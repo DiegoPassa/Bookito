@@ -127,7 +127,8 @@ public class AddFragment extends Fragment {
 
         binding.scanBtn.setOnClickListener(view -> {
             ScanOptions options = new ScanOptions();
-            options.setPrompt("Ao");
+            options.setBeepEnabled(false);
+            options.setPrompt("Premi 'volume su' per accendere la torcia");
             options.setOrientationLocked(true);
             options.setCaptureActivity(CaptureAct.class);
 
