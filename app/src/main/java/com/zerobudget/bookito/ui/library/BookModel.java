@@ -31,7 +31,6 @@ public class BookModel{
         bookMap.put("title", this.getTitle());
         bookMap.put("authors", this.getAuthors().get(0));
         bookMap.put("isbn", this.getIsbn());
-
         return bookMap;
     }
 
@@ -59,5 +58,9 @@ public class BookModel{
 
     public void setAuthors(ArrayList<String> authors) {
         this.authors = authors;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }

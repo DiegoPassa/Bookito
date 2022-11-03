@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.add;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -37,8 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AddFragment extends Fragment {
 
@@ -68,6 +61,8 @@ public class AddFragment extends Fragment {
                     JSONObject volumeObj = itemsObj.getJSONObject("volumeInfo");
 
                     //riempe newBook con i dati prelevati
+                    newBook.setIsbn(result.getContents());
+
                     newBook.setTitle(volumeObj.optString("title"));
 
                     String subtitle = volumeObj.optString("subtitle");
@@ -102,7 +97,7 @@ public class AddFragment extends Fragment {
                         dialogInterface.dismiss();
                     }).show();
 
-//                    addBook();
+                    addBook();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
