@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.add;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -28,12 +37,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddFragment extends Fragment {
 
     private FragmentAddBinding binding;
     private RequestQueue mRequestQueue;
     private BookModel newBook;
+
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) { //isbn
@@ -88,6 +102,8 @@ public class AddFragment extends Fragment {
                         dialogInterface.dismiss();
                     }).show();
 
+//                    addBook();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -101,7 +117,10 @@ public class AddFragment extends Fragment {
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        newBook = new BookModel();
+        this.newBook = new BookModel();
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         AddViewModel addViewModel =
                 new ViewModelProvider(this).get(AddViewModel.class);
@@ -142,6 +161,20 @@ public class AddFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void addBook() {
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (true) {
+//            String id = currentUser.getUid();
+
+            db.collection("users").document("lcEOKGRTqiyx6UgExmgD")
+                    .update("books", FieldValue.arrayUnion(this.newBook.serialize()));
+
+
+        }
     }
 
     static public class CaptureAct extends CaptureActivity {

@@ -1,11 +1,13 @@
 package com.zerobudget.bookito.ui.library;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BookModel{
     // TODO: completare con i dati relativi al libro mancanti
     private String thumbnail;
-    //private String isbn;
+    private String isbn;
     private String title;
     private ArrayList<String> authors;
 
@@ -21,6 +23,19 @@ public class BookModel{
         title = "";
         authors = null;
     }
+
+    public Map<String, String> serialize() {
+
+        Map<String, String> bookMap = new HashMap<>();
+        bookMap.put("thumbnail", this.getThumbnail());
+        bookMap.put("title", this.getTitle());
+        bookMap.put("authors", this.getAuthors().get(0));
+        bookMap.put("isbn", this.getIsbn());
+
+        return bookMap;
+    }
+
+    public String getIsbn() { return this.isbn; }
 
     public String getThumbnail() {
         return thumbnail;
