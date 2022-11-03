@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_requests"
+        android:state_pressed="true"
+        android:icon="@drawable/ic_baseline_move_to_inbox_24"
+        android:title="@string/title_inbox"/>
+
+    <item
+        android:id="@+id/navigation_library"
+        android:icon="@drawable/ic_baseline_local_library_24"
+        android:title="@string/title_library"/>
+
+    <item
+        android:id="@+id/navigation_insertNew"
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="@string/title_add"/>
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/title_search"/>
+
+</menu>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bookito!</string>
+    <string name="title_add">Add</string>
+    <string name="title_inbox">Inbox</string>
+    <string name="title_search">Search</string>
+    <string name="title_library">Library</string>
+</resources>
