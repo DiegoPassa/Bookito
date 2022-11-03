@@ -162,10 +162,10 @@ public class AddFragment extends Fragment {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (true) {
-//            String id = currentUser.getUid();
+        if (currentUser != null) {
+            String id = currentUser.getUid();
 
-            db.collection("users").document("lcEOKGRTqiyx6UgExmgD")
+            db.collection("users").document(id)
                     .update("books", FieldValue.arrayUnion(this.newBook.serialize()));
 
 
