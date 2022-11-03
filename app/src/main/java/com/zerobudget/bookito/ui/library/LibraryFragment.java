@@ -22,15 +22,16 @@ public class LibraryFragment extends Fragment {
 
     public void setUpBookModel(){
         bookModels = new ArrayList<>();
-        bookModels.add(new BookModel(0, "Geronimo Stilton"));
-        bookModels.add(new BookModel(0, "Title"));
-        bookModels.add(new BookModel(0, "Falce"));
-        bookModels.add(new BookModel(0, "Geronimo Stilton"));
-        bookModels.add(new BookModel(0, "Title"));
-        bookModels.add(new BookModel(0, "Falce"));
-        bookModels.add(new BookModel(0, "Geronimo Stilton"));
-        bookModels.add(new BookModel(0, "Title"));
-        bookModels.add(new BookModel(0, "Falce"));
+        bookModels.add(new BookModel("0", "Geronimo Stilton", null));
+        bookModels.add(new BookModel("0", "Title", null));
+        bookModels.add(new BookModel("0", "Falce", null));
+        bookModels.add(new BookModel("0", "Geronimo Stilton", null));
+        bookModels.add(new BookModel("0", "Title", null));
+        bookModels.add(new BookModel("0", "Falce", null));
+        bookModels.add(new BookModel("0", "Geronimo Stilton", null));
+        bookModels.add(new BookModel("0", "Title", null));
+        bookModels.add(new BookModel("0", "Falce", null));
+
     }
 
     @Override
