@@ -3,6 +3,7 @@ package com.zerobudget.bookito.ui.library;
 import java.util.ArrayList;
 
 public class BookModel{
+    // TODO: completare con i dati relativi al libro mancanti
     private String thumbnail;
     //private String isbn;
     private String title;

@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentLibraryBinding;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class LibraryFragment extends Fragment {
     private ArrayList<BookModel> bookModels;
 
     public void setUpBookModel(){
+        // TODO: prendere i dati della libreria dal database
         bookModels = new ArrayList<>();
         bookModels.add(new BookModel("0", "Geronimo Stilton", null));
         bookModels.add(new BookModel("0", "Title", null));
@@ -48,6 +51,10 @@ public class LibraryFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+
+        binding.floatingActionButton.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew);
+        });
 
         return root;
     }

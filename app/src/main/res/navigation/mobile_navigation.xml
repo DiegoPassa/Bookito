@@ -19,7 +19,12 @@
         android:id="@+id/navigation_library"
         android:name="com.zerobudget.bookito.ui.library.LibraryFragment"
         android:label="@string/title_library"
-        tools:layout="@layout/fragment_library" />
+        tools:layout="@layout/fragment_library" >
+        <action
+            android:id="@+id/action_navigation_library_to_navigation_insertNew"
+            app:destination="@id/navigation_insertNew"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search"

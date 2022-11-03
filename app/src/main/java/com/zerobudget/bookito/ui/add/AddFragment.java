@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -35,68 +36,67 @@ public class AddFragment extends Fragment {
     private BookModel newBook;
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
-       if (result.getContents() != null){ //isbn
+        if (result.getContents() != null) { //isbn
 
-           mRequestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-           mRequestQueue.getCache().clear();
-           // url per cercare il libro in base all'ISBN scannerizzato
-           String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"+result.getContents();
-           // below line we are  creating a new request queue.
-           RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+            mRequestQueue.getCache().clear();
+            // url per cercare il libro in base all'ISBN scannerizzato
+            String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + result.getContents();
+            // below line we are  creating a new request queue.
+            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
 
-           JsonObjectRequest booksObjrequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
-               try {
-                   //prova a prlevare i dati in risposta dall'API di goole books
-                   JSONArray itemsArray = response.getJSONArray("items");
+            JsonObjectRequest booksObjrequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+                try {
+                    //prova a prlevare i dati in risposta dall'API di goole books
+                    JSONArray itemsArray = response.getJSONArray("items");
 
-                   // for (int i = 0; i < itemsArray.length(); i++) {
-                   JSONObject itemsObj = itemsArray.getJSONObject(0);
-                   JSONObject volumeObj = itemsObj.getJSONObject("volumeInfo");
+                    JSONObject itemsObj = itemsArray.getJSONObject(0);
+                    JSONObject volumeObj = itemsObj.getJSONObject("volumeInfo");
 
-                   //riempe newBook con i dati prelevati
-                   newBook.setTitle(volumeObj.optString("title"));
+                    //riempe newBook con i dati prelevati
+                    newBook.setTitle(volumeObj.optString("title"));
 
-                   String subtitle = volumeObj.optString("subtitle");
-                   JSONArray authorsArray = volumeObj.getJSONArray("authors");
-                   String publisher = volumeObj.optString("publisher");
-                   String publishedDate = volumeObj.optString("publishedDate");
-                   String description = volumeObj.optString("description");
-                   int pageCount = volumeObj.optInt("pageCount");
-                   JSONObject imageLinks = volumeObj.optJSONObject("imageLinks");
+                    String subtitle = volumeObj.optString("subtitle");
+                    JSONArray authorsArray = volumeObj.getJSONArray("authors");
+                    String publisher = volumeObj.optString("publisher");
+                    String publishedDate = volumeObj.optString("publishedDate");
+                    String description = volumeObj.optString("description");
+                    int pageCount = volumeObj.optInt("pageCount");
+                    JSONObject imageLinks = volumeObj.optJSONObject("imageLinks");
 
-                   newBook.setThumbnail(imageLinks.optString("thumbnail"));
+                    newBook.setThumbnail(imageLinks.optString("thumbnail"));
 
-                   String previewLink = volumeObj.optString("previewLink");
-                   String infoLink = volumeObj.optString("infoLink");
-                   JSONObject saleInfoObj = itemsObj.optJSONObject("saleInfo");
-                   String buyLink = saleInfoObj.optString("buyLink");
+                    String previewLink = volumeObj.optString("previewLink");
+                    String infoLink = volumeObj.optString("infoLink");
+                    JSONObject saleInfoObj = itemsObj.optJSONObject("saleInfo");
+                    String buyLink = saleInfoObj.optString("buyLink");
 
-                   ArrayList<String> authorsArrayList = new ArrayList<>();
-                   if (authorsArray.length() != 0) {
-                       for (int j = 0; j < authorsArray.length(); j++) {
-                           authorsArrayList.add(authorsArray.optString(0));
-                       }
-                       newBook.setAuthors(authorsArrayList);
-                   }else
-                       newBook.setAuthors(null);
-                   //}
+                    ArrayList<String> authorsArrayList = new ArrayList<>();
+                    if (authorsArray.length() != 0) {
+                        for (int j = 0; j < authorsArray.length(); j++) {
+                            authorsArrayList.add(authorsArray.optString(0));
+                        }
+                        newBook.setAuthors(authorsArrayList);
+                    } else
+                        newBook.setAuthors(null);
 
-                   // popup
-                   AlertDialog.Builder builder = new AlertDialog.Builder(AddFragment.this.getContext());
-                   builder.setTitle("Result");
-                   builder.setMessage(result.getContents()+newBook.getTitle());
-                   builder.setPositiveButton("OK", (dialogInterface, i) -> {
-                       dialogInterface.dismiss();
-                   }).show();
+                    // popup
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AddFragment.this.getContext());
+                    builder.setTitle("Result");
+                    builder.setMessage(result.getContents() + newBook.getTitle());
+                    builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    }).show();
 
-               } catch (JSONException e) {
-                   e.printStackTrace();
-               }
-           }, error -> {
-               //TODO
-           });
-           queue.add(booksObjrequest);
-       }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }, error -> {
+                //TODO
+                Toast.makeText(this.getContext(), "Errore!", Toast.LENGTH_LONG);
+            });
+            queue.add(booksObjrequest);
+        }
     });
 
 
@@ -113,10 +113,6 @@ public class AddFragment extends Fragment {
         addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         binding.textView2.setText(Integer.toString(addViewModel.getScore()));
-/*
-        Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(this.getContext(), R.anim.my_animation);
-        textView.startAnimation(hyperspaceJumpAnimation);
-*/
 
         binding.addOneBtm.setOnClickListener(v -> {
             addViewModel.plusScore();
@@ -126,7 +122,7 @@ public class AddFragment extends Fragment {
         binding.subOneBtn.setOnClickListener(view -> {
             addViewModel.subScore();
             binding.textView2.setText(Integer.toString(addViewModel.getScore()));
-           // Toast.makeText(getActivity().getApplicationContext(), newBook.getTitle(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getActivity().getApplicationContext(), newBook.getTitle(), Toast.LENGTH_SHORT).show();
         });
 
         binding.scanBtn.setOnClickListener(view -> {
