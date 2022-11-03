@@ -8,7 +8,7 @@
         android:title="@string/title_inbox"/>
 
     <item
-        android:id="@+id/navigation_library"
+        android:id="@+id/to_navigation_library"
         android:icon="@drawable/ic_baseline_local_library_24"
         android:title="@string/title_library"/>
 
