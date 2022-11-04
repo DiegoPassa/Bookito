@@ -37,6 +37,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="title"
+                android:lines="3"
                 android:textColor="@color/black"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

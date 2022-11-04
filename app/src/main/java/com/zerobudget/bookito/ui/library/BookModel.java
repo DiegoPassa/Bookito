@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.ui.library;
 
+import androidx.annotation.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ public class BookModel{
     private String author;
 
 
-    public BookModel(String thumbnail, String isbn, String title, String author) {
+    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author) {
         this.thumbnail = thumbnail;
         this.isbn = isbn;
         this.title = title;
