@@ -9,19 +9,21 @@ public class BookModel{
     private String thumbnail;
     private String isbn;
     private String title;
-    private ArrayList<String> authors;
+    private String author;
 
 
-    public BookModel(String thumbnail, String title, ArrayList<String> authors) {
+    public BookModel(String thumbnail, String isbn, String title, String author) {
         this.thumbnail = thumbnail;
+        this.isbn = isbn;
         this.title = title;
-        this.authors = authors;
+        this.author = author;
     }
 
     public BookModel() {
         thumbnail = "";
+        isbn = "";
         title = "";
-        authors = null;
+        author = "";
     }
 
     public Map<String, String> serialize() {
@@ -29,7 +31,7 @@ public class BookModel{
         Map<String, String> bookMap = new HashMap<>();
         bookMap.put("thumbnail", this.getThumbnail());
         bookMap.put("title", this.getTitle());
-        bookMap.put("authors", this.getAuthors().get(0));
+        bookMap.put("authors", this.getAuthor());
         bookMap.put("isbn", this.getIsbn());
         return bookMap;
     }
@@ -52,15 +54,15 @@ public class BookModel{
         this.title = title;
     }
 
-    public ArrayList<String> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(ArrayList<String> authors) {
-        this.authors = authors;
-    }
-
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

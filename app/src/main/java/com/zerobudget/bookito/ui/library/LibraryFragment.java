@@ -60,7 +60,7 @@ public class LibraryFragment extends Fragment {
                             HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
                             Log.d("AAA", "" + map.get("title"));
 
-                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("title"), null);
+                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"));
                             arrBkm.add(tmp);//aggiunge il bookmodel tmp all'array list
 
                             iterator.next();
