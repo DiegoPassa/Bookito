@@ -20,6 +20,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
     private final Context context;
     private final ArrayList<BookModel> bookModels;
+    //TODO: forse cambiare il layout della visualizzazione libri nella ricerca
 
     public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels) {
         this.context = context;
@@ -37,7 +38,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     @Override
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
-    // TODO: CAMBIARE LA STRINGA DELL'URL DA HTTP A HTTPS
+
         Picasso.get().load(bookModels.get(position).getThumbnail()).resize(110*4 , 160*4).into(holder.thumbnail);
         holder.author.setText(bookModels.get(position).getAuthor());
     }

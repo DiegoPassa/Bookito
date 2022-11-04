@@ -57,7 +57,7 @@ public class LibraryFragment extends Fragment {
                                 i++;
                             }
 
-                            addBookOnLibrary(arrBkm); //visualizza il libro nella libreria
+                            addBooksOnLibrary(arrBkm); //visualizza il libro nella libreria
                         }
 
                     }
@@ -65,7 +65,7 @@ public class LibraryFragment extends Fragment {
         //}
     }
 
-     protected void addBookOnLibrary(ArrayList<BookModel> arr){
+     protected void addBooksOnLibrary(ArrayList<BookModel> arr){
         RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
         Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
