@@ -35,28 +35,31 @@ public class LibraryFragment extends Fragment {
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
 
-        db.collection("users").document("lcEOKGRTqiyx6UgExmgD").get()
+        db.collection("users").document("AZLYEN9WqTOVXiglkPJT").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         ArrayList<BookModel> arrBkm = new ArrayList<>();
 
                         Object arr = task.getResult().get("books"); //array dei books
-                        Iterator<Object> iterator = ((ArrayList<Object>) arr).iterator(); //cast ad array list per avere l'iteratore
+                        if(arr != null) { //si assicura di cercare solo se esiste quache libro
+                            Iterator<Object> iterator = ((ArrayList<Object>) arr).iterator(); //cast ad array list per avere l'iteratore
 
-                        int i = 0;//contatore
-                        while (iterator.hasNext()) {
-                            Object o = ((ArrayList<Object>) arr).get(i); //cast ad array list per prendere il libro i
-                            HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
-                            Log.d("AAA", "" + map.get("title"));
+                            int i = 0;//contatore
+                            while (iterator.hasNext()) {
+                                Object o = ((ArrayList<Object>) arr).get(i); //cast ad array list per prendere il libro i
+                                HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
+                                Log.d("AAA", "" + map.get("title"));
 
-                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"));
-                            arrBkm.add(tmp);//aggiunge il bookmodel tmp all'array list
+                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"));
+                                arrBkm.add(tmp);//aggiunge il bookmodel tmp all'array list
 
-                            iterator.next();
-                            i++;
+                                iterator.next();
+                                i++;
+                            }
+
+                            addBookOnLibrary(arrBkm); //visualizza il libro nella libreria
                         }
 
-                        addBookOnLibrary(arrBkm); //visualizza il libro nella libreria
                     }
                 });
         //}

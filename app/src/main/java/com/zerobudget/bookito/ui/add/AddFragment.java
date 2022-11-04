@@ -168,7 +168,7 @@ public class AddFragment extends Fragment {
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
 
-            db.collection("users").document("lcEOKGRTqiyx6UgExmgD")
+            db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
                     .update("books", FieldValue.arrayUnion(this.newBook.serialize()));
 
 
