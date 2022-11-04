@@ -162,14 +162,15 @@ public class AddFragment extends Fragment {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
-            String id = currentUser.getUid();
+        //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
+        //if (currentUser != null) {
+        //   String id = currentUser.getUid();
 
-            db.collection("users").document(id)
+            db.collection("users").document("lcEOKGRTqiyx6UgExmgD")
                     .update("books", FieldValue.arrayUnion(this.newBook.serialize()));
 
 
-        }
+       // }
     }
 
     static public class CaptureAct extends CaptureActivity {

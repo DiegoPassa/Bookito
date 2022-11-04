@@ -30,7 +30,7 @@ public class BookModel{
         Map<String, String> bookMap = new HashMap<>();
         bookMap.put("thumbnail", this.getThumbnail());
         bookMap.put("title", this.getTitle());
-        bookMap.put("authors", this.getAuthor());
+        bookMap.put("author", this.getAuthor());
         bookMap.put("isbn", this.getIsbn());
         return bookMap;
     }
