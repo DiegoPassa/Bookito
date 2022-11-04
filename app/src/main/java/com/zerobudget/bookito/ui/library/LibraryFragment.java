@@ -31,6 +31,9 @@ public class LibraryFragment extends Fragment {
 
     public void setUpBookModel(){
         bookModels = new ArrayList<>();
+        //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
+        //if (currentUser != null) {
+        //   String id = currentUser.getUid();
 
         db.collection("users").document("lcEOKGRTqiyx6UgExmgD").get()
                 .addOnCompleteListener(task -> {
@@ -56,6 +59,7 @@ public class LibraryFragment extends Fragment {
                         addBookOnLibrary(arrBkm); //visualizza il libro nella libreria
                     }
                 });
+        //}
     }
 
      protected void addBookOnLibrary(ArrayList<BookModel> arr){
@@ -76,6 +80,7 @@ public class LibraryFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+
 
         setUpBookModel();
         //visulizzazione spostata in addBookOnLibrary()

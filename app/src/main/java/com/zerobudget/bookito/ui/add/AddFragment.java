@@ -73,7 +73,9 @@ public class AddFragment extends Fragment {
                     int pageCount = volumeObj.optInt("pageCount");
                     JSONObject imageLinks = volumeObj.optJSONObject("imageLinks");
 
-                    newBook.setThumbnail(imageLinks.optString("thumbnail"));
+                    //l'API rende un link che inizia con http
+                    //Picasso, usato per estrarre l'immagine ha bisogno dell'https
+                    newBook.setThumbnail("https".concat(imageLinks.optString("thumbnail").substring(4)));
 
                     String previewLink = volumeObj.optString("previewLink");
                     String infoLink = volumeObj.optString("infoLink");
