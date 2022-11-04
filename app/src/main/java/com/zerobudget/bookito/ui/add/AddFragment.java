@@ -85,9 +85,9 @@ public class AddFragment extends Fragment {
                         for (int j = 0; j < authorsArray.length(); j++) {
                             authorsArrayList.add(authorsArray.optString(0));
                         }
-                        newBook.setAuthors(authorsArrayList);
+                        newBook.setAuthor(authorsArrayList.get(0));
                     } else
-                        newBook.setAuthors(null);
+                        newBook.setAuthor(null);
 
                     // popup
                     AlertDialog.Builder builder = new AlertDialog.Builder(AddFragment.this.getContext());
