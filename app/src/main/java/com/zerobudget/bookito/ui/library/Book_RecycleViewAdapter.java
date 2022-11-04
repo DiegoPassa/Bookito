@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.library;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 
 import java.util.ArrayList;
@@ -35,7 +37,9 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     @Override
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
-        holder.thumbnail.setImageResource(R.drawable.content2);
+    // TODO: CAMBIARE LA STRINGA DELL'URL DA HTTP A HTTPS
+        Picasso.get().load(bookModels.get(position).getThumbnail()).resize(110*4 , 160*4).into(holder.thumbnail);
+        holder.author.setText(bookModels.get(position).getAuthor());
     }
 
     @Override
@@ -47,11 +51,13 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         private final ImageView thumbnail;
         private final TextView title;
+        private final TextView author;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.book_thumbnail);
             title = itemView.findViewById(R.id.book_title);
+            author = itemView.findViewById(R.id.book_author);
         }
     }
 }
