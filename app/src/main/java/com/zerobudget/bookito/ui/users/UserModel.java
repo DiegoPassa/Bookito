@@ -41,7 +41,8 @@ public class UserModel {
     }
 
     public static void loadUser(UserModel user) {
-        UserModel.currentUser = user;
+        if (currentUser == null)
+            UserModel.currentUser = user;
     }
 
 
