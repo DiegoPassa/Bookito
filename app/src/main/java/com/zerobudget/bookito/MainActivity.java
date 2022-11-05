@@ -1,6 +1,7 @@
 package com.zerobudget.bookito;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
                 UserLibrary nowUser = new UserLibrary(u);
                 nowUser.setLibrary(UserLibrary.loadLibrary(task.getResult()));
                 UserModel.loadUser(nowUser);
+
+                Log.d("USER ORA AHAH", ""+UserModel.getUserFromDocument(task.getResult()).serialize());
             }
         });
     }

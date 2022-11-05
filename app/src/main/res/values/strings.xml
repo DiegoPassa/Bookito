@@ -7,4 +7,9 @@
     <string name="cerca_libri">Cerca libri</string>
     <string name="libro_trovato">Inserisci libro</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="azioni_libro">
+        <item>Regalo</item>
+        <item>Prestito</item>
+        <item>Scambio</item>
+    </string-array>
 </resources>

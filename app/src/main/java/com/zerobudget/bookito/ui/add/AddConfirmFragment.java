@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -28,11 +30,20 @@ public class AddConfirmFragment extends Fragment {
     private FragmentConfirmAddBinding binding;
     protected BookModel newBook;
 
+    String[] items;
+
+    AutoCompleteTextView autoCompleteTextView;
+    ArrayAdapter<String> adapterItems;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentConfirmAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        items = getResources().getStringArray(R.array.azioni_libro);
+
+        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
+        binding.autoCompleteTextView.setAdapter(adapterItems);
 
         Bundle args = getArguments();
         String str = args.getString("BK");
@@ -46,6 +57,11 @@ public class AddConfirmFragment extends Fragment {
         Log.d("BKCONF", newBook.getTitle());
 
         binding.btnConfirm.setOnClickListener(view -> {
+            //TODO DISABILITARE IL BOTTONE DI OK SE NON SI È INSERITO UN AZIONE OPPURE LANCIARE ERRORE
+            String action = binding.autoCompleteTextView.getText().toString();
+            if (action == "Regalo" || action == "Scambio" || action == "Prestito")
+                newBook.setType(action);
+            else newBook.setType("undefined");
             addBook(); //aggiunge il libro al database
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
             builder.setTitle("Result");
