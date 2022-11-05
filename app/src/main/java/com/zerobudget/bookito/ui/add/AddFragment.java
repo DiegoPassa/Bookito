@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.add;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
@@ -26,6 +29,7 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
+import com.zerobudget.bookito.ui.users.UserModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -118,7 +122,7 @@ public class AddFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
+        Log.d("USER ORA", ""+ UserModel.getCurrentUser().serialize());
         AddViewModel addViewModel =
                 new ViewModelProvider(this).get(AddViewModel.class);
 
@@ -169,7 +173,13 @@ public class AddFragment extends Fragment {
         //   String id = currentUser.getUid();
 
             db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
-                    .update("books", FieldValue.arrayUnion(this.newBook.serialize()));
+                    .update("books", FieldValue.arrayUnion(this.newBook.serialize())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                                UserModel.getCurrentUser().appendBook(newBook);
+                        }
+                    });
 
 
        // }

@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //TODO aspettiamo la registrazione ed il login
         //String id = currentUser.getUid();
-        String id = "AZLYEN9WqTOVXiglkPJT";
+        String id = "lcEOKGRTqiyx6UgExmgD";
 
         db.collection("users").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
