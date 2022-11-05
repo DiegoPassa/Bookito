@@ -10,7 +10,7 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,7 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentSearchBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
-import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,10 +125,10 @@ public class SearchFragment extends Fragment {
     protected void viewBooks(ArrayList<BookModel> arr) {
         RecyclerView recyclerView = binding.recycleViewSearch;
 
-        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr, "search");
+        Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
 
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 1));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 }
 

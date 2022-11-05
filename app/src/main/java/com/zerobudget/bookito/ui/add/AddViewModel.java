@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 public class AddViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
-    private int score = 0;
+    private MutableLiveData<String> score = new MutableLiveData<>("0");
 
     public AddViewModel() {
         mText = new MutableLiveData<>();
@@ -18,16 +18,19 @@ public class AddViewModel extends ViewModel {
         return mText;
     }
 
-    public int getScore(){
+    public LiveData<String> getScore() {
         return score;
     }
 
-    public void plusScore(){
-        ++score;
+    public void subScore() {
+        int tmp = Integer.parseInt(score.getValue());
+        tmp--;
+        score.setValue(Integer.toString(tmp));
     }
 
-    public void subScore(){
-        --score;
+    public void plusScore() {
+        int tmp = Integer.parseInt(score.getValue());
+        tmp++;
+        score.setValue(Integer.toString(tmp));
     }
-
 }

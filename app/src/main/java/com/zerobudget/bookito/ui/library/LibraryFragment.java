@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentLibraryBinding;
-import com.zerobudget.bookito.ui.users.UserModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +68,7 @@ public class LibraryFragment extends Fragment {
      protected void addBooksOnLibrary(ArrayList<BookModel> arr){
         RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
-        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr, "add");
+        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));

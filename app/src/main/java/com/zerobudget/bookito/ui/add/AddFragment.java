@@ -132,16 +132,14 @@ public class AddFragment extends Fragment {
         TextView textView = binding.textNotifications;
         addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        binding.textView2.setText(Integer.toString(addViewModel.getScore()));
+        addViewModel.getScore().observe(getViewLifecycleOwner(), textView::setText);
 
         binding.addOneBtm.setOnClickListener(v -> {
             addViewModel.plusScore();
-            binding.textView2.setText(Integer.toString(addViewModel.getScore()));
         });
 
         binding.subOneBtn.setOnClickListener(view -> {
             addViewModel.subScore();
-            binding.textView2.setText(Integer.toString(addViewModel.getScore()));
             // Toast.makeText(getActivity().getApplicationContext(), newBook.getTitle(), Toast.LENGTH_SHORT).show();
         });
 

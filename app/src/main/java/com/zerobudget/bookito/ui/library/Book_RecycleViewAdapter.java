@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.library;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +19,10 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
     private final Context context;
     private final ArrayList<BookModel> bookModels;
-    private final String kind; //serve per cambiare la visualizzazione da verticale a orizzontale
 
-    public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels, String kind) {
+    public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels) {
         this.context = context;
         this.bookModels = bookModels;
-        this.kind = kind;
     }
 
     @NonNull
@@ -33,11 +30,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     public Book_RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view;
-        if(this.kind.equals("search"))
-            view = inflater.inflate(R.layout.recycleview_orizzontal, parent, false);
-        else
-            view = inflater.inflate(R.layout.recycleview_row, parent, false);
+        View view = inflater.inflate(R.layout.recycleview_row, parent, false);
 
         return new Book_RecycleViewAdapter.ViewHolder(view);
     }
