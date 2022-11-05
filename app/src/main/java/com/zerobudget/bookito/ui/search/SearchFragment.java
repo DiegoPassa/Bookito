@@ -98,7 +98,7 @@ public class SearchFragment extends Fragment {
                                         Log.d("Title", "" + map.get("title"));
 
                                         BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"));
-                                        SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, new UserModel());
+                                        SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
                                         arrResults.add(searchResultsModel);
                                     }
                                     iterator.next();
