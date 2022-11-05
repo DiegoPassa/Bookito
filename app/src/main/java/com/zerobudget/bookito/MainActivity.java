@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
+import com.zerobudget.bookito.ui.users.UserLibrary;
 import com.zerobudget.bookito.ui.users.UserModel;
 
 import org.w3c.dom.Document;
@@ -65,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 UserModel u = UserModel.getUserFromDocument(task.getResult());
-                UserModel.loadUser(u);
+                UserLibrary nowUser = new UserLibrary(u);
+                nowUser.setLibrary(UserLibrary.loadLibrary(task.getResult()));
+                UserModel.loadUser(nowUser);
             }
         });
     }
