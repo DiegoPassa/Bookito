@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.add;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.databinding.FragmentConfirmAddBinding;
+import com.zerobudget.bookito.ui.Utils;
 import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserModel;
 
@@ -24,7 +26,7 @@ import com.zerobudget.bookito.ui.users.UserModel;
 public class AddConfirmFragment extends Fragment {
 
     private FragmentConfirmAddBinding binding;
-    protected BookModel bookModel;
+    protected BookModel newBook;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,6 +34,16 @@ public class AddConfirmFragment extends Fragment {
         binding = FragmentConfirmAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        Bundle args = getArguments();
+        String str = args.getString("BK");
+        newBook= Utils.getGsonParser().fromJson(str, BookModel.class);
+
+        binding.bookTitle.setText(newBook.getTitle());
+        binding.bookAuthor.setText(newBook.getAuthor());
+        binding.bookDescription.setText(newBook.getDescription());
+        Picasso.get().load(newBook.getThumbnail()).into(binding.bookThumbnail);
+
+        Log.d("BKCONF", newBook.getTitle());
 
         binding.btnConfirm.setOnClickListener(view -> {
             addBook(); //aggiunge il libro al database
@@ -68,9 +80,9 @@ public class AddConfirmFragment extends Fragment {
         //   String id = currentUser.getUid();
 
         db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
-                .update("books", FieldValue.arrayUnion(bookModel.serialize())).addOnCompleteListener(task -> {
+                .update("books", FieldValue.arrayUnion(newBook.serialize())).addOnCompleteListener(task -> {
                     if (task.isSuccessful())
-                        UserModel.getCurrentUser().appendBook(bookModel);
+                        UserModel.getCurrentUser().appendBook(newBook);
                 });
         // }
     }
