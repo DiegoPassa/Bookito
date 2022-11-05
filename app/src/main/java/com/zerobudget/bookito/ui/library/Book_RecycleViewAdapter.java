@@ -39,7 +39,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
 
-        Picasso.get().load(bookModels.get(position).getThumbnail()).resize(110*4 , 160*4).into(holder.thumbnail);
+        Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
         holder.author.setText(bookModels.get(position).getAuthor());
 
         //TODO: visualizare l'owner del libro e il tipo (scambio, prestito, regalo)

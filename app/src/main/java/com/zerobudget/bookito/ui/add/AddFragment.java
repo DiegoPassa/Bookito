@@ -77,7 +77,11 @@ public class AddFragment extends Fragment {
 
                     //l'API rende un link che inizia con http
                     //Picasso, usato per estrarre l'immagine ha bisogno dell'https
-                    newBook.setThumbnail("https".concat(imageLinks.optString("thumbnail").substring(4)));
+                    if (imageLinks != null) {
+                        newBook.setThumbnail("https".concat(imageLinks.optString("thumbnail").substring(4)));
+                    } else {
+                        newBook.setThumbnail("https://feb.kuleuven.be/drc/LEER/visiting-scholars-1/image-not-available.jpg/image");
+                    }
 
                     String previewLink = volumeObj.optString("previewLink");
                     String infoLink = volumeObj.optString("infoLink");
