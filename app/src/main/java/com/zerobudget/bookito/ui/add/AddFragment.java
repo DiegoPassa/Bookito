@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.add;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -24,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
-import com.zerobudget.bookito.MainActivity;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.ui.Utils;
@@ -36,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddFragment extends Fragment {
 
@@ -111,8 +109,8 @@ public class AddFragment extends Fragment {
                     String bookString = Utils.getGsonParser().toJson(newBook);
                     args.putString("BK", bookString);
 
+                    //va al fragment di conferma, passando un'argomento
                     Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_confirmAddFragment, args);
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -131,30 +129,14 @@ public class AddFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+
         Log.d("USER ORA", ""+ UserModel.getCurrentUser().serialize());
+
         AddViewModel addViewModel =
                 new ViewModelProvider(this).get(AddViewModel.class);
 
         binding = FragmentAddBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-
-
-
-
-
-        //TextView textView = binding.textNotifications;
-        //addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-        //addViewModel.getScore().observe(getViewLifecycleOwner(), textView::setText);
-
-       /* binding.addOneBtm.setOnClickListener(v -> {
-            addViewModel.plusScore();
-        });
-
-        binding.subOneBtn.setOnClickListener(view -> {
-            addViewModel.subScore();
-            // Toast.makeText(getActivity().getApplicationContext(), newBook.getTitle(), Toast.LENGTH_SHORT).show();
-        });*/
 
         binding.scanBtn.setOnClickListener(view -> {
             ScanOptions options = new ScanOptions();

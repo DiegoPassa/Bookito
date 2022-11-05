@@ -37,19 +37,13 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
     @Override
     public void onBindViewHolder(@NonNull Search_RecycleViewAdapter.ViewHolder holder, int position) {
-
-        // holder.title.setText(bookModels.get(position).getTitle());
-
         Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
         holder.book_owner.setText(results.get(position).getUser().getFirst_name());
         holder.kind.setText("kind");
 
-        // Picasso.get().load(bookModels.get(position).getThumbnail()).resize(110*4 , 160*4).into(holder.thumbnail);
-
         //TODO: visualizare l'owner del libro e il tipo (scambio, prestito, regalo)
-        //if(this.kind.equals("search"))
     }
 
     @Override

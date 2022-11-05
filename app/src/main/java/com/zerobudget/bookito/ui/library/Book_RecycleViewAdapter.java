@@ -41,9 +41,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
         holder.author.setText(bookModels.get(position).getAuthor());
-
-        //TODO: visualizare l'owner del libro e il tipo (scambio, prestito, regalo)
-        //if(this.kind.equals("search"))
     }
 
     @Override

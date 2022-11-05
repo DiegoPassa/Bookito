@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookModel{
-    // TODO: completare con i dati relativi al libro mancanti
     private String thumbnail = "";
     private String isbn = "";
     private String title = "";

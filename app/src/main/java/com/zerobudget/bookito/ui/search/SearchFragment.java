@@ -48,7 +48,7 @@ public class SearchFragment extends Fragment {
         // final TextView textView = binding.textHome;
         // homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        //barra di ricerca, cerca alla pressione del tasto invio
+        //barra di ricerca, cerca alla pressione del tasto invio per il momento
         binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -75,55 +75,48 @@ public class SearchFragment extends Fragment {
 
     //ricerca libro per titolo
     protected void searchBookByTitle(String t) {
-        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+        db.collection("users").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
-                    for (DocumentSnapshot document : task.getResult()) {
-                        //TODO: sostituire l'id con l'id del current user
-                        if (!document.getId().equals("AZLYEN9WqTOVXiglkPJT")) { //deve cercare i libri degli altri utenti
-                            Object arr = document.get("books"); //array dei books
-                            if (arr != null) { //si assicura di cercare solo se esiste quache libro
-                                Iterator<Object> iterator = ((ArrayList<Object>) arr).iterator(); //cast ad array list per avere l'iteratore
+                for (DocumentSnapshot document : task.getResult()) {
+                    //TODO: sostituire l'id con l'id del current user
+                    if (!document.getId().equals("AZLYEN9WqTOVXiglkPJT")) { //deve cercare i libri degli altri utenti
+                        Object arr = document.get("books"); //array dei books
+                        if (arr != null) { //si assicura di cercare solo se esiste quache libro
+                            Iterator<Object> iterator = ((ArrayList<Object>) arr).iterator(); //cast ad array list per avere l'iteratore
 
-                                int i = 0;//contatore
-                                while (iterator.hasNext()) {
-                                    Object o = ((ArrayList<Object>) arr).get(i); //cast ad array list per prendere il libro i
-                                    HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
+                            int i = 0;//contatore
+                            while (iterator.hasNext()) {
+                                Object o = ((ArrayList<Object>) arr).get(i); //cast ad array list per prendere il libro i
+                                HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
 
-                                    //ricerca per titolo
-                                    if (Objects.requireNonNull(map.get("title")).toString().contains(t)) {
-                                        Log.d("Title", "" + map.get("title"));
+                                //ricerca per titolo
+                                if (Objects.requireNonNull(map.get("title")).toString().contains(t)) {
+                                    Log.d("Title", "" + map.get("title"));
 
-                                        BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"));
-                                        SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
-                                        arrResults.add(searchResultsModel);
-                                    }
-                                    iterator.next();
-                                    i++;
+                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"));
+                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
+                                    arrResults.add(searchResultsModel);
                                 }
+                                iterator.next();
+                                i++;
                             }
                         }
                     }
-
-/*                    for (int i = 0; i < arrBkFound.size(); i++) {
-                        Log.d("ArrBKMFound:", arrBkFound.get(i).getTitle());
-
-                    }*/
-
-                    viewBooks(arrResults);
-                } else {
-                    Log.d("TAG", "Error getting documents: ", task.getException());
                 }
 
+                viewBooks(arrResults);
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
             }
+
         });
 
 
     }
 
+    //visualizza i libri nella libreria virtuale
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
         RecyclerView recyclerView = binding.recycleViewSearch;
 

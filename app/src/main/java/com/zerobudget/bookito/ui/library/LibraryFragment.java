@@ -20,6 +20,7 @@ import com.zerobudget.bookito.databinding.FragmentLibraryBinding;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class LibraryFragment extends Fragment {
 
@@ -51,7 +52,7 @@ public class LibraryFragment extends Fragment {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
                                 Log.d("AAA", "" + map.get("title"));
 
-                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"));
+                                BookModel tmp = new BookModel((String) Objects.requireNonNull(map.get("thumbnail")), (String) Objects.requireNonNull(map.get("isbn")), (String) Objects.requireNonNull(map.get("title")), (String) Objects.requireNonNull(map.get("author")), (String) Objects.requireNonNull(map.get("description")));
                                 arrBkm.add(tmp);//aggiunge il bookmodel tmp all'array list
 
                                 iterator.next();
@@ -66,7 +67,8 @@ public class LibraryFragment extends Fragment {
         //}
     }
 
-     protected void addBooksOnLibrary(ArrayList<BookModel> arr){
+     //visualizzazione libri nella libreria virtuale
+     private void addBooksOnLibrary(ArrayList<BookModel> arr){
         RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
         Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
