@@ -71,8 +71,14 @@ public class AddFragment extends Fragment {
                     JSONArray authorsArray = volumeObj.getJSONArray("authors");
                     String publisher = volumeObj.optString("publisher");
                     String publishedDate = volumeObj.optString("publishedDate");
+
                     String description = volumeObj.optString("description");
-                    int pageCount = volumeObj.optInt("pageCount");
+                    if(!description.equals(""))
+                        newBook.setDescription(description);
+                    else
+                        newBook.setDescription("No description found");
+
+                     int pageCount = volumeObj.optInt("pageCount");
                     JSONObject imageLinks = volumeObj.optJSONObject("imageLinks");
 
                     //l'API rende un link che inizia con http
@@ -104,6 +110,7 @@ public class AddFragment extends Fragment {
                     builder.setPositiveButton("OK",  (dialogInterface, i) -> {
                         dialogInterface.dismiss();
                     }).show();
+
 
                     addBook();
 

@@ -97,7 +97,7 @@ public class SearchFragment extends Fragment {
                                     if (Objects.requireNonNull(map.get("title")).toString().contains(t)) {
                                         Log.d("Title", "" + map.get("title"));
 
-                                        BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"));
+                                        BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"));
                                         SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
                                         arrResults.add(searchResultsModel);
                                     }

@@ -11,13 +11,15 @@ public class BookModel{
     private String isbn = "";
     private String title = "";
     private String author = "";
+    private String description = "";
 
 
-    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author) {
+    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description) {
         this.thumbnail = thumbnail;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
+        this.description = description;
     }
 
     public BookModel() {}
@@ -29,6 +31,8 @@ public class BookModel{
         bookMap.put("title", this.getTitle());
         bookMap.put("author", this.getAuthor());
         bookMap.put("isbn", this.getIsbn());
+        bookMap.put("description", this.getDescription());
+
         return bookMap;
     }
 
@@ -60,5 +64,13 @@ public class BookModel{
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
