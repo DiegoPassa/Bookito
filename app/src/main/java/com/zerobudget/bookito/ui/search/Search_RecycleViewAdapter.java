@@ -4,10 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.ui.library.BookModel;
 
@@ -36,9 +39,10 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     @Override
     public void onBindViewHolder(@NonNull Search_RecycleViewAdapter.ViewHolder holder, int position) {
 
-        // holder.title.setText(bookModels.get(position).getTitle());
+        holder.title.setText(bookModels.get(position).getTitle());
+        holder.author.setText(bookModels.get(position).getAuthor());
 
-        // Picasso.get().load(bookModels.get(position).getThumbnail()).resize(110*4 , 160*4).into(holder.thumbnail);
+        Picasso.get().load(bookModels.get(position).getThumbnail()).resize(110*4 , 160*4).into(holder.thumbnail);
 
         //TODO: visualizare l'owner del libro e il tipo (scambio, prestito, regalo)
         //if(this.kind.equals("search"))
@@ -51,17 +55,17 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        // Layout
-        // private final ImageView thumbnail;
-        // private final TextView title;
-        // ...
+        private final ImageView thumbnail;
+        private final TextView title;
+        private final TextView author;
+        private final TextView owner;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Binding from xml layout to Class
-            // thumbnail = itemView.findViewById(R.id.book_thumbnail);
-            // title = itemView.findViewById(R.id. ...);
-            // ...
+            thumbnail = itemView.findViewById(R.id.book_thumbnail);
+            title = itemView.findViewById(R.id.book_title);
+            author = itemView.findViewById(R.id.book_author);
+            owner = itemView.findViewById(R.id.book_owner);
         }
     }
 
