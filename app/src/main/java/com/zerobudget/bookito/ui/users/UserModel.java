@@ -97,5 +97,10 @@ public class UserModel {
 
     public void appendBook(BookModel book) { this.library.add(book); }
 
+    //TODO getUserFromQuery (TASK MUST BE SUCCESS)
+    public static UserModel getUserFromDocument(DocumentSnapshot doc) {
+        return null;
+    }
+
 
 }
