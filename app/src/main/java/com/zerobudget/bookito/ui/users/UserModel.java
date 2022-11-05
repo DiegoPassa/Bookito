@@ -97,9 +97,36 @@ public class UserModel {
 
     public void appendBook(BookModel book) { this.library.add(book); }
 
-    //TODO getUserFromQuery (TASK MUST BE SUCCESS)
-    public static UserModel getUserFromDocument(DocumentSnapshot doc) {
-        return null;
+    public static UserModel getUserFromDocument(DocumentSnapshot result) {
+        UserModel u = new UserModel();
+        u.setFirst_name((String) result.get("first_name"));
+        u.setLast_name((String) result.get("last_name"));
+        u.setTelephone((String) result.get("telephone"));
+        u.setNeighborhood((String) result.get("neighborhood"));
+        u.setKarma(loadKarma(result));
+        u.setLibrary(loadLibrary(result));
+
+        return u;
+    }
+
+    private static HashMap<String, Object> loadKarma(DocumentSnapshot doc) {
+        return (HashMap<String, Object>) doc.get("karma");
+    }
+
+    private static ArrayList<BookModel> loadLibrary(DocumentSnapshot doc) {
+        ArrayList<BookModel> library = new ArrayList<>();
+        ArrayList<Object> results = (ArrayList<Object>) doc.get("books");
+
+        for (Object book : results) {
+            HashMap<Object, Object> map = (HashMap<Object, Object>)  book;
+            BookModel newBook = new BookModel();
+            newBook.setIsbn((String) map.get("isbn"));
+            newBook.setThumbnail((String) map.get("thumbnail"));
+            newBook.setTitle((String) map.get("title"));
+            newBook.setAuthor((String)map.get("author"));
+            library.add(newBook);
+        }
+        return library;
     }
 
 
