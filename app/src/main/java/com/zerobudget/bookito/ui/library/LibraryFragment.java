@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentLibraryBinding;
+import com.zerobudget.bookito.ui.users.UserModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +90,7 @@ public class LibraryFragment extends Fragment {
         //visulizzazione spostata in addBookOnLibrary()
 
         binding.floatingActionButton.setOnClickListener(view -> {
+            Log.d("USER ORA", ""+UserModel.getCurrentUser().serialize());
             Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew);
         });
 
@@ -98,6 +100,7 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         binding = null;
     }
 }

@@ -7,10 +7,10 @@ import java.util.Map;
 
 public class BookModel{
     // TODO: completare con i dati relativi al libro mancanti
-    private String thumbnail;
-    private String isbn;
-    private String title;
-    private String author;
+    private String thumbnail = "";
+    private String isbn = "";
+    private String title = "";
+    private String author = "";
 
 
     public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author) {
@@ -20,12 +20,7 @@ public class BookModel{
         this.author = author;
     }
 
-    public BookModel() {
-        thumbnail = "";
-        isbn = "";
-        title = "";
-        author = "";
-    }
+    public BookModel() {}
 
     public Map<String, String> serialize() {
 
