@@ -30,7 +30,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     public Book_RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.recycleview_row, parent, false);
+        View view = inflater.inflate(R.layout.recycleview_library, parent, false);
 
         return new Book_RecycleViewAdapter.ViewHolder(view);
     }
