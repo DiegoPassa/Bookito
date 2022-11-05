@@ -20,18 +20,25 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
     private final Context context;
     private final ArrayList<BookModel> bookModels;
-    //TODO: forse cambiare il layout della visualizzazione libri nella ricerca
+    private final String kind; //serve per cambiare la visualizzazione da verticale a orizzontale
 
-    public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels) {
+    public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels, String kind) {
         this.context = context;
         this.bookModels = bookModels;
+        this.kind = kind;
     }
 
     @NonNull
     @Override
     public Book_RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recycleview_row, parent, false);
+
+        View view;
+        if(this.kind.equals("search"))
+            view = inflater.inflate(R.layout.recycleview_orizzontal, parent, false);
+        else
+            view = inflater.inflate(R.layout.recycleview_row, parent, false);
+
         return new Book_RecycleViewAdapter.ViewHolder(view);
     }
 
@@ -41,6 +48,9 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         Picasso.get().load(bookModels.get(position).getThumbnail()).resize(110*4 , 160*4).into(holder.thumbnail);
         holder.author.setText(bookModels.get(position).getAuthor());
+
+        //TODO: visualizare l'owner del libro e il tipo (scambio, prestito, regalo)
+        //if(this.kind.equals("search"))
     }
 
     @Override
@@ -53,12 +63,15 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         private final ImageView thumbnail;
         private final TextView title;
         private final TextView author;
+        private final TextView owner;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.book_thumbnail);
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);
+            owner = itemView.findViewById(R.id.book_owner);
         }
     }
+
 }

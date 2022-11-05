@@ -84,7 +84,6 @@ public class SearchFragment extends Fragment {
                     for (DocumentSnapshot document : task.getResult()) {
                         //TODO: sostituire l'id con l'id del current user
                         if (!document.getId().equals("AZLYEN9WqTOVXiglkPJT")) { //deve cercare i libri degli altri utenti
-
                             Object arr = document.get("books"); //array dei books
                             if (arr != null) { //si assicura di cercare solo se esiste quache libro
                                 Iterator<Object> iterator = ((ArrayList<Object>) arr).iterator(); //cast ad array list per avere l'iteratore
@@ -127,10 +126,10 @@ public class SearchFragment extends Fragment {
     protected void viewBooks(ArrayList<BookModel> arr) {
         RecyclerView recyclerView = binding.recycleViewSearch;
 
-        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
+        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr, "search");
 
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 1));
     }
 }
 
