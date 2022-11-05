@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/book_thumbnail"
+            android:layout_width="130dp"
+            android:layout_height="160dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/book_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/book_thumbnail"
+            android:padding="3dp"
+            android:text="Book Title"
+            android:lines="3"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/book_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/book_title"
+            android:layout_marginTop="3dp"
+            android:layout_toEndOf="@id/book_thumbnail"
+            android:padding="3dp"
+            android:text="Author"
+            android:lines="1"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/book_owner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/book_author"
+            android:layout_marginTop="3dp"
+            android:layout_toEndOf="@id/book_thumbnail"
+            android:padding="3dp"
+            android:text="Owner"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/kind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/book_owner"
+            android:layout_marginTop="3dp"
+            android:layout_toEndOf="@id/book_thumbnail"
+            android:padding="3dp"
+            android:text="Kind"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

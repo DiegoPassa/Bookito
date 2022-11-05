@@ -68,7 +68,7 @@ public class LibraryFragment extends Fragment {
      protected void addBooksOnLibrary(ArrayList<BookModel> arr){
         RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
-        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
+        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr, "add");
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
