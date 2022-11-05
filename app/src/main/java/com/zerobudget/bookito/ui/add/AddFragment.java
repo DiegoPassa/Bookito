@@ -1,12 +1,10 @@
 package com.zerobudget.bookito.ui.add;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -14,16 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
@@ -31,7 +25,6 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
-import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 import com.zerobudget.bookito.ui.users.UserModel;
 
 import org.json.JSONArray;
@@ -45,6 +38,7 @@ public class AddFragment extends Fragment {
     private FragmentAddBinding binding;
     private RequestQueue mRequestQueue;
     private BookModel newBook;
+    private View root;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -108,15 +102,9 @@ public class AddFragment extends Fragment {
                     } else
                         newBook.setAuthor(null);
 
+                    //TODO: capire come passare il newBook al fragment di conferma :(
+                    Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_confirmAddFragment);
 
-                    binding.textView2.setVisibility(View.INVISIBLE);
-                    binding.scanBtn.setVisibility(View.INVISIBLE);
-
-                    RecyclerView recyclerView = binding.recycleViewAddBook;
-                    BookDetails_RecycleViewAdapter adapter = new BookDetails_RecycleViewAdapter(this.getContext(), newBook);
-                    recyclerView.setAdapter(adapter);
-                    recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 1));
-                    //add book in BookDetails_RecycleViewAdapter
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -140,7 +128,9 @@ public class AddFragment extends Fragment {
                 new ViewModelProvider(this).get(AddViewModel.class);
 
         binding = FragmentAddBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
+
+
 
         //TextView textView = binding.textNotifications;
         //addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
