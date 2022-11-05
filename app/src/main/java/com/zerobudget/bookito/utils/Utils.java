@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui;
+package com.zerobudget.bookito.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

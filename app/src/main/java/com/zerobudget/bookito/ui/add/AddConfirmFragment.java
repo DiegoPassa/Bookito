@@ -18,9 +18,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentConfirmAddBinding;
-import com.zerobudget.bookito.ui.Utils;
 import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.utils.Utils;
 
 
 public class AddConfirmFragment extends Fragment {
