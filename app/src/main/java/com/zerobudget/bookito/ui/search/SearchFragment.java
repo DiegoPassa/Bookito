@@ -55,7 +55,7 @@ public class SearchFragment extends Fragment {
                 searchBookByTitle(s);
                 return true;
             }
-
+//.
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
