@@ -71,13 +71,19 @@ public class BookDetails_RecycleViewAdapter extends RecyclerView.Adapter<BookDet
 
             itemView.findViewById(R.id.btn_confirm).setOnClickListener(view -> {
                 addBook(); //aggiunge il libro al database
-                Navigation.findNavController(view).navigate(R.id.to_navigation_library);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.title.getContext());
+                builder.setTitle("Result");
+                builder.setMessage("Libro inserito correttamente");
+                builder.setPositiveButton("OK",  (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    Navigation.findNavController(view).navigate(R.id.to_navigation_library);
+                }).show();
             });
 
             itemView.findViewById(R.id.btn_cancel).setOnClickListener(view -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.title.getContext());
                 builder.setTitle("Result");
-                builder.setMessage("Inserimento annullato correttamente");
+                builder.setMessage("Inserimento annullato");
                 builder.setPositiveButton("OK",  (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     Navigation.findNavController(view).navigate(R.id.to_navigation_library);

@@ -109,6 +109,9 @@ public class AddFragment extends Fragment {
                         newBook.setAuthor(null);
 
 
+                    binding.textView2.setVisibility(View.INVISIBLE);
+                    binding.scanBtn.setVisibility(View.INVISIBLE);
+
                     RecyclerView recyclerView = binding.recycleViewAddBook;
                     BookDetails_RecycleViewAdapter adapter = new BookDetails_RecycleViewAdapter(this.getContext(), newBook);
                     recyclerView.setAdapter(adapter);
