@@ -83,4 +83,8 @@
     <color name="md_theme_dark_outlineVariant">#404942</color>
     <color name="md_theme_dark_scrim">#000000</color>
 
+
+
+<!--    <color name="mtrl_textinput_default_box_stroke_color">#ff0000</color>-->
+
 </resources>
