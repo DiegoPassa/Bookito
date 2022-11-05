@@ -34,10 +34,11 @@ public class LibraryFragment extends Fragment {
         //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
-
+        binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("users").document("AZLYEN9WqTOVXiglkPJT").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        binding.progressBar.setVisibility(View.GONE);
                         ArrayList<BookModel> arrBkm = new ArrayList<>();
 
                         Object arr = task.getResult().get("books"); //array dei books
@@ -72,7 +73,7 @@ public class LibraryFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
-    }
+     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,9 +89,9 @@ public class LibraryFragment extends Fragment {
         setUpBookModel();
         //visulizzazione spostata in addBookOnLibrary()
 
-        binding.floatingActionButton.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew);
-        });
+        binding.floatingActionButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
+
+
 
         return root;
     }

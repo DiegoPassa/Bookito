@@ -7,6 +7,7 @@
     android:background="@color/gray"
     tools:context=".ui.library.LibraryFragment">
 
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -21,7 +22,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <androidx.recyclerview.widget.RecyclerView
+
         android:id="@+id/recycleView_myLibrary"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -29,6 +32,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -41,4 +47,16 @@
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="106dp"
+        android:layout_height="112dp"
+        android:layout_marginTop="308dp"
+        android:layout_marginEnd="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

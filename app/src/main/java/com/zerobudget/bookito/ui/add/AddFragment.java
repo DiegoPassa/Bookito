@@ -18,8 +18,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
@@ -99,7 +97,7 @@ public class AddFragment extends Fragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(AddFragment.this.getContext());
                     builder.setTitle("Result");
                     builder.setMessage(result.getContents() + newBook.getTitle());
-                    builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                    builder.setPositiveButton("OK",  (dialogInterface, i) -> {
                         dialogInterface.dismiss();
                     }).show();
 
@@ -171,12 +169,9 @@ public class AddFragment extends Fragment {
         //   String id = currentUser.getUid();
 
             db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
-                    .update("books", FieldValue.arrayUnion(this.newBook.serialize())).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful())
-                                UserModel.getCurrentUser().appendBook(newBook);
-                        }
+                    .update("books", FieldValue.arrayUnion(this.newBook.serialize())).addOnCompleteListener(task -> {
+                        if (task.isSuccessful())
+                            UserModel.getCurrentUser().appendBook(newBook);
                     });
 
 
