@@ -122,7 +122,7 @@ public class AddFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        Log.d("USER ORA", ""+ UserModel.getCurrentUser().serialize());
+
         AddViewModel addViewModel =
                 new ViewModelProvider(this).get(AddViewModel.class);
 
@@ -173,13 +173,7 @@ public class AddFragment extends Fragment {
         //   String id = currentUser.getUid();
 
             db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
-                    .update("books", FieldValue.arrayUnion(this.newBook.serialize())).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful())
-                                UserModel.getCurrentUser().appendBook(newBook);
-                        }
-                    });
+                    .update("books", FieldValue.arrayUnion(this.newBook.serialize()));
 
 
        // }
