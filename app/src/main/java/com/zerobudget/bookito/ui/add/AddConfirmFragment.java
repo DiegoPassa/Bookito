@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.add;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class AddConfirmFragment extends Fragment {
         binding.bookTitle.setText(newBook.getTitle());
         binding.bookAuthor.setText(newBook.getAuthor());
         binding.bookDescription.setText(newBook.getDescription());
+        binding.bookDescription.setMovementMethod(new ScrollingMovementMethod());
         Picasso.get().load(newBook.getThumbnail()).into(binding.bookThumbnail);
 
         Log.d("BKCONF", newBook.getTitle());
