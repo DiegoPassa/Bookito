@@ -14,7 +14,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="La mia libreria"
-        android:textColor="@color/black"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/recycleView_myLibrary"
         app:layout_constraintEnd_toEndOf="parent"
