@@ -40,7 +40,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
         // holder.title.setText(bookModels.get(position).getTitle());
 
-        Picasso.get().load(results.get(position).getBook().getThumbnail()).resize(110 * 4, 160 * 4).into(holder.thumbnail);
+        Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
         holder.book_owner.setText(results.get(position).getUser().getFirst_name());
