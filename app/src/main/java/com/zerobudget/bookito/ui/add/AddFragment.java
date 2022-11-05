@@ -13,6 +13,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,8 +28,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
+import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 import com.zerobudget.bookito.ui.users.UserModel;
 
 import org.json.JSONArray;
@@ -78,7 +83,7 @@ public class AddFragment extends Fragment {
                     else
                         newBook.setDescription("No description found");
 
-                     int pageCount = volumeObj.optInt("pageCount");
+                    int pageCount = volumeObj.optInt("pageCount");
                     JSONObject imageLinks = volumeObj.optJSONObject("imageLinks");
 
                     //l'API rende un link che inizia con http
@@ -103,16 +108,12 @@ public class AddFragment extends Fragment {
                     } else
                         newBook.setAuthor(null);
 
-                    // popup
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AddFragment.this.getContext());
-                    builder.setTitle("Result");
-                    builder.setMessage(result.getContents() + newBook.getTitle());
-                    builder.setPositiveButton("OK",  (dialogInterface, i) -> {
-                        dialogInterface.dismiss();
-                    }).show();
 
-
-                    addBook();
+                    RecyclerView recyclerView = binding.recycleViewAddBook;
+                    BookDetails_RecycleViewAdapter adapter = new BookDetails_RecycleViewAdapter(this.getContext(), newBook);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 1));
+                    //add book in BookDetails_RecycleViewAdapter
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -138,19 +139,19 @@ public class AddFragment extends Fragment {
         binding = FragmentAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        TextView textView = binding.textNotifications;
-        addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        //TextView textView = binding.textNotifications;
+        //addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        addViewModel.getScore().observe(getViewLifecycleOwner(), textView::setText);
+        //addViewModel.getScore().observe(getViewLifecycleOwner(), textView::setText);
 
-        binding.addOneBtm.setOnClickListener(v -> {
+       /* binding.addOneBtm.setOnClickListener(v -> {
             addViewModel.plusScore();
         });
 
         binding.subOneBtn.setOnClickListener(view -> {
             addViewModel.subScore();
             // Toast.makeText(getActivity().getApplicationContext(), newBook.getTitle(), Toast.LENGTH_SHORT).show();
-        });
+        });*/
 
         binding.scanBtn.setOnClickListener(view -> {
             ScanOptions options = new ScanOptions();
@@ -171,23 +172,6 @@ public class AddFragment extends Fragment {
         binding = null;
     }
 
-    private void addBook() {
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
-        //if (currentUser != null) {
-        //   String id = currentUser.getUid();
-
-            db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
-                    .update("books", FieldValue.arrayUnion(this.newBook.serialize())).addOnCompleteListener(task -> {
-                        if (task.isSuccessful())
-                            UserModel.getCurrentUser().appendBook(newBook);
-                    });
-
-
-       // }
-    }
 
     static public class CaptureAct extends CaptureActivity {
 
