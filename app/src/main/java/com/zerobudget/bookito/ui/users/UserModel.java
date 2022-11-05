@@ -25,9 +25,10 @@ public class UserModel {
     private String telephone;
     private String neighborhood;
     //private String id; id utente facilmente ottenibile con FirebaseAuth.getInstance().getCurrentUser().getId()
+    private static UserModel currentUser; //modello dell'utente attuale
 
     private ArrayList<BookModel> library;
-
+    private HashMap<String, Object> karma;
 
     public UserModel(){}
 
@@ -40,7 +41,7 @@ public class UserModel {
     }
 
     public static void loadUser(UserModel user) {
-
+        UserModel.currentUser = user;
     }
 
 
@@ -63,6 +64,37 @@ public class UserModel {
         return user;
     }
 
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String name) {
+        this.first_name = name;
+    }
+
+    public String getLast_name() { return last_name; }
+
+    public String getTelephone() { return telephone; }
+
+    public String getNeighborhood() { return neighborhood; }
+
+    public HashMap<String, Object> getKarma() { return karma; }
+
+    public static UserModel getCurrentUser() { return UserModel.currentUser; }
+
+    public void setFirst_Name(String name) { this.first_name = name; }
+
+    public void setLast_name(String name) { this.last_name = name; }
+
+    public void setTelephone(String telephone) { this.telephone = telephone; }
+
+    public void setNeighborhood(String neighborhood) { this.neighborhood = neighborhood; }
+
+    public void setKarma(HashMap<String, Object> k) { this.karma = k; }
+
+    public void setLibrary(ArrayList<BookModel> library) { this.library = library; }
+
+    public void appendBook(BookModel book) { this.library.add(book); }
 
 
 }
