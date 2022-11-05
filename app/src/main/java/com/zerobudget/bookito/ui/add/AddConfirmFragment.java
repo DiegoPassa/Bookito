@@ -1,6 +1,8 @@
 package com.zerobudget.bookito.ui.add;
 
 import android.app.AlertDialog;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -33,7 +36,7 @@ public class AddConfirmFragment extends Fragment {
 
     String[] items;
 
-    AutoCompleteTextView autoCompleteTextView;
+    AutoCompleteTextView autoCompleteTxt;
     ArrayAdapter<String> adapterItems;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +47,8 @@ public class AddConfirmFragment extends Fragment {
         items = getResources().getStringArray(R.array.azioni_libro);
 
         adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
+
+
         binding.autoCompleteTextView.setAdapter(adapterItems);
 
         Bundle args = getArguments();
@@ -58,20 +63,25 @@ public class AddConfirmFragment extends Fragment {
 
         Log.d("BKCONF", newBook.getTitle());
 
+
         binding.btnConfirm.setOnClickListener(view -> {
-            //TODO DISABILITARE IL BOTTONE DI OK SE NON SI È INSERITO UN AZIONE OPPURE LANCIARE ERRORE
+
             String action = binding.autoCompleteTextView.getText().toString();
-            if (action.equals("Regalo") || action.equals("Scambio") || action.equals("Prestito"))
+            if (!action.equals("Regalo") && !action.equals("Scambio") && !action.equals("Prestito")) {
+                binding.InputText.setError("Devi selezionare un'azione!");
+                binding.InputText.setDefaultHintTextColor(ColorStateList.valueOf(Color.RED));
+            }
+            else{
                 newBook.setType(action);
-            else newBook.setType("undefined");
-            addBook(); //aggiunge il libro al database
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-            builder.setTitle("Result");
-            builder.setMessage("Libro inserito correttamente");
-            builder.setPositiveButton("OK",  (dialogInterface, i) -> {
-                dialogInterface.dismiss();
-                Navigation.findNavController(view).navigate(R.id.to_navigation_library);
-            }).show();
+                addBook(); //aggiunge il libro al database
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle("Result");
+                builder.setMessage("Libro inserito correttamente");
+                builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    Navigation.findNavController(view).navigate(R.id.to_navigation_library);
+                }).show();
+            }
         });
 
         binding.btnCancel.setOnClickListener(view -> {
