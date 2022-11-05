@@ -30,7 +30,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     public Search_RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.recycleview_orizzontal, parent, false);
+        View view = inflater.inflate(R.layout.recycleview_search_results, parent, false);
 
         return new Search_RecycleViewAdapter.ViewHolder(view);
     }

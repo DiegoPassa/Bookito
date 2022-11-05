@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/book_thumbnail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="167dp"
+                android:layout_height="243dp"
                 app:layout_constraintBottom_toTopOf="@id/book_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
