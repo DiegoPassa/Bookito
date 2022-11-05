@@ -59,7 +59,7 @@ public class AddConfirmFragment extends Fragment {
         binding.btnConfirm.setOnClickListener(view -> {
             //TODO DISABILITARE IL BOTTONE DI OK SE NON SI È INSERITO UN AZIONE OPPURE LANCIARE ERRORE
             String action = binding.autoCompleteTextView.getText().toString();
-            if (action == "Regalo" || action == "Scambio" || action == "Prestito")
+            if (action.equals("Regalo") || action.equals("Scambio") || action.equals("Prestito"))
                 newBook.setType(action);
             else newBook.setType("undefined");
             addBook(); //aggiunge il libro al database
