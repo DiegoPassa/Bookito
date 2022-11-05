@@ -131,7 +131,6 @@ public class AddFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        Log.d("USER ORA", ""+ UserModel.getCurrentUser().serialize());
         AddViewModel addViewModel =
                 new ViewModelProvider(this).get(AddViewModel.class);
 
@@ -166,6 +165,7 @@ public class AddFragment extends Fragment {
             barLauncher.launch(options);
         });
 
+        Log.d("USER NOW", ""+UserModel.getCurrentUser().serialize());
         return root;
     }
 

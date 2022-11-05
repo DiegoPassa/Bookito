@@ -64,38 +64,10 @@ public class MainActivity extends AppCompatActivity {
         db.collection("users").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                UserModel u = new UserModel();
-                DocumentSnapshot result = task.getResult();
-                u.setFirst_name((String) result.get("first_name"));
-                u.setLast_name((String) result.get("last_name"));
-                u.setTelephone((String) result.get("telephone"));
-                u.setNeighborhood((String) result.get("neighborhood"));
-                u.setKarma(getKarma(result));
-                u.setLibrary(getLibrary(result));
+                UserModel u = UserModel.getUserFromDocument(task.getResult());
                 UserModel.loadUser(u);
             }
         });
     }
-
-    protected HashMap<String, Object> getKarma(DocumentSnapshot doc) {
-        return (HashMap<String, Object>) doc.get("karma");
-    }
-
-    protected ArrayList<BookModel> getLibrary(DocumentSnapshot doc) {
-        ArrayList<BookModel> library = new ArrayList<>();
-        ArrayList<Object> results = (ArrayList<Object>) doc.get("books");
-
-        for (Object book : results) {
-            HashMap<Object, Object> map = (HashMap<Object, Object>)  book;
-            BookModel newBook = new BookModel();
-            newBook.setIsbn((String) map.get("isbn"));
-            newBook.setThumbnail((String) map.get("thumbnail"));
-            newBook.setTitle((String) map.get("title"));
-            newBook.setAuthor((String)map.get("author"));
-            library.add(newBook);
-        }
-        return library;
-    }
-
 
 }
