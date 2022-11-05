@@ -9,13 +9,13 @@
     <color name="white">#FFFFFFFF</color>
 
     <!--  my colors  -->
-    <color name="green_primary">#D2EAD8</color>
-    <color name="green_primary_light">#E0EED5</color>
-    <color name="green_primary_dark">#6D7970</color>
+    <!--    <color name="green_primary">#D2EAD8</color>-->
+    <!--    <color name="green_primary_light">#E0EED5</color>-->
+    <!--    <color name="green_primary_dark">#6D7970</color>-->
     <color name="gray">#BABABA</color>
-    <color name="green">#93D076</color>
-    <color name="red">#D07676</color>
-    <color name="yellow">#CED076</color>
+    <!--    <color name="green">#93D076</color>-->
+    <!--    <color name="red">#D07676</color>-->
+    <!--    <color name="yellow">#CED076</color>-->
     <color name="blue">#768AD0</color>
 
     <!--  Material3 generated colors  -->

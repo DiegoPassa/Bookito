@@ -24,7 +24,6 @@
 
             <TextView
                 android:id="@+id/title"
-                android:textColor="@color/black"
                 android:textSize="32dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,7 +40,6 @@
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +77,6 @@
                             android:lines="2"
                             android:padding="4dp"
                             android:text="Title"
-                            android:textColor="@color/black"
                             android:textSize="17sp" />
 
                         <TextView
@@ -89,7 +86,6 @@
                             android:padding="4dp"
                             android:layout_marginTop="8dp"
                             android:text="Author"
-                            android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="italic" />
 
@@ -121,7 +117,6 @@
                     android:layout_margin="8dp"
 
                     android:text="description"
-                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <LinearLayout
