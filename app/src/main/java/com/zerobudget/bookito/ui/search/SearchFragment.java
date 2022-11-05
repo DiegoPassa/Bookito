@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentSearchBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
+import com.zerobudget.bookito.ui.users.UserModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +79,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    ArrayList<BookModel> arrBkFound = new ArrayList<>(); //libri trovati
+                    ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
                     for (DocumentSnapshot document : task.getResult()) {
                         //TODO: sostituire l'id con l'id del current user
@@ -97,7 +98,8 @@ public class SearchFragment extends Fragment {
                                         Log.d("Title", "" + map.get("title"));
 
                                         BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"));
-                                        arrBkFound.add(tmp);
+                                        SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, new UserModel());
+                                        arrResults.add(searchResultsModel);
                                     }
                                     iterator.next();
                                     i++;
@@ -106,12 +108,12 @@ public class SearchFragment extends Fragment {
                         }
                     }
 
-                    for (int i = 0; i < arrBkFound.size(); i++) {
+/*                    for (int i = 0; i < arrBkFound.size(); i++) {
                         Log.d("ArrBKMFound:", arrBkFound.get(i).getTitle());
 
-                    }
+                    }*/
 
-                    viewBooks(arrBkFound);
+                    viewBooks(arrResults);
                 } else {
                     Log.d("TAG", "Error getting documents: ", task.getException());
                 }
@@ -122,7 +124,7 @@ public class SearchFragment extends Fragment {
 
     }
 
-    protected void viewBooks(ArrayList<BookModel> arr) {
+    protected void viewBooks(ArrayList<SearchResultsModel> arr) {
         RecyclerView recyclerView = binding.recycleViewSearch;
 
         Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
