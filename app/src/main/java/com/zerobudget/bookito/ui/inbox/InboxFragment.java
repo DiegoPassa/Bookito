@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,22 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
+import com.zerobudget.bookito.ui.Requests.RequestModel;
+
+import java.util.ArrayList;
 
 public class InboxFragment extends Fragment {
 
     private FragmentInboxBinding binding;
+    private ArrayList<RequestModel> requests;
+
+    FirebaseFirestore db;
+    FirebaseAuth mAuth;
+
 
     @Nullable
     @Override
@@ -26,12 +37,15 @@ public class InboxFragment extends Fragment {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        binding.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.testFragment);
-            }
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        binding.requestFloatingAction.setOnClickListener(view -> {
+            Log.d("LOG", "CLICCATO BOTTONE +");
         });
+        
+
+
 
         return root;
     }
