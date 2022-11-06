@@ -1,5 +1,6 @@
 package com.zerobudget.bookito;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
+import com.zerobudget.bookito.login.LoginActivity;
 import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserLibrary;
 import com.zerobudget.bookito.ui.users.UserModel;
@@ -40,7 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null){
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
         getQueryCurrentUser();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
