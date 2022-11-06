@@ -41,9 +41,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
         holder.book_owner.setText(results.get(position).getUser().getFirst_name());
-        holder.kind.setText("kind");
-
-        //TODO: visualizare l'owner del libro e il tipo (scambio, prestito, regalo)
+        holder.type.setText(results.get(position).getBook().getType());
     }
 
     @Override
@@ -58,7 +56,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         private final TextView title;
         private final TextView author;
         private final TextView book_owner;
-        private final TextView kind;
+        private final TextView type;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,7 +65,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);
             book_owner = itemView.findViewById(R.id.book_owner);
-            kind = itemView.findViewById(R.id.kind);
+            type = itemView.findViewById(R.id.type);
         }
     }
 

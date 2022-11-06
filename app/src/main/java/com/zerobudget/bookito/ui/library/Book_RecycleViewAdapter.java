@@ -50,6 +50,20 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
         holder.author.setText(bookModels.get(position).getAuthor());
 
+        switch (bookModels.get(position).getType()) {
+            case "Scambio":
+                Picasso.get().load(R.drawable.bookmark_scambio).into(holder.bookmark);
+                break;
+            case "Prestito":
+                Picasso.get().load(R.drawable.bookmark_prestito).into(holder.bookmark);
+                break;
+            case "Regalo":
+                Picasso.get().load(R.drawable.bookmark_regalo).into(holder.bookmark);
+                break;
+            default:
+                Picasso.get().load(R.drawable.bookmark_empty_200).into(holder.bookmark);
+                break;
+        }
 
         holder.x.setOnClickListener(view -> {
             //passaggio dei dati del new book al prossimo fragment
@@ -74,6 +88,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         private final TextView title;
         private final TextView author;
         private final TextView owner;
+        private final ImageView bookmark;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,6 +97,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             author = itemView.findViewById(R.id.book_author);
             owner = itemView.findViewById(R.id.book_owner);
             x = itemView.findViewById(R.id.x);
+            bookmark = itemView.findViewById(R.id.bookmark);
             
         }
     }

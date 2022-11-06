@@ -59,6 +59,15 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/book_title" />
 
+            <ImageView
+                android:id="@+id/bookmark"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_marginBottom="208dp"
+                app:layout_constraintBottom_toTopOf="@+id/book_title"
+                app:layout_constraintEnd_toEndOf="@+id/book_thumbnail"
+                app:srcCompat="@drawable/bookmark_empty_200" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
