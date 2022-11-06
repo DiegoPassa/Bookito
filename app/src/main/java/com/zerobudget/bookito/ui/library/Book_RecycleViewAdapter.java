@@ -1,8 +1,8 @@
 package com.zerobudget.bookito.ui.library;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.utils.Utils;
@@ -52,16 +49,16 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         switch (bookModels.get(position).getType()) {
             case "Scambio":
-                Picasso.get().load(R.drawable.bookmark_scambio).into(holder.bookmark);
+                holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
                 break;
             case "Prestito":
-                Picasso.get().load(R.drawable.bookmark_prestito).into(holder.bookmark);
+                holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_prestito), PorterDuff.Mode.SRC_ATOP);
                 break;
             case "Regalo":
-                Picasso.get().load(R.drawable.bookmark_regalo).into(holder.bookmark);
+                holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_regalo), PorterDuff.Mode.SRC_ATOP);
                 break;
             default:
-                Picasso.get().load(R.drawable.bookmark_empty_200).into(holder.bookmark);
+                Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
                 break;
         }
 
@@ -89,6 +86,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         private final TextView author;
         private final TextView owner;
         private final ImageView bookmark;
+        private final ImageView bookmark_outline;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,7 +96,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             owner = itemView.findViewById(R.id.book_owner);
             x = itemView.findViewById(R.id.x);
             bookmark = itemView.findViewById(R.id.bookmark);
-            
+            bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
         }
     }
 

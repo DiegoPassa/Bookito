@@ -8,6 +8,7 @@
     <string name="libro_trovato">Inserisci libro</string>
     <string name="lorem_ipsum_long">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris condimentum congue odio, vitae maximus lectus luctus vel. Nulla blandit orci eu lacinia lacinia. Morbi luctus odio nisl, a consequat nibh sollicitudin eget. Donec cursus tristique leo ac sodales. Donec augue mi, elementum vel neque nec, eleifend dapibus ipsum. Nulla et sem ac massa commodo tristique sed pretium nunc. Fusce vel dictum dolor, in interdum nunc. Cras id purus malesuada purus pretium congue id nec diam. Fusce feugiat mauris massa. Suspendisse efficitur pretium mi eu aliquam. Vestibulum vel enim sit amet orci venenatis tempor sit amet ac mauris. Morbi nulla velit, vulputate eu quam vitae, ornare laoreet mauris. Praesent porta sollicitudin ligula ut accumsan.</string>
     <string name="informazioni_libro">Informazioni libro</string>
+    <string name="elimina">Elimina</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="azioni_libro">
         <item>Regalo</item>
