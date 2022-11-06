@@ -33,6 +33,7 @@ public class BookModel{
         bookMap.put("author", this.getAuthor());
         bookMap.put("isbn", this.getIsbn());
         bookMap.put("description", this.getDescription());
+        bookMap.put("type", this.getType());
 
         return bookMap;
     }
@@ -76,4 +77,8 @@ public class BookModel{
     }
 
     public void setType(String type) { this.type = type; }
+
+    public String getType() {
+        return type;
+    }
 }

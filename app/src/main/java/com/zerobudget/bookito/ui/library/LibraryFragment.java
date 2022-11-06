@@ -37,6 +37,7 @@ public class LibraryFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("users").document("AZLYEN9WqTOVXiglkPJT").get()
                 .addOnCompleteListener(task -> {
+                    Log.d("QUERY", "queryyy");
                     if (task.isSuccessful()) {
                         binding.progressBar.setVisibility(View.GONE);
                         ArrayList<BookModel> arrBkm = new ArrayList<>();

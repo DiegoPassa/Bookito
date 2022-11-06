@@ -51,7 +51,6 @@ public class AddConfirmFragment extends Fragment {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //TODO FIXA CHE QUANDO CAMBI SCHEDA SI BUGGA IL DROPDOWN OPTION
         binding = FragmentConfirmAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -88,6 +87,7 @@ public class AddConfirmFragment extends Fragment {
             else{
                 newBook.setType(action);
                 addBook(); //aggiunge il libro al database
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle("Result");
                 builder.setMessage("Libro inserito correttamente");
@@ -123,8 +123,10 @@ public class AddConfirmFragment extends Fragment {
 
         db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
                 .update("books", FieldValue.arrayUnion(newBook.serialize())).addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                        UserModel.getCurrentUser().appendBook(newBook);
+                    if (task.isSuccessful()) {
+                        if (UserModel.getCurrentUser() != null)
+                            UserModel.getCurrentUser().appendBook(newBook);
+                    }
                 });
         // }
     }

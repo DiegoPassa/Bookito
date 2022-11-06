@@ -27,6 +27,20 @@
                 android:id="@+id/action_navigation_library_to_navigation_insertNew"
                 app:destination="@id/navigation_insertNew"
                 app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_navigation_library_to_bookDeleteFragment"
+                app:destination="@id/bookDeleteFragment" />
+
+        </fragment>
+
+        <fragment
+            android:id="@+id/bookDeleteFragment"
+            android:name="com.zerobudget.bookito.ui.library.BookDeleteFragment"
+            android:label="fragment_delete_book"
+            tools:layout="@layout/fragment_delete_book" >
+            <action
+                android:id="@+id/action_bookDeleteFragment_to_navigation_library"
+                app:destination="@id/navigation_library" />
         </fragment>
 
         <fragment
@@ -64,5 +78,6 @@
         android:name="com.zerobudget.bookito.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
+
 
 </navigation>
