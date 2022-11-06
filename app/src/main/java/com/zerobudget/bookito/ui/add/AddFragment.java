@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.add;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -24,12 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
-import com.zerobudget.bookito.MainActivity;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
-import com.zerobudget.bookito.ui.Utils;
 import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

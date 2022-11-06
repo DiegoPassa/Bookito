@@ -33,7 +33,6 @@
             android:padding="3dp"
             android:text="Book Title"
             android:lines="3"
-            android:textColor="@color/black"
             android:textSize="12sp" />
 
         <TextView
@@ -47,7 +46,6 @@
             android:text="Author"
             android:lines="1"
             android:textStyle="italic"
-            android:textColor="@color/gray"
             android:textSize="12sp" />
 
         <TextView
@@ -59,7 +57,6 @@
             android:layout_toEndOf="@id/book_thumbnail"
             android:padding="3dp"
             android:text="Owner"
-            android:textColor="@color/black"
             android:textSize="12sp" />
 
         <TextView
@@ -71,7 +68,6 @@
             android:layout_toEndOf="@id/book_thumbnail"
             android:padding="3dp"
             android:text="Kind"
-            android:textColor="@color/black"
             android:textSize="12sp" />
 
 

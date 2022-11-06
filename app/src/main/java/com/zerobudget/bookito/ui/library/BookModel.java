@@ -11,14 +11,16 @@ public class BookModel{
     private String title = "";
     private String author = "";
     private String description = "";
+    private String type = "";
 
 
-    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description) {
+    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description, @NonNull String type) {
         this.thumbnail = thumbnail;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.description = description;
+        this.type = type;
     }
 
     public BookModel() {}
@@ -72,4 +74,6 @@ public class BookModel{
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void setType(String type) { this.type = type; }
 }
