@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookModel{
-    // TODO: completare con i dati relativi al libro mancanti
     private String thumbnail = "";
     private String isbn = "";
     private String title = "";
@@ -34,6 +33,7 @@ public class BookModel{
         bookMap.put("author", this.getAuthor());
         bookMap.put("isbn", this.getIsbn());
         bookMap.put("description", this.getDescription());
+        bookMap.put("type", this.getType());
 
         return bookMap;
     }
@@ -77,4 +77,8 @@ public class BookModel{
     }
 
     public void setType(String type) { this.type = type; }
+
+    public String getType() {
+        return type;
+    }
 }

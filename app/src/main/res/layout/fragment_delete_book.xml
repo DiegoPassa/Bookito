@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.add.AddConfirmFragment">
+    tools:context=".ui.library.BookDeleteFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="@string/libro_trovato"
+                android:text="@string/informazioni_libro"
                 android:textSize="32dp"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -49,8 +49,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
                     android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="8dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -67,8 +67,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="10dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -84,8 +84,8 @@
                             android:id="@+id/book_author"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="4dp"
                             android:layout_marginTop="8dp"
+                            android:padding="4dp"
                             android:text="Author"
                             android:textSize="15sp"
                             android:textStyle="italic" />
@@ -94,30 +94,12 @@
 
                 </LinearLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:id="@+id/InputText"
-                    android:hint="Seleziona un'azione"
-                    app:errorTextColor="@color/md_theme_light_error"
-                    app:boxStrokeErrorColor="@color/md_theme_light_error"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-                    <!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-                    <AutoCompleteTextView
-                        android:id="@+id/autoCompleteTextView"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
                 <TextView
                     android:id="@+id/book_description"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginVertical="8dp"
                     android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="8dp"
                     android:maxHeight="120dp"
                     android:scrollbars="vertical"
                     android:text="@string/lorem_ipsum_long"
@@ -127,26 +109,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
                     <Button
-                        android:id="@+id/btn_cancel"
+                        android:id="@+id/btn_delete"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
                         android:layout_weight="1"
-                        android:text="Annulla"
-                        android:textAllCaps="false" />
-
-                    <Button
-                        android:id="@+id/btn_confirm"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:layout_weight="1"
-                        android:text="Conferma"
+                        android:text="@string/elimina"
                         android:textAllCaps="false" />
 
                 </LinearLayout>

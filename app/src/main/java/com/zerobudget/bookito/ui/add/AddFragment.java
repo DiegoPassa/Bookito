@@ -135,9 +135,6 @@ public class AddFragment extends Fragment {
         root = binding.getRoot();
 
 
-
-
-
         //TextView textView = binding.textNotifications;
         //addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
