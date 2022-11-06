@@ -89,8 +89,8 @@ public class AddConfirmFragment extends Fragment {
                 addBook(); //aggiunge il libro al database
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle("Result");
-                builder.setMessage("Libro inserito correttamente");
+                builder.setTitle("Conferma");
+                builder.setMessage("Libro "+newBook.getTitle()+" è stato inserito correttamente");
                 builder.setPositiveButton("OK", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     Navigation.findNavController(view).navigate(R.id.to_navigation_library);
@@ -100,7 +100,7 @@ public class AddConfirmFragment extends Fragment {
 
         binding.btnCancel.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-            builder.setTitle("Result");
+            builder.setTitle("Attenzione");
             builder.setMessage("Inserimento annullato");
             builder.setPositiveButton("OK",  (dialogInterface, i) -> {
                 dialogInterface.dismiss();
