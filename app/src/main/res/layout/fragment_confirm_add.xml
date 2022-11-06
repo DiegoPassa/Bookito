@@ -100,6 +100,8 @@
                     android:layout_margin="16dp"
                     android:id="@+id/InputText"
                     android:hint="Seleziona un'azione"
+                    app:errorTextColor="@color/md_theme_light_error"
+                    app:boxStrokeErrorColor="@color/md_theme_light_error"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                     <AutoCompleteTextView

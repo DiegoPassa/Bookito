@@ -39,17 +39,31 @@ public class AddConfirmFragment extends Fragment {
     AutoCompleteTextView autoCompleteTxt;
     ArrayAdapter<String> adapterItems;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        items = getResources().getStringArray(R.array.azioni_libro);
+        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
+        binding.autoCompleteTextView.setAdapter(adapterItems);
+
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //TODO FIXA CHE QUANDO CAMBI SCHEDA SI BUGGA IL DROPDOWN OPTION
         binding = FragmentConfirmAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        items = getResources().getStringArray(R.array.azioni_libro);
+//        items = getResources().getStringArray(R.array.azioni_libro);
 
-        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
+//        Log.d("ITEMS", items[0] + " " + items[1] + " " + items[2]);
 
 
-        binding.autoCompleteTextView.setAdapter(adapterItems);
+//        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
+
+
+//        binding.autoCompleteTextView.setAdapter(adapterItems);
 
         Bundle args = getArguments();
         String str = args.getString("BK");
@@ -69,7 +83,7 @@ public class AddConfirmFragment extends Fragment {
             String action = binding.autoCompleteTextView.getText().toString();
             if (!action.equals("Regalo") && !action.equals("Scambio") && !action.equals("Prestito")) {
                 binding.InputText.setError("Devi selezionare un'azione!");
-                binding.InputText.setDefaultHintTextColor(ColorStateList.valueOf(Color.RED));
+                binding.InputText.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
             }
             else{
                 newBook.setType(action);
