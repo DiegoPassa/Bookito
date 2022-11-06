@@ -44,19 +44,10 @@ public class LibraryFragment extends Fragment {
 
                         Object arr = task.getResult().get("books"); //array dei books
                         if(arr != null) { //si assicura di cercare solo se esiste quache libro
-                            Iterator<Object> iterator = ((ArrayList<Object>) arr).iterator(); //cast ad array list per avere l'iteratore
-
-                            int i = 0;//contatore
-                            while (iterator.hasNext()) {
-                                Object o = ((ArrayList<Object>) arr).get(i); //cast ad array list per prendere il libro i
-                                HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
-                                Log.d("AAA", "" + map.get("title"));
-
+                            for (Object o : (ArrayList<Object>) arr) {
+                                HashMap<Object, Object> map = (HashMap<Object, Object>) o;
                                 BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
                                 arrBkm.add(tmp);//aggiunge il bookmodel tmp all'array list
-
-                                iterator.next();
-                                i++;
                             }
 
                             addBooksOnLibrary(arrBkm); //visualizza il libro nella libreria

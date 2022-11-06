@@ -86,7 +86,7 @@ public class AddConfirmFragment extends Fragment {
             }
             else{
                 newBook.setType(action);
-                addBook(); //aggiunge il libro al database
+                addBook();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle("Conferma");
