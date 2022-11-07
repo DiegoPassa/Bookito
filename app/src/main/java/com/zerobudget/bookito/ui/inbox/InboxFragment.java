@@ -15,14 +15,21 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class InboxFragment extends Fragment {
 
@@ -44,14 +51,15 @@ public class InboxFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        RecyclerView recyclerView = binding.recycleViewInbox;
-        ArrayList<RequestModel> a = new ArrayList<RequestModel>();
-        a.add(new RequestModel());
-        a.add(new RequestModel());
-        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), a);
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+//        RecyclerView recyclerView = binding.recycleViewInbox;
+//        ArrayList<RequestModel> a = new ArrayList<RequestModel>();
+//        a.add(new RequestModel());
+//        a.add(new RequestModel());
+//        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), a);
+//
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        getRequests();
 
 
         return root;
@@ -61,5 +69,35 @@ public class InboxFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    protected ArrayList<Object> getRequests() {
+        FirebaseUser currentUs = mAuth.getCurrentUser();
+        if (true) {
+//            String id = currentUs.getUid();
+            db.collection("requests").whereEqualTo("recipient", "AZLYEN9WqTOVXiglkPJT")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        //TODO CAMBIARE DA ARRAY DI OBJECT AD ARRAY DI REQUEST MODEL
+                        ArrayList<Object> req = new ArrayList<>();
+
+                        QuerySnapshot result = task.getResult();
+
+                        for (DocumentSnapshot o : result) {
+                            //TODO CONTROLLARE ANCHE IL TIPO DI FLAG ED IN VASE A QUELLO AGGIUNGERE UN REQUEST MODEL DIVERSO
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("recipient", (String) o.get("recipient"));
+                            map.put("requester", (String)o.get("requester"));
+                            map.put("book", (String)o.get("book"));
+                            map.put("status", (String)o.get("status"));
+                            map.put("flag", (String)o.get("flag"));
+                            req.add(map);
+                        }
+                        Log.d("REQUEST", ""+req);
+
+
+                    });
+        }
+        return null;
     }
 }
