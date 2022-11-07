@@ -89,8 +89,9 @@ public class InboxFragment extends Fragment {
                             for (DocumentSnapshot o : result) {
                                 String flag = (String) o.get("flag");
                                 RequestModel r = getRequestModel(flag, o);
-                                req.add(r);
+                                if (r != null) req.add(r);
                             }
+                            Log.d("STATUS", req.get(0).getRequestedBook());
                             addRequestsOnPage(req);
                         }
                     });
