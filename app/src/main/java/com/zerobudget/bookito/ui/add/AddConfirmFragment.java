@@ -37,8 +37,6 @@ public class AddConfirmFragment extends Fragment {
     AutoCompleteTextView autoCompleteTxt;
     ArrayAdapter<String> adapterItems;
 
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -51,16 +49,6 @@ public class AddConfirmFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentConfirmAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-//        items = getResources().getStringArray(R.array.azioni_libro);
-
-//        Log.d("ITEMS", items[0] + " " + items[1] + " " + items[2]);
-
-
-//        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
-
-
-//        binding.autoCompleteTextView.setAdapter(adapterItems);
 
         Bundle args = getArguments();
         String str = args.getString("BK");

@@ -86,32 +86,20 @@ public class SearchFragment extends Fragment {
                         if (!document.getId().equals("AZLYEN9WqTOVXiglkPJT")) { //deve cercare i libri degli altri utenti
                             Object arr = document.get("books"); //array dei books
                             if (arr != null) { //si assicura di cercare solo se esiste quache libro
-                                Iterator<Object> iterator = ((ArrayList<Object>) arr).iterator(); //cast ad array list per avere l'iteratore
 
-                                int i = 0;//contatore
-                                while (iterator.hasNext()) {
-                                    Object o = ((ArrayList<Object>) arr).get(i); //cast ad array list per prendere il libro i
-                                    HashMap<Object, Object> map = (HashMap<Object, Object>) o; // cast per prendere i dati del libro i
-
-                                    //ricerca per titolo
+                                for (Object o : (ArrayList<Object>) arr) {
+                                    HashMap<Object, Object> map = (HashMap<Object, Object>) o;
                                     if (Objects.requireNonNull(map.get("title")).toString().contains(t)) {
                                         Log.d("Title", "" + map.get("title"));
-
                                         BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
                                         SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
                                         arrResults.add(searchResultsModel);
                                     }
-                                    iterator.next();
-                                    i++;
                                 }
                             }
                         }
                     }
 
-/*                    for (int i = 0; i < arrBkFound.size(); i++) {
-                        Log.d("ArrBKMFound:", arrBkFound.get(i).getTitle());
-
-                    }*/
 
                     viewBooks(arrResults);
                 } else {
