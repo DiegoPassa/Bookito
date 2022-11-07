@@ -7,14 +7,34 @@ public class RequestModel {
     private String requester; //id utente che fa la richiesta
     private String recipient; //id utente che RICEVE la richiesta (id utente attuale basically)
     private String status; //stato della richiesta, può assumere 3 valori: undefined, refused and accepted
+    private String thumbnail;
+    private String title;
 
     public RequestModel() {}
 
-    public RequestModel(String requestedBook, String requester, String recipient, String status) {
+    public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String title) {
         this.requestedBook = requestedBook;
         this.requester = requester;
         this.recipient = recipient;
         this.status = status;
+        this.thumbnail = thumbnail;
+        this.title = title;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getRequestedBook() {

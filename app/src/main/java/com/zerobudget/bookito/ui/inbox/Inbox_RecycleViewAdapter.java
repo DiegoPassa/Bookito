@@ -1,6 +1,8 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -24,13 +29,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         this.context = ctx;
-        requests.add(new RequestModel());
-        requests.add(new RequestModel());
-        requests.add(new RequestModel());
-        requests.add(new RequestModel());
-        requests.add(new RequestModel());
-        requests.add(new RequestModel());
-        requests.add(new RequestModel());
         this.requests = requests;
     }
 
@@ -46,7 +44,11 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.request.setText("SUPER TEST");
+        //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
+        holder.user_name.setText(requests.get(position).getRecipient());
+        Picasso.get().load(requests.get(position).getThumbnail()).into(holder.book_image);
+        holder.title.setText(requests.get(position).getTitle());
+
     }
 
     @Override
@@ -56,13 +58,18 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        private final TextView request;
+        private final TextView title;
+        private final ConstraintLayout request_selected;
+        private final TextView user_name;
+        private final ImageView book_image;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            request = itemView.findViewById(R.id.requestTitle);
+            title = itemView.findViewById(R.id.requestTitle);
+            user_name = itemView.findViewById(R.id.requester_name);
+            book_image= itemView.findViewById(R.id.book_image_request);
+            request_selected = itemView.findViewById(R.id.request);
         }
     }
 }
