@@ -1,17 +1,24 @@
 package com.zerobudget.bookito.ui.search;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -42,6 +49,15 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         holder.author.setText(results.get(position).getBook().getAuthor());
         holder.book_owner.setText(results.get(position).getUser().getFirst_name());
         holder.type.setText(results.get(position).getBook().getType());
+
+        holder.book_selected.setOnClickListener(view -> {
+            Bundle args = new Bundle();
+            String usrBookString = Utils.getGsonParser().toJson(results.get(position));
+            args.putString("USR_BK", usrBookString);
+
+            Navigation.findNavController(holder.itemView).navigate(R.id.action_navigation_search_to_bookRequestFragment, args);
+
+        });
     }
 
     @Override
@@ -52,6 +68,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         // Layout
+        private final RelativeLayout book_selected;
         private final ImageView thumbnail;
         private final TextView title;
         private final TextView author;
@@ -61,6 +78,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // Binding from xml layout to Class
+            book_selected = itemView.findViewById(R.id.book);
             thumbnail = itemView.findViewById(R.id.book_thumbnail);
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);

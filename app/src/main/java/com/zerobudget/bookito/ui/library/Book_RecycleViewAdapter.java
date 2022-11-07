@@ -65,7 +65,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 break;
         }
 
-        holder.x.setOnClickListener(view -> {
+        holder.book_selected.setOnClickListener(view -> {
             //passaggio dei dati del new book al prossimo fragment
             Bundle args = new Bundle();
             String bookString = Utils.getGsonParser().toJson(bookModels.get(position));
@@ -83,7 +83,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        private final ConstraintLayout x;
+        private final ConstraintLayout book_selected;
         private final ImageView thumbnail;
         private final TextView title;
         private final TextView author;
@@ -97,7 +97,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);
             owner = itemView.findViewById(R.id.book_owner);
-            x = itemView.findViewById(R.id.x);
+            book_selected = itemView.findViewById(R.id.book);
             bookmark = itemView.findViewById(R.id.bookmark);
             bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
         }
