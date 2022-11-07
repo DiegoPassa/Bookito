@@ -49,18 +49,21 @@
             android:label="@string/title_add"
             tools:layout="@layout/fragment_add" >
             <action
-                android:id="@+id/action_navigation_insertNew_to_confirmAddFragment"
-                app:destination="@id/confirmAddFragment" />
+                android:id="@+id/action_navigation_insertNew_to_addConfirmFragment"
+                app:destination="@id/addConfirmFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/addConfirmFragment"
+            android:name="com.zerobudget.bookito.ui.add.AddConfirmFragment"
+            android:label="fragment_confirm_add"
+            tools:layout="@layout/fragment_confirm_add">
+            <action
+                android:id="@+id/action_addConfirmFragment_to_navigation_library"
+                app:destination="@id/navigation_library"
+                app:popUpTo="@id/addConfirmFragment"
+                app:popUpToInclusive="true" />
         </fragment>
 
-        <fragment
-            android:id="@+id/confirmAddFragment"
-            android:name="com.zerobudget.bookito.ui.add.AddConfirmFragment"
-            android:label="ConfirmAddFragment" >
-            <action
-                android:id="@+id/action_confirmAddFragment_to_navigation_library"
-                app:destination="@id/navigation_library" />
-        </fragment>
     </navigation>
 
     <fragment

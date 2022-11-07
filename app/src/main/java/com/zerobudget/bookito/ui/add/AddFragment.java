@@ -108,7 +108,7 @@ public class AddFragment extends Fragment {
                     String bookString = Utils.getGsonParser().toJson(newBook);
                     args.putString("BK", bookString);
 
-                    Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_confirmAddFragment, args);
+                    Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_addConfirmFragment, args);
 
 
                 } catch (JSONException e) {
