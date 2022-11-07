@@ -8,9 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="bookmark_scambio">#2ac2de</color>
-    <color name="bookmark_prestito">#cd3517</color>
-    <color name="bookmark_regalo">#ead80f</color>
+    <color name="bookmark_scambio">#19B5DB</color>
+    <color name="bookmark_outline_scambio">#0690A1</color>
+    <color name="bookmark_prestito">#B62A0E</color>
+    <color name="bookmark_outline_prestito">#801A06</color>
+    <color name="bookmark_regalo">#EFDD13</color>
+    <color name="bookmark_outine_regalo">#AC9E09</color>
+
 
     <!--  my colors  -->
     <!--    <color name="green_primary">#D2EAD8</color>-->
