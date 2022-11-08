@@ -27,12 +27,14 @@ public class RequestModel {
     public Map<String, String> serialize() {
 
         Map<String, String> bookMap = new HashMap<>();
+        bookMap.put("recipient", this.getRecipient());
+        bookMap.put("requestedBook", this.getRequestedBook());
+        bookMap.put("requester", this.getRequester());
+        bookMap.put("status", this.getStatus());
         bookMap.put("thumbnail", this.getThumbnail());
         bookMap.put("title", this.getTitle());
-        bookMap.put("author", this.getRecipient());
-        bookMap.put("isbn", this.getRequester());
-        bookMap.put("description", this.getRequestedBook());
-        bookMap.put("type", this.getStatus());
+        bookMap.put("type", this.getType());
+
 
         return bookMap;
     }

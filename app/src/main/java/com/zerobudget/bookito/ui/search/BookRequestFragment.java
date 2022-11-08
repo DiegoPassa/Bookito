@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRequestBookBinding;
@@ -39,14 +40,15 @@ public class BookRequestFragment extends Fragment {
         View root = binding.getRoot();
 
         Bundle args = getArguments();
+        assert args != null;
         String str = args.getString("USR_BK");
-        usrBookSelected= Utils.getGsonParser().fromJson(str, SearchResultsModel.class);
+        usrBookSelected = Utils.getGsonParser().fromJson(str, SearchResultsModel.class);
 
         binding.bookTitle.setText(usrBookSelected.getBook().getTitle());
         binding.bookAuthor.setText(usrBookSelected.getBook().getAuthor());
         binding.bookDescription.setText(usrBookSelected.getBook().getDescription());
         binding.bookDescription.setMovementMethod(new ScrollingMovementMethod());
-        String owner = usrBookSelected.getUser().getFirst_name()+" "+usrBookSelected.getUser().getLast_name();
+        String owner = usrBookSelected.getUser().getFirst_name() + " " + usrBookSelected.getUser().getLast_name();
         binding.bookOwner.setText(owner);
         binding.bookType.setText(usrBookSelected.getBook().getType());
         Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);
@@ -86,18 +88,43 @@ public class BookRequestFragment extends Fragment {
             rm.setRequester("AZLYEN9WqTOVXiglkPJT");
             rm.setRecipient("lcEOKGRTqiyx6UgExmgD");
 
-            //TODO: controllare che non venga richiesto due volte lo stesso libro
-            db.collection("requests").add(rm).addOnSuccessListener(documentReference -> {
-                Log.d("OKK", documentReference.getId());
-            }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
+            db.collection("requests").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    boolean err = false;
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-            builder.setTitle("Richiesta effettuata");
-            builder.setMessage("La richiesta è andata a buon fine");
-            builder.setPositiveButton("OK", (dialogInterface, i) -> {
-                dialogInterface.dismiss();
-                Navigation.findNavController(view).navigate(R.id.navigation_search);
-            }).show();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        //TODO: aggiungere un flag nel libro per impedire la visualizzazione nelle ricerche se esiste già una richiesta
+                        //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
+                        if(checkRequests(doc, rm))
+                            err = true;
+                    }
+                    //se esiste già una richiesta da errore
+                    if (err) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                        builder.setTitle("Richiesta Rifiutata");
+                        builder.setMessage("La richiesta esiste già!");
+                        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                            dialogInterface.dismiss();
+                        }).show();
+                    } else {
+                        db.collection("requests").add(rm).addOnSuccessListener(documentReference -> {
+                            Log.d("OKK", documentReference.getId());
+                        }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                        builder.setTitle("Richiesta effettuata");
+                        builder.setMessage("La richiesta è andata a buon fine");
+                        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                            dialogInterface.dismiss();
+                        }).show();
+                    }
+
+                    Navigation.findNavController(view).navigate(R.id.navigation_search);
+                } else {
+                    Log.d("ERR", "Error getting documents: ", task.getException());
+                }
+            });
+
 
             //}
         });
@@ -105,5 +132,19 @@ public class BookRequestFragment extends Fragment {
         //}
 
         return root;
+    }
+
+    private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
+        boolean err = false;
+
+        if (doc.get("recipient").equals(rm.getRecipient())
+                && doc.get("requestedBook").equals(rm.getRequestedBook())
+                && doc.get("requester").equals(rm.getRequester())
+                && doc.get("thumbnail").equals(rm.getThumbnail())
+                && doc.get("title").equals(rm.getTitle())
+                && doc.get("type").equals(rm.getType()))
+            err = true;
+
+        return err;
     }
 }
