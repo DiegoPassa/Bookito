@@ -14,10 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRequestBookBinding;
+import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
 
 public class BookRequestFragment extends Fragment {
@@ -69,14 +71,35 @@ public class BookRequestFragment extends Fragment {
         }
 
         binding.btnRequest.setOnClickListener(view -> {
-            //TODO: implementare le query di richiesta
-            /*AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+
+            //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato, cambiare anche id nei set sotto
+            //if (currentUser != null) {
+            //   String id = currentUser.getUid();
+
+            RequestModel rm = new RequestModel();
+            rm.setRequestedBook(usrBookSelected.getBook().getIsbn());
+            rm.setTitle(usrBookSelected.getBook().getTitle());
+            rm.setThumbnail(usrBookSelected.getBook().getThumbnail());
+            rm.setStatus("undefined");
+            rm.setType(usrBookSelected.getBook().getType());
+            rm.setRequester("AZLYEN9WqTOVXiglkPJT");
+            rm.setRecipient("lcEOKGRTqiyx6UgExmgD");
+
+            //TODO: controllare che non venga richiesto due volte lo stesso libro
+            db.collection("requests").add(rm).addOnSuccessListener(documentReference -> {
+                Log.d("OKK", documentReference.getId());
+            }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
             builder.setTitle("Richiesta effettuata");
             builder.setMessage("La richiesta è andata a buon fine");
             builder.setPositiveButton("OK", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
-                Navigation.findNavController(view).navigate(R.id.to_navigation_library);
-            }).show();*/
+                Navigation.findNavController(view).navigate(R.id.navigation_search);
+            }).show();
+
+            //}
         });
 
         //}

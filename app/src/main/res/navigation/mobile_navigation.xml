@@ -93,6 +93,9 @@
         <action
             android:id="@+id/action_bookRequestFragment_to_navigation_search"
             app:destination="@id/navigation_search" />
+        <action
+            android:id="@+id/action_bookRequestFragment_to_navigation_requests"
+            app:destination="@id/navigation_requests" />
     </fragment>
 
 

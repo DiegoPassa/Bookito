@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.Requests;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestModel {
     private String requestedBook; //isbn libro richiesto
@@ -8,17 +9,32 @@ public class RequestModel {
     private String recipient; //id utente che RICEVE la richiesta (id utente attuale basically)
     private String status; //stato della richiesta, può assumere 3 valori: undefined, refused and accepted
     private String thumbnail;
+    private String type; //Scambio, Prestito o Regalo
     private String title;
 
     public RequestModel() {}
 
-    public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String title) {
+    public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title) {
         this.requestedBook = requestedBook;
         this.requester = requester;
         this.recipient = recipient;
         this.status = status;
         this.thumbnail = thumbnail;
+        this.type = type;
         this.title = title;
+    }
+
+    public Map<String, String> serialize() {
+
+        Map<String, String> bookMap = new HashMap<>();
+        bookMap.put("thumbnail", this.getThumbnail());
+        bookMap.put("title", this.getTitle());
+        bookMap.put("author", this.getRecipient());
+        bookMap.put("isbn", this.getRequester());
+        bookMap.put("description", this.getRequestedBook());
+        bookMap.put("type", this.getStatus());
+
+        return bookMap;
     }
 
     public String getThumbnail() {
@@ -67,6 +83,14 @@ public class RequestModel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
 
