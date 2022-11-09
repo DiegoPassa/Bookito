@@ -23,6 +23,9 @@ import com.zerobudget.bookito.databinding.FragmentRequestBookBinding;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BookRequestFragment extends Fragment {
 
     private FragmentRequestBookBinding binding;
@@ -79,22 +82,23 @@ public class BookRequestFragment extends Fragment {
             //if (currentUser != null) {
             //   String id = currentUser.getUid();
 
-            RequestModel rm = new RequestModel();
-            rm.setRequestedBook(usrBookSelected.getBook().getIsbn());
-            rm.setTitle(usrBookSelected.getBook().getTitle());
-            rm.setThumbnail(usrBookSelected.getBook().getThumbnail());
-            rm.setStatus("undefined");
-            rm.setType(usrBookSelected.getBook().getType());
-            rm.setRequester("AZLYEN9WqTOVXiglkPJT");
-
-
             //preleva l'id dell'utente dal database
             db.collection("users").get().addOnCompleteListener(task -> {
+                RequestModel rm = new RequestModel();
+                rm.setRequestedBook(usrBookSelected.getBook().getIsbn());
+                rm.setTitle(usrBookSelected.getBook().getTitle());
+                rm.setThumbnail(usrBookSelected.getBook().getThumbnail());
+                rm.setStatus("undefined");
+                rm.setType(usrBookSelected.getBook().getType());
+                rm.setRequester("AZLYEN9WqTOVXiglkPJT");
+
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         if (doc.get("telephone").equals(usrBookSelected.getUser().getTelephone())) {
+                            rm.setRecipient(doc.getId());
                             Log.d("REC", rm.getRecipient());
                             requestBook(rm, view); //prova a inserire la richiesta del libro
+
                         }
                     }
                 }
