@@ -22,6 +22,7 @@ import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserLibrary;
 import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.utils.Utils;
 
 import org.w3c.dom.Document;
 
@@ -61,9 +62,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //TODO aspettiamo la registrazione ed il login
         //String id = currentUser.getUid();
-        String id = "AZLYEN9WqTOVXiglkPJT";
 
-        db.collection("users").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.getResult() != null) {

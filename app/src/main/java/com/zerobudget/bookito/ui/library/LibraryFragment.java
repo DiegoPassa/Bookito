@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentLibraryBinding;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class LibraryFragment extends Fragment {
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
         binding.progressBar.setVisibility(View.VISIBLE);
-        db.collection("users").document("AZLYEN9WqTOVXiglkPJT").get()
+        db.collection("users").document(Utils.USER_ID).get()
                 .addOnCompleteListener(task -> {
                     Log.d("QUERY", "queryyy");
                     if (task.isSuccessful()) {

@@ -29,6 +29,7 @@ import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.ui.Requests.RequestShareModel;
 import com.zerobudget.bookito.ui.Requests.RequestTradeModel;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,7 +85,7 @@ public class InboxFragment extends Fragment {
         FirebaseUser currentUs = mAuth.getCurrentUser();
         //            String id = currentUs.getUid();
         //TODO: cambiare id quando abbiamo un current user
-        db.collection("requests").whereEqualTo("sender", "AZLYEN9WqTOVXiglkPJT")
+        db.collection("requests").whereEqualTo("sender", Utils.USER_ID)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
