@@ -79,58 +79,29 @@ public class BookRequestFragment extends Fragment {
             //if (currentUser != null) {
             //   String id = currentUser.getUid();
 
-            RequestModel rm = new RequestModel();
-            rm.setRequestedBook(usrBookSelected.getBook().getIsbn());
-            rm.setTitle(usrBookSelected.getBook().getTitle());
-            rm.setThumbnail(usrBookSelected.getBook().getThumbnail());
-            rm.setStatus("undefined");
-            rm.setType(usrBookSelected.getBook().getType());
-            rm.setRequester("AZLYEN9WqTOVXiglkPJT");
-            rm.setRecipient("lcEOKGRTqiyx6UgExmgD");
+            //preleva l'id dell'utente dal database
+            db.collection("users").get().addOnCompleteListener(task -> {
+                RequestModel rm = new RequestModel();
+                rm.setRequestedBook(usrBookSelected.getBook().getIsbn());
+                rm.setTitle(usrBookSelected.getBook().getTitle());
+                rm.setThumbnail(usrBookSelected.getBook().getThumbnail());
+                rm.setStatus("undefined");
+                rm.setType(usrBookSelected.getBook().getType());
+                rm.setRequester("AZLYEN9WqTOVXiglkPJT");
 
-            db.collection("requests").get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    boolean err = false;
-
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        //TODO: aggiungere un flag nel libro per impedire la visualizzazione nelle ricerche se esiste già una richiesta
-                        //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
-                        if(checkRequests(doc, rm))
-                            err = true;
-                    }
-                    //se esiste già una richiesta da errore
-                    if (err) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                        builder.setTitle("Richiesta Rifiutata");
-                        builder.setMessage("La richiesta esiste già!");
-                        builder.setPositiveButton("OK", (dialogInterface, i) -> {
-                            dialogInterface.dismiss();
-                        }).show();
-                    } else {
-                        db.collection("requests").add(rm).addOnSuccessListener(documentReference -> {
-                            Log.d("OKK", documentReference.getId());
-                        }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
+                        if (doc.get("telephone").equals(usrBookSelected.getUser().getTelephone())) {
+                            rm.setRecipient(doc.getId());
+                            Log.d("REC", rm.getRecipient());
+                            requestBook(rm, view); //prova a inserire la richiesta del libro
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                        builder.setTitle("Richiesta effettuata");
-                        builder.setMessage("La richiesta è andata a buon fine");
-                        builder.setPositiveButton("OK", (dialogInterface, i) -> {
-                            dialogInterface.dismiss();
-                        }).show();
+                        }
                     }
-
-                    Navigation.findNavController(view).navigate(R.id.navigation_search);
-                } else {
-                    Log.d("ERR", "Error getting documents: ", task.getException());
                 }
             });
-
-
-            //}
         });
-
         //}
-
         return root;
     }
 
@@ -146,5 +117,47 @@ public class BookRequestFragment extends Fragment {
             err = true;
 
         return err;
+    }
+
+    private void requestBook(RequestModel rm, View view) {
+
+        db.collection("requests").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                boolean err = false;
+
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    //TODO: aggiungere un flag nel libro per impedire la visualizzazione nelle ricerche se esiste già una richiesta
+                    //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
+                    if (checkRequests(doc, rm))
+                        err = true;
+                }
+                //se esiste già una richiesta da errore
+                if (err) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    builder.setTitle("Richiesta Rifiutata");
+                    builder.setMessage("La richiesta esiste già!");
+                    builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    }).show();
+                } else {
+                    db.collection("requests").add(rm).addOnSuccessListener(documentReference -> {
+                        Log.d("OKK", documentReference.getId());
+                    }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    builder.setTitle("Richiesta effettuata");
+                    builder.setMessage("La richiesta è andata a buon fine");
+                    builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    }).show();
+                }
+
+                Navigation.findNavController(view).navigate(R.id.navigation_search);
+            } else {
+                Log.d("ERR", "Error getting documents: ", task.getException());
+            }
+        });
+        //}
+
     }
 }

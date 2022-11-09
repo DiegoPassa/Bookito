@@ -61,17 +61,20 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //TODO aspettiamo la registrazione ed il login
         //String id = currentUser.getUid();
-        String id = "lcEOKGRTqiyx6UgExmgD";
+        String id = "AZLYEN9WqTOVXiglkPJT";
 
         db.collection("users").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                UserModel u = UserModel.getUserFromDocument(task.getResult());
-                UserLibrary nowUser = new UserLibrary(u);
-                nowUser.setLibrary(UserLibrary.loadLibrary(task.getResult()));
-                UserModel.loadUser(nowUser);
+                if(task.getResult() != null) {
+                    UserModel u = UserModel.getUserFromDocument(task.getResult());
+                    UserLibrary nowUser = new UserLibrary(u);
 
-                Log.d("USER ORA AHAH", ""+UserModel.getUserFromDocument(task.getResult()).serialize());
+                    nowUser.setLibrary(UserLibrary.loadLibrary(task.getResult()));
+                    UserModel.loadUser(nowUser);
+
+                    Log.d("USER ORA AHAH", "" + UserModel.getUserFromDocument(task.getResult()).serialize());
+                }
             }
         });
     }

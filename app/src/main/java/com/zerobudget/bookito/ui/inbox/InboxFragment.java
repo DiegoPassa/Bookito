@@ -76,26 +76,25 @@ public class InboxFragment extends Fragment {
 
     protected ArrayList<Object> getRequests() {
         FirebaseUser currentUs = mAuth.getCurrentUser();
-        if (true) {
-//            String id = currentUs.getUid();
-            db.collection("requests").whereEqualTo("recipient", "lcEOKGRTqiyx6UgExmgD")
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            ArrayList<RequestModel> req = new ArrayList<>();
+        //            String id = currentUs.getUid();
+        //TODO: cambiare id quando abbiamo un current user
+        db.collection("requests").whereNotEqualTo("recipient", "AZLYEN9WqTOVXiglkPJT")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<RequestModel> req = new ArrayList<>();
 
-                            QuerySnapshot result = task.getResult();
+                        QuerySnapshot result = task.getResult();
 
-                            for (DocumentSnapshot o : result) {
-                                String type = (String) o.get("type");
-                                RequestModel r = getRequestModel(type, o);
-                                if (r != null) req.add(r);
-                            }
-                           // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
-                            addRequestsOnPage(req);
+                        for (DocumentSnapshot o : result) {
+                            String type = (String) o.get("type");
+                            RequestModel r = getRequestModel(type, o);
+                            if (r != null) req.add(r);
                         }
-                    });
-        }
+                       // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
+                        addRequestsOnPage(req);
+                    }
+                });
         return null;
     }
 
