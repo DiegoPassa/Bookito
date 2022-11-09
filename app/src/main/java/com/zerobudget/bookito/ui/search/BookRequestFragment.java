@@ -23,9 +23,6 @@ import com.zerobudget.bookito.databinding.FragmentRequestBookBinding;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class BookRequestFragment extends Fragment {
 
     private FragmentRequestBookBinding binding;
@@ -160,11 +157,7 @@ public class BookRequestFragment extends Fragment {
                 Log.d("ERR", "Error getting documents: ", task.getException());
             }
         });
-
-
         //}
 
     }
 }
-
-
