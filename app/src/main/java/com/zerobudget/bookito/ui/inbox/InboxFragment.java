@@ -54,6 +54,12 @@ public class InboxFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
+        //permette di ricaricare la pagina con lo swipe verso il basso
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.swipeRefreshLayout.setRefreshing(false);
+            getRequests();
+        });
+
 //        RecyclerView recyclerView = binding.recycleViewInbox;
 //        ArrayList<RequestModel> a = new ArrayList<RequestModel>();
 //        a.add(new RequestModel());

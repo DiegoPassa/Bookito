@@ -13,10 +13,16 @@
         android:layout_height="wrap_content"
         android:text="Zona richieste"
         android:textSize="50sp"
-        app:layout_constraintBottom_toTopOf="@+id/recycleView_Inbox"
+        app:layout_constraintBottom_toTopOf="@+id/swipeRefreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textView">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView_Inbox"
@@ -27,5 +33,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
