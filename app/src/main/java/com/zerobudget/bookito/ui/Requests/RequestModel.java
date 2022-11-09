@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class RequestModel {
     private String requestedBook; //isbn libro richiesto
-    private String requester; //id utente che fa la richiesta
-    private String recipient; //id utente che RICEVE la richiesta (id utente attuale basically)
+    private String sender; //id utente che fa la richiesta
+    private String receiver; //id utente che RICEVE la richiesta (id utente attuale basically)
     private String status; //stato della richiesta, può assumere 3 valori: undefined, refused and accepted
     private String thumbnail;
     private String type; //Scambio, Prestito o Regalo
@@ -16,8 +16,8 @@ public class RequestModel {
 
     public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title) {
         this.requestedBook = requestedBook;
-        this.requester = requester;
-        this.recipient = recipient;
+        this.sender = requester;
+        this.receiver = recipient;
         this.status = status;
         this.thumbnail = thumbnail;
         this.type = type;
@@ -27,9 +27,9 @@ public class RequestModel {
     public Map<String, String> serialize() {
 
         Map<String, String> bookMap = new HashMap<>();
-        bookMap.put("recipient", this.getRecipient());
+        bookMap.put("receiver", this.getReceiver());
         bookMap.put("requestedBook", this.getRequestedBook());
-        bookMap.put("requester", this.getRequester());
+        bookMap.put("sender", this.getSender());
         bookMap.put("status", this.getStatus());
         bookMap.put("thumbnail", this.getThumbnail());
         bookMap.put("title", this.getTitle());
@@ -59,12 +59,8 @@ public class RequestModel {
         return requestedBook;
     }
 
-    public String getRequester() {
-        return requester;
-    }
-
-    public String getRecipient() {
-        return recipient;
+    public String getSender() {
+        return sender;
     }
 
     public String getStatus() {
@@ -75,12 +71,8 @@ public class RequestModel {
         this.requestedBook = requestedBook;
     }
 
-    public void setRequester(String requester) {
-        this.requester = requester;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public void setStatus(String status) {
@@ -93,6 +85,14 @@ public class RequestModel {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }
 

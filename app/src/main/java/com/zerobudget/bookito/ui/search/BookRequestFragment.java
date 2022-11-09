@@ -87,13 +87,13 @@ public class BookRequestFragment extends Fragment {
                 rm.setThumbnail(usrBookSelected.getBook().getThumbnail());
                 rm.setStatus("undefined");
                 rm.setType(usrBookSelected.getBook().getType());
-                rm.setRequester("AZLYEN9WqTOVXiglkPJT");
+                rm.setSender("AZLYEN9WqTOVXiglkPJT");
 
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         if (doc.get("telephone").equals(usrBookSelected.getUser().getTelephone())) {
-                            rm.setRecipient(doc.getId());
-                            Log.d("REC", rm.getRecipient());
+                            rm.setReceiver(doc.getId());
+                            Log.d("REC", rm.getReceiver());
                             requestBook(rm, view); //prova a inserire la richiesta del libro
 
                         }
@@ -108,9 +108,9 @@ public class BookRequestFragment extends Fragment {
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
         boolean err = false;
 
-        if (doc.get("recipient").equals(rm.getRecipient())
+        if (doc.get("receiver").equals(rm.getReceiver())
                 && doc.get("requestedBook").equals(rm.getRequestedBook())
-                && doc.get("requester").equals(rm.getRequester())
+                && doc.get("sender").equals(rm.getSender())
                 && doc.get("thumbnail").equals(rm.getThumbnail())
                 && doc.get("title").equals(rm.getTitle())
                 && doc.get("type").equals(rm.getType()))

@@ -45,7 +45,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
-        holder.user_name.setText(requests.get(position).getRecipient());
+        holder.user_name.setText(requests.get(position).getReceiver());
         Picasso.get().load(requests.get(position).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(position).getTitle());
 
