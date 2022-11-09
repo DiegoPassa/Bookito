@@ -56,7 +56,7 @@ public class BookDeleteFragment extends Fragment {
 
         binding.btnDelete.setOnClickListener(view -> {
             //rimuove il libro selezionato
-            db.collection("users").document("AZLYEN9WqTOVXiglkPJT").update("books", FieldValue.arrayRemove(bookSelected));
+            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookSelected));
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
             builder.setTitle("Eliminazione");
             builder.setMessage("Il libro "+bookSelected.getTitle()+" è stato eliminato correttamente");

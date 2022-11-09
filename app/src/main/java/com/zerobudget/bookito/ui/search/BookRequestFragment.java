@@ -87,7 +87,7 @@ public class BookRequestFragment extends Fragment {
                 rm.setThumbnail(usrBookSelected.getBook().getThumbnail());
                 rm.setStatus("undefined");
                 rm.setType(usrBookSelected.getBook().getType());
-                rm.setSender("AZLYEN9WqTOVXiglkPJT");
+                rm.setSender(Utils.USER_ID);
 
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {

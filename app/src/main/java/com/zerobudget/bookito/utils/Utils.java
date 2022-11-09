@@ -7,6 +7,8 @@ public class Utils {
     //contiene metodi statici per funzionalità
     private static Gson gson;
 
+    public static String USER_ID = "AZLYEN9WqTOVXiglkPJT";
+
     //serve a creare una stringa json da un oggetto e viceversa
     public static Gson getGsonParser() {
         if(null == gson) {
