@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,6 +30,7 @@ import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.ui.Requests.RequestShareModel;
 import com.zerobudget.bookito.ui.Requests.RequestTradeModel;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
+import com.zerobudget.bookito.ui.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -61,14 +63,7 @@ public class InboxFragment extends Fragment {
             getRequests();
         });
 
-//        RecyclerView recyclerView = binding.recycleViewInbox;
-//        ArrayList<RequestModel> a = new ArrayList<RequestModel>();
-//        a.add(new RequestModel());
-//        a.add(new RequestModel());
-//        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), a);
-//
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
         getRequests();
 
 
@@ -98,11 +93,30 @@ public class InboxFragment extends Fragment {
                             RequestModel r = getRequestModel(type, o);
                             if (r != null) req.add(r);
                         }
-                       // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
-                        addRequestsOnPage(req);
+                        // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
+                        getUserByRequest(req);
                     }
                 });
         return null;
+    }
+
+    protected void getUserByRequest(ArrayList<RequestModel> arr) {
+        ArrayList<Task<DocumentSnapshot>> t = new ArrayList<>();
+        int index = 0;
+        for (RequestModel r : arr) {
+            t.add(db.collection("users").document(r.getSender())
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            UserModel u = UserModel.getUserFromDocument(task.getResult());
+                            r.setSenderModel(u);
+                        }
+                    }));
+        }
+
+        Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
+            addRequestsOnPage(arr);
+        });
     }
 
     //TODO
