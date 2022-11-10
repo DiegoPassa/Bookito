@@ -52,7 +52,7 @@ public class AddConfirmFragment extends Fragment {
 
         Bundle args = getArguments();
         String str = args.getString("BK");
-        newBook= Utils.getGsonParser().fromJson(str, BookModel.class);
+        newBook = Utils.getGsonParser().fromJson(str, BookModel.class);
 
         binding.bookTitle.setText(newBook.getTitle());
         binding.bookAuthor.setText(newBook.getAuthor());
@@ -64,19 +64,18 @@ public class AddConfirmFragment extends Fragment {
 
 
         binding.btnConfirm.setOnClickListener(view -> {
-
             String action = binding.autoCompleteTextView.getText().toString();
+
             if (!action.equals("Regalo") && !action.equals("Scambio") && !action.equals("Prestito")) {
                 binding.InputText.setError("Devi selezionare un'azione!");
                 binding.InputText.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
-            }
-            else{
+            } else {
                 newBook.setType(action);
-                addBook();
+                addBook();//inserimento libro nel database
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle("Conferma");
-                builder.setMessage("Libro "+newBook.getTitle()+" è stato inserito correttamente");
+                builder.setMessage("Libro " + newBook.getTitle() + " è stato inserito correttamente");
                 builder.setPositiveButton("OK", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
@@ -88,7 +87,7 @@ public class AddConfirmFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
             builder.setTitle("Attenzione");
             builder.setMessage("Inserimento annullato");
-            builder.setPositiveButton("OK",  (dialogInterface, i) -> {
+            builder.setPositiveButton("OK", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
                 Navigation.findNavController(view).navigate(R.id.to_navigation_library);
             }).show();
@@ -98,7 +97,10 @@ public class AddConfirmFragment extends Fragment {
     }
 
 
-    protected void addBook() {
+    /**
+     * inserisce il nuovo libro nel database, nel documento dell'utente corrente
+     */
+    private void addBook() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -106,7 +108,6 @@ public class AddConfirmFragment extends Fragment {
         //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
-
         db.collection("users").document(Utils.USER_ID)
                 .update("books", FieldValue.arrayUnion(newBook.serialize())).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

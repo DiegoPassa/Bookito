@@ -5,14 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,7 +20,6 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class LibraryFragment extends Fragment {
 
@@ -32,6 +29,8 @@ public class LibraryFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
+    /**
+     * preleva i libri dell'utente corrente dal database*/
     public void setUpBookModel(){
         bookModels = new ArrayList<>();
         //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
@@ -57,12 +56,14 @@ public class LibraryFragment extends Fragment {
                         }
 
                     }else{
-                        Log.d("err", "error");
+                        Log.d("ERR", "error");
                     }
                 });
         //}
     }
 
+    /**
+     * visualizza i libri dell'utente corrente nella libreria virtuale*/
      protected void addBooksOnLibrary(ArrayList<BookModel> arr){
         RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
@@ -71,6 +72,7 @@ public class LibraryFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
      }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,7 +83,6 @@ public class LibraryFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
 
         setUpBookModel();
         //visulizzazione spostata in addBookOnLibrary()
