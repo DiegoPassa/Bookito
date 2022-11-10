@@ -10,6 +10,10 @@
     <string name="informazioni_libro">Informazioni libro</string>
     <string name="elimina">Elimina</string>
     <string name="titolo_del_libro">Titolo del libro ...</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="vedi_profilo">Vedi profilo</string>
+    <string name="disconnetti">Disconnetti</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="azioni_libro">
         <item>Regalo</item>

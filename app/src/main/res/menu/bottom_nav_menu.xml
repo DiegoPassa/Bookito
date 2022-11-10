@@ -3,7 +3,6 @@
 
     <item
         android:id="@+id/navigation_requests"
-        android:state_pressed="true"
         android:icon="@drawable/ic_baseline_move_to_inbox_24"
         android:title="@string/title_inbox"/>
 
