@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentSearchBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class SearchFragment extends Fragment {
 
                     for (DocumentSnapshot document : task.getResult()) {
                         //TODO: sostituire l'id con l'id del current user
-                        if (!document.getId().equals("AZLYEN9WqTOVXiglkPJT")) { //deve cercare i libri degli altri utenti
+                        if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                             Object arr = document.get("books"); //array dei books
                             if (arr != null) { //si assicura di cercare solo se esiste quache libro
 

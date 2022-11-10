@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,7 +29,7 @@ import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.ui.Requests.RequestShareModel;
 import com.zerobudget.bookito.ui.Requests.RequestTradeModel;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +55,20 @@ public class InboxFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
+        //permette di ricaricare la pagina con lo swipe verso il basso
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.swipeRefreshLayout.setRefreshing(false);
+            getRequests();
+        });
+
+//        RecyclerView recyclerView = binding.recycleViewInbox;
+//        ArrayList<RequestModel> a = new ArrayList<RequestModel>();
+//        a.add(new RequestModel());
+//        a.add(new RequestModel());
+//        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), a);
+//
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         getRequests();
 
 
@@ -72,7 +85,7 @@ public class InboxFragment extends Fragment {
         FirebaseUser currentUs = mAuth.getCurrentUser();
         //            String id = currentUs.getUid();
         //TODO: cambiare id quando abbiamo un current user
-        db.collection("requests").whereEqualTo("sender", "AZLYEN9WqTOVXiglkPJT")
+        db.collection("requests").whereEqualTo("sender", Utils.USER_ID)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -86,29 +99,10 @@ public class InboxFragment extends Fragment {
                             if (r != null) req.add(r);
                         }
                        // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
-                        getUserByRequest(req);
+                        addRequestsOnPage(req);
                     }
                 });
         return null;
-    }
-
-    protected void getUserByRequest(ArrayList<RequestModel> arr) {
-        ArrayList<Task<DocumentSnapshot>> t = new ArrayList<>();
-        int index = 0;
-        for (RequestModel r : arr) {
-            t.add(db.collection("users").document(r.getSender())
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            UserModel u = UserModel.getUserFromDocument(task.getResult());
-                            r.setSenderModel(u);
-                        }
-                    }));
-        }
-
-        Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
-            addRequestsOnPage(arr);
-        });
     }
 
     //TODO

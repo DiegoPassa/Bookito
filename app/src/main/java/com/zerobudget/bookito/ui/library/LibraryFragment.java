@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentLibraryBinding;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +38,7 @@ public class LibraryFragment extends Fragment {
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
         binding.progressBar.setVisibility(View.VISIBLE);
-        db.collection("users").document("AZLYEN9WqTOVXiglkPJT").get()
+        db.collection("users").document(Utils.USER_ID).get()
                 .addOnCompleteListener(task -> {
                     Log.d("QUERY", "queryyy");
                     if (task.isSuccessful()) {
@@ -86,7 +88,11 @@ public class LibraryFragment extends Fragment {
 
         binding.floatingActionButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
 
-
+        //permette di ricaricare la pagina con lo swipe verso il basso
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.swipeRefreshLayout.setRefreshing(false);
+            setUpBookModel();
+        });
 
         return root;
     }

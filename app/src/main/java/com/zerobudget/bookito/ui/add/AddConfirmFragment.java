@@ -107,7 +107,7 @@ public class AddConfirmFragment extends Fragment {
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
 
-        db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
+        db.collection("users").document(Utils.USER_ID)
                 .update("books", FieldValue.arrayUnion(newBook.serialize())).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (UserModel.getCurrentUser() != null)
