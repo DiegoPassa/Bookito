@@ -116,7 +116,6 @@ public class InboxFragment extends Fragment {
 
         Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
             spinner.setVisibility(View.GONE);
-
             addRequestsOnPage(arr);
         });
     }

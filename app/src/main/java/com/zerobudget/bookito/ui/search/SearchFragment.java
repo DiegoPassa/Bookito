@@ -87,6 +87,7 @@ public class SearchFragment extends Fragment {
             binding.swipeRefreshLayout.setRefreshing(false);
 /*            binding.search.setQuery("", false); //clear the text
             binding.search.setIconified(true); //rimette la search view ad icona*/
+            binding.bookTextfield.setText("");
             viewBooks(new ArrayList<>()); //svuota la recycle view
         });
 
