@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
+import com.zerobudget.bookito.ui.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -45,9 +46,16 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
-        holder.user_name.setText(requests.get(position).getReceiver());
+        UserModel senderModel = requests.get(position).getSenderModel();
+        if (senderModel != null)
+            holder.user_name.setText(requests.get(position).getSenderModel().getFirst_name());
+        else holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(position).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(position).getTitle());
+
+        holder.request_selected.setOnClickListener(view -> {
+
+        });
 
     }
 
