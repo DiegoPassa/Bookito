@@ -2,12 +2,12 @@ package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -44,6 +44,7 @@ public class SearchFragment extends Fragment {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        viewBooks(new ArrayList<>());
         // final TextView textView = binding.textHome;
         // homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -72,9 +73,17 @@ public class SearchFragment extends Fragment {
 
             }
 
+            /* TODO: Se si cancella velocemente c'è un delay tra il thread di ricerca e la chiama della ricerca succesiva,
+             *       questo porta a visualizzare dei risultati anche se l'input è vuoto (credo)
+             */
             @Override
             public void afterTextChanged(Editable editable) {
-                searchBookByTitle(editable.toString());
+                //controlla che la text field non sia vuota
+                if (!TextUtils.isEmpty(binding.bookTextfield.getText().toString().trim()))
+                    searchBookByTitle(editable.toString());
+                else {
+                    viewBooks(new ArrayList<>());
+                }
             }
         });
 
@@ -83,6 +92,7 @@ public class SearchFragment extends Fragment {
             binding.swipeRefreshLayout.setRefreshing(false);
 /*            binding.search.setQuery("", false); //clear the text
             binding.search.setIconified(true); //rimette la search view ad icona*/
+            binding.bookTextfield.setText("");
             viewBooks(new ArrayList<>()); //svuota la recycle view
         });
 
@@ -130,12 +140,14 @@ public class SearchFragment extends Fragment {
     }
 
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
-        RecyclerView recyclerView = binding.recycleViewSearch;
+        if(getView() != null) { //evita il crash dell'applicazione
+            RecyclerView recyclerView = binding.recycleViewSearch;
 
-        Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
+            Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        }
     }
 }
 

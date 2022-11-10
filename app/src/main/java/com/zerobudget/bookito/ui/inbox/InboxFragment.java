@@ -124,14 +124,12 @@ public class InboxFragment extends Fragment {
     }
 
     protected void addRequestsOnPage(ArrayList<RequestModel> requests) {
-        if (getView() != null) {
-            RecyclerView recyclerView = binding.recycleViewInbox;
+        RecyclerView recyclerView = binding.recycleViewInbox;
 
-            Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests);
+        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests);
 
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        }
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
     protected RequestModel getRequestModel(String type, DocumentSnapshot o) {

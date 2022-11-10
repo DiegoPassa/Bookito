@@ -2,8 +2,6 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +13,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
-import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 import com.zerobudget.bookito.ui.users.UserModel;
-import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
