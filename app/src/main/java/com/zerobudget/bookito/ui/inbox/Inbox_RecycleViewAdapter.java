@@ -3,6 +3,7 @@ package com.zerobudget.bookito.ui.inbox;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
@@ -22,6 +24,7 @@ import com.zerobudget.bookito.ui.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder>{
 
@@ -54,9 +57,27 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         holder.title.setText(requests.get(position).getTitle());
 
         holder.request_selected.setOnClickListener(view -> {
+            if (senderModel != null) {
+                HashMap<String, Object> karma = senderModel.getKarma(); //HashMap<String, Long>
+                Long points = (Long) karma.get("points");
+                Long feedback_numbers = (Long) karma.get("feedbacks");
+                Flag flag = getFlagFromUser(points, feedback_numbers);
 
+                switch (flag) {
+                    case GREEN_FLAG: Log.d("AAAAA", "GREEEN FLAG"); break;
+                    case RED_FLAG: Log.d("AAAAAA", "RED_FLAG"); break;
+                    case NORMAL_FLAG: Log.d("AAAAAA", "FLAG NORMALE"); break;
+                    default: Log.d("UNDEFINED", "aaaaa");
+                }
+
+            }
         });
 
+    }
+
+    private Flag getFlagFromUser(Long points, Long feedbacks) {
+        //FATTA ENUM PER INDICARE I VARI TIPI DI FLAG
+        return Flag.RED_FLAG;
     }
 
     @Override
