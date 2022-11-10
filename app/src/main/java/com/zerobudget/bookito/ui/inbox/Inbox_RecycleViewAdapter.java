@@ -76,8 +76,25 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     private Flag getFlagFromUser(Long points, Long feedbacks) {
-        //FATTA ENUM PER INDICARE I VARI TIPI DI FLAG
-        return Flag.RED_FLAG;
+        /*
+        TODO fare in modo che se un utente ha tanti punti e pochi feedbak, o viceversa
+        allora ritorna una NORMAL FLAG
+
+        TODO se un utente ha tanti feedback e pochi punti allora ritorna una RED FLAG
+
+        TODO se un utente ha tanti feedback e tanti punti allora è una GREEN FLAG
+         */
+        Long total_points = points*feedbacks;
+        //per ora facciamo che "tanti feedback" equivalgono a 8
+        if (feedbacks >= 8) {
+            //facciamo che pochi punti sono meno di 20
+            if (total_points <= 20) {
+                return Flag.RED_FLAG;
+            }
+            return Flag.GREEN_FLAG;
+        }
+        return Flag.NORMAL_FLAG;
+
     }
 
     @Override
