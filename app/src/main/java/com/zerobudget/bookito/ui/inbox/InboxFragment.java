@@ -81,7 +81,8 @@ public class InboxFragment extends Fragment {
         FirebaseUser currentUs = mAuth.getCurrentUser();
         //            String id = currentUs.getUid();
         //TODO: cambiare id quando abbiamo un current user
-        db.collection("requests").whereEqualTo("sender", Utils.USER_ID)
+        //VISUALIZZA RICHIESTE CHE L'UTENTE ATTUALE HA RICEVUTO
+        db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
