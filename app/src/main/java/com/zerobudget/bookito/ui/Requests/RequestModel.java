@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.ui.Requests;
 
+import com.zerobudget.bookito.ui.users.UserModel;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +13,7 @@ public class RequestModel {
     private String thumbnail;
     private String type; //Scambio, Prestito o Regalo
     private String title;
+    private UserModel senderModel;
 
     public RequestModel() {}
 
@@ -67,6 +70,8 @@ public class RequestModel {
         return status;
     }
 
+    public UserModel getSenderModel() { return this.senderModel; }
+
     public void setRequestedBook(String requestedBook) {
         this.requestedBook = requestedBook;
     }
@@ -94,6 +99,8 @@ public class RequestModel {
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
+
+    public void setSenderModel(UserModel u) { this.senderModel = u; }
 }
 
 
