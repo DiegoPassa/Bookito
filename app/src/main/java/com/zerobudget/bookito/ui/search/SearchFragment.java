@@ -13,12 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentSearchBinding;
 import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserModel;
@@ -26,7 +23,6 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Objects;
 
 public class SearchFragment extends Fragment {
@@ -52,17 +48,24 @@ public class SearchFragment extends Fragment {
         //barra di ricerca, cerca alla pressione del tasto invio
         binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                searchBookByTitle(s);
+            public boolean onQueryTextSubmit(String searched_title) {
+                searchBookByTitle(searched_title);
                 return true;
             }
-//.
+
             @Override
-            public boolean onQueryTextChange(String s) {
+            public boolean onQueryTextChange(String searched_title) {
                 return false;
             }
         });
 
+        //ricarica la pagina con lo swipe verso il basso
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.swipeRefreshLayout.setRefreshing(false);
+            binding.search.setQuery("", false); //clear the text
+            binding.search.setIconified(true); //rimette la search view ad icona
+            viewBooks(new ArrayList<>()); //svuota la recycle view
+        });
 
         return root;
     }
@@ -75,42 +78,36 @@ public class SearchFragment extends Fragment {
 
 
     //ricerca libro per titolo
-    protected void searchBookByTitle(String t) {
-        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+    protected void searchBookByTitle(String searched_title) {
+        db.collection("users").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
-                    for (DocumentSnapshot document : task.getResult()) {
-                        //TODO: sostituire l'id con l'id del current user
-                        if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
-                            Object arr = document.get("books"); //array dei books
-                            if (arr != null) { //si assicura di cercare solo se esiste quache libro
+                for (DocumentSnapshot document : task.getResult()) {
+                    //TODO: sostituire l'id con l'id del current user
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arr = document.get("books"); //array dei books
+                        if (arr != null) { //si assicura di cercare solo se esiste quache libro
 
-                                for (Object o : (ArrayList<Object>) arr) {
-                                    HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                    if (Objects.requireNonNull(map.get("title")).toString().contains(t)) {
-                                        Log.d("Title", "" + map.get("title"));
-                                        BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
-                                        SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
-                                        arrResults.add(searchResultsModel);
-                                    }
+                            for (Object o : (ArrayList<Object>) arr) {
+                                HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                                if (Objects.requireNonNull(map.get("title")).toString().contains(searched_title)) {
+                                    Log.d("Title", "" + map.get("title"));
+                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
+                                    arrResults.add(searchResultsModel);
                                 }
                             }
                         }
                     }
-
-
-                    viewBooks(arrResults);
-                } else {
-                    Log.d("TAG", "Error getting documents: ", task.getException());
                 }
 
+                viewBooks(arrResults);
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
             }
+
         });
-
-
     }
 
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
