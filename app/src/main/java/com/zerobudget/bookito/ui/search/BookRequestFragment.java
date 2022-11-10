@@ -91,6 +91,7 @@ public class BookRequestFragment extends Fragment {
 
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
+                        if (doc.get("telephone") == null) Log.d("ERRORE", "SUPREMOOOO");
                         if (doc.get("telephone").equals(usrBookSelected.getUser().getTelephone())) {
                             rm.setReceiver(doc.getId());
                             Log.d("REC", rm.getReceiver());
@@ -140,7 +141,7 @@ public class BookRequestFragment extends Fragment {
                         dialogInterface.dismiss();
                     }).show();
                 } else {
-                    db.collection("requests").add(rm).addOnSuccessListener(documentReference -> {
+                    db.collection("requests").add(rm.serialize()).addOnSuccessListener(documentReference -> {
                         Log.d("OKK", documentReference.getId());
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
