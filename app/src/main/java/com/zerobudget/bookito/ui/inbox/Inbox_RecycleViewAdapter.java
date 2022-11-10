@@ -30,6 +30,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     private final Context context;
     ArrayList<RequestModel> requests;
+    private final Long MIN_FEEDBACKS_FLAG = 8l;
 
     public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         this.context = ctx;
@@ -85,16 +86,16 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         TODO se un utente ha tanti feedback e tanti punti allora è una GREEN FLAG
         TODO se un utente è "bilanciato" ritorna una normal flag
          */
+        if (feedbacks > MIN_FEEDBACKS_FLAG) {
+            //per ora facciamo che "tanti feedback" equivalgono a 8
+            Long total_points = points / feedbacks;
+            if (total_points >= 2.5)
+                return Flag.GREEN_FLAG;
+            else if (total_points <= 1)
+                return Flag.RED_FLAG;
 
-        //per ora facciamo che "tanti feedback" equivalgono a 8
-        Long total_points = points/feedbacks;
-        if (total_points >= 2.5)
-            return Flag.GREEN_FLAG;
-        else if (total_points <= 1)
-            return Flag.RED_FLAG;
-
+        }
         return Flag.NORMAL_FLAG;
-
 
     }
 
