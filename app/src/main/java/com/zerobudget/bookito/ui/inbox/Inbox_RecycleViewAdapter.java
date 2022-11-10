@@ -60,7 +60,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             if (senderModel != null) {
                 HashMap<String, Object> karma = senderModel.getKarma(); //HashMap<String, Long>
                 Long points = (Long) karma.get("points");
-                Long feedback_numbers = (Long) karma.get("feedbacks");
+                Long feedback_numbers = (Long) karma.get("numbers");
                 Flag flag = getFlagFromUser(points, feedback_numbers);
 
                 switch (flag) {
