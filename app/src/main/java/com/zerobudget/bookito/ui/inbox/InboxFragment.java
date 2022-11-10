@@ -82,6 +82,7 @@ public class InboxFragment extends Fragment {
         //            String id = currentUs.getUid();
         //TODO: cambiare id quando abbiamo un current user
         //VISUALIZZA RICHIESTE CHE L'UTENTE ATTUALE HA RICEVUTO
+        binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -117,6 +118,7 @@ public class InboxFragment extends Fragment {
         }
 
         Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
+            binding.progressBar.setVisibility(View.GONE);
             addRequestsOnPage(arr);
         });
     }
