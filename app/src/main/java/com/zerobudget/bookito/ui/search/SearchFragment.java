@@ -1,6 +1,8 @@
 package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +48,7 @@ public class SearchFragment extends Fragment {
         // homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         //barra di ricerca, cerca alla pressione del tasto invio
-        binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+/*        binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String searched_title) {
                 searchBookByTitle(searched_title);
@@ -57,13 +59,30 @@ public class SearchFragment extends Fragment {
             public boolean onQueryTextChange(String searched_title) {
                 return false;
             }
+        });*/
+
+        binding.bookTextfield.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                searchBookByTitle(editable.toString());
+            }
         });
 
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
-            binding.search.setQuery("", false); //clear the text
-            binding.search.setIconified(true); //rimette la search view ad icona
+/*            binding.search.setQuery("", false); //clear the text
+            binding.search.setIconified(true); //rimette la search view ad icona*/
             viewBooks(new ArrayList<>()); //svuota la recycle view
         });
 

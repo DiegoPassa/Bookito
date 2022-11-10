@@ -13,6 +13,6 @@
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="@string/logout"
         android:contentDescription="@string/disconnetti"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
 </menu>

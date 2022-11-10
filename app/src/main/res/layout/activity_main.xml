@@ -25,6 +25,7 @@
             app:menu="@menu/toolbar"
             app:titleTextColor="@color/black"
             app:navigationIcon="?homeAsUpIndicator"
+            app:popupTheme="@style/Widget.Material3.PopupMenu"
             app:title="title" />
 
     </com.google.android.material.appbar.AppBarLayout>
