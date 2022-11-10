@@ -77,6 +77,7 @@ public class InboxFragment extends Fragment {
     }
 
     protected ArrayList<Object> getRequests() {
+        //TODO I TIMESTAMP NON POSSONO ESSERE CASTATI A STRING, QUINDI FARE UNA FUNZIONE PER CONVERTIRE TIMESTAMP A STRING O PER CONTROLLARNE I VALORI
         FirebaseUser currentUs = mAuth.getCurrentUser();
         //            String id = currentUs.getUid();
         //TODO: cambiare id quando abbiamo un current user
@@ -119,7 +120,6 @@ public class InboxFragment extends Fragment {
         });
     }
 
-    //TODO
     protected void addRequestsOnPage(ArrayList<RequestModel> requests) {
         RecyclerView recyclerView = binding.recycleViewInbox;
 
