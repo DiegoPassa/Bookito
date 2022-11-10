@@ -71,12 +71,14 @@ public class LibraryFragment extends Fragment {
     /**
      * visualizza i libri dell'utente corrente nella libreria virtuale*/
      protected void addBooksOnLibrary(ArrayList<BookModel> arr){
-        RecyclerView recyclerView = binding.recycleViewMyLibrary;
+         if(getView() != null) {
+             RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
-        Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
+             Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+             recyclerView.setAdapter(adapter);
+             recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+         }
      }
 
 
