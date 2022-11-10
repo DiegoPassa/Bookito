@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -74,11 +73,17 @@ public class SearchFragment extends Fragment {
 
             }
 
+            /* TODO: Se si cancella velocemente c'è un delay tra il thread di ricerca e la chiama della ricerca succesiva,
+             *       questo porta a visualizzare dei risultati anche se l'input è vuoto (credo)
+             */
             @Override
             public void afterTextChanged(Editable editable) {
                 //controlla che la text field non sia vuota
-                if (!TextUtils.isEmpty(binding.bookTextfield.getText().toString()))
+                if (!TextUtils.isEmpty(binding.bookTextfield.getText().toString().trim()))
                     searchBookByTitle(editable.toString());
+                else {
+                    viewBooks(new ArrayList<>());
+                }
             }
         });
 
