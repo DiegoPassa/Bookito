@@ -130,12 +130,14 @@ public class SearchFragment extends Fragment {
     }
 
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
-        RecyclerView recyclerView = binding.recycleViewSearch;
+        if(getView() != null) {
+            RecyclerView recyclerView = binding.recycleViewSearch;
 
-        Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
+            Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        }
     }
 }
 
