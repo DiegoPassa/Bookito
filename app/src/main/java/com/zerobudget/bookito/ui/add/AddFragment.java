@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.add;
 
 import static com.zerobudget.bookito.utils.Utils.isAValidISBN;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -115,8 +116,17 @@ public class AddFragment extends Fragment {
 
         binding.btnAdd.setOnClickListener(view -> {
             String isbn = binding.isbnNumber.getText().toString();
+
             if(isAValidISBN(Long.parseLong(isbn)))
                 searchBookAPI(isbn);
+            else {
+                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle("Attenzione");
+                builder.setMessage("L'isbn inserito non è valido, si prega di riprovare");
+                builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                }).show();
+            }
         });
 
         Log.d("USER NOW", ""+UserModel.getCurrentUser().serialize());
