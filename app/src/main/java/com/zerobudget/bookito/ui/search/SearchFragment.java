@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class SearchFragment extends Fragment {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        viewBooks(new ArrayList<>());
         // final TextView textView = binding.textHome;
         // homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -74,7 +76,9 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                searchBookByTitle(editable.toString());
+                //controlla che la text field non sia vuota
+                if (!TextUtils.isEmpty(binding.bookTextfield.getText().toString()))
+                    searchBookByTitle(editable.toString());
             }
         });
 
@@ -130,7 +134,7 @@ public class SearchFragment extends Fragment {
     }
 
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
-        if(getView() != null) {
+        if(getView() != null) { //evita il crash dell'applicazione
             RecyclerView recyclerView = binding.recycleViewSearch;
 
             Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);

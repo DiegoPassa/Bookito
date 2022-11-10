@@ -71,7 +71,7 @@ public class LibraryFragment extends Fragment {
     /**
      * visualizza i libri dell'utente corrente nella libreria virtuale*/
      protected void addBooksOnLibrary(ArrayList<BookModel> arr){
-         if(getView() != null) {
+         if(getView() != null) { //evita il crash dell'applicazione
              RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
              Book_RecycleViewAdapter adapter = new Book_RecycleViewAdapter(this.getContext(), arr);
