@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,6 +30,8 @@ public class LibraryFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
+    private ProgressBar spinner;
+
     /**
      * preleva i libri dell'utente corrente dal database*/
     public void setUpBookModel(){
@@ -36,12 +39,13 @@ public class LibraryFragment extends Fragment {
         //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
-        binding.progressBar.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.VISIBLE);
         db.collection("users").document(Utils.USER_ID).get()
                 .addOnCompleteListener(task -> {
                     Log.d("QUERY", "queryyy");
                     if (task.isSuccessful()) {
-                        binding.progressBar.setVisibility(View.GONE);
+                        spinner.setVisibility(View.GONE);
+
                         ArrayList<BookModel> arrBkm = new ArrayList<>();
 
                         Object arr = task.getResult().get("books"); //array dei books
@@ -52,7 +56,9 @@ public class LibraryFragment extends Fragment {
                                 arrBkm.add(tmp);//aggiunge il bookmodel tmp all'array list
                             }
 
+
                             addBooksOnLibrary(arrBkm); //visualizza il libro nella libreria
+
                         }
 
                     }else{
@@ -80,6 +86,8 @@ public class LibraryFragment extends Fragment {
 
         binding = FragmentLibraryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        spinner = root.findViewById(R.id.progressBar);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();

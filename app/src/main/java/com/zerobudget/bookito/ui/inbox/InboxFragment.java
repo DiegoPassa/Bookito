@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,9 +43,10 @@ public class InboxFragment extends Fragment {
     private FragmentInboxBinding binding;
     private ArrayList<RequestModel> requests;
 
-    FirebaseFirestore db;
-    FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
+    private ProgressBar spinner;
 
     @Nullable
     @Override
@@ -53,6 +55,8 @@ public class InboxFragment extends Fragment {
 
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        spinner = root.findViewById(R.id.progressBar);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -82,7 +86,7 @@ public class InboxFragment extends Fragment {
         //            String id = currentUs.getUid();
         //TODO: cambiare id quando abbiamo un current user
         //VISUALIZZA RICHIESTE CHE L'UTENTE ATTUALE HA RICEVUTO
-        binding.progressBar.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -118,12 +122,14 @@ public class InboxFragment extends Fragment {
         }
 
         Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
-            binding.progressBar.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
+
             addRequestsOnPage(arr);
         });
     }
 
     protected void addRequestsOnPage(ArrayList<RequestModel> requests) {
+
         RecyclerView recyclerView = binding.recycleViewInbox;
 
         Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests);
