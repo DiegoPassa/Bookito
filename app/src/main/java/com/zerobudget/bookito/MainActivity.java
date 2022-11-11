@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.getResult() != null) {
+                if (task.getResult() != null) {
                     UserModel u = UserModel.getUserFromDocument(task.getResult());
                     UserLibrary nowUser = new UserLibrary(u);
 

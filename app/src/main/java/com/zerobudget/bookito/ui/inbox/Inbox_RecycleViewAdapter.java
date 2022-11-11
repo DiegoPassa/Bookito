@@ -154,7 +154,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();
         dialog.show();
-        dialog.getWindow().setLayout(1080, 1080);
 
     }
 

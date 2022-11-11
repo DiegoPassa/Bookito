@@ -140,7 +140,7 @@ public class InboxFragment extends Fragment {
                 return new RequestModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), (String) o.get("type"), (String)o.get("title"), (String)o.getId());
             }
             case("Prestito"): {
-                return new RequestShareModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), (String)o.get("type"), (String) o.get("title"), (String)o.getId(), new Date((String)o.get("date")));
+                return new RequestShareModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), (String)o.get("type"), (String) o.get("title"), (String)o.getId(), null);
             }
 
             case("Scambio"): {
