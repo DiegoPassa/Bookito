@@ -3,9 +3,7 @@ package com.zerobudget.bookito.ui.library;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.ui.Requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -118,32 +114,35 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         bookDescription.setMovementMethod(new ScrollingMovementMethod());
         Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(bookThumbnail);
 
-
         btnDelete.setOnClickListener(view1 -> {
-            //rimuove il libro selezionato
-            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
+            //conferma dell'eliminazione
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Conferma eliminazione");
+            builder.setMessage("Sei sicuro di voler eliminare\n"+bookModels.get(holder.getAdapterPosition()).getTitle());
+            builder.setPositiveButton("SI", (dialogInterface, i) -> {
+                //rimuove il libro selezionato
+                db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
 
-            //rimuove la richiesta relativa a quel libro se esiste!
-            db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                    for (DocumentSnapshot document : documents) {
-                        DocumentReference documentReference = document.getReference();
-                        documentReference.delete();
+                //rimuove la richiesta relativa a quel libro se esiste!
+                db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                        for (DocumentSnapshot document : documents) {
+                            DocumentReference documentReference = document.getReference();
+                            documentReference.delete();
+                        }
                     }
-                }
-            });
 
-/*            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Eliminazione");
-            builder.setMessage("Il libro " + bookModels.get(holder.getAdapterPosition()).getTitle() + " è stato eliminato correttamente");
-            builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                });
+                Toast.makeText(context,  bookModels.get(holder.getAdapterPosition()).getTitle()+" eliminato!", Toast.LENGTH_LONG).show();
+                bookModels.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
                 dialogInterface.dismiss();
-            }).show();*/
-            Toast.makeText(context,  bookModels.get(holder.getAdapterPosition()).getTitle()+" eliminato!", Toast.LENGTH_LONG).show();
-            bookModels.remove(holder.getAdapterPosition());
-            notifyItemRemoved(holder.getAdapterPosition());
+            }).setNegativeButton("NO",  (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            }).show();
+
             dialog.dismiss();
         });
 
