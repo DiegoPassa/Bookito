@@ -5,8 +5,8 @@ public class RequestTradeModel extends RequestModel{
 
     public RequestTradeModel() {}
 
-    public RequestTradeModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String title, String type, String requestTradeBook) {
-        super(requestedBook, requester, recipient, status, thumbnail, type, title);
+    public RequestTradeModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String title, String type, String id, String requestTradeBook) {
+        super(requestedBook, requester, recipient, status, thumbnail, title, type, id);
         this.requestTradeBook = requestTradeBook;
     }
 }
