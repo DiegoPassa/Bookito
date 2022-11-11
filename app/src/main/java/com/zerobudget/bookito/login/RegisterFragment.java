@@ -74,6 +74,17 @@ public class RegisterFragment extends Fragment {
             binding.phoneNumberRegister.requestFocus();
             return false;
         }
+        LoginActivity.PhoneChecker checker = new LoginActivity.PhoneChecker(phoneNumber);
+        if(checker.isRegistered()){
+            binding.phoneNumberRegister.setError("Il numero inserito e gia registrato");
+            binding.phoneNumberRegister.requestFocus();
+            return false;
+        }
+        if(!checker.checkPhoneIntegrity()){
+            binding.phoneNumberRegister.setError("Il numero inserito non e valido");
+            binding.phoneNumberRegister.requestFocus();
+            return false;
+        }
         if(zone.isEmpty()){
             binding.zone.setError("Deve specificare il quartiere dove abbita");
             binding.zone.requestFocus();

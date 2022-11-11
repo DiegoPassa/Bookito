@@ -54,7 +54,17 @@ public class LoginFragment extends Fragment {
                     binding.phoneNumber.requestFocus();
                     return;
                 }
-                //TODO verifica se il non e registrato
+                LoginActivity.PhoneChecker checker = new LoginActivity.PhoneChecker(phoneNumber);
+                if(!checker.checkPhoneIntegrity()){
+                    binding.phoneNumber.setError("Il numero inserito non e valido");
+                    binding.phoneNumber.requestFocus();
+                    return;
+                }
+                /*if(!checker.isRegistered()){
+                    binding.phoneNumber.setError("Il numero inserito non e registrato");
+                    binding.phoneNumber.requestFocus();
+                    return;
+                }*/
                 Bundle bundle = new Bundle();
                 bundle.putString("phone_number", phoneNumber);
                 bundle.putBoolean("register",false);

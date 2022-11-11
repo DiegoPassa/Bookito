@@ -20,11 +20,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.MainActivity;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentOtpConfirmBinding;
+import com.zerobudget.bookito.ui.library.BookModel;
 import com.zerobudget.bookito.ui.users.UserModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -33,8 +38,9 @@ public class OTPConfirmFragment extends Fragment {
     FragmentOtpConfirmBinding binding;
     FirebaseAuth mAuth;
     private String code;
-    Bundle bundle;
-
+    private Bundle bundle;
+    private boolean isRegister;
+    FirebaseFirestore db;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
 
@@ -53,6 +59,10 @@ public class OTPConfirmFragment extends Fragment {
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+            if(isRegister){
+                Fragment fragment = new RegisterFragment();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+            }
         }
 
     };
@@ -65,11 +75,13 @@ public class OTPConfirmFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         bundle = this.getArguments();
         mAuth = FirebaseAuth.getInstance();
         binding = FragmentOtpConfirmBinding.inflate(inflater,container,false);
+        isRegister = bundle.getBoolean("register");
         return binding.getRoot();
+
     }
 
     @Override
@@ -102,7 +114,6 @@ public class OTPConfirmFragment extends Fragment {
     }
 
     private void signInWithPhoneCredential(PhoneAuthCredential credential) {
-        boolean isRegister = bundle.getBoolean("register");
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -114,7 +125,6 @@ public class OTPConfirmFragment extends Fragment {
                                 addUserToDatabase();
                             startActivity(intent);
                             requireActivity().finish();
-
                         }
                     }
                 });
@@ -125,6 +135,22 @@ public class OTPConfirmFragment extends Fragment {
         String last_name = bundle.getString("surname");
         String phone = bundle.getString("phone_number");
         String neighbourhood = bundle.getString("zone");
-        UserModel user = new UserModel(first_name,last_name,phone,neighbourhood,new HashMap<String,Object>());
+        HashMap<String,Object> user = new HashMap<>();
+        user.put("first_name",first_name);
+        user.put("last_name",last_name);
+        user.put("telephone",phone);
+        user.put("karma", new HashMap<String,Object>());
+        user.put("neighbourhood",neighbourhood);
+        HashMap<String,Object> books = new HashMap<>();
+        user.put("books",books);
+        db = FirebaseFirestore.getInstance();
+        db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser()).getUid().toString())
+                .set(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(requireActivity(), "Il suo account e stato corretamente registrato.", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
