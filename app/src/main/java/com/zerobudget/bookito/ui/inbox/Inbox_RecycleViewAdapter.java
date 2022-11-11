@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.ui.Requests.RequestModel;
+import com.zerobudget.bookito.ui.Requests.RequestTradeModel;
 import com.zerobudget.bookito.ui.users.UserModel;
 
 import java.util.ArrayList;
@@ -85,7 +87,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                     case NORMAL_FLAG: Log.d("AAAAAA", "FLAG NORMALE"); break;
                     default: Log.d("UNDEFINED", "aaaaa");
                 }
-                createNewContactDialog(position);
+                createNewContactDialog(position, holder);
 
             }
 
@@ -127,7 +129,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     }
 
-    public void createNewContactDialog(int position) {
+    public void createNewContactDialog(int position, ViewHolder holder) {
 
 
         dialogBuilder = new AlertDialog.Builder(context);
@@ -135,12 +137,25 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         confirmButton = view.findViewById(R.id.acceptButton);
         refuseButton = view.findViewById(R.id.refuseButton);
+        closeButton = view.findViewById(R.id.closeButton);
+
+        if (requests.get(position) instanceof RequestTradeModel) {
+            confirmButton.setText("Libreria Utente");
+        }
 
         confirmButton.setOnClickListener(view1 -> {
-            acceptRequest(requests.get(position));
-            requests.get(position).setTitle("BUONGIORNO CAFFE");
-            notifyItemChanged(position);
+            if (requests.get(position) instanceof RequestTradeModel) {
+//                Navigation.findNavController(holder.itemView).navigate(R.layout.fragment_add);
+                //todo creare fragment per spostarci nella libreria dell'altro utente (OSLO LIBRI SCAMBIABII)
+            } else {
+                acceptRequest(requests.get(position));
+                requests.remove(position);
+                notifyItemRemoved(position);
+            }
+
             dialog.hide();
+
+
         });
 
         refuseButton.setOnClickListener(view1 -> {
@@ -150,6 +165,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             dialog.hide();
         });
 
+        closeButton.setOnClickListener(view1 -> dialog.hide());
 
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();

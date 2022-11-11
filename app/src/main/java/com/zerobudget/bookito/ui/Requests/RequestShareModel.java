@@ -8,7 +8,7 @@ public class RequestShareModel extends RequestModel {
     public RequestShareModel(){}
 
     public RequestShareModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String id, String title, String type, Date date) {
-        super(requestedBook, requester, recipient, status, thumbnail, title, type, id);
+        super(requestedBook, requester, recipient, status, thumbnail, type, title, id);
         this.date = date;
     }
 }
