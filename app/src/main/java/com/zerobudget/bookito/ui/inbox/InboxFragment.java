@@ -94,6 +94,7 @@ public class InboxFragment extends Fragment {
                         for (DocumentSnapshot o : result) {
                             String type = (String) o.get("type");
                             RequestModel r = getRequestModel(type, o);
+                            Log.d("RICHIESTA", r.getTitle());
                             if (r != null) req.add(r);
                         }
                         // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
@@ -133,16 +134,17 @@ public class InboxFragment extends Fragment {
     }
 
     protected RequestModel getRequestModel(String type, DocumentSnapshot o) {
+        Log.d("SCAMBIO", ""+o);
         switch (type) {
             case ("Regalo"): {
-                return new RequestModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), (String) o.get("type"), (String)o.get("title"));
+                return new RequestModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), (String) o.get("type"), (String)o.get("title"), (String)o.getId());
             }
             case("Prestito"): {
-                return new RequestShareModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("title"), (String)o.get("thumbnail"), (String) o.get("type"), new Date((String)o.get("date")));
+                return new RequestShareModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), (String)o.get("type"), (String) o.get("title"), (String)o.getId(), new Date((String)o.get("date")));
             }
 
             case("Scambio"): {
-                return new RequestTradeModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("title"), (String)o.get("thumbnail"), (String) o.get("type"), (String) o.get("requested_book"));
+                return new RequestTradeModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("thumbnail"), (String)o.get("type"), (String) o.get("title"), (String)o.getId(), (String) o.get("requested_book"));
             }
         }
         return null;

@@ -14,10 +14,11 @@ public class RequestModel {
     private String type; //Scambio, Prestito o Regalo
     private String title;
     private UserModel senderModel;
+    private String requestId;
 
     public RequestModel() {}
 
-    public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title) {
+    public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title, String id) {
         this.requestedBook = requestedBook;
         this.sender = requester;
         this.receiver = recipient;
@@ -25,6 +26,7 @@ public class RequestModel {
         this.thumbnail = thumbnail;
         this.type = type;
         this.title = title;
+        this.requestId = id;
     }
 
     public Map<String, String> serialize() {
@@ -101,6 +103,10 @@ public class RequestModel {
     }
 
     public void setSenderModel(UserModel u) { this.senderModel = u; }
+
+    public String getrequestId() {
+        return this.requestId;
+    }
 }
 
 
