@@ -132,29 +132,30 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         confirmButton = view.findViewById(R.id.acceptButton);
         refuseButton = view.findViewById(R.id.refuseButton);
 
-        if (requests.get(position) instanceof RequestTradeModel) {
+        if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
             confirmButton.setText("Libreria Utente");
         }
 
         confirmButton.setOnClickListener(view1 -> {
-            if (requests.get(position) instanceof RequestTradeModel) {
+            Log.d("Pos", ""+position);
+            if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
 //                Navigation.findNavController(holder.itemView).navigate(R.layout.fragment_add);
                 //todo creare fragment per spostarci nella libreria dell'altro utente (OSLO LIBRI SCAMBIABII)
-            } else {
-                acceptRequest(requests.get(position));
-                requests.remove(position);
-                notifyItemRemoved(position);
             }
+            acceptRequest(requests.get(holder.getAdapterPosition()));
+            requests.remove(holder.getAdapterPosition());
+            notifyItemRemoved(holder.getOldPosition());
+
+            // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
 
             dialog.hide();
-
-
         });
 
         refuseButton.setOnClickListener(view1 -> {
-            refuseRequest(requests.get(position));
-            requests.remove(position);
-            notifyItemRemoved(position);
+            refuseRequest(requests.get(holder.getAdapterPosition()));
+            requests.remove(holder.getAdapterPosition());
+            notifyItemRemoved(holder.getOldPosition());
+            // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             dialog.hide();
         });
 
@@ -165,14 +166,11 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     private void refuseRequest(RequestModel r) {
-        db.collection("requests").document(r.getrequestId())
-                .delete();
-
+        db.collection("requests").document(r.getrequestId()).delete();
     }
 
     private void acceptRequest(RequestModel r) {
-        db.collection("requests").document(r.getrequestId())
-                .update("title", "SOOOKA");
+        db.collection("requests").document(r.getrequestId()).update("title", "SOOOKA");
     }
 
     @Override
@@ -186,7 +184,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         private final ConstraintLayout request_selected;
         private final TextView user_name;
         private final ImageView book_image;
-
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
