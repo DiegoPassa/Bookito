@@ -144,7 +144,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             }
             acceptRequest(requests.get(holder.getAdapterPosition()));
             requests.remove(holder.getAdapterPosition());
-            notifyItemRemoved(holder.getOldPosition());
+            notifyItemRemoved(holder.getAdapterPosition());
 
             // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
 
@@ -154,7 +154,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         refuseButton.setOnClickListener(view1 -> {
             refuseRequest(requests.get(holder.getAdapterPosition()));
             requests.remove(holder.getAdapterPosition());
-            notifyItemRemoved(holder.getOldPosition());
+            notifyItemRemoved(holder.getAdapterPosition());
             // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             dialog.hide();
         });
