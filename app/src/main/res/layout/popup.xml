@@ -76,6 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="8dp"
+        android:visibility="gone"
         android:text="data restituzione: 25/12/2022"
         app:layout_constraintBottom_toTopOf="@+id/flag"
         app:layout_constraintStart_toEndOf="@+id/imageView"
