@@ -1,33 +1,57 @@
 package com.zerobudget.bookito.ui.library;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.ui.Requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleViewAdapter.ViewHolder> {
 
     private final Context context;
     private final ArrayList<BookModel> bookModels;
 
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+
+    FirebaseFirestore db;
+    FirebaseAuth auth;
+
     public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels) {
         this.context = context;
         this.bookModels = bookModels;
+
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
     }
 
     @NonNull
@@ -66,14 +90,66 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         }
 
         holder.book_selected.setOnClickListener(view -> {
+            createNewDeletePopup(position, holder);
             //passaggio dei dati del new book al prossimo fragment
+/*
             Bundle args = new Bundle();
             String bookString = Utils.getGsonParser().toJson(bookModels.get(position));
             args.putString("BK", bookString);
+*/
 
-            Navigation.findNavController(holder.itemView).navigate(R.id.action_navigation_library_to_bookDeleteFragment, args);
-
+            // Navigation.findNavController(holder.itemView).navigate(R.id.action_navigation_library_to_bookDeleteFragment, args);
         });
+    }
+
+    private void createNewDeletePopup(int position, ViewHolder holder) {
+        dialogBuilder = new AlertDialog.Builder(context);
+        View view = View.inflate(context, R.layout.fragment_delete_book, null);
+
+        TextView bookTitle = view.findViewById(R.id.book_title);
+        TextView bookAuthor = view.findViewById(R.id.book_author);
+        TextView bookDescription = view.findViewById(R.id.book_description);
+        Button btnDelete = view.findViewById(R.id.btn_delete);
+        ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
+
+        bookTitle.setText(bookModels.get(holder.getAdapterPosition()).getTitle());
+        bookAuthor.setText(bookModels.get(holder.getAdapterPosition()).getAuthor());
+        bookDescription.setText(bookModels.get(holder.getAdapterPosition()).getDescription());
+        bookDescription.setMovementMethod(new ScrollingMovementMethod());
+        Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(bookThumbnail);
+
+
+        btnDelete.setOnClickListener(view1 -> {
+            //rimuove il libro selezionato
+            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
+
+            //rimuove la richiesta relativa a quel libro se esiste!
+            db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    for (DocumentSnapshot document : documents) {
+                        DocumentReference documentReference = document.getReference();
+                        documentReference.delete();
+                    }
+                }
+            });
+
+/*            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Eliminazione");
+            builder.setMessage("Il libro " + bookModels.get(holder.getAdapterPosition()).getTitle() + " è stato eliminato correttamente");
+            builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            }).show();*/
+            Toast.makeText(context,  bookModels.get(holder.getAdapterPosition()).getTitle()+" eliminato!", Toast.LENGTH_LONG).show();
+            bookModels.remove(holder.getAdapterPosition());
+            notifyItemRemoved(holder.getAdapterPosition());
+            dialog.dismiss();
+        });
+
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 
     @Override
