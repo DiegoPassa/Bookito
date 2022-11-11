@@ -81,13 +81,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 Long feedback_numbers = (Long) karma.get("numbers");
                 Flag flag = getFlagFromUser(points, feedback_numbers);
 
-                switch (flag) {
-                    case GREEN_FLAG: Log.d("AAAAA", "GREEEN FLAG"); break;
-                    case RED_FLAG: Log.d("AAAAAA", "RED_FLAG"); break;
-                    case NORMAL_FLAG: Log.d("AAAAAA", "FLAG NORMALE"); break;
-                    default: Log.d("UNDEFINED", "aaaaa");
-                }
-                createNewContactDialog(position, holder);
+                createNewContactDialog(position, holder, flag);
 
             }
 
@@ -129,7 +123,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     }
 
-    public void createNewContactDialog(int position, ViewHolder holder) {
+    public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
 
 
         dialogBuilder = new AlertDialog.Builder(context);
@@ -137,7 +131,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         confirmButton = view.findViewById(R.id.acceptButton);
         refuseButton = view.findViewById(R.id.refuseButton);
-        closeButton = view.findViewById(R.id.closeButton);
 
         if (requests.get(position) instanceof RequestTradeModel) {
             confirmButton.setText("Libreria Utente");
@@ -164,8 +157,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             notifyItemRemoved(position);
             dialog.hide();
         });
-
-        closeButton.setOnClickListener(view1 -> dialog.hide());
 
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();
