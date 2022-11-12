@@ -9,16 +9,12 @@
         android:id="@+id/navigation_requests"
         android:name="com.zerobudget.bookito.ui.inbox.InboxFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_inbox" >
-        <action
-            android:id="@+id/action_navigation_requests_to_testFragment"
-            app:destination="@id/testFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_inbox" />
 
     <fragment
         android:id="@+id/request_page_nav"
         android:name="com.zerobudget.bookito.ui.inbox.RequestFragment"
-        android:label="Bookito!"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_request_page"/>
 
     <navigation
@@ -33,9 +29,6 @@
                 android:id="@+id/action_navigation_library_to_navigation_insertNew"
                 app:destination="@id/navigation_insertNew"
                 app:popExitAnim="@android:anim/fade_out" />
-            <action
-                android:id="@+id/action_navigation_library_to_bookDeleteFragment"
-                app:destination="@id/bookDeleteFragment" />
 
         </fragment>
 
@@ -43,11 +36,7 @@
             android:id="@+id/bookDeleteFragment"
             android:name="com.zerobudget.bookito.ui.library.BookDeleteFragment"
             android:label="@string/app_name"
-            tools:layout="@layout/fragment_delete_book" >
-            <action
-                android:id="@+id/action_bookDeleteFragment_to_navigation_library"
-                app:destination="@id/navigation_library" />
-        </fragment>
+            tools:layout="@layout/fragment_delete_book" />
 
         <fragment
             android:id="@+id/navigation_insertNew"
@@ -71,16 +60,6 @@
         </fragment>
 
     </navigation>
-
-    <fragment
-        android:id="@+id/testFragment"
-        android:name="com.zerobudget.bookito.TestFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_test" >
-        <action
-            android:id="@+id/action_testFragment_to_navigation_requests"
-            app:destination="@id/navigation_requests" />
-    </fragment>
 
     <fragment
         android:id="@+id/navigation_search"
