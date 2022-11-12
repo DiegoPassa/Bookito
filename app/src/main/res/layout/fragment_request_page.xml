@@ -24,10 +24,10 @@
                 android:layout_height="wrap_content"
                 android:text="Le tue Richieste" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Richieste in Corso"/>
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Richieste in Corso"/>-->
 
         </com.google.android.material.tabs.TabLayout>
 

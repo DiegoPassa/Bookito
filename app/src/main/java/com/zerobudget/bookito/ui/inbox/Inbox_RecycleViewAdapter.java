@@ -154,25 +154,29 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         confirmButton.setOnClickListener(view1 -> {
             Log.d("Pos", ""+position);
-            if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+            if (holder.getAdapterPosition() != -1) {
+                if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
 //                Navigation.findNavController(holder.itemView).navigate(R.layout.fragment_add);
-                //todo creare fragment per spostarci nella libreria dell'altro utente (OSLO LIBRI SCAMBIABII)
+                    //todo creare fragment per spostarci nella libreria dell'altro utente (OSLO LIBRI SCAMBIABII)
+                }
+                acceptRequest(requests.get(holder.getAdapterPosition()));
+                requests.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+
+                // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
+
+                dialog.hide();
             }
-            acceptRequest(requests.get(holder.getAdapterPosition()));
-            requests.remove(holder.getAdapterPosition());
-            notifyItemRemoved(holder.getAdapterPosition());
-
-            // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
-
-            dialog.hide();
         });
 
         refuseButton.setOnClickListener(view1 -> {
-            refuseRequest(requests.get(holder.getAdapterPosition()));
-            requests.remove(holder.getAdapterPosition());
-            notifyItemRemoved(holder.getAdapterPosition());
-            // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
-            dialog.hide();
+            if (holder.getAdapterPosition() != -1) {
+                refuseRequest(requests.get(holder.getAdapterPosition()));
+                requests.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+                // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
+                dialog.hide();
+            }
         });
 
         dialogBuilder.setView(view);
@@ -182,11 +186,11 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     private void refuseRequest(RequestModel r) {
-        db.collection("requests").document(r.getrequestId()).delete();
+//        db.collection("requests").document(r.getrequestId()).delete();
     }
 
     private void acceptRequest(RequestModel r) {
-        db.collection("requests").document(r.getrequestId()).update("title", "SOOOKA");
+//        db.collection("requests").document(r.getrequestId()).update("title", "SOOOKA");
     }
 
     @Override

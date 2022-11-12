@@ -33,7 +33,10 @@ public class RequestFragment extends Fragment {
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 2) {
+                    Log.d("TEST", "AAAA");
+                }else
+                    viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
