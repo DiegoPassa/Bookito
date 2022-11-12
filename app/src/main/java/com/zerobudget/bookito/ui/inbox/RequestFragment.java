@@ -47,6 +47,14 @@ public class RequestFragment extends Fragment {
             }
         });
 
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabs.getTabAt(position).select();
+            }
+        });
         return view;
 
     }

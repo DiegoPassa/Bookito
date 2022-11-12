@@ -41,6 +41,6 @@ public class RequestPageAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 2; //todo mettere 3 appena facciamo il terzo fragment
     }
 }
