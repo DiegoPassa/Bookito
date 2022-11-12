@@ -19,9 +19,6 @@ import java.util.List;
 public class RequestPageAdapter extends FragmentStateAdapter {
 
 
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
-
     public RequestPageAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
