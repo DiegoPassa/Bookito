@@ -131,6 +131,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         TextView owner = view.findViewById(R.id.user);
         TextView ownerLocation = view.findViewById(R.id.user_location);
         TextView returnDate = view.findViewById(R.id.return_date);
+        ImageView thumbnail = view.findViewById(R.id.imageView);
 
 
         String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
@@ -138,6 +139,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getSenderModel().getFirst_name()+" "+requests.get(holder.getAdapterPosition()).getSenderModel().getLast_name();
         owner.setText(firstAndLastNameStr);
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getSenderModel().getNeighborhood());
+
+        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
 
         //TODO: sistemare la data del prestito
         if(requests.get(holder.getAdapterPosition()).getType().equals("Prestito"))
