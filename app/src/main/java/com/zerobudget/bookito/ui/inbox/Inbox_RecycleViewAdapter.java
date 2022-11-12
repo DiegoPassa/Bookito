@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.inbox;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
@@ -121,7 +122,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
 
         View view = View.inflate(context, R.layout.popup, null);
 
@@ -135,7 +136,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         TextView ownerLocation = view.findViewById(R.id.user_location);
         TextView returnDate = view.findViewById(R.id.return_date);
         ImageView thumbnail = view.findViewById(R.id.imageView);
-
 
         String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);

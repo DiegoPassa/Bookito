@@ -1,8 +1,8 @@
 package com.zerobudget.bookito.ui.library;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -99,7 +101,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     }
 
     private void createNewDeletePopup(int position, ViewHolder holder) {
-        dialogBuilder = new AlertDialog.Builder(context);
+        dialogBuilder = new MaterialAlertDialogBuilder(context);
         View view = View.inflate(context, R.layout.fragment_delete_book, null);
 
         TextView bookTitle = view.findViewById(R.id.book_title);
@@ -116,9 +118,11 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         btnDelete.setOnClickListener(view1 -> {
             //conferma dell'eliminazione
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma eliminazione");
-            builder.setMessage("Sei sicuro di voler eliminare\n"+bookModels.get(holder.getAdapterPosition()).getTitle());
+            builder.setMessage(Html.fromHtml("Sei sicuro di voler eliminare il libro: <br><b>" + bookModels.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
             builder.setPositiveButton("SI", (dialogInterface, i) -> {
                 //rimuove il libro selezionato
                 db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
@@ -135,6 +139,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                     }
 
                 });
+
                 Toast.makeText(context,  bookModels.get(holder.getAdapterPosition()).getTitle()+" eliminato!", Toast.LENGTH_LONG).show();
                 bookModels.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());

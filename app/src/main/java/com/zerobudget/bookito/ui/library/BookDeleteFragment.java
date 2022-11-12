@@ -73,6 +73,7 @@ public class BookDeleteFragment extends Fragment {
                 }
             });
 
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
             builder.setTitle("Eliminazione");
             builder.setMessage("Il libro " + bookSelected.getTitle() + " è stato eliminato correttamente");

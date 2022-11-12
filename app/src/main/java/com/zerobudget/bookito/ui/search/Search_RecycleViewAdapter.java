@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.search;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.text.method.ScrollingMovementMethod;
@@ -15,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -79,9 +80,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     }
 
     private void createNewSearchPopup(int position, ViewHolder holder){
-        dialogBuilder = new AlertDialog.Builder(context);
+        dialogBuilder = new MaterialAlertDialogBuilder(context);
         View view = View.inflate(context, R.layout.fragment_request_book, null);
-
 
         TextView bookTitle = view.findViewById(R.id.book_title);
         TextView bookAuthor = view.findViewById(R.id.book_author);
@@ -94,7 +94,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
         ImageView bookmark = view.findViewById(R.id.bookmark);
         ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
-
 
         bookTitle.setText(results.get(holder.getAdapterPosition()).getBook().getTitle());
         bookAuthor.setText(results.get(holder.getAdapterPosition()).getBook().getAuthor());
@@ -155,7 +154,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
             dialog.dismiss();
         });
-
 
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();
