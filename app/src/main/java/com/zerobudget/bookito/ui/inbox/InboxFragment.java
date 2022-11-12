@@ -45,6 +45,13 @@ public class InboxFragment extends Fragment {
     FirebaseFirestore db;
     FirebaseAuth mAuth;
 
+    public InboxFragment() {}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Nullable
     @Override
@@ -62,7 +69,6 @@ public class InboxFragment extends Fragment {
             binding.swipeRefreshLayout.setRefreshing(false);
             getRequests();
         });
-
 
         getRequests();
 

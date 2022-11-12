@@ -15,6 +15,12 @@
             app:destination="@id/testFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/request_page_nav"
+        android:name="com.zerobudget.bookito.ui.inbox.RequestFragment"
+        android:label="Bookito!"
+        tools:layout="@layout/fragment_request_page"/>
+
     <navigation
         android:id="@+id/to_navigation_library"
         app:startDestination="@id/navigation_library">
