@@ -1,5 +1,10 @@
 package com.zerobudget.bookito.ui.Requests;
 
+import android.util.Log;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.ui.users.UserModel;
 
 import java.util.HashMap;
@@ -13,8 +18,9 @@ public class RequestModel {
     private String thumbnail;
     private String type; //Scambio, Prestito o Regalo
     private String title;
-    private UserModel senderModel;
+    private UserModel otherUser;
     private String requestId;
+
 
     public RequestModel() {}
 
@@ -72,7 +78,7 @@ public class RequestModel {
         return status;
     }
 
-    public UserModel getSenderModel() { return this.senderModel; }
+    public UserModel getOtherUser() { return this.otherUser; }
 
     public void setRequestedBook(String requestedBook) {
         this.requestedBook = requestedBook;
@@ -102,10 +108,37 @@ public class RequestModel {
         this.receiver = receiver;
     }
 
-    public void setSenderModel(UserModel u) { this.senderModel = u; }
+    public void setOtherUser(UserModel u) { this.otherUser = u; }
 
     public String getrequestId() {
         return this.requestId;
+    }
+
+    public Task<DocumentSnapshot> queryOtherUser(FirebaseFirestore db, String id) {
+        return db.collection("users").document(id)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        UserModel u = UserModel.getUserFromDocument(task.getResult());
+                        this.setOtherUser(u);
+                    }
+                });
+    }
+
+    public static RequestModel getRequestModel(String type, DocumentSnapshot o) {
+        Log.d("SCAMBIO", ""+o);
+        switch (type) {
+            case ("Regalo"): {
+                return new RequestModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId());
+            }
+            case("Prestito"): {
+                return new RequestShareModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), null);
+            }
+            case("Scambio"): {
+                return new RequestTradeModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("thumbnail"), type, (String) o.get("title"), o.getId(), (String) o.get("requested_book"));
+            }
+        }
+        return null;
     }
 }
 

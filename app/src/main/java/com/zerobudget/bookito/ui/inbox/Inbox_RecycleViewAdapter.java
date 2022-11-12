@@ -48,6 +48,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         this.context = ctx;
         this.requests = requests;
+
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
     }
@@ -65,9 +66,9 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
-        UserModel senderModel = requests.get(position).getSenderModel();
+        UserModel senderModel = requests.get(position).getOtherUser();
         if (senderModel != null)
-            holder.user_name.setText(requests.get(position).getSenderModel().getFirst_name());
+            holder.user_name.setText(requests.get(position).getOtherUser().getFirst_name());
         else holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(position).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(position).getTitle());
@@ -136,9 +137,9 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getSenderModel().getFirst_name()+" "+requests.get(holder.getAdapterPosition()).getSenderModel().getLast_name();
+        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name()+" "+requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();
         owner.setText(firstAndLastNameStr);
-        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getSenderModel().getNeighborhood());
+        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
 

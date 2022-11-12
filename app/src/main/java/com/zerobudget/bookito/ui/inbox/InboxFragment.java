@@ -33,6 +33,8 @@ import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 import com.zerobudget.bookito.ui.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,16 +44,11 @@ public class InboxFragment extends Fragment {
     private FragmentInboxBinding binding;
     private ArrayList<RequestModel> requests;
 
-    FirebaseFirestore db;
-    FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     public InboxFragment() {}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
 
     @Nullable
     @Override
@@ -67,6 +64,7 @@ public class InboxFragment extends Fragment {
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
+            addRequestsOnPage(new ArrayList<>());
             getRequests();
         });
 
@@ -90,6 +88,7 @@ public class InboxFragment extends Fragment {
         //VISUALIZZA RICHIESTE CHE L'UTENTE ATTUALE HA RICEVUTO
         binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
+                .whereEqualTo("status", "undefined")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -99,7 +98,7 @@ public class InboxFragment extends Fragment {
 
                         for (DocumentSnapshot o : result) {
                             String type = (String) o.get("type");
-                            RequestModel r = getRequestModel(type, o);
+                            RequestModel r = RequestModel.getRequestModel(type, o);
                             Log.d("RICHIESTA", r.getTitle());
                             if (r != null) req.add(r);
                         }
@@ -114,14 +113,7 @@ public class InboxFragment extends Fragment {
         ArrayList<Task<DocumentSnapshot>> t = new ArrayList<>();
         int index = 0;
         for (RequestModel r : arr) {
-            t.add(db.collection("users").document(r.getSender())
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            UserModel u = UserModel.getUserFromDocument(task.getResult());
-                            r.setSenderModel(u);
-                        }
-                    }));
+            t.add(r.queryOtherUser(db, r.getSender()));
         }
 
         Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
@@ -139,19 +131,4 @@ public class InboxFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
-    protected RequestModel getRequestModel(String type, DocumentSnapshot o) {
-        Log.d("SCAMBIO", ""+o);
-        switch (type) {
-            case ("Regalo"): {
-                return new RequestModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId());
-            }
-            case("Prestito"): {
-                return new RequestShareModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), null);
-            }
-            case("Scambio"): {
-                return new RequestTradeModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("thumbnail"), type, (String) o.get("title"), o.getId(), (String) o.get("requested_book"));
-            }
-        }
-        return null;
-    }
 }
