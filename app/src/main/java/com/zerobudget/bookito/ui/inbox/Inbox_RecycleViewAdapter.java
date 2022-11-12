@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.inbox;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
@@ -8,15 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,16 +26,15 @@ import com.zerobudget.bookito.ui.users.UserModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder>{
+public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder> {
 
     private final Context context;
     private ArrayList<RequestModel> requests;
 
     private final Long MIN_FEEDBACKS_FLAG = 8l;
 
-    private AlertDialog.Builder dialogBuilder;
-    private AlertDialog dialog;
-    private Button closeButton;
+    // private AlertDialog.Builder dialogBuilder;
+    // private AlertDialog dialog;
 
     FirebaseFirestore db;
     FirebaseAuth auth;
@@ -74,7 +68,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         holder.title.setText(requests.get(position).getTitle());
 
         holder.request_selected.setOnClickListener(view -> {
-            if (senderModel != null) {
+            if (senderModel != null && holder.getAdapterPosition() != -1) {
                 HashMap<String, Object> karma = senderModel.getKarma(); //HashMap<String, Long>
                 Long points = (Long) karma.get("points");
                 Long feedback_numbers = (Long) karma.get("numbers");
@@ -123,8 +117,12 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
-        dialogBuilder = new AlertDialog.Builder(context);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+
         View view = View.inflate(context, R.layout.popup, null);
+
+        dialogBuilder.setView(view);
+        AlertDialog dialog = dialogBuilder.create();
 
         Button confirmButton = view.findViewById(R.id.acceptButton);
         Button refuseButton = view.findViewById(R.id.refuseButton);
@@ -164,9 +162,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 notifyItemRemoved(holder.getAdapterPosition());
 
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
-
-                dialog.hide();
             }
+            dialog.dismiss();
         });
 
         refuseButton.setOnClickListener(view1 -> {
@@ -175,12 +172,9 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 requests.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
-                dialog.hide();
             }
+            dialog.dismiss();
         });
-
-        dialogBuilder.setView(view);
-        dialog = dialogBuilder.create();
         dialog.show();
 
     }
