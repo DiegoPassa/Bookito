@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bookito!</string>
+    <string name="app_name">Bookito</string>
     <string name="title_add">Aggiungi libro</string>
     <string name="title_inbox">Richieste</string>
     <string name="title_search">Cerca libri</string>
