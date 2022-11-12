@@ -40,8 +40,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    private Button confirmButton;
-    private Button refuseButton;
     private Button closeButton;
 
     FirebaseFirestore db;
@@ -124,13 +122,27 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
-
-
         dialogBuilder = new AlertDialog.Builder(context);
         View view = View.inflate(context, R.layout.popup, null);
 
-        confirmButton = view.findViewById(R.id.acceptButton);
-        refuseButton = view.findViewById(R.id.refuseButton);
+        Button confirmButton = view.findViewById(R.id.acceptButton);
+        Button refuseButton = view.findViewById(R.id.refuseButton);
+        TextView titlePopup = view.findViewById(R.id.title_popup);
+        TextView owner = view.findViewById(R.id.user);
+        TextView ownerLocation = view.findViewById(R.id.user_location);
+        TextView returnDate = view.findViewById(R.id.return_date);
+
+
+        String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
+        titlePopup.setText(requestTypeStr);
+        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getSenderModel().getFirst_name()+" "+requests.get(holder.getAdapterPosition()).getSenderModel().getLast_name();
+        owner.setText(firstAndLastNameStr);
+        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getSenderModel().getNeighborhood());
+
+        //TODO: sistemare la data del prestito
+        if(requests.get(holder.getAdapterPosition()).getType().equals("Prestito"))
+            returnDate.setVisibility(View.VISIBLE);
+
 
         if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
             confirmButton.setText("Libreria Utente");

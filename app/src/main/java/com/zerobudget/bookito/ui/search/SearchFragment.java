@@ -33,6 +33,7 @@ public class SearchFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
+    //TODO: cercare nel quartire del current user
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         SearchViewModel homeViewModel =
@@ -61,6 +62,27 @@ public class SearchFragment extends Fragment {
                 return false;
             }
         });*/
+
+        binding.btnSearch.setOnClickListener(view -> {
+            binding.btnSearch.setVisibility(View.INVISIBLE);
+            binding.btnSeeAllBooks.setVisibility(View.INVISIBLE);
+            binding.bookTextfield.setVisibility(View.VISIBLE);
+            binding.button4.setVisibility(View.VISIBLE);
+            binding.btnBack.setVisibility(View.VISIBLE);
+            viewBooks(new ArrayList<>());
+        });
+
+        binding.btnBack.setOnClickListener(view -> {
+            binding.btnSearch.setVisibility(View.VISIBLE);
+            binding.btnSeeAllBooks.setVisibility(View.VISIBLE);
+            binding.bookTextfield.setVisibility(View.INVISIBLE);
+            binding.button4.setVisibility(View.INVISIBLE);
+            binding.btnBack.setVisibility(View.INVISIBLE);
+            viewBooks(new ArrayList<>());
+        });
+        binding.btnSeeAllBooks.setOnClickListener(view -> {
+            searchAllBooks();
+        });
 
         binding.bookTextfield.addTextChangedListener(new TextWatcher() {
             @Override
@@ -106,8 +128,37 @@ public class SearchFragment extends Fragment {
     }
 
 
+    private void searchAllBooks(){
+        db.collection("users").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+
+                for (DocumentSnapshot document : task.getResult()) {
+                    //TODO: sostituire l'id con l'id del current user
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arr = document.get("books"); //array dei books
+                        if (arr != null) { //si assicura di cercare solo se esiste quache libro
+
+                            for (Object o : (ArrayList<Object>) arr) {
+                                HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
+                                    arrResults.add(searchResultsModel);
+                            }
+                        }
+                    }
+                }
+
+                viewBooks(arrResults);
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
+            }
+
+        });
+    }
+
     //ricerca libro per titolo
-    protected void searchBookByTitle(String searched_title) {
+    private void searchBookByTitle(String searched_title) {
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
