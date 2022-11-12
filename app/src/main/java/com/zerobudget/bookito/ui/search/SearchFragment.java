@@ -30,6 +30,10 @@ public class SearchFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
+    private boolean showedAll = false;
+
+
+
     //TODO: cercare nel quartire del current user
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,13 +50,18 @@ public class SearchFragment extends Fragment {
         });
 
         binding.btnSeeAllBooks.setOnClickListener(view -> {
+            showedAll  = true;
             searchAllBooks();
         });
 
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.swipeRefreshLayout.setRefreshing(false);
-            viewBooks(new ArrayList<>()); //svuota la recycle view
+            binding.swipeRefreshLayout.setRefreshing(false);//svuota la recycle view
+            if (showedAll) {
+                searchAllBooks();
+            } else {
+                viewBooks(new ArrayList<>());
+            }
         });
 
         return root;
