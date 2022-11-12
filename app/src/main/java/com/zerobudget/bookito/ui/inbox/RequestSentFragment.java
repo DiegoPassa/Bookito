@@ -93,7 +93,7 @@ public class RequestSentFragment extends Fragment {
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
         RecyclerView recyclerView = binding.recycleViewInbox;
 
-        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), req);
+        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), req, "RequestSentFragment");
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

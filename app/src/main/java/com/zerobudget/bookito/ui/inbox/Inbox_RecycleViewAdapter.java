@@ -30,21 +30,25 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     private final Context context;
     private ArrayList<RequestModel> requests;
+    private String fragment;
 
     private final Long MIN_FEEDBACKS_FLAG = 8l;
 
     // private AlertDialog.Builder dialogBuilder;
     // private AlertDialog dialog;
 
-    FirebaseFirestore db;
-    FirebaseAuth auth;
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
 
-    public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
+    public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, String fragment) {
         this.context = ctx;
         this.requests = requests;
+        this.fragment = fragment;
 
-        db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
+        this.db = FirebaseFirestore.getInstance();
+        this.auth = FirebaseAuth.getInstance();
+
+
     }
 
     @NonNull
@@ -180,11 +184,11 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     private void refuseRequest(RequestModel r) {
-//        db.collection("requests").document(r.getrequestId()).delete();
+        db.collection("requests").document(r.getrequestId()).delete();
     }
 
     private void acceptRequest(RequestModel r) {
-//        db.collection("requests").document(r.getrequestId()).update("title", "SOOOKA");
+        db.collection("requests").document(r.getrequestId()).update("title", "SOOOKA");
     }
 
     @Override

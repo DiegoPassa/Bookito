@@ -125,7 +125,7 @@ public class InboxFragment extends Fragment {
     protected void addRequestsOnPage(ArrayList<RequestModel> requests) {
         RecyclerView recyclerView = binding.recycleViewInbox;
 
-        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests);
+        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, "RequestFragment");
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
