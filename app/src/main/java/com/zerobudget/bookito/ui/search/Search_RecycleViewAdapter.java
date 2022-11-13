@@ -226,7 +226,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             super(itemView);
             // Binding from xml layout to Class
             book_selected = itemView.findViewById(R.id.book);
-            thumbnail = itemView.findViewById(R.id.book_thumbnail);
+            thumbnail = itemView.findViewById(R.id.thumbnail);
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);
             book_owner = itemView.findViewById(R.id.book_owner);

@@ -15,61 +15,104 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/book_thumbnail"
-            android:layout_width="130dp"
-            android:layout_height="160dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/thumbnail"
+                        android:layout_width="100dp"
+                        android:layout_height="0dp"
+                        android:scaleType="fitXY"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="h,1:1.45"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:srcCompat="@tools:sample/avatars" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/book_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/book_thumbnail"
+            android:gravity="center_vertical"
+            android:lines="3"
             android:padding="3dp"
             android:text="Book Title"
-            android:lines="3"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/book_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/book_title"
-            android:layout_marginTop="3dp"
+            android:layout_below="@+id/book_title"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/book_thumbnail"
+            android:lines="1"
             android:padding="3dp"
             android:text="Author"
-            android:lines="1"
-            android:textStyle="italic"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/book_owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/book_author"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/book_thumbnail"
             android:padding="3dp"
             android:text="Owner"
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/owner_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/book_owner"
+            android:layout_toEndOf="@id/book_thumbnail"
+            android:padding="3dp"
+            android:text="Campalto"
+            android:textSize="12sp" />
+
+        <TextView
             android:id="@+id/type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/book_owner"
-            android:layout_marginTop="3dp"
+            android:layout_below="@+id/owner_location"
+            android:layout_marginTop="0dp"
             android:layout_toEndOf="@id/book_thumbnail"
             android:padding="3dp"
             android:text="Type"
-            android:textSize="12sp" />
+            android:textColor="@color/green"
+            android:textSize="12sp"
+            tools:layout_marginTop="4dp" />
 
 
     </RelativeLayout>
