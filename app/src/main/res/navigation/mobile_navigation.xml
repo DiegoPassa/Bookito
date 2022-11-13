@@ -88,6 +88,11 @@
             android:id="@+id/action_searchByNameFragment_to_navigation_search"
             app:destination="@id/navigation_search" />
     </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.zerobudget.bookito.ui.profile.UserProfileFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_user_profile" />
 
 
 </navigation>

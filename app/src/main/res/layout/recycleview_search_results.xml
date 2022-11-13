@@ -64,7 +64,7 @@
             android:lines="3"
             android:padding="3dp"
             android:text="Book Title"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
