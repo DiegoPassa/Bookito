@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui.library;
+package com.zerobudget.bookito.models.book;
 
 import androidx.annotation.NonNull;
 

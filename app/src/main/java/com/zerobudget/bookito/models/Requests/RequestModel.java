@@ -1,11 +1,11 @@
-package com.zerobudget.bookito.ui.Requests;
+package com.zerobudget.bookito.models.Requests;
 
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.models.users.UserModel;
 
 import java.util.HashMap;
 import java.util.Map;

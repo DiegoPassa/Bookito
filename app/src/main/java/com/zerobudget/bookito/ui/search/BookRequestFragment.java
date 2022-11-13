@@ -21,7 +21,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRequestBookBinding;
-import com.zerobudget.bookito.ui.Requests.RequestModel;
+import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
 
 public class BookRequestFragment extends Fragment {

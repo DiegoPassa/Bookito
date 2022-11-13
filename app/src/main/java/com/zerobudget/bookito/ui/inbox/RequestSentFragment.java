@@ -17,13 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
-import com.zerobudget.bookito.ui.Requests.RequestModel;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RequestSentFragment extends Fragment {

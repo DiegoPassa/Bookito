@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui.Requests;
+package com.zerobudget.bookito.models.Requests;
 
 public class RequestTradeModel extends RequestModel{
     private String requestTradeBook; //libro che l'utente attuale richiede all'altro utente

@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui.Requests;
+package com.zerobudget.bookito.models.Requests;
 
 import java.util.Date;
 

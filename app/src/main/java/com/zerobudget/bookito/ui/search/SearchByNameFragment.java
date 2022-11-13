@@ -18,8 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
-import com.zerobudget.bookito.ui.library.BookModel;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;

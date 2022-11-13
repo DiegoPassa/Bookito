@@ -15,7 +15,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.android.volley.Request;
@@ -30,8 +29,8 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
-import com.zerobudget.bookito.ui.library.BookModel;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.json.JSONArray;
@@ -65,8 +64,6 @@ public class AddFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        AddViewModel addViewModel =
-                new ViewModelProvider(this).get(AddViewModel.class);
 
         binding = FragmentAddBinding.inflate(inflater, container, false);
         root = binding.getRoot();

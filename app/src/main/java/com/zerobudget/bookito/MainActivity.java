@@ -3,6 +3,8 @@ package com.zerobudget.bookito;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,18 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
-import com.zerobudget.bookito.ui.library.BookModel;
-import com.zerobudget.bookito.ui.users.UserLibrary;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.models.users.UserLibrary;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
-
-import org.w3c.dom.Document;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,6 +58,23 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.profile:
+                Toast.makeText(getApplicationContext(), "Premuto", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.logout:
+                // TODO: Logout utente
+                // FirebaseAuth.getInstance().signOut();
+                // Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     protected void getQueryCurrentUser() {
