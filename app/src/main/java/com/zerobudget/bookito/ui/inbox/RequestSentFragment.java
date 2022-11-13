@@ -89,12 +89,14 @@ public class RequestSentFragment extends Fragment {
     }
     //TODO O CREARE UN NUOVO FRAGMENT (E NUOVA RECYCLE VIEW QUINDI) OPPURE NELLA RECYCLE VIEW CONTROLLARE IN CHE FRAGMENT STIAMO FACENDO RIFERIMENTO ED IN BASE A QUELLO GENERARE POPUP DIVERSI
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
-        RecyclerView recyclerView = binding.recycleViewInbox;
+        if (getView() != null) {
+            RecyclerView recyclerView = binding.recycleViewInbox;
 
-        Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), req, "RequestSentFragment");
+            Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), req, "RequestSentFragment");
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        }
     }
 
 }
