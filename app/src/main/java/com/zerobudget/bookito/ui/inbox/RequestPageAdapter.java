@@ -17,11 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestPageAdapter extends FragmentStateAdapter {
-
-
-    public RequestPageAdapter(@NonNull FragmentActivity fragmentActivity) {
-        super(fragmentActivity);
+    public RequestPageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+        super(fragmentManager, lifecycle);
     }
+
+
+//    public RequestPageAdapter(@NonNull FragmentActivity fragmentActivity) {
+//        super(fragmentActivity);
+//    }
 
 
     @NonNull

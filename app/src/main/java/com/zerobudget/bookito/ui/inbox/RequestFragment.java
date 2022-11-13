@@ -19,24 +19,29 @@ import com.zerobudget.bookito.databinding.FragmentRequestPageBinding;
 
 public class RequestFragment extends Fragment {
 
+    ViewPager2 viewPager;
+    TabLayout tabs;
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_request_page,container, false);
         // Setting ViewPager for each Tabs
-        ViewPager2 viewPager = (ViewPager2) view.findViewById(R.id.viewPager);
+        viewPager = view.findViewById(R.id.viewPager);
         setupViewPager(viewPager);
         // Set Tabs inside Toolbar
-        TabLayout tabs = (TabLayout) view.findViewById(R.id.tabLayout);
+        tabs = view.findViewById(R.id.tabLayout);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 2) {
-                    Log.d("TEST", "AAAA");
-                }else
-                    viewPager.setCurrentItem(tab.getPosition());
+
+                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -63,9 +68,10 @@ public class RequestFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager2 viewPager) {
-        RequestPageAdapter adapter = new RequestPageAdapter(getActivity());
+        RequestPageAdapter adapter = new RequestPageAdapter(getChildFragmentManager(), getLifecycle());
 
         viewPager.setAdapter(adapter);
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,6 @@ public class RequestSentFragment extends Fragment {
     private ArrayList<RequestModel> requests;
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,6 +52,8 @@ public class RequestSentFragment extends Fragment {
 
         requests = new ArrayList<>();
         getRequests(requests);
+
+        Log.d("CREATE", "CRERATO");
 
 
         return root;

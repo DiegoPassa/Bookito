@@ -52,9 +52,7 @@ public class InboxFragment extends Fragment {
             addRequestsOnPage(new ArrayList<>());
             getRequests();
         });
-
         getRequests();
-
 
         return root;
     }
