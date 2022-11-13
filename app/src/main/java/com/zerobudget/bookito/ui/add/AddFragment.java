@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.add;
 
 import static com.zerobudget.bookito.utils.Utils.isAValidISBN;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -22,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
@@ -120,7 +121,7 @@ public class AddFragment extends Fragment {
             if(isAValidISBN(Long.parseLong(isbn)))
                 searchBookAPI(isbn);
             else {
-                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Attenzione");
                 builder.setMessage("L'isbn inserito non è valido, si prega di riprovare");
                 builder.setPositiveButton("OK", (dialogInterface, i) -> {

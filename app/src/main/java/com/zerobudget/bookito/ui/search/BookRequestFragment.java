@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.search;
 
-import android.app.AlertDialog;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -10,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -134,7 +135,7 @@ public class BookRequestFragment extends Fragment {
                 }
                 //se esiste già una richiesta da errore
                 if (err) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                     builder.setTitle("Richiesta Rifiutata");
                     builder.setMessage("La richiesta esiste già!");
                     builder.setPositiveButton("OK", (dialogInterface, i) -> {
@@ -145,7 +146,7 @@ public class BookRequestFragment extends Fragment {
                         Log.d("OKK", documentReference.getId());
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                     builder.setTitle("Richiesta effettuata");
                     builder.setMessage("La richiesta è andata a buon fine");
                     builder.setPositiveButton("OK", (dialogInterface, i) -> {

@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.add;
 
-import android.app.AlertDialog;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -73,24 +73,32 @@ public class AddConfirmFragment extends Fragment {
                 newBook.setType(action);
                 addBook();//inserimento libro nel database
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                Toast.makeText(getContext(), "Libro " + newBook.getTitle() + " inserito correttamente!", Toast.LENGTH_LONG).show();
+
+                Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
+
+/*                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Conferma");
                 builder.setMessage("Libro " + newBook.getTitle() + " è stato inserito correttamente");
                 builder.setPositiveButton("OK", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
-                }).show();
+                }).show();*/
             }
         });
 
         binding.btnCancel.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+            Navigation.findNavController(view).navigate(R.id.to_navigation_library);
+
+            Toast.makeText(getContext(), "Inserimento annullato", Toast.LENGTH_LONG).show();
+
+/*            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
             builder.setTitle("Attenzione");
             builder.setMessage("Inserimento annullato");
             builder.setPositiveButton("OK", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
                 Navigation.findNavController(view).navigate(R.id.to_navigation_library);
-            }).show();
+            }).show();*/
         });
 
         return root;
