@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -104,6 +105,25 @@ public class LibraryFragment extends Fragment {
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
             setUpBookModel();
+        });
+
+
+        binding.recycleViewMyLibrary.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 10 && binding.floatingActionButton.isShown()) {
+                    binding.floatingActionButton.hide();
+                }
+
+                if (dy < -10 && !binding.floatingActionButton.isShown()) {
+                    binding.floatingActionButton.show();
+               }
+
+                if (!binding.recycleViewMyLibrary.canScrollVertically(-1)) {
+                    binding.floatingActionButton.show();
+                }
+            }
         });
 
         return root;
