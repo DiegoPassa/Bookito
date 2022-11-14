@@ -63,7 +63,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
-        holder.book_owner.setText(results.get(position).getUser().getFirst_name());
+        String owner = results.get(position).getUser().getFirst_name()+" "+results.get(position).getUser().getLast_name();
+        holder.book_owner.setText(owner);
         holder.type.setText(results.get(position).getBook().getType());
 
 
