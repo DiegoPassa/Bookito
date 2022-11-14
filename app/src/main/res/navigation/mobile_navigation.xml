@@ -93,6 +93,11 @@
         android:name="com.zerobudget.bookito.ui.profile.UserProfileFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.zerobudget.bookito.ui.notifications.NotificationsFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_notifications" />
 
 
 </navigation>

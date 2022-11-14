@@ -73,17 +73,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.userProfileFragment:
-                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-                return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
-
             case R.id.logout:
                 // TODO: Logout utente
                 // FirebaseAuth.getInstance().signOut();
                 Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_SHORT).show();
 
             default:
-                return super.onOptionsItemSelected(item);
+                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+                return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
         }
     }
 
