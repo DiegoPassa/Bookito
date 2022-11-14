@@ -6,12 +6,6 @@
     app:startDestination="@+id/to_navigation_library">
 
     <fragment
-        android:id="@+id/navigation_requests"
-        android:name="com.zerobudget.bookito.ui.inbox.InboxFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_inbox" />
-
-    <fragment
         android:id="@+id/request_page_nav"
         android:name="com.zerobudget.bookito.ui.inbox.RequestFragment"
         android:label="@string/app_name"
@@ -24,7 +18,7 @@
             android:id="@+id/navigation_library"
             android:name="com.zerobudget.bookito.ui.library.LibraryFragment"
             android:label="@string/app_name"
-            tools:layout="@layout/fragment_library" >
+            tools:layout="@layout/fragment_library">
             <action
                 android:id="@+id/action_navigation_library_to_navigation_insertNew"
                 app:destination="@id/navigation_insertNew"
@@ -33,16 +27,10 @@
         </fragment>
 
         <fragment
-            android:id="@+id/bookDeleteFragment"
-            android:name="com.zerobudget.bookito.ui.library.BookDeleteFragment"
-            android:label="@string/app_name"
-            tools:layout="@layout/fragment_delete_book" />
-
-        <fragment
             android:id="@+id/navigation_insertNew"
             android:name="com.zerobudget.bookito.ui.add.AddFragment"
             android:label="@string/app_name"
-            tools:layout="@layout/fragment_add" >
+            tools:layout="@layout/fragment_add">
             <action
                 android:id="@+id/action_navigation_insertNew_to_addConfirmFragment"
                 app:destination="@id/addConfirmFragment" />
@@ -62,33 +50,6 @@
     </navigation>
 
     <fragment
-        android:id="@+id/navigation_search"
-        android:name="com.zerobudget.bookito.ui.search.SearchFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_navigation_search_to_searchByNameFragment"
-            app:destination="@id/searchByNameFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/bookRequestFragment"
-        android:name="com.zerobudget.bookito.ui.search.BookRequestFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_request_book">
-        <action
-            android:id="@+id/action_bookRequestFragment_to_navigation_requests"
-            app:destination="@id/navigation_requests" />
-    </fragment>
-    <fragment
-        android:id="@+id/searchByNameFragment"
-        android:name="com.zerobudget.bookito.ui.search.SearchByNameFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_search_by_name">
-        <action
-            android:id="@+id/action_searchByNameFragment_to_navigation_search"
-            app:destination="@id/navigation_search" />
-    </fragment>
-    <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.zerobudget.bookito.ui.profile.UserProfileFragment"
         android:label="@string/app_name"
@@ -98,6 +59,28 @@
         android:name="com.zerobudget.bookito.ui.notifications.NotificationsFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_notifications" />
+    <navigation
+        android:id="@+id/to_navigation_search"
+        app:startDestination="@id/navigation_search">
+        <fragment
+            android:id="@+id/searchByNameFragment"
+            android:name="com.zerobudget.bookito.ui.search.SearchByNameFragment"
+            android:label="@string/app_name"
+            tools:layout="@layout/fragment_search_by_name">
+            <action
+                android:id="@+id/action_searchByNameFragment_to_navigation_search"
+                app:destination="@id/navigation_search" />
+        </fragment>
+        <fragment
+            android:id="@+id/navigation_search"
+            android:name="com.zerobudget.bookito.ui.search.SearchFragment"
+            android:label="@string/app_name"
+            tools:layout="@layout/fragment_search">
+            <action
+                android:id="@+id/action_navigation_search_to_searchByNameFragment"
+                app:destination="@id/searchByNameFragment" />
+        </fragment>
+    </navigation>
 
 
 </navigation>
