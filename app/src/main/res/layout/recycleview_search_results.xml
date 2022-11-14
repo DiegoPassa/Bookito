@@ -92,20 +92,20 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/owner_location"
+            android:id="@+id/neighborhood_owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/book_owner"
             android:layout_toEndOf="@id/book_thumbnail"
             android:padding="3dp"
-            android:text="Campalto"
+            android:text="neighborhood"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/owner_location"
+            android:layout_below="@+id/neighborhood_owner"
             android:layout_marginTop="0dp"
             android:layout_toEndOf="@id/book_thumbnail"
             android:padding="3dp"
