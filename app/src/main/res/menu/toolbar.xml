@@ -9,6 +9,13 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/notificationsFragment"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Notification"
+        android:contentDescription="@string/vedi_notifiche"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="@string/logout"
