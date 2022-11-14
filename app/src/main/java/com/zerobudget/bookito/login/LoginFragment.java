@@ -10,8 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentLoginBinding;
+
+import java.util.List;
 
 
 public class LoginFragment extends Fragment {
@@ -54,23 +61,33 @@ public class LoginFragment extends Fragment {
                     binding.phoneNumber.requestFocus();
                     return;
                 }
-                LoginActivity.PhoneChecker checker = new LoginActivity.PhoneChecker(phoneNumber);
-                if(!checker.checkPhoneIntegrity()){
+                if(phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3'){
                     binding.phoneNumber.setError("Il numero inserito non e valido");
                     binding.phoneNumber.requestFocus();
                     return;
                 }
-                /*if(!checker.isRegistered()){
-                    binding.phoneNumber.setError("Il numero inserito non e registrato");
-                    binding.phoneNumber.requestFocus();
-                    return;
-                }*/
-                Bundle bundle = new Bundle();
-                bundle.putString("phone_number", phoneNumber);
-                bundle.putBoolean("register",false);
-                OTPConfirmFragment fragment = new OTPConfirmFragment();
-                fragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("users").whereEqualTo("telephone", phoneNumber)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                List<DocumentSnapshot> x = task.getResult().getDocuments();
+                                if(!x.isEmpty()){
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("phone_number", phoneNumber);
+                                    bundle.putBoolean("register",false);
+                                    OTPConfirmFragment fragment = new OTPConfirmFragment();
+                                    fragment.setArguments(bundle);
+                                    requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+                                }else{
+                                    binding.phoneNumber.setError("Il numero inserito non e registrato");
+                                    binding.phoneNumber.requestFocus();
+                                }
+
+                            }
+                        });
             }
         });
 

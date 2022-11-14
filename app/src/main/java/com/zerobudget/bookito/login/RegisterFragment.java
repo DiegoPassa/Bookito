@@ -10,10 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRegisterBinding;
 
-
+import java.util.List;
 
 
 public class RegisterFragment extends Fragment {
@@ -48,8 +53,23 @@ public class RegisterFragment extends Fragment {
         binding.registerConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 if(validateInput())
-                    register();
+                    db.collection("users").whereEqualTo("telephone", phoneNumber)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    List<DocumentSnapshot> x = task.getResult().getDocuments();
+                                    if(x.isEmpty()){
+                                        register();
+                                    }else{
+                                        binding.phoneNumberRegister.setError("Il numero inserito e gia registrato");
+                                        binding.phoneNumberRegister.requestFocus();
+                                    }
+
+                                }
+                            });
             }
         });
     }
@@ -74,17 +94,14 @@ public class RegisterFragment extends Fragment {
             binding.phoneNumberRegister.requestFocus();
             return false;
         }
-        LoginActivity.PhoneChecker checker = new LoginActivity.PhoneChecker(phoneNumber);
-        if(checker.isRegistered()){
-            binding.phoneNumberRegister.setError("Il numero inserito e gia registrato");
-            binding.phoneNumberRegister.requestFocus();
-            return false;
-        }
-        if(!checker.checkPhoneIntegrity()){
+
+        if(phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3'){
             binding.phoneNumberRegister.setError("Il numero inserito non e valido");
             binding.phoneNumberRegister.requestFocus();
             return false;
         }
+
+        //Possible change of input insertion mode
         if(zone.isEmpty()){
             binding.zone.setError("Deve specificare il quartiere dove abbita");
             binding.zone.requestFocus();
@@ -101,7 +118,6 @@ public class RegisterFragment extends Fragment {
         bundle.putString("surname",surname);
         bundle.putString("zone",zone);
         OTPConfirmFragment fragment = new OTPConfirmFragment();
-        //TODO verifica se il numero di telefono e gia registrato
         fragment.setArguments(bundle);
         requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
     }

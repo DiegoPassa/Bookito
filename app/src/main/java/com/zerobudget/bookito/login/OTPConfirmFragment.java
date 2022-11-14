@@ -48,6 +48,9 @@ public class OTPConfirmFragment extends Fragment {
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+            binding.otpConfirmButton.setEnabled(true);
+            binding.codeSentProgressBar.setVisibility(View.GONE);
+            binding.doneCheck.setVisibility(View.VISIBLE);
             code = s;
         }
 
@@ -61,6 +64,10 @@ public class OTPConfirmFragment extends Fragment {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
             if(isRegister){
                 Fragment fragment = new RegisterFragment();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+            }
+            else {
+                Fragment fragment = new LoginFragment();
                 requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
             }
         }
@@ -98,7 +105,7 @@ public class OTPConfirmFragment extends Fragment {
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
-        binding.button.setOnClickListener(new View.OnClickListener() {
+        binding.otpConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String userInput = binding.otpUser.getText().toString().trim();
@@ -120,11 +127,13 @@ public class OTPConfirmFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         //TODO aggiungere l'informazione utente all'interno del DATABASE
                         if(task.isSuccessful()){
-                            Intent intent = new Intent(requireActivity(), MainActivity.class);
                             if(isRegister)
                                 addUserToDatabase();
-                            startActivity(intent);
-                            requireActivity().finish();
+                            else {
+                                Intent intent = new Intent(requireActivity(), MainActivity.class);
+                                startActivity(intent);
+                                requireActivity().finish();
+                            }
                         }
                     }
                 });
@@ -141,7 +150,7 @@ public class OTPConfirmFragment extends Fragment {
         user.put("telephone",phone);
         user.put("karma", new HashMap<String,Object>());
         user.put("neighbourhood",neighbourhood);
-        HashMap<String,Object> books = new HashMap<>();
+        ArrayList<HashMap<String,Object>> books = new ArrayList<>();
         user.put("books",books);
         db = FirebaseFirestore.getInstance();
         db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser()).getUid().toString())
@@ -150,6 +159,9 @@ public class OTPConfirmFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(requireActivity(), "Il suo account e stato corretamente registrato.", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(requireActivity(), MainActivity.class);
+                        startActivity(intent);
+                        requireActivity().finish();
                     }
                 });
     }
