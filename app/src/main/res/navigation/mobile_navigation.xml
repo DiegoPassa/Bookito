@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/to_navigation_library">
+    app:startDestination="@id/to_navigation_library">
 
     <fragment
         android:id="@+id/request_page_nav"
         android:name="com.zerobudget.bookito.ui.inbox.RequestFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_request_page"/>
+        tools:layout="@layout/fragment_request_page" />
 
     <navigation
         android:id="@+id/to_navigation_library"

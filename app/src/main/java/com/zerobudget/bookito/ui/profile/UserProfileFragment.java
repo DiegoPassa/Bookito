@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.profile;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +13,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentUserProfileBinding;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UserProfileFragment extends Fragment {
 
@@ -35,7 +31,7 @@ public class UserProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
-    private String[] items;
+    private ArrayList<String> items;
     ArrayAdapter<String> adapterItems;
 
     // BottomNavigationView navBar;
@@ -61,17 +57,17 @@ public class UserProfileFragment extends Fragment {
         binding.usrNeighborhood.setText(user.getNeighborhood());
 
         binding.floatingActionButton.setOnClickListener(view -> {
+            binding.autoCompleteTextView.setHint(binding.usrNeighborhood.getText());
             changeVisibility();
         });
 
         binding.btnConfirmEdit.setOnClickListener(view -> {
             String new_neighborood = binding.autoCompleteTextView.getText().toString();
 
-            if (!new_neighborood.equals("Venezia") && !new_neighborood.equals("Mestre") && !new_neighborood.equals("Campalto")
-                    && !new_neighborood.equals("Favaro") && !new_neighborood.equals("Marghera")) {
-                binding.editNeighborhood.setError("Devi selezionare un'azione!");
+            if (!items.contains(new_neighborood)) {
+                binding.editNeighborhood.setError("Seleziona un nuovo quartiere!");
                 binding.editNeighborhood.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
-            }else {
+            } else {
                 //TODO: cambia id con current user
                 db.collection("users").document(Utils.USER_ID).update("neighborood", new_neighborood).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -95,25 +91,25 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void changeVisibility(){
-        if(binding.floatingActionButton.isShown()){
-            binding.usrNeighborhood.setVisibility(View.INVISIBLE);
+        if (binding.floatingActionButton.isShown()) {
+            binding.usrNeighborhood.setVisibility(View.GONE);
             binding.editNeighborhood.setVisibility(View.VISIBLE);
             binding.btnConfirmEdit.setVisibility(View.VISIBLE);
             binding.btnAnnulla.setVisibility(View.VISIBLE);
-            binding.floatingActionButton.setVisibility(View.INVISIBLE);
-        }else{
+            binding.floatingActionButton.setVisibility(View.GONE);
+        } else {
             binding.floatingActionButton.setVisibility(View.VISIBLE);
             binding.usrNeighborhood.setVisibility(View.VISIBLE);
-            binding.editNeighborhood.setVisibility(View.INVISIBLE);
-            binding.btnConfirmEdit.setVisibility(View.INVISIBLE);
-            binding.btnAnnulla.setVisibility(View.INVISIBLE);
+            binding.editNeighborhood.setVisibility(View.GONE);
+            binding.btnConfirmEdit.setVisibility(View.GONE);
+            binding.btnAnnulla.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        items = getResources().getStringArray(R.array.quartieri);
+        items = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.quartieri)));
         adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
         binding.autoCompleteTextView.setAdapter(adapterItems);
 

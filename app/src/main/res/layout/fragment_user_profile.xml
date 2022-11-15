@@ -59,22 +59,21 @@
         app:layout_constraintTop_toBottomOf="@+id/usr_telephone" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:id="@+id/edit_neighborhood"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:visibility="invisible"
-        android:hint="quartiere"
-        app:layout_constraintTop_toBottomOf="@+id/usr_telephone"
+        app:boxStrokeErrorColor="@color/md_theme_light_error"
+        app:errorTextColor="@color/md_theme_light_error"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:errorTextColor="@color/md_theme_light_error"
-        app:boxStrokeErrorColor="@color/md_theme_light_error"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        app:layout_constraintTop_toBottomOf="@+id/usr_telephone">
         <!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView"
-            android:layout_width="232dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
             app:layout_constraintEnd_toStartOf="@+id/guideline6"
