@@ -23,6 +23,7 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.UserFlag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +33,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     private final Context context;
     private ArrayList<RequestModel> requests;
     private String fragment;
-
-    private final Long MIN_FEEDBACKS_FLAG = 8l;
 
     // private AlertDialog.Builder dialogBuilder;
     // private AlertDialog dialog;
@@ -77,7 +76,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 HashMap<String, Object> karma = senderModel.getKarma(); //HashMap<String, Long>
                 Long points = (Long) karma.get("points");
                 Long feedback_numbers = (Long) karma.get("numbers");
-                Flag flag = getFlagFromUser(points, feedback_numbers);
+                Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
 
                 createNewContactDialog(position, holder, flag);
 
@@ -95,29 +94,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 //            }
         });
 
-
-    }
-
-    private Flag getFlagFromUser(Long points, Long feedbacks) {
-        /*
-        TODO fare in modo che se un utente ha tanti punti e pochi feedbak, o viceversa
-        allora ritorna una NORMAL FLAG
-
-        TODO se un utente ha tanti feedback e pochi punti allora ritorna una RED FLAG
-
-        TODO se un utente ha tanti feedback e tanti punti allora è una GREEN FLAG
-        TODO se un utente è "bilanciato" ritorna una normal flag
-         */
-        if (feedbacks > MIN_FEEDBACKS_FLAG) {
-            //per ora facciamo che "tanti feedback" equivalgono a 8
-            Long total_points = points / feedbacks;
-
-            if (total_points < 0.5) return Flag.RED_FLAG;
-            else if (total_points >= 0.8) return Flag.GREEN_FLAG;
-            return Flag.NORMAL_FLAG;
-
-        }
-        return Flag.NORMAL_FLAG;
 
     }
 
