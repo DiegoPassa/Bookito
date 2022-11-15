@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,8 +20,8 @@ import com.zerobudget.bookito.models.users.UserModel;
 
 import java.util.ArrayList;
 
-public class RequestSent_RecycleView extends Inbox_RecycleViewAdapter{
-    public RequestSent_RecycleView(Context ctx, ArrayList<RequestModel> requests) {
+public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
+    public RequestSent_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         super(ctx, requests);
     }
 
