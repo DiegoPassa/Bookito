@@ -2,12 +2,8 @@ package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ImageSpan;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -36,10 +31,6 @@ public class SearchByNameFragment extends Fragment {
     private FragmentSearchByNameBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-
-
-
-    private int beforeCharCounter = 0, charCounter = 0;
 
     //TODO: cercare nel quartire del current user
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,8 +57,9 @@ public class SearchByNameFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (!editable.toString().trim().isEmpty()) {
                     binding.recycleViewSearch.setVisibility(View.VISIBLE);
-                    searchBookByTitle(editable.toString().trim());
+                    searchBookByTitle(editable.toString());
                 } else {
+                    //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
                     binding.recycleViewSearch.setVisibility(View.INVISIBLE);
                     viewBooks(new ArrayList<>());
                 }
