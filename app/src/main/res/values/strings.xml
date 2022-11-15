@@ -14,6 +14,13 @@
     <string name="profile">Profile</string>
     <string name="vedi_profilo">Vedi profilo</string>
     <string name="disconnetti">Disconnetti</string>
+    <string-array name="quartieri">
+        <item>Venezia</item>
+        <item>Mestre</item>
+        <item>Campalto</item>
+        <item>Favaro</item>
+        <item>Marghera</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="azioni_libro">
         <item>Regalo</item>
