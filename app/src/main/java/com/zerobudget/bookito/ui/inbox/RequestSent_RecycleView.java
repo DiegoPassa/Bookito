@@ -85,8 +85,7 @@ public class RequestSent_RecycleView extends Inbox_RecycleViewAdapter{
                                 requests.get(holder.getAdapterPosition()).getTitle() + "</b>?",
                         Html.FROM_HTML_MODE_LEGACY));
                 newDialog.setPositiveButton("SI", (dialogInterface, i) -> {
-                    Log.d("POSITIVE_BUTTON", "HO DETTO DI SI");
-//                    super.deleteRequest(requests.get(holder.getAdapterPosition()));
+                    super.deleteRequest(requests.get(holder.getAdapterPosition()));
                     requests.remove(holder.getAdapterPosition());
                     notifyItemRemoved(holder.getAdapterPosition());
                     dialogInterface.dismiss();
@@ -94,7 +93,6 @@ public class RequestSent_RecycleView extends Inbox_RecycleViewAdapter{
                 });
 
                 newDialog.setNegativeButton("NO", (dialogInterface, i) -> {
-                    Log.d("NEGATIVE BUTTON", "HO DETTO DI NO");
                     dialogInterface.dismiss();
                 });
 
