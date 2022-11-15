@@ -2,9 +2,12 @@ package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -33,6 +37,8 @@ public class SearchByNameFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
+
+
     private int beforeCharCounter = 0, charCounter = 0;
 
     //TODO: cercare nel quartire del current user
@@ -47,7 +53,7 @@ public class SearchByNameFragment extends Fragment {
         viewBooks(new ArrayList<>());
 
         binding.bookTextfield.addTextChangedListener(new TextWatcher() {
-            boolean editing = false;
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
             }
@@ -56,15 +62,13 @@ public class SearchByNameFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
             }
 
-            /* TODO: Se si cancella velocemente c'è un delay tra il thread di ricerca e la chiama della ricerca succesiva,
-             *       questo porta a visualizzare dei risultati anche se l'input è vuoto (credo)
-             */
             @Override
             public void afterTextChanged(Editable editable) {
-                //controlla che la text field non sia vuota
-                if (editable.length() > 0 ) {
-                    searchBookByTitle(editable.toString());
+                if (!editable.toString().trim().isEmpty()) {
+                    binding.recycleViewSearch.setVisibility(View.VISIBLE);
+                    searchBookByTitle(editable.toString().trim());
                 } else {
+                    binding.recycleViewSearch.setVisibility(View.INVISIBLE);
                     viewBooks(new ArrayList<>());
                 }
             }
@@ -132,5 +136,6 @@ public class SearchByNameFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         }
     }
+
 
 }
