@@ -30,20 +30,18 @@ import java.util.HashMap;
 
 public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder> {
 
-    private final Context context;
-    private ArrayList<RequestModel> requests;
-    private String fragment;
+    protected final Context context;
+    protected ArrayList<RequestModel> requests;
 
     // private AlertDialog.Builder dialogBuilder;
     // private AlertDialog dialog;
 
-    private FirebaseFirestore db;
-    private FirebaseAuth auth;
+    protected FirebaseFirestore db;
+    protected FirebaseAuth auth;
 
-    public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, String fragment) {
+    public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         this.context = ctx;
         this.requests = requests;
-        this.fragment = fragment;
 
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
@@ -64,14 +62,14 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
-        UserModel senderModel = requests.get(position).getOtherUser();
+        UserModel senderModel = requests.get(holder.getAdapterPosition()).getOtherUser();
         if (senderModel != null) {
-            String other_usr = requests.get(position).getOtherUser().getFirst_name()+" "+requests.get(position).getOtherUser().getLast_name();
+            String other_usr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name()+" "+requests.get(position).getOtherUser().getLast_name();
             holder.user_name.setText(other_usr);
         }else
             holder.user_name.setText("undefined");
-        Picasso.get().load(requests.get(position).getThumbnail()).into(holder.book_image);
-        holder.title.setText(requests.get(position).getTitle());
+        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
+        holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
 
         holder.request_selected.setOnClickListener(view -> {
             if (senderModel != null && holder.getAdapterPosition() != -1) {
@@ -150,7 +148,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         refuseButton.setOnClickListener(view1 -> {
             if (holder.getAdapterPosition() != -1) {
-                refuseRequest(requests.get(holder.getAdapterPosition()));
+                deleteRequest(requests.get(holder.getAdapterPosition()));
                 requests.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
@@ -161,11 +159,11 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     }
 
-    private void refuseRequest(RequestModel r) {
+    protected void deleteRequest(RequestModel r) {
         db.collection("requests").document(r.getrequestId()).delete();
     }
 
-    private void acceptRequest(RequestModel r) {
+    protected void acceptRequest(RequestModel r) {
         db.collection("requests").document(r.getrequestId()).update("title", "SOOOKA");
     }
 
@@ -176,10 +174,10 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        private final TextView title;
-        private final ConstraintLayout request_selected;
-        private final TextView user_name;
-        private final ImageView book_image;
+        protected final TextView title;
+        protected final ConstraintLayout request_selected;
+        protected final TextView user_name;
+        protected final ImageView book_image;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

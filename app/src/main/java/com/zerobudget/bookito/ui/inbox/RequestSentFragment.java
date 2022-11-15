@@ -92,7 +92,7 @@ public class RequestSentFragment extends Fragment {
         if (getView() != null) {
             RecyclerView recyclerView = binding.recycleViewInbox;
 
-            Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), req, "RequestSentFragment");
+            Inbox_RecycleViewAdapter adapter = new RequestSent_RecycleView(this.getContext(), req);
 
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
