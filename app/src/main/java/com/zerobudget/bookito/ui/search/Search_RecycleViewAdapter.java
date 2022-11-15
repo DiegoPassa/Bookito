@@ -63,7 +63,9 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
-        holder.book_owner.setText(results.get(position).getUser().getFirst_name());
+        String owner = results.get(position).getUser().getFirst_name()+" "+results.get(position).getUser().getLast_name();
+        holder.book_owner.setText(owner);
+        holder.neighborhood_owner.setText(results.get(position).getUser().getNeighborhood());
         holder.type.setText(results.get(position).getBook().getType());
 
 
@@ -220,6 +222,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         private final TextView title;
         private final TextView author;
         private final TextView book_owner;
+        private final TextView neighborhood_owner;
         private final TextView type;
 
         public ViewHolder(@NonNull View itemView) {
@@ -230,6 +233,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);
             book_owner = itemView.findViewById(R.id.book_owner);
+            neighborhood_owner = itemView.findViewById(R.id.neighborhood_owner);
             type = itemView.findViewById(R.id.type);
         }
     }

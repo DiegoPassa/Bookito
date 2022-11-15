@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.request_page_nav, R.id.to_navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
+                R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
                 .build();
         MaterialToolbar toolbar = findViewById(R.id.topAppBar);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -73,17 +73,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.userProfileFragment:
-                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-                return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
-
             case R.id.logout:
                 // TODO: Logout utente
                 // FirebaseAuth.getInstance().signOut();
                 Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_SHORT).show();
 
             default:
-                return super.onOptionsItemSelected(item);
+                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+                return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
         }
     }
 

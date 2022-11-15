@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 public class SearchByNameFragment extends Fragment {
@@ -44,25 +44,23 @@ public class SearchByNameFragment extends Fragment {
         viewBooks(new ArrayList<>());
 
         binding.bookTextfield.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
             }
 
-            /* TODO: Se si cancella velocemente c'è un delay tra il thread di ricerca e la chiama della ricerca succesiva,
-             *       questo porta a visualizzare dei risultati anche se l'input è vuoto (credo)
-             */
             @Override
             public void afterTextChanged(Editable editable) {
-                //controlla che la text field non sia vuota
-                if (!TextUtils.isEmpty(binding.bookTextfield.getText().toString().trim()))
+                if (!editable.toString().trim().isEmpty()) {
+                    binding.recycleViewSearch.setVisibility(View.VISIBLE);
                     searchBookByTitle(editable.toString());
-                else {
+                } else {
+                    //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
+                    binding.recycleViewSearch.setVisibility(View.INVISIBLE);
                     viewBooks(new ArrayList<>());
                 }
             }
@@ -100,8 +98,9 @@ public class SearchByNameFragment extends Fragment {
 
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                if (Objects.requireNonNull(map.get("title")).toString().contains(searched_title)) {
-                                    Log.d("Title", "" + map.get("title"));
+                                //converte in lower case per non avere problemi di non corrispondenza tra maiuscole e minuscole
+                                if (Objects.requireNonNull(map.get("title")).toString().toLowerCase(Locale.ROOT).contains(searched_title.toLowerCase(Locale.ROOT))) {
+                                    //Log.d("Title", "" + map.get("title"));
                                     BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
                                     arrResults.add(searchResultsModel);
@@ -129,5 +128,6 @@ public class SearchByNameFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         }
     }
+
 
 }
