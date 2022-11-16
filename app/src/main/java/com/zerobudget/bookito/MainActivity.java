@@ -24,15 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
-
-
 import com.zerobudget.bookito.login.LoginActivity;
-
-import org.w3c.dom.Document;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.zerobudget.bookito.models.users.UserLibrary;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
@@ -51,11 +43,17 @@ public class MainActivity extends AppCompatActivity {
 //
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if(user == null){
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            this.finish();
+            return;
         }
+        Log.d("USER_ID", currentUser.getUid());
+        Utils.setUserId(currentUser.getUid());
+
         getQueryCurrentUser();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void getQueryCurrentUser() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // FirebaseUser currentUser = mAuth.getCurrentUser();
         //TODO aspettiamo la registrazione ed il login
         //String id = currentUser.getUid();
 
