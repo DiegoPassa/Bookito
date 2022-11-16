@@ -1,21 +1,19 @@
 package com.zerobudget.bookito.login;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRegisterBinding;
 
@@ -27,7 +25,7 @@ import java.util.List;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
-    private String phoneNumber,name,zone,surname;
+    private String phoneNumber, name, zone, surname;
     private ArrayList<String> items;
     ArrayAdapter<String> adapterItems;
 
@@ -40,7 +38,7 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentRegisterBinding.inflate(inflater,container,false);
+        binding = FragmentRegisterBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -56,24 +54,56 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.cancel.setOnClickListener(new View.OnClickListener() {
+        binding.cancel.setOnClickListener(view12 -> NavHostFragment.findNavController(RegisterFragment.this)
+                .navigate(R.id.action_registerFragment_to_loginFragment));
+
+        binding.phoneNumberRegister.addTextChangedListener(new TextWatcher() {
+            private int previousLength;
+            private boolean backSpace;
+
             @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(RegisterFragment.this)
-                        .navigate(R.id.action_registerFragment_to_loginFragment);
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                previousLength = charSequence.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                int editLen = editable.length();
+
+                //controlla se sto cancellando o no
+                backSpace = previousLength > editLen;
+
+                if (editable.toString().isEmpty())
+                    binding.registerConfirm.setEnabled(false);
+
+                if (editLen > 0 && editLen < 11) {
+                    String numWithSpace = editable + " ";
+                    if (!backSpace && (editLen == 3 || editLen == 7)) {
+                        binding.phoneNumberRegister.setText(numWithSpace);
+                        binding.phoneNumberRegister.setSelection(editLen + 1);
+                    }
+                    binding.registerConfirm.setEnabled(false);
+                } else
+                    binding.registerConfirm.setEnabled(true);
+
             }
         });
 
         binding.registerConfirm.setOnClickListener(view1 -> {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            if(validateInput())
+            if (validateInput())
                 db.collection("users").whereEqualTo("telephone", phoneNumber)
                         .get()
                         .addOnCompleteListener(task -> {
                             List<DocumentSnapshot> x = task.getResult().getDocuments();
-                            if(x.isEmpty()){
+                            if (x.isEmpty()) {
                                 register();
-                            }else{
+                            } else {
                                 binding.phoneNumberRegister.setError("Il numero inserito e gia registrato");
                                 binding.phoneNumberRegister.requestFocus();
                             }
@@ -83,35 +113,35 @@ public class RegisterFragment extends Fragment {
     }
 
     private boolean validateInput() {
-        phoneNumber = binding.phoneNumberRegister.getText().toString().trim();
+        phoneNumber = binding.phoneNumberRegister.getText().toString().replaceAll("\\s", "");
         name = binding.name.getText().toString().trim();
         zone = binding.autoCompleteTextView.getText().toString();
         surname = binding.surname.getText().toString().trim();
 
-        if(name.isEmpty()){
+        if (name.isEmpty()) {
             binding.name.setError("Il campo nome deve essere compilato");
             binding.name.requestFocus();
             return false;
         }
-        if(surname.isEmpty()){
+        if (surname.isEmpty()) {
             binding.surname.setError("Il campo cognome deve essere compilato");
             binding.surname.requestFocus();
             return false;
         }
-        if(phoneNumber.isEmpty()){
+        if (phoneNumber.isEmpty()) {
             binding.phoneNumberRegister.setError("Deve inserire il suo numero di telefono");
             binding.phoneNumberRegister.requestFocus();
             return false;
         }
 
-        if(phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3'){
+        if (phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3') {
             binding.phoneNumberRegister.setError("Il numero inserito non e valido");
             binding.phoneNumberRegister.requestFocus();
             return false;
         }
 
         //Possible change of input insertion mode
-        if(!items.contains(zone)){
+        if (!items.contains(zone)) {
             binding.neighborhood.setError("Deve specificare il quartiere dove abbita");
             binding.neighborhood.requestFocus();
             return false;
@@ -119,16 +149,16 @@ public class RegisterFragment extends Fragment {
         return true;
     }
 
-    public void register(){
+    public void register() {
         Bundle bundle = new Bundle();
         bundle.putString("phone_number", phoneNumber);
-        bundle.putBoolean("register",true);
-        bundle.putString("name",name);
-        bundle.putString("surname",surname);
-        bundle.putString("zone",zone);
+        bundle.putBoolean("register", true);
+        bundle.putString("name", name);
+        bundle.putString("surname", surname);
+        bundle.putString("zone", zone);
         OTPConfirmFragment fragment = new OTPConfirmFragment();
         fragment.setArguments(bundle);
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
     }
 
 }
