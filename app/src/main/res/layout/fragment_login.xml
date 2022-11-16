@@ -10,22 +10,25 @@
         android:id="@+id/phoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:ems="10"
-        android:maxLength="12"
+        android:hint="@string/numero_di_telefono"
         android:inputType="phone"
-        android:hint="Numero di telefono"
+        android:maxLength="12"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
 
     <Button
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:enabled="false"
-        android:text="Accedi"
+        android:text="@string/accedi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumber" />
@@ -34,24 +37,28 @@
         android:id="@+id/prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="95dp"
-        android:layout_marginTop="78dp"
-        android:text="Non sei ancora utente?"
+        android:layout_marginTop="16dp"
+        android:text="@string/non_sei_ancora_registrato"
+        app:layout_constraintEnd_toStartOf="@+id/register"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/login" />
 
     <TextView
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="78dp"
-        android:text="Crea utente!"
-        app:layout_constraintStart_toEndOf="@+id/prompt"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumber"
+        android:layout_marginStart="8dp"
         android:clickable="true"
-        android:textColor="@color/blue"
-        android:focusable="true" />
+        android:focusable="true"
+        android:gravity="center"
+        android:minHeight="48dp"
+        android:text="@string/crea_utente"
+        android:textColor="#5C6BC0"
+        app:layout_constraintBottom_toBottomOf="@+id/prompt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/prompt"
+        app:layout_constraintTop_toTopOf="@+id/prompt" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

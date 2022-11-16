@@ -30,4 +30,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="vedi_notifiche">Vedi notifiche</string>
+    <string name="numero_di_telefono">Numero di telefono</string>
+    <string name="accedi">Accedi</string>
+    <string name="non_sei_ancora_registrato">Non sei ancora registrato?</string>
+    <string name="crea_utente">Crea utente!</string>
 </resources>
