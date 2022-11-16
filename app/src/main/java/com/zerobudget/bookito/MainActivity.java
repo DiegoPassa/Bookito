@@ -98,8 +98,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.logout:
                 // TODO: Logout utente
-                // FirebaseAuth.getInstance().signOut();
-                Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "Disconnessione...", Toast.LENGTH_SHORT).show();
+                finish();
 
             default:
                 NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
