@@ -110,9 +110,7 @@ public class LoginFragment extends Fragment {
                             Bundle bundle = new Bundle();
                             bundle.putString("phone_number", phoneNumber);
                             bundle.putBoolean("register",false);
-                            OTPConfirmFragment fragment = new OTPConfirmFragment();
-                            fragment.setArguments(bundle);
-                            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+                            NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_OTPConfirmFragment,bundle);
                         }else{
                             binding.phoneNumber.setError("Il numero inserito non e registrato");
                             binding.phoneNumber.requestFocus();

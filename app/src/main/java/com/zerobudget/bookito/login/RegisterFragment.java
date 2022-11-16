@@ -156,9 +156,7 @@ public class RegisterFragment extends Fragment {
         bundle.putString("name", name);
         bundle.putString("surname", surname);
         bundle.putString("zone", zone);
-        OTPConfirmFragment fragment = new OTPConfirmFragment();
-        fragment.setArguments(bundle);
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
+        NavHostFragment.findNavController(RegisterFragment.this).navigate(R.id.action_registerFragment_to_OTPConfirmFragment,bundle);
     }
 
 }

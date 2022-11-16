@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -65,12 +66,10 @@ public class OTPConfirmFragment extends Fragment {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
             Log.d("ER_Verification_Failed", e.toString());
             if(isRegister){
-                Fragment fragment = new RegisterFragment();
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+                NavHostFragment.findNavController(OTPConfirmFragment.this).navigate(R.id.action_OTPConfirmFragment_to_registerFragment);
             }
             else {
-                Fragment fragment = new LoginFragment();
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+                NavHostFragment.findNavController(OTPConfirmFragment.this).navigate(R.id.action_OTPConfirmFragment_to_loginFragment);
             }
         }
 
