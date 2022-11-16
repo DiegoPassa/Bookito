@@ -14,74 +14,66 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
-public class RequestSentFragment extends Fragment {
+public class RequestAcceptedFragment extends Fragment {
     private FragmentInboxBinding binding;
-
-    private FirebaseAuth mAuth;
+    private ArrayList<RequestModel> requests = new ArrayList<>();
     private FirebaseFirestore db;
-
-    private ArrayList<RequestModel> requests;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.progressBar.setVisibility(View.VISIBLE);
-            addRequestsOnPage(new ArrayList<>());
-            binding.swipeRefreshLayout.setRefreshing(false);
-            getRequests(new ArrayList<>());
-        });
-
-        requests = new ArrayList<>();
-        getRequests(requests);
-
-        Log.d("DIOOOOO", "CRERATO");
-
+        loadCompletedRequests();
 
         return root;
     }
 
-    private void getRequests(ArrayList<RequestModel> req) {
-        db.collection("requests").whereEqualTo("sender", Utils.USER_ID)
-                .whereEqualTo("status", "undefined")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            RequestModel r = RequestModel.getRequestModel((String) doc.get("type"), doc);
-                            if (r != null) req.add(r);
+    protected void loadCompletedRequests() {
+        Task<QuerySnapshot> requestSent = db.collection("requests").whereEqualTo("status", "accepted")
+                .whereEqualTo("sender", Utils.USER_ID).get();
 
-                        }
+        Task<QuerySnapshot> requestReceived = db.collection("requests").whereEqualTo("status", "accepted")
+                .whereEqualTo("receiver", Utils.USER_ID).get();
 
-                        addOtherUsers(req);
-                    }
-                });
+        Tasks.whenAllSuccess(requestSent, requestReceived).addOnSuccessListener(list -> {
+           QuerySnapshot queryRequestSent = (QuerySnapshot) list.get(0);
+           QuerySnapshot queryRequestReceived = (QuerySnapshot) list.get(1);
+
+           for (QueryDocumentSnapshot doc : queryRequestReceived) {
+               requests.add(RequestModel.getRequestModel( (String) doc.get("type"), doc) );
+           }
+
+           for (QueryDocumentSnapshot doc : queryRequestSent) {
+               requests.add(RequestModel.getRequestModel( (String) doc.get("type"), doc));
+           }
+
+           addOtherUsers(requests);
+
+        });
     }
 
-
-    protected void addOtherUsers(ArrayList<RequestModel> requests) {
+    private void addOtherUsers(ArrayList<RequestModel> req) {
         ArrayList<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (RequestModel r : requests) {
-            tasks.add(r.queryOtherUser(db, r.getReceiver()));
-        }
+            if (Utils.USER_ID.equals(r.getReceiver())) {
+                tasks.add(r.queryOtherUser(db, r.getSender())); //se user_id == sender allora prendo id di chi la manda
+            } else {
+                tasks.add(r.queryOtherUser(db, r.getReceiver())); //altrimenti prendo id di chi la riceve (in questo caso current user sta mandando la richiesta)
+            }
+        } //voglio ottenre informazioni sull'ALTRO utente
         Tasks.whenAllSuccess(tasks).addOnSuccessListener(task -> {
             binding.progressBar.setVisibility(View.GONE);
             addRequestsOnPage(requests);
@@ -92,11 +84,10 @@ public class RequestSentFragment extends Fragment {
         if (getView() != null) {
             RecyclerView recyclerView = binding.recycleViewInbox;
 
-            Inbox_RecycleViewAdapter adapter = new RequestSent_RecycleViewAdapter(this.getContext(), req);
+            Inbox_RecycleViewAdapter adapter = new RequestAccepted_RecycleViewAdapter(this.getContext(), req);
 
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         }
     }
-
 }
