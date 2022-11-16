@@ -36,6 +36,14 @@ public class RequestAcceptedFragment extends Fragment {
         View root = binding.getRoot();
 
         db = FirebaseFirestore.getInstance();
+
+        binding.swipeRefreshLayout.setOnRefreshListener( () -> {
+            addRequestsOnPage(new ArrayList<>());
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.swipeRefreshLayout.setRefreshing(false);
+            loadCompletedRequests();
+        });
+
         loadCompletedRequests();
 
         return root;
