@@ -103,8 +103,8 @@ public class AddFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 //si assicura che vegnano inserti esattamente 13 caratteri
-                if(editable.toString().length() > 0 && editable.toString().length() < 13) {
-                    binding.isbnNumber.setError("Attezione! L'isbn deve avere 13 caratteri");
+
+                if(editable.toString().length() < 13) {
                     binding.btnAdd.setEnabled(false);
                 }
                 if(editable.toString().length() == 13)
@@ -115,6 +115,7 @@ public class AddFragment extends Fragment {
         binding.btnAdd.setOnClickListener(view -> {
             String isbn = binding.isbnNumber.getText().toString();
 
+
             if(isAValidISBN(Long.parseLong(isbn)))
                 searchBookAPI(isbn);
             else {
@@ -124,6 +125,8 @@ public class AddFragment extends Fragment {
                 builder.setPositiveButton("OK", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                 }).show();
+                binding.isbnNumber.setError("Attezione! L'isbn deve avere 13 caratteri");
+                binding.isbnNumber.requestFocus();
             }
         });
 

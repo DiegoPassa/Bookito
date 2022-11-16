@@ -33,6 +33,7 @@
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
+        <item name="logo">@drawable/bookito_logo_darktheme</item>
     </style>
 
     <style name="buttonAccept">
