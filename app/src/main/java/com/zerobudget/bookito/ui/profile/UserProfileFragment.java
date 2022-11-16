@@ -75,7 +75,7 @@ public class UserProfileFragment extends Fragment {
                         user.setNeighborhood(new_neighborood);
                         Toast.makeText(getContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                         //aggiorna la pagina
-                        Navigation.findNavController(view).navigate(R.id.userProfileFragment);
+                        Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
                     }
                 });
                 changeVisibility();
