@@ -23,11 +23,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.MainActivity;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentOtpConfirmBinding;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.internal.Util;
 
 
 public class OTPConfirmFragment extends Fragment {
@@ -130,6 +133,7 @@ public class OTPConfirmFragment extends Fragment {
                                 Intent intent = new Intent(requireActivity(), MainActivity.class);
                                 startActivity(intent);
                                 requireActivity().finish();
+                                Utils.setUserId(mAuth.getCurrentUser().getUid());
                             }
                         }
                     }
@@ -158,6 +162,7 @@ public class OTPConfirmFragment extends Fragment {
                         Toast.makeText(requireActivity(), "Il suo account e stato corretamente registrato.", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(requireActivity(), MainActivity.class);
                         startActivity(intent);
+                        Utils.setUserId(mAuth.getCurrentUser().getUid());
                         requireActivity().finish();
                     }
                 });

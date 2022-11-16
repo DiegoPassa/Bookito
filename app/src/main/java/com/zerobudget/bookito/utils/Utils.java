@@ -1,5 +1,6 @@
 package com.zerobudget.bookito.utils;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -7,7 +8,13 @@ public class Utils {
     //contiene metodi statici per funzionalità
     private static Gson gson;
 
-    public static String USER_ID = "AZLYEN9WqTOVXiglkPJT";
+    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    public static String USER_ID = mAuth.getCurrentUser().getUid();
+
+    public static void setUserId(String userId) {
+        USER_ID = userId;
+    }
 
     //serve a creare una stringa json da un oggetto e viceversa
     public static Gson getGsonParser() {
