@@ -39,6 +39,7 @@ public class RequestAcceptedFragment extends Fragment {
 
         binding.swipeRefreshLayout.setOnRefreshListener( () -> {
             addRequestsOnPage(new ArrayList<>());
+            requests = new ArrayList<>();
             binding.progressBar.setVisibility(View.VISIBLE);
             binding.swipeRefreshLayout.setRefreshing(false);
             loadCompletedRequests();
