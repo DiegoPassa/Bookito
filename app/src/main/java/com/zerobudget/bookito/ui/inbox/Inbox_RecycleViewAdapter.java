@@ -160,11 +160,11 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     protected void deleteRequest(RequestModel r) {
-//        db.collection("requests").document(r.getrequestId()).delete();
+        db.collection("requests").document(r.getrequestId()).delete();
     }
 
     protected void acceptRequest(RequestModel r) {
-//        db.collection("requests").document(r.getrequestId()).update("status", "accepted");
+        db.collection("requests").document(r.getrequestId()).update("status", "accepted");
     }
 
     @Override

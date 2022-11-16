@@ -55,36 +55,37 @@ public class MainActivity extends AppCompatActivity {
         if(user == null){
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
+        } else {
+            getQueryCurrentUser();
+
+            binding = ActivityMainBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+
+            setSupportActionBar(binding.topAppBar);
+
+            binding.topAppBar.setNavigationOnClickListener(view -> {
+                onBackPressed();
+            });
+
+            BottomNavigationView navView = findViewById(R.id.nav_view);
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
+            appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
+                    .build();
+            MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(binding.navView, navController);
+
+            navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
+                if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment) {
+                    navView.setVisibility(View.GONE);
+                } else {
+                    navView.setVisibility(View.VISIBLE);
+                }
+            });
         }
-        getQueryCurrentUser();
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.topAppBar);
-
-        binding.topAppBar.setNavigationOnClickListener(view -> {
-            onBackPressed();
-        });
-
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
-                .build();
-        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
-
-        navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment) {
-                navView.setVisibility(View.GONE);
-            } else {
-                navView.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     @Override
