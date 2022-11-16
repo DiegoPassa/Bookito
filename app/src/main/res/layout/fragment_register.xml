@@ -10,7 +10,7 @@
         android:id="@+id/phoneNumberRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:ems="10"
         android:maxLength="12"
         android:hint="Numero di telefono"
@@ -36,7 +36,7 @@
         android:id="@+id/surname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="Cognome"
         android:inputType="textPersonName"
@@ -49,7 +49,7 @@
         android:id="@+id/neighborhood"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:layout_height="wrap_content"
         android:hint="Quartiere"
         app:boxStrokeErrorColor="@color/md_theme_light_error"
@@ -64,15 +64,14 @@
             android:layout_height="wrap_content"
             android:inputType="none"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
-            app:layout_constraintStart_toStartOf="@+id/guideline3"
-            />
+            app:layout_constraintStart_toStartOf="@+id/guideline3" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/registerConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:text="Conferma"
         android:enabled="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:text="Anulla"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/neighborhood" />
