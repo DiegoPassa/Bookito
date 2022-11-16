@@ -62,17 +62,17 @@ public class UserProfileFragment extends Fragment {
         });
 
         binding.btnConfirmEdit.setOnClickListener(view -> {
-            String new_neighborood = binding.autoCompleteTextView.getText().toString();
+            String new_neighborhood = binding.autoCompleteTextView.getText().toString();
 
-            if (!items.contains(new_neighborood)) {
+            if (!items.contains(new_neighborhood)) {
                 binding.editNeighborhood.setError("Seleziona un nuovo quartiere!");
                 binding.editNeighborhood.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
             } else {
                 //TODO: cambia id con current user
-                db.collection("users").document(Utils.USER_ID).update("neighborood", new_neighborood).addOnSuccessListener(new OnSuccessListener<Void>() {
+                db.collection("users").document(Utils.USER_ID).update("neighborhood", new_neighborhood).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        user.setNeighborhood(new_neighborood);
+                        user.setNeighborhood(new_neighborhood);
                         Toast.makeText(getContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                         //aggiorna la pagina
                         Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);

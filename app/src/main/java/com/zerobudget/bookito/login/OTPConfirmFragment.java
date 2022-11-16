@@ -144,13 +144,13 @@ public class OTPConfirmFragment extends Fragment {
         String first_name = bundle.getString("name");
         String last_name = bundle.getString("surname");
         String phone = bundle.getString("phone_number");
-        String neighbourhood = bundle.getString("zone");
+        String neighborhood = bundle.getString("zone");
         HashMap<String,Object> user = new HashMap<>();
         user.put("first_name",first_name);
         user.put("last_name",last_name);
         user.put("telephone",phone);
         user.put("karma", new HashMap<String,Object>());
-        user.put("neighbourhood",neighbourhood);
+        user.put("neighborhood",neighborhood);
         ArrayList<HashMap<String,Object>> books = new ArrayList<>();
         user.put("books",books);
         db = FirebaseFirestore.getInstance();
