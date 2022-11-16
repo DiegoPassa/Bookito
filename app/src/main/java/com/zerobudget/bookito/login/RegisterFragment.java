@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,6 +19,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRegisterBinding;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -25,6 +28,8 @@ public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
     private String phoneNumber,name,zone,surname;
+    private ArrayList<String> items;
+    ArrayAdapter<String> adapterItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,15 @@ public class RegisterFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        items = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.quartieri)));
+        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
+        binding.autoCompleteTextView.setAdapter(adapterItems);
+
+    }
+
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -50,35 +64,30 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        binding.registerConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                if(validateInput())
-                    db.collection("users").whereEqualTo("telephone", phoneNumber)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    List<DocumentSnapshot> x = task.getResult().getDocuments();
-                                    if(x.isEmpty()){
-                                        register();
-                                    }else{
-                                        binding.phoneNumberRegister.setError("Il numero inserito e gia registrato");
-                                        binding.phoneNumberRegister.requestFocus();
-                                    }
+        binding.registerConfirm.setOnClickListener(view1 -> {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            if(validateInput())
+                db.collection("users").whereEqualTo("telephone", phoneNumber)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            List<DocumentSnapshot> x = task.getResult().getDocuments();
+                            if(x.isEmpty()){
+                                register();
+                            }else{
+                                binding.phoneNumberRegister.setError("Il numero inserito e gia registrato");
+                                binding.phoneNumberRegister.requestFocus();
+                            }
 
-                                }
-                            });
-            }
+                        });
         });
     }
 
     private boolean validateInput() {
         phoneNumber = binding.phoneNumberRegister.getText().toString().trim();
         name = binding.name.getText().toString().trim();
-        zone = binding.zone.getText().toString().trim();
+        zone = binding.autoCompleteTextView.getText().toString();
         surname = binding.surname.getText().toString().trim();
+
         if(name.isEmpty()){
             binding.name.setError("Il campo nome deve essere compilato");
             binding.name.requestFocus();
@@ -102,9 +111,9 @@ public class RegisterFragment extends Fragment {
         }
 
         //Possible change of input insertion mode
-        if(zone.isEmpty()){
-            binding.zone.setError("Deve specificare il quartiere dove abbita");
-            binding.zone.requestFocus();
+        if(!items.contains(zone)){
+            binding.neighborhood.setError("Deve specificare il quartiere dove abbita");
+            binding.neighborhood.requestFocus();
             return false;
         }
         return true;

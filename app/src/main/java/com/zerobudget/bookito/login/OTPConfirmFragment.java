@@ -2,6 +2,7 @@ package com.zerobudget.bookito.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class OTPConfirmFragment extends Fragment {
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+            Log.d("ER_Verification_Failed", e.toString());
             if(isRegister){
                 Fragment fragment = new RegisterFragment();
                 requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
@@ -105,36 +107,30 @@ public class OTPConfirmFragment extends Fragment {
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
-        binding.otpConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String userInput = binding.otpUser.getText().toString().trim();
-                if(userInput.isEmpty()){
-                    binding.otpUser.setError("Inserisci il codice OTP");
-                    binding.otpUser.requestFocus();
-                    return;
-                }
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(code,userInput);
-                signInWithPhoneCredential(credential);
+        binding.otpConfirmButton.setOnClickListener(view1 -> {
+            String userInput = binding.otpUser.getText().toString().trim();
+            if(userInput.isEmpty()){
+                binding.otpUser.setError("Inserisci il codice OTP");
+                binding.otpUser.requestFocus();
+                return;
             }
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(code,userInput);
+            signInWithPhoneCredential(credential);
         });
     }
 
     private void signInWithPhoneCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //TODO aggiungere l'informazione utente all'interno del DATABASE
-                        if(task.isSuccessful()){
-                            if(isRegister)
-                                addUserToDatabase();
-                            else {
-                                Intent intent = new Intent(requireActivity(), MainActivity.class);
-                                startActivity(intent);
-                                requireActivity().finish();
-                                Utils.setUserId(mAuth.getCurrentUser().getUid());
-                            }
+                .addOnCompleteListener(requireActivity(), task -> {
+                    //TODO aggiungere l'informazione utente all'interno del DATABASE
+                    if(task.isSuccessful()){
+                        if(isRegister)
+                            addUserToDatabase();
+                        else {
+                            Intent intent = new Intent(requireActivity(), MainActivity.class);
+                            startActivity(intent);
+                            requireActivity().finish();
+                            Utils.setUserId(mAuth.getCurrentUser().getUid());
                         }
                     }
                 });
@@ -159,15 +155,12 @@ public class OTPConfirmFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser()).getUid().toString())
                 .set(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(requireActivity(), "Il suo account e stato corretamente registrato.", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(requireActivity(), MainActivity.class);
-                        startActivity(intent);
-                        Utils.setUserId(mAuth.getCurrentUser().getUid());
-                        requireActivity().finish();
-                    }
+                .addOnCompleteListener(task -> {
+                    Toast.makeText(requireActivity(), "Il suo account e stato corretamente registrato.", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(requireActivity(), MainActivity.class);
+                    startActivity(intent);
+                    Utils.setUserId(mAuth.getCurrentUser().getUid());
+                    requireActivity().finish();
                 });
     }
 }

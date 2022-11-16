@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "992992301814-608e2jg89ukacr82k2jtkaqgn12v2gb1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bookito_test",
+            "certificate_hash": "e78f120875716d4ff4300411b5941f577f381483"
+          }
+        },
+        {
           "client_id": "992992301814-7it9cfsa5gqhfrflp38ad7v7ocl8kh6f.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -130,6 +138,30 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "992992301814-5bgtfncsstul9nt2empp3t99pmcsgnc9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zerobudget.bookito",
+            "certificate_hash": "44e86a0f9f8fe39240e423d0331d027d7094919b"
+          }
+        },
+        {
+          "client_id": "992992301814-8itqg2l7tdnsof7kfo4tldaoqt2ist8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zerobudget.bookito",
+            "certificate_hash": "e78f120875716d4ff4300411b5941f577f381483"
+          }
+        },
+        {
+          "client_id": "992992301814-a49d3i5tu1lej8e4e0b2k9blqvuolmg0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zerobudget.bookito",
+            "certificate_hash": "128693ba101198e2c13aba61d8e1dea8255b6c4c"
+          }
+        },
         {
           "client_id": "992992301814-7it9cfsa5gqhfrflp38ad7v7ocl8kh6f.apps.googleusercontent.com",
           "client_type": 3
