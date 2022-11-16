@@ -74,23 +74,21 @@ public class RegisterFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 int editLen = editable.length();
-
-                //controlla se sto cancellando o no
                 backSpace = previousLength > editLen;
 
-                if (editable.toString().isEmpty())
+                if (editable.toString().isEmpty()) {
                     binding.registerConfirm.setEnabled(false);
-
-                if (editLen > 0 && editLen < 11) {
-                    String numWithSpace = editable + " ";
-                    if (!backSpace && (editLen == 3 || editLen == 7)) {
-                        binding.phoneNumberRegister.setText(numWithSpace);
-                        binding.phoneNumberRegister.setSelection(editLen + 1);
-                    }
-                    binding.registerConfirm.setEnabled(false);
-                } else
-                    binding.registerConfirm.setEnabled(true);
-
+                } else {
+                    if (editLen > 0 && editLen < 11) {
+                        String numWithSpace = editable + " ";
+                        if (!backSpace && (editLen == 3 || editLen == 7)) {
+                            binding.phoneNumberRegister.setText(numWithSpace);
+                            binding.phoneNumberRegister.setSelection(editLen + 1);
+                        }
+                        binding.registerConfirm.setEnabled(false);
+                    } else
+                        binding.registerConfirm.setEnabled(true);
+                }
             }
         });
 

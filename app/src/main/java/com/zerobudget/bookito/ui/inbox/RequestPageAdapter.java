@@ -30,10 +30,11 @@ public class RequestPageAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Log.d("CREATE_FRAGMENT", "ENTRO");
+
         switch (position) {
             case 0: return new InboxFragment();
             case 1: return new RequestSentFragment();
+            case 2: return new RequestAcceptedFragment();
             //case2: retutn new CompletedRequestFragment();
         }
         return null;
@@ -41,6 +42,6 @@ public class RequestPageAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2; //todo mettere 3 appena facciamo il terzo fragment
+        return 3; //todo mettere 3 appena facciamo il terzo fragment
     }
 }

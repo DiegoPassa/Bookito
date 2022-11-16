@@ -53,7 +53,7 @@ public class RequestSentFragment extends Fragment {
         requests = new ArrayList<>();
         getRequests(requests);
 
-        Log.d("CREATE", "CRERATO");
+        Log.d("DIOOOOO", "CRERATO");
 
 
         return root;
@@ -87,7 +87,7 @@ public class RequestSentFragment extends Fragment {
             addRequestsOnPage(requests);
         });
     }
-    //TODO O CREARE UN NUOVO FRAGMENT (E NUOVA RECYCLE VIEW QUINDI) OPPURE NELLA RECYCLE VIEW CONTROLLARE IN CHE FRAGMENT STIAMO FACENDO RIFERIMENTO ED IN BASE A QUELLO GENERARE POPUP DIVERSI
+
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
         if (getView() != null) {
             RecyclerView recyclerView = binding.recycleViewInbox;

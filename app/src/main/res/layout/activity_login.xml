@@ -46,14 +46,15 @@
                     app:layout_constraintGuide_percent=".25" />
 
                 <ImageView
-                    android:id="@+id/logo"
+                    android:id="@+id/img_logo"
+                    style="@style/img_logo"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toStartOf="@+id/guideline9"
                     app:layout_constraintStart_toStartOf="@+id/guideline8"
                     app:layout_constraintTop_toTopOf="@+id/guideline10"
-                    app:srcCompat="@drawable/bookito_logo" />
+                    android:contentDescription="@string/bookito_logo" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

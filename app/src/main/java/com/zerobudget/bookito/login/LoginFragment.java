@@ -65,22 +65,21 @@ public class LoginFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 int editLen = editable.length();
-
-                //controlla se sto cancellando o no
                 backSpace = previousLength > editLen;
 
-                if(editable.toString().isEmpty())
+                if(editable.toString().isEmpty()) {
                     binding.login.setEnabled(false);
-
-                if(editLen > 0 && editLen<11){
-                    String numWithSpace = editable +" ";
-                    if(!backSpace && (editLen == 3 || editLen == 7)) {
-                        binding.phoneNumber.setText(numWithSpace);
-                        binding.phoneNumber.setSelection(editLen+1);
+                } else {
+                    if(editLen > 0 && editLen < 11){
+                        String numWithSpace = editable +" ";
+                        if(!backSpace && (editLen == 3 || editLen == 7)) {
+                            binding.phoneNumber.setText(numWithSpace);
+                            binding.phoneNumber.setSelection(editLen+1);
+                        }
+                        binding.login.setEnabled(false);
+                    }else{
+                        binding.login.setEnabled(true);
                     }
-                    binding.login.setEnabled(false);
-                }else{
-                    binding.login.setEnabled(true);
                 }
 
             }

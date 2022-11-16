@@ -35,6 +35,10 @@
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
     </style>
 
+    <style name="img_logo">
+        <item name="android:src">@drawable/bookito_logo_darktheme</item>
+    </style>
+
     <style name="buttonAccept">
         <item name="android:backgroundTint">#81C784</item>
         <item name="android:textColor">#132A13</item>

@@ -126,7 +126,7 @@ public class RequestModel {
     }
 
     public static RequestModel getRequestModel(String type, DocumentSnapshot o) {
-        Log.d("SCAMBIO", ""+o);
+
         switch (type) {
             case ("Regalo"): {
                 return new RequestModel((String) o.get("book"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId());

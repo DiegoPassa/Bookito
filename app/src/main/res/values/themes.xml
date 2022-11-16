@@ -31,6 +31,10 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
     </style>
 
+    <style name="img_logo">
+        <item name="android:src">@drawable/bookito_logo</item>
+    </style>
+
     <style name="buttonAccept">
         <item name="android:backgroundTint">@color/green</item>
         <item name="android:textColor">@color/white</item>
