@@ -1,8 +1,6 @@
 package com.zerobudget.bookito.ui.add;
 
-import android.app.AlertDialog;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -11,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -24,8 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentConfirmAddBinding;
-import com.zerobudget.bookito.ui.library.BookModel;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 
@@ -38,8 +36,6 @@ public class AddConfirmFragment extends Fragment {
 
     AutoCompleteTextView autoCompleteTxt;
     ArrayAdapter<String> adapterItems;
-
-
 
     @Override
     public void onResume() {
@@ -54,19 +50,9 @@ public class AddConfirmFragment extends Fragment {
         binding = FragmentConfirmAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-//        items = getResources().getStringArray(R.array.azioni_libro);
-
-//        Log.d("ITEMS", items[0] + " " + items[1] + " " + items[2]);
-
-
-//        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
-
-
-//        binding.autoCompleteTextView.setAdapter(adapterItems);
-
         Bundle args = getArguments();
         String str = args.getString("BK");
-        newBook= Utils.getGsonParser().fromJson(str, BookModel.class);
+        newBook = Utils.getGsonParser().fromJson(str, BookModel.class);
 
         binding.bookTitle.setText(newBook.getTitle());
         binding.bookAuthor.setText(newBook.getAuthor());
@@ -78,41 +64,51 @@ public class AddConfirmFragment extends Fragment {
 
 
         binding.btnConfirm.setOnClickListener(view -> {
-
             String action = binding.autoCompleteTextView.getText().toString();
+
             if (!action.equals("Regalo") && !action.equals("Scambio") && !action.equals("Prestito")) {
                 binding.InputText.setError("Devi selezionare un'azione!");
                 binding.InputText.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
-            }
-            else{
+            } else {
                 newBook.setType(action);
-                addBook(); //aggiunge il libro al database
+                addBook();//inserimento libro nel database
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                Toast.makeText(getContext(), "Libro " + newBook.getTitle() + " inserito correttamente!", Toast.LENGTH_LONG).show();
+
+                Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
+
+/*                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Conferma");
-                builder.setMessage("Libro "+newBook.getTitle()+" è stato inserito correttamente");
+                builder.setMessage("Libro " + newBook.getTitle() + " è stato inserito correttamente");
                 builder.setPositiveButton("OK", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
-                    Navigation.findNavController(view).navigate(R.id.to_navigation_library);
-                }).show();
+                    Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
+                }).show();*/
             }
         });
 
         binding.btnCancel.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+            Navigation.findNavController(view).navigate(R.id.to_navigation_library);
+
+            Toast.makeText(getContext(), "Inserimento annullato", Toast.LENGTH_LONG).show();
+
+/*            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
             builder.setTitle("Attenzione");
             builder.setMessage("Inserimento annullato");
-            builder.setPositiveButton("OK",  (dialogInterface, i) -> {
+            builder.setPositiveButton("OK", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
                 Navigation.findNavController(view).navigate(R.id.to_navigation_library);
-            }).show();
+            }).show();*/
         });
 
         return root;
     }
 
 
-    protected void addBook() {
+    /**
+     * inserisce il nuovo libro nel database, nel documento dell'utente corrente
+     */
+    private void addBook() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -120,8 +116,7 @@ public class AddConfirmFragment extends Fragment {
         //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
         //if (currentUser != null) {
         //   String id = currentUser.getUid();
-
-        db.collection("users").document("AZLYEN9WqTOVXiglkPJT")
+        db.collection("users").document(Utils.USER_ID)
                 .update("books", FieldValue.arrayUnion(newBook.serialize())).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (UserModel.getCurrentUser() != null)

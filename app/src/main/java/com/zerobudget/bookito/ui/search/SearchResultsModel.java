@@ -1,7 +1,7 @@
 package com.zerobudget.bookito.ui.search;
 
-import com.zerobudget.bookito.ui.library.BookModel;
-import com.zerobudget.bookito.ui.users.UserModel;
+import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.models.users.UserModel;
 
 class SearchResultsModel {
     private BookModel book;

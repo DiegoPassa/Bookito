@@ -1,6 +1,8 @@
 package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,60 +10,69 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.databinding.FragmentSearchBinding;
+import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Objects;
 
-public class SearchFragment extends Fragment {
+public class SearchByNameFragment extends Fragment {
 
-    private FragmentSearchBinding binding;
+    private FragmentSearchByNameBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
-    private boolean showedAll = false;
-
-
-
     //TODO: cercare nel quartire del current user
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        binding = FragmentSearchBinding.inflate(inflater, container, false);
+        binding = FragmentSearchByNameBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         viewBooks(new ArrayList<>());
 
-        binding.btnSearch.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.action_navigation_search_to_searchByNameFragment);
-        });
+        binding.bookTextfield.addTextChangedListener(new TextWatcher() {
 
-        binding.btnSeeAllBooks.setOnClickListener(view -> {
-            showedAll  = true;
-            searchAllBooks();
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!editable.toString().trim().isEmpty()) {
+                    binding.recycleViewSearch.setVisibility(View.VISIBLE);
+                    searchBookByTitle(editable.toString());
+                } else {
+                    //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
+                    binding.recycleViewSearch.setVisibility(View.INVISIBLE);
+                    viewBooks(new ArrayList<>());
+                }
+            }
         });
 
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.swipeRefreshLayout.setRefreshing(false);//svuota la recycle view
-            if (showedAll) {
-                searchAllBooks();
-            } else {
-                viewBooks(new ArrayList<>());
-            }
+            binding.swipeRefreshLayout.setRefreshing(false);
+/*            binding.search.setQuery("", false); //clear the text
+            binding.search.setIconified(true); //rimette la search view ad icona*/
+            binding.bookTextfield.setText("");
+            viewBooks(new ArrayList<>()); //svuota la recycle view
         });
 
         return root;
@@ -73,8 +84,8 @@ public class SearchFragment extends Fragment {
         binding = null;
     }
 
-
-    private void searchAllBooks(){
+    //ricerca libro per titolo
+    private void searchBookByTitle(String searched_title) {
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
@@ -87,9 +98,13 @@ public class SearchFragment extends Fragment {
 
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                                //converte in lower case per non avere problemi di non corrispondenza tra maiuscole e minuscole
+                                if (Objects.requireNonNull(map.get("title")).toString().toLowerCase(Locale.ROOT).contains(searched_title.toLowerCase(Locale.ROOT))) {
+                                    //Log.d("Title", "" + map.get("title"));
                                     BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
                                     arrResults.add(searchResultsModel);
+                                }
                             }
                         }
                     }
@@ -104,7 +119,7 @@ public class SearchFragment extends Fragment {
     }
 
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
-        if(getView() != null) { //evita il crash dell'applicazione
+        if (getView() != null) { //evita il crash dell'applicazione
             RecyclerView recyclerView = binding.recycleViewSearch;
 
             Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
@@ -113,5 +128,6 @@ public class SearchFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         }
     }
-}
 
+
+}

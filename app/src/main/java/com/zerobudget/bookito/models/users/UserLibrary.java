@@ -1,7 +1,7 @@
-package com.zerobudget.bookito.ui.users;
+package com.zerobudget.bookito.models.users;
 
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.zerobudget.bookito.ui.library.BookModel;
+import com.zerobudget.bookito.models.book.BookModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

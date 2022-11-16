@@ -34,36 +34,69 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.287" />
 
-    <!--Button
-        android:id="@+id/add_one_btm"
-        android:layout_width="wrap_content"
+
+    <TextView
+        android:id="@+id/txt_insert_manually"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="+1"
-        app:layout_constraintBottom_toTopOf="@+id/text_notifications"
-        app:layout_constraintEnd_toStartOf="@+id/sub_one_btn"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:text="Inserisci isbn manualmente"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
+
     <Button
-        android:id="@+id/sub_one_btn"
+        android:id="@+id/btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="-1"
-        app:layout_constraintBottom_toTopOf="@+id/text_notifications"
+        android:layout_marginStart="162dp"
+        android:layout_marginEnd="162dp"
+        android:enabled="false"
+        android:text="ADD"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/add_one_btm"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" /-->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isbn_number" />
+
+    <EditText
+        android:id="@+id/isbn_number"
+        android:layout_width="200dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginEnd="106dp"
+        android:autofillHints=""
+        android:hint="isbn 13"
+        android:inputType="numberDecimal"
+        android:maxHeight="48dp"
+        android:maxLength="13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_insert_manually" />
 
     <Button
         android:id="@+id/scan_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SCAN"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_notifications" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_scan_isbn" />
+
+    <TextView
+        android:id="@+id/txt_scan_isbn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:text="Scannerizza isbn"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_notifications" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

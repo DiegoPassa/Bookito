@@ -2,8 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_requests"
-        android:state_pressed="true"
+        android:id="@+id/request_page_nav"
         android:icon="@drawable/ic_baseline_move_to_inbox_24"
         android:title="@string/title_inbox"/>
 
@@ -20,7 +19,7 @@
 -->
 
     <item
-        android:id="@+id/navigation_search"
+        android:id="@+id/to_navigation_search"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/title_search"/>
 
