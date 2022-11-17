@@ -59,6 +59,6 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
     }
 
     protected boolean isCurrentUserReceiver(RequestModel r) {
-        return r.getReceiver().equals(Utils.USER_ID) ? true : false;
+        return r.getReceiver().equals(Utils.USER_ID);
     }
 }

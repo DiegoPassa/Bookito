@@ -40,7 +40,6 @@ public class RequestAcceptedFragment extends Fragment {
         binding.swipeRefreshLayout.setOnRefreshListener( () -> {
             addRequestsOnPage(new ArrayList<>());
             requests = new ArrayList<>();
-            binding.progressBar.setVisibility(View.VISIBLE);
             binding.swipeRefreshLayout.setRefreshing(false);
             loadCompletedRequests();
         });
@@ -51,6 +50,7 @@ public class RequestAcceptedFragment extends Fragment {
     }
 
     protected void loadCompletedRequests() {
+        binding.progressBar.setVisibility(View.VISIBLE);
         Task<QuerySnapshot> requestSent = db.collection("requests").whereEqualTo("status", "accepted")
                 .whereEqualTo("sender", Utils.USER_ID).get();
 
@@ -91,6 +91,7 @@ public class RequestAcceptedFragment extends Fragment {
 
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
         if (getView() != null) {
+            Log.d("ACCEPTED", "SONO ENTRATO");
             RecyclerView recyclerView = binding.recycleViewInbox;
 
             Inbox_RecycleViewAdapter adapter = new RequestAccepted_RecycleViewAdapter(this.getContext(), req);

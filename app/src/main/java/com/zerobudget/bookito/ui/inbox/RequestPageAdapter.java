@@ -21,10 +21,9 @@ public class RequestPageAdapter extends FragmentStateAdapter {
         super(fragmentManager, lifecycle);
     }
 
-
-//    public RequestPageAdapter(@NonNull FragmentActivity fragmentActivity) {
-//        super(fragmentActivity);
-//    }
+    public RequestPageAdapter(FragmentActivity fa) {
+        super(fa);
+    }
 
 
     @NonNull
@@ -42,6 +41,6 @@ public class RequestPageAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3; //todo mettere 3 appena facciamo il terzo fragment
+        return 3;
     }
 }

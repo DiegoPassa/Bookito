@@ -17,6 +17,8 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.databinding.FragmentRequestPageBinding;
 
+import java.util.Objects;
+
 public class RequestFragment extends Fragment {
 
     ViewPager2 viewPager;
@@ -59,7 +61,7 @@ public class RequestFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                tabs.getTabAt(position).select();
+                Objects.requireNonNull(tabs.getTabAt(position)).select();
             }
         });
         return view;
@@ -70,6 +72,7 @@ public class RequestFragment extends Fragment {
         RequestPageAdapter adapter = new RequestPageAdapter(getChildFragmentManager(), getLifecycle());
 
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
 
     }
 

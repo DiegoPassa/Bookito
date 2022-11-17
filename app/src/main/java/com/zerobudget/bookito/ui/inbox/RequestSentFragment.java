@@ -44,7 +44,6 @@ public class RequestSentFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.progressBar.setVisibility(View.VISIBLE);
             addRequestsOnPage(new ArrayList<>());
             binding.swipeRefreshLayout.setRefreshing(false);
             getRequests(new ArrayList<>());
@@ -54,13 +53,11 @@ public class RequestSentFragment extends Fragment {
         requests = new ArrayList<>();
         getRequests(requests);
 
-        Log.d("DIOOOOO", "CRERATO");
-
-
         return root;
     }
 
     private void getRequests(ArrayList<RequestModel> req) {
+        binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("sender", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
                 .get()
@@ -91,6 +88,7 @@ public class RequestSentFragment extends Fragment {
 
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
         if (getView() != null) {
+            Log.d("SENDED", "SONO ENTRATO");
             RecyclerView recyclerView = binding.recycleViewInbox;
 
             Inbox_RecycleViewAdapter adapter = new RequestSent_RecycleViewAdapter(this.getContext(), req);

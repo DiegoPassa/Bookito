@@ -66,9 +66,7 @@ public class InboxFragment extends Fragment {
     protected ArrayList<Object> getRequests() {
         //TODO I TIMESTAMP NON POSSONO ESSERE CASTATI A STRING, QUINDI FARE UNA FUNZIONE PER CONVERTIRE TIMESTAMP A STRING O PER CONTROLLARNE I VALORI
         FirebaseUser currentUs = mAuth.getCurrentUser();
-        //            String id = currentUs.getUid();
-        //TODO: cambiare id quando abbiamo un current user
-        //VISUALIZZA RICHIESTE CHE L'UTENTE ATTUALE HA RICEVUTO
+
         binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
