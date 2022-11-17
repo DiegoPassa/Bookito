@@ -27,7 +27,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="nome libro"
+                android:hint="titolo o autore"
                 android:inputType="text"
                 android:minHeight="48dp"
                 app:layout_constraintBottom_toTopOf="@+id/recycleView_search"

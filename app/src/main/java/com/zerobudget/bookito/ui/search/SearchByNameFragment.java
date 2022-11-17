@@ -83,7 +83,7 @@ public class SearchByNameFragment extends Fragment {
     }
 
     //ricerca libro per titolo
-    private void searchBookByTitle(String searched_title) {
+    private void searchBookByTitle(String searched_book) {
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
@@ -97,7 +97,8 @@ public class SearchByNameFragment extends Fragment {
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
                                 //converte in lower case per non avere problemi di non corrispondenza tra maiuscole e minuscole
-                                if (Objects.requireNonNull(map.get("title")).toString().toLowerCase(Locale.ROOT).contains(searched_title.toLowerCase(Locale.ROOT))) {
+                                if ((Objects.requireNonNull(map.get("title")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))
+                                || (Objects.requireNonNull(map.get("author")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))){
                                     //Log.d("Title", "" + map.get("title"));
                                     BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
