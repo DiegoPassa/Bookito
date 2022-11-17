@@ -38,7 +38,6 @@
                 android:id="@+id/user_gravatar"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:visibility="gone"
                 app:hash="0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

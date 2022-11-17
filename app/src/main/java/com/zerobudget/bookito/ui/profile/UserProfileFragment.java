@@ -67,28 +67,19 @@ public class UserProfileFragment extends Fragment {
         StorageReference riversRef = storageRef.child("profile_pics/" + currentUser.getUid());
         UploadTask uploadTask = riversRef.putFile(uri);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                int errorCode = ((StorageException) exception).getErrorCode();
-                String errorMessage = exception.getMessage();
-                Log.d("ERR", errorMessage);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
-            }
-        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
-                    Log.d("URIIDB", downloadUri.toString());
-                    Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
-                } else {
-                    //
-                }
+        uploadTask.addOnFailureListener(exception -> {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Log.d("ERR", errorMessage);
+        }).addOnSuccessListener(taskSnapshot -> {
+            //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
+                Log.d("URIIDB", downloadUri.toString());
+                Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
+            } else {
+                //
             }
         });
     }
@@ -99,15 +90,12 @@ public class UserProfileFragment extends Fragment {
         desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(requireActivity(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getParentFragment().getContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                int errorCode = ((StorageException) exception).getErrorCode();
-                String errorMessage = exception.getMessage();
-                Log.d("ERR", errorMessage);
-            }
+        }).addOnFailureListener(exception -> {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Log.d("ERR", errorMessage);
         });
     }
 
@@ -139,7 +127,7 @@ public class UserProfileFragment extends Fragment {
 
         showPic();
 
-        binding.cardView2.setOnClickListener(view -> {
+        binding.imgContainer.setOnClickListener(view -> {
             showImagePicDialog();
         });
         binding.floatingActionButton.setOnClickListener(view -> {
@@ -180,22 +168,16 @@ public class UserProfileFragment extends Fragment {
     private void showPic() {
         StorageReference load = storageRef.child("profile_pics/" + currentUser.getUid());
 
-        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                binding.userGravatar.setVisibility(View.GONE);
-                binding.profilePic.setVisibility(View.VISIBLE);
-                Picasso.get().load(uri.toString()).into(binding.profilePic);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                int errorCode = ((StorageException) exception).getErrorCode();
-                String errorMessage = exception.getMessage();
-                Log.d("ERR", errorMessage);
-                binding.userGravatar.setVisibility(View.VISIBLE);
-                binding.profilePic.setVisibility(View.GONE);
-            }
+        load.getDownloadUrl().addOnSuccessListener(uri -> {
+            Picasso.get().load(uri.toString()).into(binding.profilePic);
+            binding.profilePic.setVisibility(View.VISIBLE);
+            binding.userGravatar.setVisibility(View.GONE);
+        }).addOnFailureListener(exception -> {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Log.d("ERR", errorMessage);
+            binding.userGravatar.setVisibility(View.VISIBLE);
+            binding.profilePic.setVisibility(View.GONE);
         });
     }
 
@@ -244,7 +226,6 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // navBar.setVisibility(View.VISIBLE);
         binding = null;
     }
 
