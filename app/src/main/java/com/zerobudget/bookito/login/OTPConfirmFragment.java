@@ -44,9 +44,7 @@ public class OTPConfirmFragment extends Fragment {
     private boolean isRegister;
     FirebaseFirestore db;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-
-
+        
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);

@@ -28,17 +28,13 @@ public class SearchFragment extends Fragment {
 
     private FragmentSearchBinding binding;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
     private boolean showedAll = false;
-
-
 
     //TODO: cercare nel quartire del current user
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

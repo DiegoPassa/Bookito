@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
             return;
         }
-        Log.d("USER_ID", currentUser.getUid());
+        // Log.d("USER_ID", currentUser.getUid());
         Utils.setUserId(currentUser.getUid());
 
         getQueryCurrentUser();

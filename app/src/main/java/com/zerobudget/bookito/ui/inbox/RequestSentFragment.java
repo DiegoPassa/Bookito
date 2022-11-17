@@ -27,7 +27,6 @@ import java.util.ArrayList;
 public class RequestSentFragment extends Fragment {
     private FragmentInboxBinding binding;
 
-    private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     private ArrayList<RequestModel> requests;
@@ -40,7 +39,6 @@ public class RequestSentFragment extends Fragment {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {

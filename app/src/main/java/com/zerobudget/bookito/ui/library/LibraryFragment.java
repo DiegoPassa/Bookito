@@ -30,7 +30,6 @@ public class LibraryFragment extends Fragment {
     private ArrayList<BookModel> bookModels;
 
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
     private ProgressBar spinner;
 
@@ -94,7 +93,6 @@ public class LibraryFragment extends Fragment {
         spinner = root.findViewById(R.id.progressBar);
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         setUpBookModel();
         //visulizzazione spostata in addBookOnLibrary()

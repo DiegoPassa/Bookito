@@ -30,12 +30,10 @@ public class BookRequestFragment extends Fragment {
     private SearchResultsModel usrBookSelected;
 
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         binding = FragmentRequestBookBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -74,7 +72,6 @@ public class BookRequestFragment extends Fragment {
         }
 
         binding.btnRequest.setOnClickListener(view -> {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
 
             //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato, cambiare anche id nei set sotto
             //if (currentUser != null) {

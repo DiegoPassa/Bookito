@@ -31,10 +31,8 @@ public class InboxFragment extends Fragment {
     private ArrayList<RequestModel> requests;
 
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
     public InboxFragment() {}
-
 
     @Nullable
     @Override
@@ -44,7 +42,6 @@ public class InboxFragment extends Fragment {
         View root = binding.getRoot();
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -65,7 +62,6 @@ public class InboxFragment extends Fragment {
 
     protected ArrayList<Object> getRequests() {
         //TODO I TIMESTAMP NON POSSONO ESSERE CASTATI A STRING, QUINDI FARE UNA FUNZIONE PER CONVERTIRE TIMESTAMP A STRING O PER CONTROLLARNE I VALORI
-        FirebaseUser currentUs = mAuth.getCurrentUser();
 
         binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)

@@ -42,8 +42,6 @@ public class UserProfileFragment extends Fragment {
     private FragmentUserProfileBinding binding;
 
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
     private StorageReference storageRef;
 
     private ArrayList<String> items;
@@ -63,7 +61,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void addPicOnFirebase(Uri uri) {
-        StorageReference riversRef = storageRef.child("profile_pics/"+currentUser.getUid());
+        StorageReference riversRef = storageRef.child("profile_pics/"+Utils.USER_ID);
         UploadTask uploadTask = riversRef.putFile(uri);
 
         uploadTask.addOnFailureListener(exception -> {
@@ -85,7 +83,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void deletePicOnFirebase() {
-        StorageReference desertRef = storageRef.child("profile_pics/"+currentUser.getUid());
+        StorageReference desertRef = storageRef.child("profile_pics/"+Utils.USER_ID);
 
         desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -112,8 +110,6 @@ public class UserProfileFragment extends Fragment {
         View root = binding.getRoot();
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
@@ -167,7 +163,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void showPic() {
-        StorageReference load = storageRef.child("profile_pics/" + currentUser.getUid());
+        StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
 
         load.getDownloadUrl().addOnSuccessListener(uri -> {
             Picasso.get().load(uri.toString()).into(binding.profilePic);

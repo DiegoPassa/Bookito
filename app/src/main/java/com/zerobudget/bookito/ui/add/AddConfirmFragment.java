@@ -110,8 +110,6 @@ public class AddConfirmFragment extends Fragment {
      */
     private void addBook() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
         //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
         //if (currentUser != null) {

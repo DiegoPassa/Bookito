@@ -47,7 +47,6 @@ public class AddFragment extends Fragment {
     private View root;
 
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
     /**
      * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato*/
@@ -63,7 +62,6 @@ public class AddFragment extends Fragment {
         this.newBook = new BookModel();
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         binding = FragmentAddBinding.inflate(inflater, container, false);
         root = binding.getRoot();

@@ -35,11 +35,9 @@ public class BookDeleteFragment extends Fragment {
     private BookModel bookSelected;
 
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         binding = FragmentDeleteBookBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
