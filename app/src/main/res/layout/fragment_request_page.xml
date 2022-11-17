@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_baseline_chat_24"
-            android:text="Completate" />
+            android:text="Accettate" />
 
     </com.google.android.material.tabs.TabLayout>
 
