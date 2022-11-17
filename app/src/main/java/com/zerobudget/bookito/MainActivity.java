@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         Utils.setUserId(currentUser.getUid());
 
         getUriPic();
+
         getQueryCurrentUser();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -120,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         // FirebaseUser currentUser = mAuth.getCurrentUser();
         //TODO aspettiamo la registrazione ed il login
         //String id = currentUser.getUid();
-
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
 
         load.getDownloadUrl().addOnSuccessListener(uri -> {
-            //Picasso.get().load(uri.toString()).into(binding.profilePic);
             Utils.setUriPic(uri.toString());
             Log.d("PIC", Utils.URI_PIC);
         }).addOnFailureListener(exception -> {

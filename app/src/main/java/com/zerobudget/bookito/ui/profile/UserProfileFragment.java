@@ -57,49 +57,6 @@ public class UserProfileFragment extends Fragment {
         activityResultGalleryLauncher.launch("image/*");
     }
 
-    private void addPicOnFirebase(Uri uri) {
-        StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);
-        UploadTask uploadTask = riversRef.putFile(uri);
-
-        user.setHasPicture(true);
-
-        uploadTask.addOnFailureListener(exception -> {
-            int errorCode = ((StorageException) exception).getErrorCode();
-            String errorMessage = exception.getMessage();
-            Log.d("ERR", errorMessage);
-        }).addOnSuccessListener(taskSnapshot -> {
-            //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
-        }).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
-                db.collection("users").document(Utils.USER_ID).update("hasPicture", true).addOnSuccessListener(unused -> {
-                    showPic();
-                });
-                Log.d("URIIDB", downloadUri.toString());
-                Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
-                // Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
-            } else {
-                //
-            }
-        });
-    }
-
-    private void deletePicOnFirebase() {
-        StorageReference desertRef = storageRef.child("profile_pics/" + Utils.USER_ID);
-
-        user.setHasPicture(false);
-
-        desertRef.delete().addOnSuccessListener(aVoid -> {
-            db.collection("users").document(Utils.USER_ID).update("hasPicture", false);
-        }).addOnFailureListener(exception -> {
-            int errorCode = ((StorageException) exception).getErrorCode();
-            String errorMessage = exception.getMessage();
-            Log.d("ERR_DEL", errorMessage);
-        });
-
-        showPic();
-    }
-
     // BottomNavigationView navBar;
 
     public UserProfileFragment() {
@@ -163,16 +120,19 @@ public class UserProfileFragment extends Fragment {
         if (user.isHasPicture()) {
             binding.profilePic.setVisibility(View.VISIBLE);
             binding.userGravatar.setVisibility(View.GONE);
+            if(Utils.URI_PIC.equals("")) {
+                StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
 
-            StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
-
-            load.getDownloadUrl().addOnSuccessListener(uri -> {
-                Picasso.get().load(uri.toString()).into(binding.profilePic);
-            }).addOnFailureListener(exception -> {
-                int errorCode = ((StorageException) exception).getErrorCode();
-                String errorMessage = exception.getMessage();
-                Log.d("ERR", errorMessage);
-            });
+                load.getDownloadUrl().addOnSuccessListener(uri -> {
+                    Utils.setUriPic(uri.toString());
+                    Picasso.get().load(uri.toString()).into(binding.profilePic);
+                }).addOnFailureListener(exception -> {
+                    String errorMessage = exception.getMessage();
+                    Log.d("ERR", errorMessage);
+                });
+            }else{
+                Picasso.get().load(Utils.URI_PIC).into(binding.profilePic);
+            }
         } else {
             binding.userGravatar.setHash(user.getTelephone().hashCode());
             binding.userGravatar.setVisibility(View.VISIBLE);
@@ -192,12 +152,58 @@ public class UserProfileFragment extends Fragment {
                 openImagePicker();//prende l'immagine dalla gallera
             } else if (i == 2 && !binding.userGravatar.isShown()) {
                 deletePicOnFirebase();
+                Utils.setUriPic("");
                 Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
             }
         });
         builder.create().show();
     }
+
+
+    private void addPicOnFirebase(Uri uri) {
+        StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);
+        UploadTask uploadTask = riversRef.putFile(uri);
+
+        user.setHasPicture(true);
+
+        uploadTask.addOnFailureListener(exception -> {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Log.d("ERR", errorMessage);
+        }).addOnSuccessListener(taskSnapshot -> {
+            //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
+                db.collection("users").document(Utils.USER_ID).update("hasPicture", true).addOnSuccessListener(unused -> {
+                    showPic();
+                });
+                Log.d("URIIDB", downloadUri.toString());
+                Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
+                // Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
+            } else {
+                //
+            }
+        });
+    }
+
+    private void deletePicOnFirebase() {
+        StorageReference desertRef = storageRef.child("profile_pics/" + Utils.USER_ID);
+
+        user.setHasPicture(false);
+
+        desertRef.delete().addOnSuccessListener(aVoid -> {
+            db.collection("users").document(Utils.USER_ID).update("hasPicture", false);
+        }).addOnFailureListener(exception -> {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Log.d("ERR_DEL", errorMessage);
+        });
+
+        showPic();
+    }
+
 
     private void changeVisibility() {
         if (binding.floatingActionButton.isShown()) {
