@@ -139,7 +139,7 @@ public class UserProfileFragment extends Fragment {
         });
 
 
-        binding.profilePic.setOnClickListener(view -> {
+        binding.cardView2.setOnClickListener(view -> {
             showImagePicDialog();
         });
         binding.floatingActionButton.setOnClickListener(view -> {
