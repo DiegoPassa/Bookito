@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserLibrary extends UserModel{
+public class UserLibrary extends UserModel {
     private ArrayList<BookModel> library;
 
-    public UserLibrary(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma) {
-        super(first_name, last_name, telephone, neighborhood, karma);
+    public UserLibrary(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma, Boolean hasPicture) {
+        super(first_name, last_name, telephone, neighborhood, karma, hasPicture);
     }
 
     public UserLibrary(UserModel u) {
-        super(u.getFirst_name(), u.getLast_name(), u.getTelephone(), u.getNeighborhood(), u.getKarma());
+        super(u.getFirst_name(), u.getLast_name(), u.getTelephone(), u.getNeighborhood(), u.getKarma(), u.isHasPicture());
     }
 
     public static ArrayList<BookModel> loadLibrary(DocumentSnapshot doc) {

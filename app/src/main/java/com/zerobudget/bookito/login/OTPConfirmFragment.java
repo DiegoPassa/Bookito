@@ -13,10 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -31,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.internal.Util;
 
 
 public class OTPConfirmFragment extends Fragment {
@@ -138,19 +133,20 @@ public class OTPConfirmFragment extends Fragment {
         String last_name = bundle.getString("surname");
         String phone = bundle.getString("phone_number");
         String neighborhood = bundle.getString("zone");
-        HashMap<String,Object> user = new HashMap<>();
+        HashMap<String, Object> user = new HashMap<>();
         HashMap<String, Object> karma = new HashMap<>();
-        karma.put("points", 0l);
-        karma.put("numbers", 0l);
-        user.put("first_name",first_name);
-        user.put("last_name",last_name);
-        user.put("telephone",phone);
+        karma.put("points", 0L);
+        karma.put("numbers", 0L);
+        user.put("first_name", first_name);
+        user.put("last_name", last_name);
+        user.put("telephone", phone);
         user.put("karma", karma);
-        user.put("neighborhood",neighborhood);
-        ArrayList<HashMap<String,Object>> books = new ArrayList<>();
-        user.put("books",books);
+        user.put("neighborhood", neighborhood);
+        ArrayList<HashMap<String, Object>> books = new ArrayList<>();
+        user.put("books", books);
+        user.put("hasPicture", false);
         db = FirebaseFirestore.getInstance();
-        db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser()).getUid().toString())
+        db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())
                 .set(user)
                 .addOnCompleteListener(task -> {
                     Toast.makeText(requireActivity(), "Il suo account e stato corretamente registrato.", Toast.LENGTH_LONG).show();
