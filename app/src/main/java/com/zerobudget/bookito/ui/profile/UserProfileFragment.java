@@ -25,8 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -37,7 +37,6 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class UserProfileFragment extends Fragment {
 
@@ -71,13 +70,14 @@ public class UserProfileFragment extends Fragment {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
+                int errorCode = ((StorageException) exception).getErrorCode();
+                String errorMessage = exception.getMessage();
+                Log.d("ERR", errorMessage);
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
+                //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
             }
         }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -93,6 +93,23 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
+    private void deletePicOnFirebase() {
+        StorageReference desertRef = storageRef.child("profile_pics/" + currentUser.getUid());
+
+        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(requireActivity(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                int errorCode = ((StorageException) exception).getErrorCode();
+                String errorMessage = exception.getMessage();
+                Log.d("ERR", errorMessage);
+            }
+        });
+    }
 
     // BottomNavigationView navBar;
 
@@ -120,24 +137,7 @@ public class UserProfileFragment extends Fragment {
         binding.usrNeighborhood.setText(user.getNeighborhood());
         binding.userGravatar.setHash(user.getTelephone().hashCode());
 
-
-        StorageReference load = storageRef.child("profile_pics/" + currentUser.getUid());
-
-        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                binding.userGravatar.setVisibility(View.GONE);
-                binding.profilePic.setVisibility(View.VISIBLE);
-                Picasso.get().load(uri.toString()).into(binding.profilePic);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                binding.userGravatar.setVisibility(View.VISIBLE);
-                binding.profilePic.setVisibility(View.GONE);
-            }
-        });
-
+        showPic();
 
         binding.cardView2.setOnClickListener(view -> {
             showImagePicDialog();
@@ -159,8 +159,9 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         user.setNeighborhood(new_neighborhood);
-                        Toast.makeText(getContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(requireActivity(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                         //aggiorna la pagina
+                        showPic();
                         Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
                     }
                 });
@@ -176,9 +177,31 @@ public class UserProfileFragment extends Fragment {
         return root;
     }
 
+    private void showPic() {
+        StorageReference load = storageRef.child("profile_pics/" + currentUser.getUid());
+
+        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                binding.userGravatar.setVisibility(View.GONE);
+                binding.profilePic.setVisibility(View.VISIBLE);
+                Picasso.get().load(uri.toString()).into(binding.profilePic);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                int errorCode = ((StorageException) exception).getErrorCode();
+                String errorMessage = exception.getMessage();
+                Log.d("ERR", errorMessage);
+                binding.userGravatar.setVisibility(View.VISIBLE);
+                binding.profilePic.setVisibility(View.GONE);
+            }
+        });
+    }
+
 
     private void showImagePicDialog() {
-        String[] options = {"Camera", "Gallery"};
+        String[] options = {"Camera", "Galleria", "Elimina foto"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
         builder.setTitle("Scegli l'immagine da");
         builder.setItems(options, (dialogInterface, i) -> {
@@ -186,6 +209,9 @@ public class UserProfileFragment extends Fragment {
                 //TODO: pick from camera
             } else if (i == 1) {
                 openImagePicker();//prende l'immagine dalla gallera
+            } else if (i == 2) {
+                deletePicOnFirebase();
+                Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
             }
         });
         builder.create().show();
