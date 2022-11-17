@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.utils;
 
+import android.util.Log;
+
 import com.zerobudget.bookito.Flag;
 
 public class UserFlag {

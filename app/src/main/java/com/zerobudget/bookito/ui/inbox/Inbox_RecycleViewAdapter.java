@@ -33,6 +33,14 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     protected final Context context;
     protected ArrayList<RequestModel> requests;
 
+    protected Button confirmButton;
+    protected Button refuseButton;
+    protected TextView titlePopup;
+    protected TextView owner;
+    protected TextView ownerLocation;
+    protected TextView returnDate;
+    protected ImageView thumbnail;
+
     // private AlertDialog.Builder dialogBuilder;
     // private AlertDialog dialog;
 
@@ -97,6 +105,17 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     }
 
+    //TODO DALLE RIGHE 113-127 C'È MOLTA RIPETIZIONE DI CODICE, MEGLIO FARE UN METOOD A POSTA DA RICBHIAMARE
+    protected void loadPopupViewMembers(View view) {
+        confirmButton = view.findViewById(R.id.acceptButton);
+        refuseButton = view.findViewById(R.id.refuseButton);
+        titlePopup = view.findViewById(R.id.title_popup);
+        owner = view.findViewById(R.id.user);
+        ownerLocation = view.findViewById(R.id.user_location);
+        returnDate = view.findViewById(R.id.return_date);
+        thumbnail = view.findViewById(R.id.imageView);
+    }
+
     public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
 
@@ -105,14 +124,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
-        Button confirmButton = view.findViewById(R.id.acceptButton);
-        Button refuseButton = view.findViewById(R.id.refuseButton);
-        TextView titlePopup = view.findViewById(R.id.title_popup);
-        TextView owner = view.findViewById(R.id.user);
-        TextView ownerLocation = view.findViewById(R.id.user_location);
-        TextView returnDate = view.findViewById(R.id.return_date);
-        ImageView thumbnail = view.findViewById(R.id.imageView);
-
+        loadPopupViewMembers(view);
         String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
         String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name()+" "+requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();

@@ -57,14 +57,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
-        Button refuseButton = view.findViewById(R.id.refuseButton);
-        Button acceptButton = view.findViewById(R.id.acceptButton);
-        acceptButton.setVisibility(View.GONE);
-        TextView titlePopup = view.findViewById(R.id.title_popup);
-        TextView owner = view.findViewById(R.id.user);
-        TextView ownerLocation = view.findViewById(R.id.user_location);
-        TextView returnDate = view.findViewById(R.id.return_date);
-        ImageView thumbnail = view.findViewById(R.id.imageView);
+        loadPopupViewMembers(view);
 
         String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
@@ -73,6 +66,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
         refuseButton.setText("Annulla richiesta");
+        confirmButton.setVisibility(View.GONE);
 
         refuseButton.setOnClickListener(view1 -> {
             if (holder.getAdapterPosition() != -1) {
