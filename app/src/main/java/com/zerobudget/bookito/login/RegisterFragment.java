@@ -102,7 +102,7 @@ public class RegisterFragment extends Fragment {
                             if (x.isEmpty()) {
                                 register();
                             } else {
-                                binding.phoneNumberRegister.setError("Il numero inserito e gia registrato");
+                                binding.phoneNumberRegister.setError("Il numero inserito è gia registrato");
                                 binding.phoneNumberRegister.requestFocus();
                             }
 
@@ -111,6 +111,8 @@ public class RegisterFragment extends Fragment {
     }
 
     private boolean validateInput() {
+        Boolean flag = true;
+
         phoneNumber = binding.phoneNumberRegister.getText().toString().replaceAll("\\s", "");
         name = binding.name.getText().toString().trim();
         zone = binding.autoCompleteTextView.getText().toString();
@@ -118,33 +120,33 @@ public class RegisterFragment extends Fragment {
 
         if (name.isEmpty()) {
             binding.name.setError("Il campo nome deve essere compilato");
-            binding.name.requestFocus();
-            return false;
+            // binding.name.requestFocus();
+            flag = false;
         }
         if (surname.isEmpty()) {
             binding.surname.setError("Il campo cognome deve essere compilato");
-            binding.surname.requestFocus();
-            return false;
+            // binding.surname.requestFocus();
+            flag = false;
         }
         if (phoneNumber.isEmpty()) {
             binding.phoneNumberRegister.setError("Deve inserire il suo numero di telefono");
-            binding.phoneNumberRegister.requestFocus();
-            return false;
+            // binding.phoneNumberRegister.requestFocus();
+            flag = false;
         }
 
         if (phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3') {
             binding.phoneNumberRegister.setError("Il numero inserito non e valido");
-            binding.phoneNumberRegister.requestFocus();
-            return false;
+            // binding.phoneNumberRegister.requestFocus();
+            flag = false;
         }
 
         //Possible change of input insertion mode
         if (!items.contains(zone)) {
             binding.neighborhood.setError("Deve specificare il quartiere dove abbita");
-            binding.neighborhood.requestFocus();
-            return false;
+            // binding.neighborhood.requestFocus();
+            flag = false;
         }
-        return true;
+        return flag;
     }
 
     public void register() {

@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -43,6 +42,8 @@ public class UserProfileFragment extends Fragment {
     private ArrayList<String> items;
     ArrayAdapter<String> adapterItems;
 
+    private UserModel user;
+
     ActivityResultLauncher<String> activityResultGalleryLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(),
                     result -> {
@@ -55,6 +56,51 @@ public class UserProfileFragment extends Fragment {
     private void openImagePicker() {
         activityResultGalleryLauncher.launch("image/*");
     }
+
+    private void addPicOnFirebase(Uri uri) {
+        StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);
+        UploadTask uploadTask = riversRef.putFile(uri);
+
+        user.setHasPicture(true);
+
+        uploadTask.addOnFailureListener(exception -> {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Log.d("ERR", errorMessage);
+        }).addOnSuccessListener(taskSnapshot -> {
+            //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
+                db.collection("users").document(Utils.USER_ID).update("hasPicture", true).addOnSuccessListener(unused -> {
+                    showPic();
+                });
+                Log.d("URIIDB", downloadUri.toString());
+                Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
+                // Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
+            } else {
+                //
+            }
+        });
+    }
+
+    private void deletePicOnFirebase() {
+        StorageReference desertRef = storageRef.child("profile_pics/" + Utils.USER_ID);
+
+        user.setHasPicture(false);
+
+        desertRef.delete().addOnSuccessListener(aVoid -> {
+            db.collection("users").document(Utils.USER_ID).update("hasPicture", false);
+        }).addOnFailureListener(exception -> {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Log.d("ERR_DEL", errorMessage);
+        });
+
+        showPic();
+    }
+
+    // BottomNavigationView navBar;
 
     public UserProfileFragment() {
     }
@@ -70,19 +116,19 @@ public class UserProfileFragment extends Fragment {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        UserModel user = UserModel.getCurrentUser();
+        user = UserModel.getCurrentUser();
 
         binding.usrFirstName.setText(user.getFirst_name());
         binding.usrLastName.setText(user.getLast_name());
         binding.usrTelephone.setText(user.getTelephone());
         binding.usrNeighborhood.setText(user.getNeighborhood());
-        binding.userGravatar.setHash(user.getTelephone().hashCode());
 
         showPic();
 
         binding.imgContainer.setOnClickListener(view -> {
             showImagePicDialog();
         });
+
         binding.floatingActionButton.setOnClickListener(view -> {
             binding.autoCompleteTextView.setHint(binding.usrNeighborhood.getText());
             changeVisibility();
@@ -96,16 +142,11 @@ public class UserProfileFragment extends Fragment {
                 binding.editNeighborhood.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
             } else {
                 //TODO: cambia id con current user
-                db.collection("users").document(Utils.USER_ID).update("neighborhood", new_neighborhood).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        user.setNeighborhood(new_neighborhood);
-                        //aggiorna la pagina
-                        showPic();
-                        Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
-                        Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
-
-                    }
+                db.collection("users").document(Utils.USER_ID).update("neighborhood", new_neighborhood).addOnSuccessListener(unused -> {
+                    user.setNeighborhood(new_neighborhood);
+                    //aggiorna la pagina
+                    Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
+                    Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
                 });
                 changeVisibility();
             }
@@ -115,64 +156,27 @@ public class UserProfileFragment extends Fragment {
             changeVisibility();
         });
 
-
         return root;
     }
 
-
-    private void addPicOnFirebase(Uri uri) {
-        StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);
-        UploadTask uploadTask = riversRef.putFile(uri);
-
-        uploadTask.addOnFailureListener(exception -> {
-            String errorMessage = exception.getMessage();
-            Log.d("ERR", errorMessage);
-        }).addOnSuccessListener(taskSnapshot -> {
-            //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
-        }).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
-                Log.d("URIIDB", downloadUri.toString());
-                Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
-                Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
-            }
-        });
-    }
-
-    private void deletePicOnFirebase() {
-        StorageReference desertRef = storageRef.child("profile_pics/" + Utils.USER_ID);
-
-        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-            }
-        }).addOnFailureListener(exception -> {
-            int errorCode = ((StorageException) exception).getErrorCode();
-            String errorMessage = exception.getMessage();
-            Log.d("ERR_DEL", errorMessage);
-        });
-    }
-
     private void showPic() {
-        if (Utils.URI_PIC.equals("")) {
+        if (user.isHasPicture()) {
+            binding.profilePic.setVisibility(View.VISIBLE);
+            binding.userGravatar.setVisibility(View.GONE);
+
             StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
 
             load.getDownloadUrl().addOnSuccessListener(uri -> {
                 Picasso.get().load(uri.toString()).into(binding.profilePic);
-                Utils.setUriPic(uri.toString());
-                binding.profilePic.setVisibility(View.VISIBLE);
-                binding.userGravatar.setVisibility(View.GONE);
             }).addOnFailureListener(exception -> {
+                int errorCode = ((StorageException) exception).getErrorCode();
                 String errorMessage = exception.getMessage();
                 Log.d("ERR", errorMessage);
-                binding.userGravatar.setVisibility(View.VISIBLE);
-                binding.profilePic.setVisibility(View.GONE);
             });
         } else {
-            Picasso.get().load(Utils.URI_PIC).into(binding.profilePic);
-            binding.profilePic.setVisibility(View.VISIBLE);
-            binding.userGravatar.setVisibility(View.GONE);
-            Log.d("PIIC", Utils.URI_PIC);
+            binding.userGravatar.setHash(user.getTelephone().hashCode());
+            binding.userGravatar.setVisibility(View.VISIBLE);
+            binding.profilePic.setVisibility(View.GONE);
         }
     }
 
@@ -188,7 +192,6 @@ public class UserProfileFragment extends Fragment {
                 openImagePicker();//prende l'immagine dalla gallera
             } else if (i == 2 && !binding.userGravatar.isShown()) {
                 deletePicOnFirebase();
-                Utils.setUriPic("");
                 Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
             }

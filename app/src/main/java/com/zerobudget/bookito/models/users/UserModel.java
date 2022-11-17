@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.models.users;
 
-import com.google.common.hash.HashCode;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
@@ -14,16 +13,20 @@ public class UserModel {
     //private String id; id utente facilmente ottenibile con FirebaseAuth.getInstance().getCurrentUser().getId()
     private static UserLibrary currentUser; //modello dell'utente attuale
 
+    private boolean hasPicture = false;
+
     private HashMap<String, Object> karma;
 
-    public UserModel(){}
+    public UserModel() {
+    }
 
-    public UserModel(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma) {
+    public UserModel(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma, Boolean hasPicture) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.telephone = telephone;
         this.neighborhood = neighborhood;
         this.karma = karma;
+        this.hasPicture = hasPicture;
     }
 
     public static void loadUser(UserModel user) {
@@ -84,6 +87,13 @@ public class UserModel {
         u.setNeighborhood((String) result.get("neighborhood"));
         u.setKarma(loadKarma(result));
 
+        Boolean hasPicture = (Boolean) result.get("hasPicture");
+        if (hasPicture != null) {
+            u.setHasPicture(hasPicture);
+        } else {
+            u.setHasPicture(false);
+        }
+
         return u;
     }
 
@@ -92,4 +102,11 @@ public class UserModel {
         return (HashMap<String, Object>) doc.get("karma");
     }
 
+    public boolean isHasPicture() {
+        return hasPicture;
+    }
+
+    public void setHasPicture(boolean hasPicture) {
+        this.hasPicture = hasPicture;
+    }
 }
