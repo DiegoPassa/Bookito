@@ -9,9 +9,13 @@ public class Utils {
 
     public static String USER_ID;
 
+    public static String URI_PIC = "";
+
     public static void setUserId(String userId) {
         USER_ID = userId;
     }
+
+    public static void setUriPic(String uri){ URI_PIC = uri; }
 
     //serve a creare una stringa json da un oggetto e viceversa
     public static Gson getGsonParser() {

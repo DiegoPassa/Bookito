@@ -23,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.login.LoginActivity;
 import com.zerobudget.bookito.models.users.UserLibrary;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private StorageReference storageRef;
 
     private AppBarConfiguration appBarConfiguration;
 
@@ -43,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
 //
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -54,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // Log.d("USER_ID", currentUser.getUid());
         Utils.setUserId(currentUser.getUid());
 
+        getUriPic();
         getQueryCurrentUser();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -127,6 +134,19 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("USER ORA AHAH", "" + UserModel.getUserFromDocument(task.getResult()).serialize());
                 }
             }
+        });
+    }
+
+    private void getUriPic() {
+        StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
+
+        load.getDownloadUrl().addOnSuccessListener(uri -> {
+            //Picasso.get().load(uri.toString()).into(binding.profilePic);
+            Utils.setUriPic(uri.toString());
+            Log.d("PIC", Utils.URI_PIC);
+        }).addOnFailureListener(exception -> {
+            String errorMessage = exception.getMessage();
+            Log.d("ERR", errorMessage);
         });
     }
 
