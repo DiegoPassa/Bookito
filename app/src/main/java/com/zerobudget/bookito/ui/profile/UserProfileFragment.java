@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,7 +63,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void addPicOnFirebase(Uri uri) {
-        StorageReference riversRef = storageRef.child("profile_pics/" + currentUser.getUid());
+        StorageReference riversRef = storageRef.child("profile_pics/"+currentUser.getUid());
         UploadTask uploadTask = riversRef.putFile(uri);
 
         uploadTask.addOnFailureListener(exception -> {
@@ -77,6 +76,7 @@ public class UserProfileFragment extends Fragment {
             if (task.isSuccessful()) {
                 Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
                 Log.d("URIIDB", downloadUri.toString());
+                Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
             } else {
                 //
@@ -85,17 +85,17 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void deletePicOnFirebase() {
-        StorageReference desertRef = storageRef.child("profile_pics/" + currentUser.getUid());
+        StorageReference desertRef = storageRef.child("profile_pics/"+currentUser.getUid());
 
         desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // Toast.makeText(getParentFragment().getContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
+                //                Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
             }
         }).addOnFailureListener(exception -> {
             int errorCode = ((StorageException) exception).getErrorCode();
             String errorMessage = exception.getMessage();
-            Log.d("ERR", errorMessage);
+            Log.d("ERR_DEL", errorMessage);
         });
     }
 
@@ -147,10 +147,11 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         user.setNeighborhood(new_neighborhood);
-                        //Toast.makeText(requireActivity(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                         //aggiorna la pagina
                         showPic();
+                        Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                         Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
+
                     }
                 });
                 changeVisibility();
@@ -183,16 +184,17 @@ public class UserProfileFragment extends Fragment {
 
 
     private void showImagePicDialog() {
-        String[] options = {"Camera", "Galleria", "Elimina foto"};
+        String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-        builder.setTitle("Scegli l'immagine da");
+        builder.setTitle("Cosa vuoi fare?");
         builder.setItems(options, (dialogInterface, i) -> {
             if (i == 0) {
                 //TODO: pick from camera
             } else if (i == 1) {
                 openImagePicker();//prende l'immagine dalla gallera
-            } else if (i == 2) {
+            } else if (i == 2 && !binding.userGravatar.isShown()) {
                 deletePicOnFirebase();
+                Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
             }
         });
