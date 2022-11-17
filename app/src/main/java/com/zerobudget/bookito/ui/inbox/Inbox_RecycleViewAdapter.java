@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
@@ -78,6 +79,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
+        Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
+        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
 
         holder.request_selected.setOnClickListener(view -> {
             if (senderModel != null && holder.getAdapterPosition() != -1) {
@@ -190,6 +193,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         protected final ConstraintLayout request_selected;
         protected final TextView user_name;
         protected final ImageView book_image;
+        protected final ClassicIdenticonView user_gravatar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -197,6 +201,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             user_name = itemView.findViewById(R.id.requester_name);
             book_image= itemView.findViewById(R.id.book_image_request);
             request_selected = itemView.findViewById(R.id.request);
+            user_gravatar = itemView.findViewById(R.id.user_gravatar);
         }
     }
 }

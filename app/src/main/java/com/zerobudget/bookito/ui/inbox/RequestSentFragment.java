@@ -50,6 +50,7 @@ public class RequestSentFragment extends Fragment {
             getRequests(new ArrayList<>());
         });
 
+
         requests = new ArrayList<>();
         getRequests(requests);
 

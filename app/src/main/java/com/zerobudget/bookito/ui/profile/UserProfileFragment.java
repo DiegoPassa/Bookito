@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.profile;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class UserProfileFragment extends Fragment {
         binding.usrLastName.setText(user.getLast_name());
         binding.usrTelephone.setText(user.getTelephone());
         binding.usrNeighborhood.setText(user.getNeighborhood());
+        binding.userGravatar.setHash(user.getTelephone().hashCode());
 
         binding.floatingActionButton.setOnClickListener(view -> {
             binding.autoCompleteTextView.setHint(binding.usrNeighborhood.getText());

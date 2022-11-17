@@ -1,5 +1,6 @@
 package com.zerobudget.bookito.models.users;
 
+import com.google.common.hash.HashCode;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
@@ -90,6 +91,5 @@ public class UserModel {
 
         return (HashMap<String, Object>) doc.get("karma");
     }
-
 
 }

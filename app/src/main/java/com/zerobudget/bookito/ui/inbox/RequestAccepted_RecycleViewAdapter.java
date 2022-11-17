@@ -41,6 +41,8 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
 
+        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+
         holder.request_selected.setOnClickListener(view1 -> {
             if (otherUser != null && holder.getAdapterPosition() != -1) {
                 if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
