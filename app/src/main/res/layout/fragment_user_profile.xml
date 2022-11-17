@@ -8,7 +8,7 @@
     tools:context=".ui.profile.UserProfileFragment">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/img_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="100dp"
@@ -22,20 +22,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.lelloman.identicon.view.ClassicIdenticonView
-                android:id="@+id/user_gravatar"
+            <ImageView
+                android:id="@+id/profile_pic"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                app:hash="0"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-               <ImageView
-                android:id="@+id/profile_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:visibility="gone"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -43,6 +33,17 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@mipmap/ic_launcher"
                 tools:src="@tools:sample/avatars" />
+
+            <com.lelloman.identicon.view.ClassicIdenticonView
+                android:id="@+id/user_gravatar"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:visibility="gone"
+                app:hash="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -55,11 +56,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Nome"
-        android:textStyle="bold"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintTop_toBottomOf="@+id/img_container" />
 
     <TextView
         android:id="@+id/usr_last_name"
@@ -79,8 +80,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Quartiere"
-        android:textStyle="bold"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toBottomOf="@+id/usr_telephone" />
@@ -118,8 +119,6 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline6"
             app:layout_constraintStart_toStartOf="@+id/guideline5" />
     </com.google.android.material.textfield.TextInputLayout>
-
-
 
 
     <Button
