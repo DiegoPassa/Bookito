@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         getUriPic();
 
+        initFirebaseMessaging();
+
         getQueryCurrentUser();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -92,6 +95,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initFirebaseMessaging() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()){
+                Log.d("CAZZO", "CAZZOCAZZOCAZZOCAzZo");
+                return;
+            }
+
+            // Get new FCM registration token
+            String token = task.getResult();
+
+            System.out.println(token);
+
+        });
     }
 
     @Override
