@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
@@ -84,57 +83,46 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
         UserModel senderModel = requests.get(holder.getAdapterPosition()).getOtherUser();
         if (senderModel != null) {
-            String other_usr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name()+" "+requests.get(position).getOtherUser().getLast_name();
+            String other_usr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(position).getOtherUser().getLast_name();
             holder.user_name.setText(other_usr);
-        }else
+        } else
             holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
         storageRef.child("profile_pics/").listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                    @Override
-                    public void onSuccess(ListResult listResult) {
-                        for (StorageReference prefix : listResult.getPrefixes()) {
-                            // Log.d("PRE", prefix.getName());
-                            // All the prefixes under listRef.
-                            // You may call listAll() recursively on them.
-                        }
+            @Override
+            public void onSuccess(ListResult listResult) {
 
-                        for (StorageReference item : listResult.getItems()) {
-                            // All the items under listRef.
-                            if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getSender())) {
-                                Log.d("item", item.getName());
-                                item.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    // Utils.setUriPic(uri.toString());
-                                    Log.d("PIC", Utils.URI_PIC);
+                for (StorageReference item : listResult.getItems()) {
+                    // All the items under listRef.
+                    if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getSender())) {
+                        Log.d("item", item.getName());
+                        item.getDownloadUrl().addOnSuccessListener(uri -> {
+                            // Utils.setUriPic(uri.toString());
+                            Log.d("PIC", Utils.URI_PIC);
 
-                                    Picasso.get().load(uri).into(holder.usr_pic);
-                                    holder.usr_pic.setVisibility(View.VISIBLE);
-                                    holder.user_gravatar.setVisibility(View.GONE);
+                            Picasso.get().load(uri).into(holder.usr_pic);
+                            holder.usr_pic.setVisibility(View.VISIBLE);
+                            holder.user_gravatar.setVisibility(View.GONE);
 
-                                }).addOnFailureListener(exception -> {
-                                    int code = ((StorageException) exception).getErrorCode();
-                                    if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                                        holder.user_gravatar.setVisibility(View.VISIBLE);
-                                        holder.usr_pic.setVisibility(View.GONE);
-                                    }
-                                });
-                            }else{
+                        }).addOnFailureListener(exception -> {
+                            int code = ((StorageException) exception).getErrorCode();
+                            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
                                 holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
                                 holder.user_gravatar.setVisibility(View.VISIBLE);
                                 holder.usr_pic.setVisibility(View.GONE);
                             }
-                        }
+                        });
+                    } else {
+                        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                        holder.user_gravatar.setVisibility(View.VISIBLE);
+                        holder.usr_pic.setVisibility(View.GONE);
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Uh-oh, an error occurred!
-                    }
-                });
+                }
+            }
+        });
 
         holder.request_selected.setOnClickListener(view -> {
             if (senderModel != null && holder.getAdapterPosition() != -1) {
@@ -182,16 +170,16 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         AlertDialog dialog = dialogBuilder.create();
 
         loadPopupViewMembers(view);
-        String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
+        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name()+" "+requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();
+        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();
         owner.setText(firstAndLastNameStr);
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
 
         //TODO: sistemare la data del prestito
-        if(requests.get(holder.getAdapterPosition()).getType().equals("Prestito"))
+        if (requests.get(holder.getAdapterPosition()).getType().equals("Prestito"))
             returnDate.setVisibility(View.VISIBLE);
 
 
@@ -200,7 +188,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         }
 
         confirmButton.setOnClickListener(view1 -> {
-            Log.d("Pos", ""+position);
+            Log.d("Pos", "" + position);
             if (holder.getAdapterPosition() != -1) {
                 if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
 //                Navigation.findNavController(holder.itemView).navigate(R.layout.fragment_add);
@@ -238,8 +226,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             int code = ((StorageException) exception).getErrorCode();
             if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
                 // haha, the image does not actually exist, upload it
-            }
-            else {
+            } else {
                 // handle all other problems here
             }
         });
@@ -258,7 +245,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         return requests.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         protected final TextView title;
         protected final ConstraintLayout request_selected;
@@ -271,7 +258,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             super(itemView);
             title = itemView.findViewById(R.id.requestTitle);
             user_name = itemView.findViewById(R.id.requester_name);
-            book_image= itemView.findViewById(R.id.book_image_request);
+            book_image = itemView.findViewById(R.id.book_image_request);
             request_selected = itemView.findViewById(R.id.request);
             user_gravatar = itemView.findViewById(R.id.user_gravatar);
             usr_pic = itemView.findViewById(R.id.profile_pic);
