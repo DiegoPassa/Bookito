@@ -31,9 +31,9 @@ public class UserModel {
     }
 
     public static void loadUser(UserModel user) {
-        if (currentUser == null) {
-            UserModel.currentUser = (UserLibrary) user;
-        }
+
+        UserModel.currentUser = (UserLibrary) user;
+
     }
 
 
