@@ -82,6 +82,8 @@ public class UserProfileFragment extends Fragment {
 
         showPic();
 
+        Log.d("SONO_USER_PROFILE", user.getFirst_name());
+
         binding.imgContainer.setOnClickListener(view -> {
             showImagePicDialog();
         });
