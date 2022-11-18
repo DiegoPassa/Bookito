@@ -48,31 +48,39 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
 
-        //scorre le immagini e cerca solo quella dell'utente relativo alla richiesta
-        storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
-            for (StorageReference item : listResult.getItems()) {
-                // All the items under listRef.
-                if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getReceiver())) {
-                    item.getDownloadUrl().addOnSuccessListener(uri -> {
-                        Picasso.get().load(uri).into(holder.usr_pic);
-                        holder.usr_pic.setVisibility(View.VISIBLE);
-                        holder.user_gravatar.setVisibility(View.GONE);
 
-                    }).addOnFailureListener(exception -> {
-                        int code = ((StorageException) exception).getErrorCode();
-                        if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                            holder.user_gravatar.setVisibility(View.VISIBLE);
-                            holder.usr_pic.setVisibility(View.GONE);
-                        }
-                    });
-                } else {
-                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                    holder.user_gravatar.setVisibility(View.VISIBLE);
-                    holder.usr_pic.setVisibility(View.GONE);
+        if(requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+            holder.user_gravatar.setVisibility(View.GONE);
+            //scorre le immagini e cerca solo quella dell'utente relativo alla richiesta
+            storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
+                for (StorageReference item : listResult.getItems()) {
+                    // All the items under listRef.
+                    if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getReceiver())) {
+                        item.getDownloadUrl().addOnSuccessListener(uri -> {
+                            Picasso.get().load(uri).into(holder.usr_pic);
+                            holder.usr_pic.setVisibility(View.VISIBLE);
+                            //holder.user_gravatar.setVisibility(View.GONE);
+
+                        }).addOnFailureListener(exception -> {
+                            int code = ((StorageException) exception).getErrorCode();
+                            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                holder.user_gravatar.setVisibility(View.VISIBLE);
+                                holder.usr_pic.setVisibility(View.GONE);
+                            }
+                        });
+                    } /*else {
+                        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                        holder.user_gravatar.setVisibility(View.VISIBLE);
+                        holder.usr_pic.setVisibility(View.GONE);
+                    }*/
                 }
+            });
+        }else {
+                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                holder.user_gravatar.setVisibility(View.VISIBLE);
+                holder.usr_pic.setVisibility(View.GONE);
             }
-        });
 
         holder.request_selected.setOnClickListener(view -> {
             if (otherModel != null && holder.getAdapterPosition() != -1) {
