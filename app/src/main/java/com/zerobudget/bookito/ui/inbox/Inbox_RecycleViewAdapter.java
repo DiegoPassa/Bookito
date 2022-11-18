@@ -103,7 +103,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
                         for (StorageReference item : listResult.getItems()) {
                             // All the items under listRef.
-                            if (item.getName().equals(requests.get(holder.getAdapterPosition()).getReceiver())) {
+                            if (item.getName().equals(requests.get(holder.getAdapterPosition()).getSender())) {
                                 Log.d("item", item.getName());
                                 item.getDownloadUrl().addOnSuccessListener(uri -> {
                                     // Utils.setUriPic(uri.toString());
