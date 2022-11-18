@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -85,20 +87,22 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
 
         holder.request_selected.setOnClickListener(view1 -> {
             if (otherUser != null && holder.getAdapterPosition() != -1) {
-                if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
-                    createNewContactDialog(holder.getAdapterPosition(), holder, UserFlag.getFlagFromUser((Long) otherUser.getKarma().get("numbers"), (Long) otherUser.getKarma().get("points")));
-                else createNewContactDialog(holder.getAdapterPosition(), holder, null);
+                Bundle args = new Bundle();
+                String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
+                args.putString("otherChatUser", toJson);
+                Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
 
             }
         });
     }
 
-    @Override
-    public void createNewContactDialog(int position, ViewHolder holder, Flag user) {
-        Bundle args = new Bundle();
-        String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
-        args.putString("otherChatUser", toJson);
-    }
+//    @Override
+//    public void createNewContactDialog(int position, ViewHolder holder, Flag user) {
+//        Bundle args = new Bundle();
+//        String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
+//        args.putString("otherChatUser", toJson);
+//        Navigation.findNavController(View.inflate(context, R.id.recycleView_Inbox, null)).navigate(R.layout.chat_fragment);
+//    }
 
     protected boolean isCurrentUserReceiver(RequestModel r) {
         return r.getReceiver().equals(Utils.USER_ID);

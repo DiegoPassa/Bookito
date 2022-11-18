@@ -6,10 +6,23 @@
     app:startDestination="@id/to_navigation_library">
 
     <fragment
+        android:id="@+id/chat_fragment"
+        android:name="com.zerobudget.bookito.ui.Chat.ChatFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/chat_fragment" />
+
+    <fragment
         android:id="@+id/request_page_nav"
         android:name="com.zerobudget.bookito.ui.inbox.RequestFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_request_page" />
+        tools:layout="@layout/fragment_request_page">
+
+        <action
+            android:id="@+id/to_chat_fragment"
+            app:destination="@id/chat_fragment"
+            app:popExitAnim="@android:anim/fade_out"/>
+
+    </fragment>
 
     <navigation
         android:id="@+id/to_navigation_library"
