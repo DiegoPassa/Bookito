@@ -3,26 +3,32 @@ package com.zerobudget.bookito.ui.inbox;
 import android.content.Context;
 import android.text.Html;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
-public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
+public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
+    private StorageReference storageRef;
+
     public RequestSent_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         super(ctx, requests);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
     }
 
     @Override
@@ -33,16 +39,40 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
             String other_user = requests.get(holder.getAdapterPosition())
                     .getOtherUser()
                     .getFirst_name() + " " + requests.get(holder.getAdapterPosition())
-                                                .getOtherUser()
-                                                .getLast_name();
+                    .getOtherUser()
+                    .getLast_name();
 
             holder.user_name.setText(other_user);
         } else holder.user_name.setText("undefined");
 
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
-        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
 
+        //scorre le immagini e cerca solo quella dell'utente relativo alla richiesta
+        storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
+            for (StorageReference item : listResult.getItems()) {
+                // All the items under listRef.
+                if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getReceiver())) {
+                    item.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Picasso.get().load(uri).into(holder.usr_pic);
+                        holder.usr_pic.setVisibility(View.VISIBLE);
+                        holder.user_gravatar.setVisibility(View.GONE);
+
+                    }).addOnFailureListener(exception -> {
+                        int code = ((StorageException) exception).getErrorCode();
+                        if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                            holder.user_gravatar.setVisibility(View.VISIBLE);
+                            holder.usr_pic.setVisibility(View.GONE);
+                        }
+                    });
+                } else {
+                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                    holder.user_gravatar.setVisibility(View.VISIBLE);
+                    holder.usr_pic.setVisibility(View.GONE);
+                }
+            }
+        });
 
         holder.request_selected.setOnClickListener(view -> {
             if (otherModel != null && holder.getAdapterPosition() != -1) {
@@ -61,9 +91,9 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
 
         loadPopupViewMembers(view);
 
-        String requestTypeStr = "Richiesta "+requests.get(holder.getAdapterPosition()).getType();
+        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name()+" "+requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();
+        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();
         owner.setText(firstAndLastNameStr);
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
