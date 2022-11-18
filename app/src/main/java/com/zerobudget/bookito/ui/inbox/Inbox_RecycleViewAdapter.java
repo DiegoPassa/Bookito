@@ -134,17 +134,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 createNewContactDialog(position, holder, flag);
 
             }
-
-//            RequestModel r2 = requests.get(0);
-//            r2.setTitle("CIAONEEE");
-//            acceptRequest(requests.get(0));
-//            try {
-//                requests.set(0, r2);
-//                notifyItemChanged(0);
-//                Log.d("ENTROOO", "SIIIIII");
-//            }catch(Exception e) {
-//
-//            }
         });
 
 
@@ -177,6 +166,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
+
 
         //TODO: sistemare la data del prestito
         if (requests.get(holder.getAdapterPosition()).getType().equals("Prestito"))
