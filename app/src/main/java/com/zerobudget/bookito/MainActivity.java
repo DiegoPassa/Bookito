@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.login.LoginActivity;
@@ -144,8 +145,10 @@ public class MainActivity extends AppCompatActivity {
             Utils.setUriPic(uri.toString());
             Log.d("PIC", Utils.URI_PIC);
         }).addOnFailureListener(exception -> {
-            String errorMessage = exception.getMessage();
-            Log.d("ERR", errorMessage);
+            int code = ((StorageException) exception).getErrorCode();
+            if (code == StorageException.ERROR_OBJECT_NOT_FOUND)
+                Log.d("ERR", "L'immagine non esiste");
+
         });
     }
 

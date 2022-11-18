@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
@@ -31,6 +33,7 @@ public class InboxFragment extends Fragment {
     private ArrayList<RequestModel> requests;
 
     private FirebaseFirestore db;
+    private ProgressBar spinner;
 
     public InboxFragment() {}
 
@@ -40,6 +43,9 @@ public class InboxFragment extends Fragment {
 
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        spinner = root.findViewById(R.id.progressBar);
+
 
         db = FirebaseFirestore.getInstance();
 
@@ -63,7 +69,7 @@ public class InboxFragment extends Fragment {
     protected ArrayList<Object> getRequests() {
         //TODO I TIMESTAMP NON POSSONO ESSERE CASTATI A STRING, QUINDI FARE UNA FUNZIONE PER CONVERTIRE TIMESTAMP A STRING O PER CONTROLLARNE I VALORI
 
-        binding.progressBar.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
                 .get()
@@ -94,7 +100,7 @@ public class InboxFragment extends Fragment {
         }
 
         Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
-            binding.progressBar.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
             addRequestsOnPage(arr);
         });
     }

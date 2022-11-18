@@ -14,9 +14,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
 import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
@@ -25,6 +31,7 @@ import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.UserFlag;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +54,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     protected FirebaseFirestore db;
     protected FirebaseAuth auth;
+    private StorageReference storageRef;
+
 
     public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         this.context = ctx;
@@ -55,6 +64,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
     }
 
@@ -80,7 +91,46 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
-        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+
+        storageRef.child("profile_pics/").listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference prefix : listResult.getPrefixes()) {
+                            // Log.d("PRE", prefix.getName());
+                            // All the prefixes under listRef.
+                            // You may call listAll() recursively on them.
+                        }
+
+                        for (StorageReference item : listResult.getItems()) {
+                            // All the items under listRef.
+                            if (item.getName().equals(requests.get(holder.getAdapterPosition()).getReceiver())) {
+                                Log.d("item", item.getName());
+                                item.getDownloadUrl().addOnSuccessListener(uri -> {
+                                    // Utils.setUriPic(uri.toString());
+                                    Log.d("PIC", Utils.URI_PIC);
+
+                                    Picasso.get().load(uri).into(holder.usr_pic);
+                                    holder.usr_pic.setVisibility(View.VISIBLE);
+                                    holder.user_gravatar.setVisibility(View.GONE);
+
+                                }).addOnFailureListener(exception -> {
+                                    int code = ((StorageException) exception).getErrorCode();
+                                    if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                        holder.user_gravatar.setVisibility(View.VISIBLE);
+                                        holder.usr_pic.setVisibility(View.GONE);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Uh-oh, an error occurred!
+                    }
+                });
 
         holder.request_selected.setOnClickListener(view -> {
             if (senderModel != null && holder.getAdapterPosition() != -1) {
@@ -174,6 +224,23 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     }
 
+    private void getUriPic() {
+        StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
+
+        load.getDownloadUrl().addOnSuccessListener(uri -> {
+            Utils.setUriPic(uri.toString());
+            Log.d("PIC", Utils.URI_PIC);
+        }).addOnFailureListener(exception -> {
+            int code = ((StorageException) exception).getErrorCode();
+            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                // haha, the image does not actually exist, upload it
+            }
+            else {
+                // handle all other problems here
+            }
+        });
+    }
+
     protected void deleteRequest(RequestModel r) {
         db.collection("requests").document(r.getrequestId()).delete();
     }
@@ -194,6 +261,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         protected final TextView user_name;
         protected final ImageView book_image;
         protected final ClassicIdenticonView user_gravatar;
+        protected final ImageView usr_pic;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -202,6 +270,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             book_image= itemView.findViewById(R.id.book_image_request);
             request_selected = itemView.findViewById(R.id.request);
             user_gravatar = itemView.findViewById(R.id.user_gravatar);
+            usr_pic = itemView.findViewById(R.id.profile_pic);
         }
     }
 }
