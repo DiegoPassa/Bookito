@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -55,7 +56,9 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
 
     @Override
     public void createNewContactDialog(int position, ViewHolder holder, Flag user) {
-
+        Bundle args = new Bundle();
+        String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
+        args.putString("otherChatUser", toJson);
     }
 
     protected boolean isCurrentUserReceiver(RequestModel r) {
