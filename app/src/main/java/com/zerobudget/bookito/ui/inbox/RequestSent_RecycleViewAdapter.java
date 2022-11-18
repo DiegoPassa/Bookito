@@ -34,6 +34,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         UserModel otherModel = requests.get(holder.getAdapterPosition()).getOtherUser();
+        String idReceiver = requests.get(holder.getAdapterPosition()).getReceiver();
 
         if (otherModel != null) {
             String other_user = requests.get(holder.getAdapterPosition())
@@ -55,7 +56,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
             storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
                 for (StorageReference item : listResult.getItems()) {
                     // All the items under listRef.
-                    if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getReceiver())) {
+                    if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(idReceiver)) {
                         item.getDownloadUrl().addOnSuccessListener(uri -> {
                             Picasso.get().load(uri).into(holder.usr_pic);
                             holder.usr_pic.setVisibility(View.VISIBLE);
@@ -69,11 +70,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
                                 holder.usr_pic.setVisibility(View.GONE);
                             }
                         });
-                    } /*else {
-                        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                        holder.user_gravatar.setVisibility(View.VISIBLE);
-                        holder.usr_pic.setVisibility(View.GONE);
-                    }*/
+                    }
                 }
             });
         }else {

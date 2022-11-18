@@ -40,6 +40,8 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         UserModel otherUser = requests.get(holder.getAdapterPosition()).getOtherUser();
+        String idSender = requests.get(holder.getAdapterPosition()).getSender();
+        String idReceiver = requests.get(holder.getAdapterPosition()).getReceiver();
 
         if (otherUser != null) {
             String nameOtherUser = otherUser.getFirst_name();
@@ -61,8 +63,8 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
                 for (StorageReference item : listResult.getItems()) {
                     // All the items under listRef.
-                    if (!item.getName().equals(Utils.USER_ID) && (item.getName().equals(requests.get(holder.getAdapterPosition()).getReceiver())
-                            || item.getName().equals(requests.get(holder.getAdapterPosition()).getSender()))) {
+                    if (!item.getName().equals(Utils.USER_ID) && (item.getName().equals(idReceiver)
+                            || item.getName().equals(idSender))) {
                         Log.d("item", item.getName());
                         item.getDownloadUrl().addOnSuccessListener(uri -> {
                             // Utils.setUriPic(uri.toString());
@@ -80,11 +82,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                                 holder.usr_pic.setVisibility(View.GONE);
                             }
                         });
-                    } /*else {
-                        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                        holder.user_gravatar.setVisibility(View.VISIBLE);
-                        holder.usr_pic.setVisibility(View.GONE);
-                    }*/
+                    }
                 }
             });
         }else{

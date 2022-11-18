@@ -82,6 +82,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
         UserModel senderModel = requests.get(holder.getAdapterPosition()).getOtherUser();
+        String idSender = requests.get(holder.getAdapterPosition()).getSender();
+
         if (senderModel != null) {
             String other_usr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(position).getOtherUser().getLast_name();
             holder.user_name.setText(other_usr);
@@ -93,34 +95,27 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         if(requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()){
             holder.user_gravatar.setVisibility(View.GONE);
-            storageRef.child("profile_pics/").listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                @Override
-                public void onSuccess(ListResult listResult) {
-                    for (StorageReference item : listResult.getItems()) {
-                        // All the items under listRef.
-                        if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getSender())) {
-                            Log.d("item", item.getName());
-                            item.getDownloadUrl().addOnSuccessListener(uri -> {
-                                // Utils.setUriPic(uri.toString());
-                                Log.d("PIC", Utils.URI_PIC);
+            storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
+                for (StorageReference item : listResult.getItems()) {
+                    // All the items under listRef.
+                    if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(idSender)) {
+                        Log.d("item", item.getName());
+                        item.getDownloadUrl().addOnSuccessListener(uri -> {
+                            // Utils.setUriPic(uri.toString());
+                            Log.d("PIC", Utils.URI_PIC);
 
-                                Picasso.get().load(uri).into(holder.usr_pic);
-                                holder.usr_pic.setVisibility(View.VISIBLE);
-                                //holder.user_gravatar.setVisibility(View.GONE);
+                            Picasso.get().load(uri).into(holder.usr_pic);
+                            holder.usr_pic.setVisibility(View.VISIBLE);
+                            //holder.user_gravatar.setVisibility(View.GONE);
 
-                            }).addOnFailureListener(exception -> {
-                                int code = ((StorageException) exception).getErrorCode();
-                                if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                                    holder.user_gravatar.setVisibility(View.VISIBLE);
-                                    holder.usr_pic.setVisibility(View.GONE);
-                                }
-                            });
-                        } /*else {
-                            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                            holder.user_gravatar.setVisibility(View.VISIBLE);
-                            holder.usr_pic.setVisibility(View.GONE);
-                        }*/
+                        }).addOnFailureListener(exception -> {
+                            int code = ((StorageException) exception).getErrorCode();
+                            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                holder.user_gravatar.setVisibility(View.VISIBLE);
+                                holder.usr_pic.setVisibility(View.GONE);
+                            }
+                        });
                     }
                 }
             });
@@ -211,22 +206,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         });
         dialog.show();
 
-    }
-
-    private void getUriPic() {
-        StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
-
-        load.getDownloadUrl().addOnSuccessListener(uri -> {
-            Utils.setUriPic(uri.toString());
-            Log.d("PIC", Utils.URI_PIC);
-        }).addOnFailureListener(exception -> {
-            int code = ((StorageException) exception).getErrorCode();
-            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                // haha, the image does not actually exist, upload it
-            } else {
-                // handle all other problems here
-            }
-        });
     }
 
     protected void deleteRequest(RequestModel r) {
