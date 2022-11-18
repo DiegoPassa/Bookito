@@ -121,6 +121,10 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                                         holder.usr_pic.setVisibility(View.GONE);
                                     }
                                 });
+                            }else{
+                                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                holder.user_gravatar.setVisibility(View.VISIBLE);
+                                holder.usr_pic.setVisibility(View.GONE);
                             }
                         }
                     }
