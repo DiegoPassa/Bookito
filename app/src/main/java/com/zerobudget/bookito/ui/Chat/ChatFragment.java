@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui;
+package com.zerobudget.bookito.ui.Chat;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,13 +26,14 @@ public class ChatFragment extends Fragment {
         binding = ChatFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         Bundle args = getArguments();
         String otherId = args.getString("otherChatUser");
         otherUser = Utils.getGsonParser().fromJson(otherId, UserModel.class);
 
         //l'utente glielo passiamo dal fragment delle richieste accettate, tanto dentro l'array delle richieste contiene anche l'altro user
-
-
 
         return root;
     }
