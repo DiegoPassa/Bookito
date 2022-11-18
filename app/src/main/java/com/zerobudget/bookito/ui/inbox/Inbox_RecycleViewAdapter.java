@@ -91,38 +91,45 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
-        storageRef.child("profile_pics/").listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-            @Override
-            public void onSuccess(ListResult listResult) {
+        if(requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()){
+            holder.user_gravatar.setVisibility(View.GONE);
+            storageRef.child("profile_pics/").listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                @Override
+                public void onSuccess(ListResult listResult) {
+                    for (StorageReference item : listResult.getItems()) {
+                        // All the items under listRef.
+                        if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getSender())) {
+                            Log.d("item", item.getName());
+                            item.getDownloadUrl().addOnSuccessListener(uri -> {
+                                // Utils.setUriPic(uri.toString());
+                                Log.d("PIC", Utils.URI_PIC);
 
-                for (StorageReference item : listResult.getItems()) {
-                    // All the items under listRef.
-                    if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(requests.get(holder.getAdapterPosition()).getSender())) {
-                        Log.d("item", item.getName());
-                        item.getDownloadUrl().addOnSuccessListener(uri -> {
-                            // Utils.setUriPic(uri.toString());
-                            Log.d("PIC", Utils.URI_PIC);
+                                Picasso.get().load(uri).into(holder.usr_pic);
+                                holder.usr_pic.setVisibility(View.VISIBLE);
+                                //holder.user_gravatar.setVisibility(View.GONE);
 
-                            Picasso.get().load(uri).into(holder.usr_pic);
-                            holder.usr_pic.setVisibility(View.VISIBLE);
-                            holder.user_gravatar.setVisibility(View.GONE);
-
-                        }).addOnFailureListener(exception -> {
-                            int code = ((StorageException) exception).getErrorCode();
-                            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                                holder.user_gravatar.setVisibility(View.VISIBLE);
-                                holder.usr_pic.setVisibility(View.GONE);
-                            }
-                        });
-                    } else {
-                        holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                        holder.user_gravatar.setVisibility(View.VISIBLE);
-                        holder.usr_pic.setVisibility(View.GONE);
+                            }).addOnFailureListener(exception -> {
+                                int code = ((StorageException) exception).getErrorCode();
+                                if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                    holder.user_gravatar.setVisibility(View.VISIBLE);
+                                    holder.usr_pic.setVisibility(View.GONE);
+                                }
+                            });
+                        } /*else {
+                            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                            holder.user_gravatar.setVisibility(View.VISIBLE);
+                            holder.usr_pic.setVisibility(View.GONE);
+                        }*/
                     }
                 }
-            }
-        });
+            });
+        }else{
+            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+            holder.user_gravatar.setVisibility(View.VISIBLE);
+            holder.usr_pic.setVisibility(View.GONE);
+        }
+
 
         holder.request_selected.setOnClickListener(view -> {
             if (senderModel != null && holder.getAdapterPosition() != -1) {
