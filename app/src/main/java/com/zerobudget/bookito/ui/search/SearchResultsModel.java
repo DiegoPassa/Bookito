@@ -3,7 +3,9 @@ package com.zerobudget.bookito.ui.search;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
 
-class SearchResultsModel {
+import java.util.Comparator;
+
+class SearchResultsModel implements Comparable<SearchResultsModel> {
     private BookModel book;
     private UserModel user;
 
@@ -34,5 +36,11 @@ class SearchResultsModel {
                 "book=" + book +
                 ", user=" + user +
                 '}';
+    }
+
+
+    @Override
+    public int compareTo(SearchResultsModel searchResultsModel) {
+        return this.getBook().getTitle().compareTo(searchResultsModel.getBook().getTitle());
     }
 }
