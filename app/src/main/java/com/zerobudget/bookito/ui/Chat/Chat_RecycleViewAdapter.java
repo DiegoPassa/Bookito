@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.Chat;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -78,7 +76,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             loadUserProfilePicture(otherUser, holder.profileImg);
 
             if (isNightMode(context)) {
-                holder.messageSent.setTextColor(R.color.black);
+                holder.messageSent.setTextColor(context.getResources().getColor(R.color.black));
             }
         }
     }

@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
+import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -199,7 +200,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
                     Log.d("Sent to: ", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
-                    Utils.sendPushNotification("Richiesta di libro", UserModel.getCurrentUser().getFirst_name() + " ti ha richiesto il libro: " + rm.getTitle(), results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
+                    Notifications.sendPushNotification(UserModel.getCurrentUser().getFirst_name() + " ti ha richiesto il libro: " + rm.getTitle(), "Nuova richiesta", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
 
                 }

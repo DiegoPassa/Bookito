@@ -54,7 +54,7 @@
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme" />
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".Notifications"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
