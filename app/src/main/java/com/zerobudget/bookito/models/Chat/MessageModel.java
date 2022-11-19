@@ -9,7 +9,8 @@ public class MessageModel {
     private String receiver;
     private String message;
     private String messageId;
-
+    //PkxM2m4pXZeEgdyPLUXq0qAdKLZ2 IO
+    // EnKAs9DVThSOFRjDHalzWJCGZpZ2  ALTRO
     private Timestamp messageSentAt;
 
     public MessageModel(){}
