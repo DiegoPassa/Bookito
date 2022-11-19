@@ -198,8 +198,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                         Log.d("OKK", documentReference.getId());
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
-                    Log.d("Sent to: ", rm.getOtherUser().getNotificationToken());
-                    Utils.sendPushNotification(UserModel.getCurrentUser().getFirst_name() + "ti ha richiesto il libro " + rm.getTitle(), "Title", rm.getOtherUser().getNotificationToken());
+                    Log.d("Sent to: ", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
+                    Utils.sendPushNotification("Richiesta di libro", UserModel.getCurrentUser().getFirst_name() + " ti ha richiesto il libro: " + rm.getTitle(), results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
 
                 }
