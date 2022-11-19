@@ -10,10 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModel;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -30,9 +32,19 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         this.senderImg = senderImg;
         this.receiverImg = receiverImg;
 
-        for (int i = 0; i < 10; i++) {
-            messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "EnKAs9DVThSOFRjDHalzWJCGZpZ2", "Posso foto piedini?", null));
-        }
+
+        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ciao!", null));
+        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Mi mandi foto piedini?", null));
+        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ciao! No, direi di no", null));
+        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ma come no", null));
+        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ma chi sei", null));
+        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Chi ti conosce", null));
+        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Sono marco e mi piacciono i piedi", null));
+        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Io sono giorgio e mi piacciono i treni", null));
+        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "ciao giorgio,posso foto piedi?", null));
+        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ti prego", null));
+
+
     }
 
     @NonNull
@@ -45,8 +57,28 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d("CHATTT", "ENTRO NEL BIND");
         holder.messageSent.setText(messages.get(position).getMessage());
+
+        Log.d("BINDMESSAGE", "SENDER = " + messages.get(position).getSender() + " RECEIVER = " + messages.get(position).getReceiver());
+
+        if (messages.get(position).getSender().equals(Utils.USER_ID)) {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(holder.constraintLayout);
+            constraintSet.clear(R.id.chat_profile_card_view, ConstraintSet.LEFT);
+            constraintSet.clear(R.id.message_content, ConstraintSet.LEFT);
+            constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.RIGHT, R.id.chat_layout, ConstraintSet.RIGHT, 0);
+            constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
+            constraintSet.applyTo(holder.constraintLayout);
+        } else {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(holder.constraintLayout);
+            constraintSet.clear(R.id.chat_profile_card_view, ConstraintSet.RIGHT);
+            constraintSet.clear(R.id.message_content, ConstraintSet.RIGHT);
+            constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.LEFT, R.id.chat_layout, ConstraintSet.LEFT, 0);
+            constraintSet.connect(R.id.message_content, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
+            constraintSet.applyTo(holder.constraintLayout);
+            holder.messageSent.setBackgroundResource(R.drawable.enemy_message);
+        }
     }
 
     @Override
@@ -58,7 +90,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
         protected ConstraintLayout constraintLayout;
         protected TextView messageSent;
-        ImageView profileImg;
+        protected ImageView profileImg;
 
 
         public ViewHolder(@NonNull View itemView) {
