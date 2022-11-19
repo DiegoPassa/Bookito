@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.add;
 
 import static com.zerobudget.bookito.utils.Utils.isAValidISBN;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+import com.zerobudget.bookito.MainActivity;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.models.book.BookModel;
@@ -45,6 +49,8 @@ public class AddFragment extends Fragment {
     private BookModel newBook;
     private View root;
 
+    private ProgressBar spinner;
+
     private FirebaseFirestore db;
 
     /**
@@ -63,6 +69,8 @@ public class AddFragment extends Fragment {
 
         binding = FragmentAddBinding.inflate(inflater, container, false);
         root = binding.getRoot();
+
+        spinner = root.findViewById(R.id.progressBar);
 
         binding.scanBtn.setOnClickListener(view -> {
             ScanOptions options = new ScanOptions();
@@ -101,12 +109,14 @@ public class AddFragment extends Fragment {
         });
 
         binding.btnAdd.setOnClickListener(view -> {
+            hideKeyboard(getActivity());
+            spinner.setVisibility(View.VISIBLE);
+
             String isbn = binding.isbnNumber.getText().toString();
-
-
-            if (isAValidISBN(Long.parseLong(isbn)))
+            if (isAValidISBN(Long.parseLong(isbn))) {
                 searchBookAPI(isbn);
-            else {
+
+            }else {
                 AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Attenzione");
                 builder.setMessage("L'isbn inserito non è valido, si prega di riprovare");
@@ -118,7 +128,7 @@ public class AddFragment extends Fragment {
             }
         });
 
-        Log.d("USER NOW", "" + UserModel.getCurrentUser().serialize());
+        //Log.d("USER NOW", "" + UserModel.getCurrentUser().serialize());
         return root;
     }
 
@@ -127,6 +137,17 @@ public class AddFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
 
 
     static public class CaptureAct extends CaptureActivity {
@@ -143,6 +164,7 @@ public class AddFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
 
         JsonObjectRequest booksObjrequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+            spinner.setVisibility(View.GONE);
             boolean foundByIsbn = false;
             try {
                 //prova a prlevare i dati in risposta dall'API di goole books
@@ -200,11 +222,11 @@ public class AddFragment extends Fragment {
                 args.putString("BK", bookString);
 
                 foundByIsbn = true;
+                //spinner.setVisibility(View.GONE);
                 Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_addConfirmFragment, args);
 
             } catch (JSONException e) {
                 Toast.makeText(getContext().getApplicationContext(), "Attendere prego, sarà necessario più tempo del previsto!", Toast.LENGTH_LONG).show();
-                // e.printStackTrace();
             }
 
             //a volte google boooks api non trova i libri tramite isbn, non si sa perché
@@ -214,6 +236,7 @@ public class AddFragment extends Fragment {
                 String url_2 = "https://www.googleapis.com/books/v1/volumes?q=" + isbn + "&maxResults=40";
 
                 JsonObjectRequest booksObjrequestNotByIsbn = new JsonObjectRequest(Request.Method.GET, url_2, null, responseNotByIsbn -> {
+                    spinner.setVisibility(View.GONE);
                     boolean foundNotByIsbn = false;
                     try {
                         //prova a prlevare i dati in risposta dall'API di goole books
@@ -241,19 +264,7 @@ public class AddFragment extends Fragment {
                                 else
                                     newBook.setDescription("No description found");
 
-                                //data we might need in the future!
-
-                                //String subtitle = volumeObj.optString("subtitle");
-                                //String publisher = volumeObj.optString("publisher");
-                                //String publishedDate = volumeObj.optString("publishedDate");
-                                //String previewLink = volumeObj.optString("previewLink");
-                                //String infoLink = volumeObj.optString("infoLink");
-                                //int pageCount = volumeObj.optInt("pageCount");
-                                //JSONObject saleInfoObj = itemsObj.optJSONObject("saleInfo");
-                                //String buyLink = saleInfoObj.optString("buyLink");
-
                                 JSONObject imageLinks = volumeObj.optJSONObject("imageLinks");
-
 
                                 if (imageLinks != null) {
                                     //l'API rende un link che inizia con http ma Picasso, usato per estrarre l'immagine ha bisogno dell'https
@@ -277,31 +288,26 @@ public class AddFragment extends Fragment {
                                 args = new Bundle();
                                 String bookString = Utils.getGsonParser().toJson(newBook);
                                 args.putString("BK", bookString);
+
                                 foundNotByIsbn = true;
                                 Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_addConfirmFragment, args);
                             }
                         }
 
-                        if (!foundNotByIsbn)
+                        if (!foundNotByIsbn) {
                             Toast.makeText(getContext().getApplicationContext(), "Oh no, libro non trovato", Toast.LENGTH_LONG).show();
-
+                        }
                     } catch (JSONException ex) {
                         ex.printStackTrace();
                     }
-                }, error -> Toast.makeText(getContext().getApplicationContext(), "Oh no, libro non trovato", Toast.LENGTH_LONG).show());
+
+                }, error -> Toast.makeText(getContext().getApplicationContext(), "Errore nella richiesta", Toast.LENGTH_LONG).show());
 
                 queue.add(booksObjrequestNotByIsbn);
             }
-        }, error -> {
-            //TODO
 
-            //Toast.makeText(this.getContext(), "Errore!", Toast.LENGTH_LONG).show();
-        });
+        }, error -> Toast.makeText(getContext().getApplicationContext(), "Errore nella richiesta", Toast.LENGTH_LONG).show());
 
         queue.add(booksObjrequest);
-
-
     }
-
-
 }
