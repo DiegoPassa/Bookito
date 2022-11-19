@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment) {
+            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
                 navView.setVisibility(View.GONE);
             } else {
                 navView.setVisibility(View.VISIBLE);
