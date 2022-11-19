@@ -42,7 +42,7 @@ public class ChatFragment extends Fragment {
 
         RecyclerView recyclerView = binding.ChatRecycleView;
 
-        Chat_RecycleViewAdapter adapter = new Chat_RecycleViewAdapter(this.getContext(), new ArrayList<>(), null, null);
+        Chat_RecycleViewAdapter adapter = new Chat_RecycleViewAdapter(this.getContext(), new ArrayList<>(), null);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

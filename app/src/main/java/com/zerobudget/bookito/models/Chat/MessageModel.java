@@ -9,8 +9,6 @@ public class MessageModel {
     private String receiver;
     private String message;
     private String messageId;
-    //PkxM2m4pXZeEgdyPLUXq0qAdKLZ2 IO
-    // EnKAs9DVThSOFRjDHalzWJCGZpZ2  ALTRO
     private Timestamp messageSentAt;
 
     public MessageModel(){}
@@ -57,6 +55,14 @@ public class MessageModel {
 
     public void setMessageId(String messageId) {
         this.messageId = messageId;
+    }
+
+    public Timestamp getMessageSentAt() {
+        return messageSentAt;
+    }
+
+    public void setMessageSentAt(Timestamp messageSentAt) {
+        this.messageSentAt = messageSentAt;
     }
 
     public static ArrayList<MessageModel> getMessages(String user1, String user2) {

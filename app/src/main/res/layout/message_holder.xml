@@ -36,7 +36,7 @@
             android:background="@drawable/message_view"
             android:maxWidth="200dp"
             android:padding="8dp"
-            tools:text="random textwqewewqweweewewweweqeqwewqeqwqwedqwwdwqwdfwwqfewfewewfewfwefwefewfwew" />
+            tools:text="" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
