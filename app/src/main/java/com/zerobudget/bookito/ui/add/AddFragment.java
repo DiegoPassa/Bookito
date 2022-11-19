@@ -250,7 +250,7 @@ public class AddFragment extends Fragment {
                             JSONArray isbnArr = volumeObj.getJSONArray("industryIdentifiers");
 
                             //confronta l'isbn trovato con quello che l'utente ha cercato
-                            if (isbnArr.getJSONObject(0).optString("identifier").equals(isbn)) {
+                            if (isbnArr.getJSONObject(0).optString("identifier").equals(isbn) || isbnArr.getJSONObject(1).optString("identifier").equals(isbn)) {
 
                                 //riempe newBook con i dati prelevati
                                 newBook.setIsbn(isbn);
