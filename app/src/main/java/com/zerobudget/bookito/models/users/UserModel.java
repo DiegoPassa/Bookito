@@ -13,6 +13,7 @@ public class UserModel {
     private String neighborhood;
     //private String id; id utente facilmente ottenibile con FirebaseAuth.getInstance().getCurrentUser().getId()
     private static UserLibrary currentUser; //modello dell'utente attuale
+    private String notificationToken;
 
     private boolean hasPicture = false;
 
@@ -21,13 +22,14 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma, Boolean hasPicture) {
+    public UserModel(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma, Boolean hasPicture, String notificationToken) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.telephone = telephone;
         this.neighborhood = neighborhood;
         this.karma = karma;
         this.hasPicture = hasPicture;
+        this.notificationToken = notificationToken;
     }
 
     public static void loadUser(UserModel user) {
@@ -86,6 +88,7 @@ public class UserModel {
         u.setLast_name((String) result.get("last_name"));
         u.setTelephone((String) result.get("telephone"));
         u.setNeighborhood((String) result.get("neighborhood"));
+        u.setNotificationToken((String) result.get("notificationToken"));
         u.setKarma(loadKarma(result));
 
         Boolean hasPicture = (Boolean) result.get("hasPicture");
@@ -112,4 +115,11 @@ public class UserModel {
     }
 
 
+    public String getNotificationToken() {
+        return notificationToken;
+    }
+
+    public void setNotificationToken(String notificationToken) {
+        this.notificationToken = notificationToken;
+    }
 }

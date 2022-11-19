@@ -90,25 +90,23 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment) {
+            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
                 navView.setVisibility(View.GONE);
             } else {
                 navView.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     private void initFirebaseMessaging() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (!task.isSuccessful()){
-                Log.d("CAZZO", "CAZZOCAZZOCAZZOCAzZo");
                 return;
             }
-
             // Get new FCM registration token
             String token = task.getResult();
 
+            db.collection("users").document(Utils.USER_ID).update("notificationToken", token);
             System.out.println(token);
 
         });

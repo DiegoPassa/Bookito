@@ -75,6 +75,9 @@ public class UserProfileFragment extends Fragment {
 
         user = UserModel.getCurrentUser();
 
+        Utils.sendPushNotification("Body", "Title", user.getNotificationToken());
+
+
         binding.usrFirstName.setText(user.getFirst_name());
         binding.usrLastName.setText(user.getLast_name());
         binding.usrTelephone.setText(user.getTelephone());

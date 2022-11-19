@@ -40,7 +40,7 @@
             android:padding="8dp"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp"
-            tools:text="random textwqewewqweweewewweweqeqwewqeqwqwedqwwdwqwdfwwqfewfewewfewfwefwefewfwew" />
+            tools:text="@string/lorem_ipsum_long" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

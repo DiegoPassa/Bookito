@@ -111,7 +111,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private boolean validateInput() {
-        Boolean flag = true;
+        boolean flag = true;
 
         phoneNumber = binding.phoneNumberRegister.getText().toString().replaceAll("\\s", "");
         name = binding.name.getText().toString().trim();
