@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -197,6 +198,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                         Log.d("OKK", documentReference.getId());
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
+                    Log.d("Sent to: ", rm.getOtherUser().getNotificationToken());
+                    Utils.sendPushNotification(UserModel.getCurrentUser().getFirst_name() + "ti ha richiesto il libro " + rm.getTitle(), "Title", rm.getOtherUser().getNotificationToken());
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
 
                 }

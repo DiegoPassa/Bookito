@@ -57,8 +57,6 @@ public class UserProfileFragment extends Fragment {
         activityResultGalleryLauncher.launch("image/*");
     }
 
-    // BottomNavigationView navBar;
-
     public UserProfileFragment() {
     }
 
@@ -75,6 +73,7 @@ public class UserProfileFragment extends Fragment {
 
         user = UserModel.getCurrentUser();
 
+        Log.d("Sent to: ", user.getNotificationToken());
         Utils.sendPushNotification("Body", "Title", user.getNotificationToken());
 
 
