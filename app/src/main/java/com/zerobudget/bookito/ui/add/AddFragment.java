@@ -22,7 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
@@ -49,12 +48,11 @@ public class AddFragment extends Fragment {
     private FirebaseFirestore db;
 
     /**
-     * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato*/
+     * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato
+     */
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) { //isbn scannerizzato
-
             searchBookAPI(result.getContents());
-
         }
     });
 
@@ -65,21 +63,6 @@ public class AddFragment extends Fragment {
 
         binding = FragmentAddBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-
-
-        //TextView textView = binding.textNotifications;
-        //addViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-        //addViewModel.getScore().observe(getViewLifecycleOwner(), textView::setText);
-
-       /* binding.addOneBtm.setOnClickListener(v -> {
-            addViewModel.plusScore();
-        });
-
-        binding.subOneBtn.setOnClickListener(view -> {
-            addViewModel.subScore();
-            // Toast.makeText(getActivity().getApplicationContext(), newBook.getTitle(), Toast.LENGTH_SHORT).show();
-        });*/
 
         binding.scanBtn.setOnClickListener(view -> {
             ScanOptions options = new ScanOptions();
@@ -92,20 +75,27 @@ public class AddFragment extends Fragment {
         });
 
         binding.isbnNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            private int previousLength;
+            private boolean backSpace;
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                previousLength = charSequence.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 //si assicura che vegnano inserti esattamente 13 caratteri
 
-                if(editable.toString().length() < 13) {
+                if (editable.toString().length() < 13) {
                     binding.btnAdd.setEnabled(false);
                 }
-                if(editable.toString().length() == 13)
+                if (editable.toString().length() == 13)
                     binding.btnAdd.setEnabled(true);
             }
         });
@@ -114,7 +104,7 @@ public class AddFragment extends Fragment {
             String isbn = binding.isbnNumber.getText().toString();
 
 
-            if(isAValidISBN(Long.parseLong(isbn)))
+            if (isAValidISBN(Long.parseLong(isbn)))
                 searchBookAPI(isbn);
             else {
                 AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
@@ -128,7 +118,7 @@ public class AddFragment extends Fragment {
             }
         });
 
-        Log.d("USER NOW", ""+UserModel.getCurrentUser().serialize());
+        Log.d("USER NOW", "" + UserModel.getCurrentUser().serialize());
         return root;
     }
 
@@ -143,7 +133,7 @@ public class AddFragment extends Fragment {
 
     }
 
-    private void searchBookAPI(String isbn){
+    private void searchBookAPI(String isbn) {
         mRequestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         mRequestQueue.getCache().clear();
         // url per cercare il libro in base all'ISBN scannerizzato
@@ -153,6 +143,7 @@ public class AddFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
 
         JsonObjectRequest booksObjrequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+            boolean foundByIsbn = false;
             try {
                 //prova a prlevare i dati in risposta dall'API di goole books
                 JSONArray itemsArray = response.getJSONArray("items");
@@ -166,7 +157,7 @@ public class AddFragment extends Fragment {
                 JSONArray authorsArray = volumeObj.getJSONArray("authors");
 
                 String description = volumeObj.optString("description");
-                if(!description.equals(""))
+                if (!description.equals(""))
                     newBook.setDescription(description);
                 else
                     newBook.setDescription("No description found");
@@ -208,16 +199,108 @@ public class AddFragment extends Fragment {
                 String bookString = Utils.getGsonParser().toJson(newBook);
                 args.putString("BK", bookString);
 
+                foundByIsbn = true;
                 Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_addConfirmFragment, args);
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                Toast.makeText(getContext().getApplicationContext(), "Attendere prego, sarà necessario più tempo del previsto!", Toast.LENGTH_LONG).show();
+                // e.printStackTrace();
+            }
+
+            //a volte google boooks api non trova i libri tramite isbn, non si sa perché
+            //nel dubbio viene fatto un tentativo di ricerca senza il filtro isbn: cercando tra i primi 40 risultati
+            //in caso non si trovasse si avvisa l'utente
+            if (!foundByIsbn) {
+                String url_2 = "https://www.googleapis.com/books/v1/volumes?q=" + isbn + "&maxResults=40";
+
+                JsonObjectRequest booksObjrequestNotByIsbn = new JsonObjectRequest(Request.Method.GET, url_2, null, responseNotByIsbn -> {
+                    boolean foundNotByIsbn = false;
+                    try {
+                        //prova a prlevare i dati in risposta dall'API di goole books
+                        JSONArray itemsArray = responseNotByIsbn.getJSONArray("items");
+                        Bundle args = null;
+                        //scorre per tutti i risultati trovati
+                        for (int i = 0; i < itemsArray.length(); i++) {
+                            JSONObject itemsObj = itemsArray.getJSONObject(i);
+
+                            JSONObject volumeObj = itemsObj.getJSONObject("volumeInfo");
+                            JSONArray isbnArr = volumeObj.getJSONArray("industryIdentifiers");
+
+                            //confronta l'isbn trovato con quello che l'utente ha cercato
+                            if (isbnArr.getJSONObject(0).optString("identifier").equals(isbn)) {
+
+                                //riempe newBook con i dati prelevati
+                                newBook.setIsbn(isbn);
+                                newBook.setTitle(volumeObj.optString("title"));
+
+                                JSONArray authorsArray = volumeObj.getJSONArray("authors");
+
+                                String description = volumeObj.optString("description");
+                                if (!description.equals(""))
+                                    newBook.setDescription(description);
+                                else
+                                    newBook.setDescription("No description found");
+
+                                //data we might need in the future!
+
+                                //String subtitle = volumeObj.optString("subtitle");
+                                //String publisher = volumeObj.optString("publisher");
+                                //String publishedDate = volumeObj.optString("publishedDate");
+                                //String previewLink = volumeObj.optString("previewLink");
+                                //String infoLink = volumeObj.optString("infoLink");
+                                //int pageCount = volumeObj.optInt("pageCount");
+                                //JSONObject saleInfoObj = itemsObj.optJSONObject("saleInfo");
+                                //String buyLink = saleInfoObj.optString("buyLink");
+
+                                JSONObject imageLinks = volumeObj.optJSONObject("imageLinks");
+
+
+                                if (imageLinks != null) {
+                                    //l'API rende un link che inizia con http ma Picasso, usato per estrarre l'immagine ha bisogno dell'https
+                                    newBook.setThumbnail("https".concat(imageLinks.optString("thumbnail").substring(4)));
+                                } else {
+                                    //se l'immagine non è disponibile ne viene usata una di default
+                                    newBook.setThumbnail("https://feb.kuleuven.be/drc/LEER/visiting-scholars-1/image-not-available.jpg/image");
+                                }
+
+                                //soltanto il primo autore viene utilizzato
+                                ArrayList<String> authorsArrayList = new ArrayList<>();
+                                if (authorsArray.length() != 0) {
+                                    for (int j = 0; j < authorsArray.length(); j++) {
+                                        authorsArrayList.add(authorsArray.optString(0));
+                                    }
+                                    newBook.setAuthor(authorsArrayList.get(0));
+                                } else
+                                    newBook.setAuthor(null);
+
+                                //passaggio dei dati del new book al prossimo fragment
+                                args = new Bundle();
+                                String bookString = Utils.getGsonParser().toJson(newBook);
+                                args.putString("BK", bookString);
+                                foundNotByIsbn = true;
+                                Navigation.findNavController(root).navigate(R.id.action_navigation_insertNew_to_addConfirmFragment, args);
+                            }
+                        }
+
+                        if (!foundNotByIsbn)
+                            Toast.makeText(getContext().getApplicationContext(), "Oh no, libro non trovato", Toast.LENGTH_LONG).show();
+
+                    } catch (JSONException ex) {
+                        ex.printStackTrace();
+                    }
+                }, error -> Toast.makeText(getContext().getApplicationContext(), "Oh no, libro non trovato", Toast.LENGTH_LONG).show());
+
+                queue.add(booksObjrequestNotByIsbn);
             }
         }, error -> {
             //TODO
-            Toast.makeText(this.getContext(), "Errore!", Toast.LENGTH_LONG);
+
+            //Toast.makeText(this.getContext(), "Errore!", Toast.LENGTH_LONG).show();
         });
+
         queue.add(booksObjrequest);
+
+
     }
 
 
