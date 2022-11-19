@@ -60,14 +60,10 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
             return;
         }
-        // Log.d("USER_ID", currentUser.getUid());
+
         Utils.setUserId(currentUser.getUid());
 
-        getUriPic();
-
         initFirebaseMessaging();
-
-        getQueryCurrentUser();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -106,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
             // Get new FCM registration token
             String token = task.getResult();
 
-            db.collection("users").document(Utils.USER_ID).update("notificationToken", token);
+            db.collection("users").document(Utils.USER_ID).update("notificationToken", token).addOnSuccessListener(task1 -> {
+                getQueryCurrentUser();
+            });
             System.out.println(token);
 
         });
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
                     nowUser.setLibrary(UserLibrary.loadLibrary(task.getResult()));
                     UserModel.loadUser(nowUser);
-
+                    getUriPic();
                     Log.d("USER ORA AHAH", "" + UserModel.getUserFromDocument(task.getResult()).serialize());
                 }
             }
