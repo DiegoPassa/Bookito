@@ -91,6 +91,8 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             holder.usr_pic.setVisibility(View.GONE);
         }
 
+        setUpColorType(holder, requests.get(position).getType());
+
         holder.request_selected.setOnClickListener(view1 -> {
             if (otherUser != null && holder.getAdapterPosition() != -1) {
                 Bundle args = new Bundle();

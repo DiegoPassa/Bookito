@@ -95,25 +95,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
         String type = requests.get(holder.getAdapterPosition()).getType();
-        holder.type.setText(type);
 
-        switch (type) {
-            case "Regalo":
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_regalo));
-                break;
-
-            case "Prestito":
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_prestito));
-                break;
-
-            case "Scambio":
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_scambio));
-                break;
-
-            default:
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.black));
-                break;
-        }
+        setUpColorType(holder, type);
 
         if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
             holder.user_gravatar.setVisibility(View.GONE);
@@ -161,6 +144,27 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         });
 
 
+    }
+
+    protected void setUpColorType(ViewHolder holder, String type) {
+        switch (type) {
+            case "Regalo":
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_regalo));
+                break;
+
+            case "Prestito":
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_prestito));
+                break;
+
+            case "Scambio":
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_scambio));
+                break;
+
+            default:
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.black));
+                break;
+        }
+        holder.type.setText(type);
     }
 
     //TODO DALLE RIGHE 113-127 C'È MOLTA RIPETIZIONE DI CODICE, MEGLIO FARE UN METOOD A POSTA DA RICBHIAMARE
