@@ -65,10 +65,10 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                     // All the items under listRef.
                     if (!item.getName().equals(Utils.USER_ID) && (item.getName().equals(idReceiver)
                             || item.getName().equals(idSender))) {
-                        Log.d("item", item.getName());
+                        //Log.d("item", item.getName());
                         item.getDownloadUrl().addOnSuccessListener(uri -> {
                             // Utils.setUriPic(uri.toString());
-                            Log.d("PIC", Utils.URI_PIC);
+                            //Log.d("PIC", Utils.URI_PIC);
 
                             Picasso.get().load(uri).into(holder.usr_pic);
                             holder.usr_pic.setVisibility(View.VISIBLE);

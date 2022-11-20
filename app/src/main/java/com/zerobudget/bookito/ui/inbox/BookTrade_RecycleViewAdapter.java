@@ -128,6 +128,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
         tradeBtn.setOnClickListener(view1 -> {
             acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook().getIsbn());
+            Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
             Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
             dialog.dismiss();
         });

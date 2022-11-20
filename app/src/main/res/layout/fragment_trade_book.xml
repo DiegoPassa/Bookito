@@ -25,6 +25,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <TextView
+            android:id="@+id/no_books_found"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Oh no, sembra che non ci sia \nnessun libro disponibile \nper lo scambio!\nRiprova più tardi o elimina la richiesta"
+            android:textAlignment="center"
+            android:lineSpacingExtra="10dp"
+            android:visibility="gone"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"/>
+
         <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView_myLibrary"
         android:layout_width="0dp"
@@ -32,9 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/title"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
