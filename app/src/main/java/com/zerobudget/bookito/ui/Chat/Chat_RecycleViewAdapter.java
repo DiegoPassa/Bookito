@@ -77,10 +77,6 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.applyTo(holder.constraintLayout);
             holder.messageSent.setBackgroundResource(R.drawable.enemy_message);
             loadUserProfilePicture(otherUser, holder.profileImg);
-
-            if (isNightMode(context)) {
-                holder.messageSent.setTextColor(context.getResources().getColor(R.color.black));
-            }
         }
     }
 
