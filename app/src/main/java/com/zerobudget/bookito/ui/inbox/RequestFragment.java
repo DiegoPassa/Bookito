@@ -64,6 +64,7 @@ public class RequestFragment extends Fragment {
                 Objects.requireNonNull(tabs.getTabAt(position)).select();
             }
         });
+
         return view;
 
     }
@@ -73,6 +74,7 @@ public class RequestFragment extends Fragment {
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
+//        viewPager.setUserInputEnabled(false);
 
     }
 

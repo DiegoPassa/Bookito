@@ -96,6 +96,9 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                 Bundle args = new Bundle();
                 String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
                 args.putString("otherChatUser", toJson);
+                args.putString("requestID", requests.get(holder.getAdapterPosition()).getrequestId());
+
+
                 Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
 
             }

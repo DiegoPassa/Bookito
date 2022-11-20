@@ -31,18 +31,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         sendNotification(remoteMessage.getNotification().getBody());
     }
 
-/*    @Override
-    public void onNewToken(String token) {
-        Log.d("NewToken", "Refreshed token: " + token);
-
-        sendRegistrationToServer(token);
-    }
-
-    private void sendRegistrationToServer(String token) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(Utils.USER_ID).update("notificationToken", token);
-
-    }*/
+//    public void onNewToken(String token) {
+//        super.onNewToken(token);
+//        Log.d("NewToken", "Refreshed token: " + token);
+//
+//        sendRegistrationToServer(token);
+//    }
+//
+//    private void sendRegistrationToServer(String token) {
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        db.collection("users").document(Utils.USER_ID).update("notificationToken", token);
+//
+//    }
 
     private void sendNotification(String messageBody) {
         Intent intent = new Intent(this, MainActivity.class);

@@ -33,16 +33,16 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         this.messages = messages;
         this.otherUser = otherUser;
 
-        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ciao!", null));
-        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Mi mandi foto piedini?", null));
-        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ciao! No, direi di no", null));
-        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ma come no", null));
-        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ma chi sei", null));
-        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Chi ti conosce", null));
-        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Sono marco e mi piacciono i piedi", null));
-        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Io sono giorgio e mi piacciono i treni", null));
-        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "ciao giorgio,posso foto piedi?", null));
-        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ti prego", null));
+//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ciao!", null));
+//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Mi mandi foto piedini?", null));
+//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ciao! No, direi di no", null));
+//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ma come no", null));
+//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ma chi sei", null));
+//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Chi ti conosce", null));
+//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Sono marco e mi piacciono i piedi", null));
+//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Io sono giorgio e mi piacciono i treni", null));
+//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "ciao giorgio,posso foto piedi?", null));
+//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ti prego", null));
     }
 
     @NonNull
@@ -56,6 +56,8 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.messageSent.setText(messages.get(position).getMessage());
+
+        Log.d("SENDER: ", messages.get(holder.getAdapterPosition()).getSender());
 
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
             ConstraintSet constraintSet = new ConstraintSet();
@@ -101,7 +103,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     @Override
     public int getItemCount() {
-        return 10;
+        return messages.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

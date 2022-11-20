@@ -12,11 +12,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.ChatFragmentBinding;
+import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.ui.inbox.Inbox_RecycleViewAdapter;
 import com.zerobudget.bookito.utils.Utils;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -25,6 +34,14 @@ public class ChatFragment extends Fragment {
     private FirebaseFirestore db;
     private ChatFragmentBinding binding;
     private UserModel otherUser;
+    private DatabaseReference realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/PROVA");
+    private String requestID;
+
+    private RecyclerView recyclerView;
+
+    private Chat_RecycleViewAdapter adapter;
+
+    private ArrayList<MessageModel> messages = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,17 +53,42 @@ public class ChatFragment extends Fragment {
 
         Bundle args = getArguments();
 
-        assert args != null;
         String otherId = args.getString("otherChatUser");
         otherUser = Utils.getGsonParser().fromJson(otherId, UserModel.class);
+        requestID = args.getString("requestID");
 
-        RecyclerView recyclerView = binding.ChatRecycleView;
+        recyclerView = binding.ChatRecycleView;
 
-        Chat_RecycleViewAdapter adapter = new Chat_RecycleViewAdapter(this.getContext(), new ArrayList<>(), null);
+        adapter = new Chat_RecycleViewAdapter(this.getContext(), messages, null);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
+        setUpChatRoom();
+
+
         return root;
+    }
+
+    protected void setUpChatRoom() {
+        realTimedb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messages.clear();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    messages.add(dataSnapshot.getValue(MessageModel.class));
+                }
+                adapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(messages.size()-1);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("ENTRO", "SONO ENTRATO IN CANCELLAZIONE");
+            }
+        });
+
     }
 }

@@ -216,6 +216,9 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         db.collection("requests").document(r.getrequestId()).update("status", "accepted");
     }
 
+
+
+
     @Override
     public int getItemCount() {
         return requests.size();

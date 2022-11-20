@@ -65,7 +65,7 @@ public class MessageModel {
         this.messageSentAt = messageSentAt;
     }
 
-    public static ArrayList<MessageModel> getMessages(String user1, String user2) {
+    public static ArrayList<MessageModel> getMessages(String user1, String user2, String requestID) {
         //TODO get un array of message between two users (maybe could be useful?)
         return null;
     }
