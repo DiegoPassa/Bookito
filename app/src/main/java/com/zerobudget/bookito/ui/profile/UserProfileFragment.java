@@ -24,6 +24,7 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentUserProfileBinding;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -74,7 +75,7 @@ public class UserProfileFragment extends Fragment {
         user = UserModel.getCurrentUser();
 
         Log.d("Sent to: ", user.getNotificationToken());
-        Utils.sendPushNotification("Body", "Title", user.getNotificationToken());
+        Notifications.sendPushNotification("profilo di " + user.getFirst_name() + " " + user.getLast_name() + "\ntoken: " + user.getNotificationToken(), user.getTelephone(), user.getNotificationToken());
 
 
         binding.usrFirstName.setText(user.getFirst_name());
