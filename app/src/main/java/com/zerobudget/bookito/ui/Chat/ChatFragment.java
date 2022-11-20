@@ -89,9 +89,10 @@ public class ChatFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     messages.add(dataSnapshot.getValue(MessageModel.class));
                 }
-                adapter = new Chat_RecycleViewAdapter(ChatFragment.this.getContext(), messages, null);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(ChatFragment.this.getContext()));
+//                adapter = new Chat_RecycleViewAdapter(ChatFragment.this.getContext(), messages, null);
+//                recyclerView.setAdapter(adapter);
+//                recyclerView.setLayoutManager(new LinearLayoutManager(ChatFragment.this.getContext()));
+                adapter.notifyDataSetChanged();
 
                 recyclerView.scrollToPosition(messages.size()-1);
                 recyclerView.setVisibility(View.VISIBLE);
