@@ -34,7 +34,7 @@ public class ChatFragment extends Fragment {
     private FirebaseFirestore db;
     private ChatFragmentBinding binding;
     private UserModel otherUser;
-    private DatabaseReference realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/PROVA");
+    private DatabaseReference realTimedb;
     private String requestID;
 
     private RecyclerView recyclerView;
@@ -48,6 +48,7 @@ public class ChatFragment extends Fragment {
         binding = ChatFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -56,6 +57,7 @@ public class ChatFragment extends Fragment {
         String otherId = args.getString("otherChatUser");
         otherUser = Utils.getGsonParser().fromJson(otherId, UserModel.class);
         requestID = args.getString("requestID");
+        realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + requestID);
 
         recyclerView = binding.ChatRecycleView;
 
@@ -65,6 +67,11 @@ public class ChatFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         setUpChatRoom();
+
+        binding.sendMessage.setOnClickListener(view -> {
+            realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), binding.inputMessage.getText().toString(), null));
+            binding.inputMessage.setText("");
+        });
 
 
         return root;
@@ -79,7 +86,10 @@ public class ChatFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     messages.add(dataSnapshot.getValue(MessageModel.class));
                 }
-                adapter.notifyDataSetChanged();
+                adapter = new Chat_RecycleViewAdapter(ChatFragment.this.getContext(), messages, null);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ChatFragment.this.getContext()));
+
                 recyclerView.scrollToPosition(messages.size()-1);
                 recyclerView.setVisibility(View.VISIBLE);
             }
