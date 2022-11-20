@@ -30,14 +30,14 @@
 
         <TextView
             android:id="@+id/message_content"
-            android:textColor="@color/black"
+            android:textColor="?colorOnSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:background="@drawable/message_view"
             android:maxWidth="200dp"
             android:padding="8dp"
-            tools:text="" />
+            tools:text="@string/lorem_ipsum_long" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

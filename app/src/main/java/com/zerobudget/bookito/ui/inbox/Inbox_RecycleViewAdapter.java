@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -92,6 +93,27 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
+
+        String type = requests.get(holder.getAdapterPosition()).getType();
+        holder.type.setText(type);
+
+        switch (type) {
+            case "Regalo":
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_regalo));
+                break;
+
+            case "Prestito":
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_prestito));
+                break;
+
+            case "Scambio":
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_scambio));
+                break;
+
+            default:
+                holder.type.setTextColor(ContextCompat.getColor(context, R.color.black));
+                break;
+        }
 
         if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
             holder.user_gravatar.setVisibility(View.GONE);
@@ -233,6 +255,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         protected final ImageView book_image;
         protected final ClassicIdenticonView user_gravatar;
         protected final ImageView usr_pic;
+        protected final TextView type;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -242,6 +265,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             request_selected = itemView.findViewById(R.id.request);
             user_gravatar = itemView.findViewById(R.id.user_gravatar);
             usr_pic = itemView.findViewById(R.id.profile_pic);
+            type = itemView.findViewById(R.id.request_type);
         }
     }
 
