@@ -5,7 +5,7 @@ import com.zerobudget.bookito.models.users.UserModel;
 
 import java.util.Comparator;
 
-class SearchResultsModel implements Comparable<SearchResultsModel> {
+public class SearchResultsModel implements Comparable<SearchResultsModel> {
     private BookModel book;
     private UserModel user;
 

@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.lelloman.identicon.view.ClassicIdenticonView;
@@ -39,7 +39,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     protected final Context context;
     protected ArrayList<RequestModel> requests;
-
+    private String isbn_trade;
     protected Button confirmButton;
     protected Button refuseButton;
     protected TextView titlePopup;
@@ -93,16 +93,16 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
-        if(requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()){
+        if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
             holder.user_gravatar.setVisibility(View.GONE);
             storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
                 for (StorageReference item : listResult.getItems()) {
                     // All the items under listRef.
                     if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(idSender)) {
-                        Log.d("item", item.getName());
+                        //Log.d("item", item.getName());
                         item.getDownloadUrl().addOnSuccessListener(uri -> {
                             // Utils.setUriPic(uri.toString());
-                            Log.d("PIC", Utils.URI_PIC);
+                            //Log.d("PIC", Utils.URI_PIC);
 
                             Picasso.get().load(uri).into(holder.usr_pic);
                             holder.usr_pic.setVisibility(View.VISIBLE);
@@ -119,7 +119,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                     }
                 }
             });
-        }else{
+        } else {
             holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
             holder.user_gravatar.setVisibility(View.VISIBLE);
             holder.usr_pic.setVisibility(View.GONE);
@@ -183,13 +183,16 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             Log.d("Pos", "" + position);
             if (holder.getAdapterPosition() != -1) {
                 if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
-//                Navigation.findNavController(holder.itemView).navigate(R.layout.fragment_add);
-                    //todo creare fragment per spostarci nella libreria dell'altro utente (OSLO LIBRI SCAMBIABII)
-                }
-                acceptRequest(requests.get(holder.getAdapterPosition()));
-                requests.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
+                    Bundle args = new Bundle();
+                    String bookString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
+                    args.putString("BK", bookString);
 
+                    Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
+                } else {
+                    acceptRequest(requests.get(holder.getAdapterPosition()));
+                    requests.remove(holder.getAdapterPosition());
+                    notifyItemRemoved(holder.getAdapterPosition());
+                }
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             }
             dialog.dismiss();
@@ -217,8 +220,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
 
-
-
     @Override
     public int getItemCount() {
         return requests.size();
@@ -242,5 +243,14 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             user_gravatar = itemView.findViewById(R.id.user_gravatar);
             usr_pic = itemView.findViewById(R.id.profile_pic);
         }
+    }
+
+
+    public String getIsbn_trade() {
+        return isbn_trade;
+    }
+
+    public void setIsbn_trade(String isbn_trade) {
+        this.isbn_trade = isbn_trade;
     }
 }

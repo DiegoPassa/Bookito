@@ -21,6 +21,9 @@
             android:id="@+id/to_chat_fragment"
             app:destination="@id/chat_fragment"
             app:popExitAnim="@android:anim/fade_out"/>
+        <action
+            android:id="@+id/action_request_page_nav_to_bookTradeFragment"
+            app:destination="@id/bookTradeFragment" />
 
     </fragment>
 
@@ -100,6 +103,15 @@
                 app:destination="@id/searchByNameFragment" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/bookTradeFragment"
+        android:name="com.zerobudget.bookito.ui.inbox.BookTradeFragment"
+        android:label="fragment_trade_book"
+        tools:layout="@layout/fragment_trade_book" >
+        <action
+            android:id="@+id/action_bookTradeFragment_to_request_page_nav"
+            app:destination="@id/request_page_nav" />
+    </fragment>
 
 
 </navigation>
