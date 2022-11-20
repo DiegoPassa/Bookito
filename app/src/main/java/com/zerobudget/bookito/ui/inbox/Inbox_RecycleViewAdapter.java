@@ -85,7 +85,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         String idSender = requests.get(holder.getAdapterPosition()).getSender();
 
         if (senderModel != null) {
-            String other_usr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(position).getOtherUser().getLast_name();
+            String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(position).getOtherUser().getLast_name();
             holder.user_name.setText(other_usr);
         } else
             holder.user_name.setText("undefined");

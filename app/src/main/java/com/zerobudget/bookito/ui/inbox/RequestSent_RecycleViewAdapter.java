@@ -37,7 +37,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
         String idReceiver = requests.get(holder.getAdapterPosition()).getReceiver();
 
         if (otherModel != null) {
-            String other_user = requests.get(holder.getAdapterPosition())
+            String other_user = "A: " + requests.get(holder.getAdapterPosition())
                     .getOtherUser()
                     .getFirst_name() + " " + requests.get(holder.getAdapterPosition())
                     .getOtherUser()
