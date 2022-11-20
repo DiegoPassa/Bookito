@@ -69,8 +69,11 @@ public class ChatFragment extends Fragment {
         setUpChatRoom();
 
         binding.sendMessage.setOnClickListener(view -> {
-            realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), binding.inputMessage.getText().toString(), null));
-            binding.inputMessage.setText("");
+            String message = binding.inputMessage.getText().toString().trim();
+            if (!message.isEmpty()) {
+                realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, null));
+                binding.inputMessage.setText("");
+            }
         });
 
 

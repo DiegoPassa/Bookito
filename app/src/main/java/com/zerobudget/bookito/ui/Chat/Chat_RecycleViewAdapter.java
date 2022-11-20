@@ -65,6 +65,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
             constraintSet.applyTo(holder.constraintLayout);
             loadUserProfilePicture(UserModel.getCurrentUser(), holder.profileImg);
+            holder.messageSent.setBackgroundResource(R.drawable.message_view);
         } else {
             Log.d("SONO_QUA", messages.get(holder.getAdapterPosition()).getSender() + " - " + messages.get(holder.getAdapterPosition()).getMessage());
             ConstraintSet constraintSet = new ConstraintSet();
