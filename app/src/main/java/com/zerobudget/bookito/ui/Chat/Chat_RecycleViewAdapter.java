@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.Chat;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,6 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.messageSent.setText(messages.get(position).getMessage());
 
-        Log.d("SENDER: ", messages.get(holder.getAdapterPosition()).getSender());
-
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(holder.constraintLayout);
@@ -66,7 +65,9 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
             constraintSet.applyTo(holder.constraintLayout);
             loadUserProfilePicture(UserModel.getCurrentUser(), holder.profileImg);
+            holder.messageSent.setBackgroundResource(R.drawable.message_view);
         } else {
+            Log.d("SONO_QUA", messages.get(holder.getAdapterPosition()).getSender() + " - " + messages.get(holder.getAdapterPosition()).getMessage());
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(holder.constraintLayout);
             constraintSet.clear(R.id.chat_profile_card_view, ConstraintSet.RIGHT);
@@ -76,10 +77,6 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.applyTo(holder.constraintLayout);
             holder.messageSent.setBackgroundResource(R.drawable.enemy_message);
             loadUserProfilePicture(otherUser, holder.profileImg);
-
-            if (isNightMode(context)) {
-                holder.messageSent.setTextColor(context.getResources().getColor(R.color.black));
-            }
         }
     }
 

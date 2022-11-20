@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class RequestAcceptedFragment extends Fragment {
     private FragmentInboxBinding binding;
-    private ArrayList<RequestModel> requests = new ArrayList<>();
+    private ArrayList<RequestModel> requests;
     private FirebaseFirestore db;
 
     @Nullable
@@ -50,6 +50,7 @@ public class RequestAcceptedFragment extends Fragment {
     }
 
     protected void loadCompletedRequests() {
+        requests = new ArrayList<>();
         binding.progressBar.setVisibility(View.VISIBLE);
         Task<QuerySnapshot> requestSent = db.collection("requests").whereEqualTo("status", "accepted")
                 .whereEqualTo("sender", Utils.USER_ID).get();

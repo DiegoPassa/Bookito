@@ -96,6 +96,9 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                 Bundle args = new Bundle();
                 String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
                 args.putString("otherChatUser", toJson);
+                if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
+                    args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getSender());
+                else args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
                 args.putString("requestID", requests.get(holder.getAdapterPosition()).getrequestId());
 
 
