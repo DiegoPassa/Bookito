@@ -17,11 +17,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.ui.search.SearchResultsModel;
 
@@ -36,6 +41,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
+    private boolean exists;
+
     FirebaseFirestore db;
     FirebaseAuth auth;
 
@@ -43,6 +50,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         this.context = context;
         this.results = bookModels;
         this.requestTradeModel = requestTradeModel;
+        this.exists = false;
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -81,6 +89,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
     }
 
     private void createNewSelectPopup(int position, BookTrade_RecycleViewAdapter.ViewHolder holder) {
+        checkIfStillExists(requestTradeModel);
+
         dialogBuilder = new MaterialAlertDialogBuilder(context);
 
         View view = View.inflate(context, R.layout.popup_trade_book, null);
@@ -127,9 +137,14 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
 
         tradeBtn.setOnClickListener(view1 -> {
-            acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook().getIsbn());
-            Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
-            Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
+            if(exists) { //controlla che la richiesta esista ancora
+                acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook().getIsbn());
+                Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
+                Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
+            }else{
+                Toast.makeText(context, "Oh no, la richiesta è stata annullata!", Toast.LENGTH_LONG).show();
+                Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
+            }
             dialog.dismiss();
         });
 
@@ -143,10 +158,24 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         dialog.show();
     }
 
-
     protected void acceptRequest(RequestTradeModel r, String isbnTradeBk) {
         db.collection("requests").document(r.getrequestId()).update("status", "accepted");
         db.collection("requests").document(r.getrequestId()).update("requestTradeBook", isbnTradeBk);
+    }
+
+    private void checkIfStillExists(RequestTradeModel r){
+        db.collection("requests").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        if(doc.getId().equals(r.getrequestId())) {
+                            exists = true;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
