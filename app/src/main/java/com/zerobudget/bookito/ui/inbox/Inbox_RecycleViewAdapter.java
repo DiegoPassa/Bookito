@@ -221,7 +221,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                         String bookString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
                         args.putString("BK", bookString);
 
-                        Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
+                        checkIfTheBookIsAlreadyAcceptedSomewhere(requests.get(holder.getAdapterPosition()), holder, args);
+                        //Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
                     } else {
                         acceptRequest(requests.get(holder.getAdapterPosition()), holder);
                     }
@@ -286,6 +287,25 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         });
     }
 
+    private void checkIfTheBookIsAlreadyAcceptedSomewhere(RequestModel r, ViewHolder holder, Bundle args) {
+        db.collection("requests").get().addOnCompleteListener(task -> {
+            boolean exixtsOther = false;
+            for (QueryDocumentSnapshot doc : task.getResult()) {
+                if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
+                    exixtsOther = true;
+
+                if (doc.contains("requestTradeBook"))
+                    if (doc.get("requestTradeBook").equals(r.getRequestedBook()))
+                        exixtsOther = true;
+            }
+
+            if (!exixtsOther)
+                Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
+            else
+                Toast.makeText(context, "Esiste già una richiesta accettata per il libro!\nAttendere o eliminare la richiesta.", Toast.LENGTH_LONG).show();
+
+        });
+    }
 
     @Override
     public int getItemCount() {
