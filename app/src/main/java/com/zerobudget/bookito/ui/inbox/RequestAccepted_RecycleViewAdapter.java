@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
@@ -42,6 +44,8 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         UserModel otherUser = requests.get(holder.getAdapterPosition()).getOtherUser();
         String idSender = requests.get(holder.getAdapterPosition()).getSender();
         String idReceiver = requests.get(holder.getAdapterPosition()).getReceiver();
+
+        Uri[] otherUserPic = new Uri[1];
 
         if (otherUser != null) {
             String nameOtherUser = otherUser.getFirst_name();
@@ -69,7 +73,8 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                         item.getDownloadUrl().addOnSuccessListener(uri -> {
                             // Utils.setUriPic(uri.toString());
                             //Log.d("PIC", Utils.URI_PIC);
-
+                            otherUserPic[0] = uri;
+                            Log.d("carico immaginme", ""+uri.getClass());
                             Picasso.get().load(uri).into(holder.usr_pic);
                             holder.usr_pic.setVisibility(View.VISIBLE);
                             //holder.user_gravatar.setVisibility(View.GONE);
@@ -102,7 +107,8 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                     args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getSender());
                 else args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
                 args.putString("requestID", requests.get(holder.getAdapterPosition()).getrequestId());
-
+//                args.putString("otherUserPic", Utils.getGsonParser().toJson(otherUserPic[0]));
+                args.putParcelable("otherUserPic", otherUserPic[0]);
 
                 Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
 

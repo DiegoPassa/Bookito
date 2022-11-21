@@ -1,5 +1,6 @@
 package com.zerobudget.bookito.ui.Chat;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,9 +60,11 @@ public class ChatFragment extends Fragment {
         requestID = args.getString("requestID");
         realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + requestID);
 
+        String otherUserId = args.getString("otherUserId");
+
         recyclerView = binding.ChatRecycleView;
 
-        adapter = new Chat_RecycleViewAdapter(this.getContext(), messages, null);
+        adapter = new Chat_RecycleViewAdapter(this.getContext(), messages, otherUser, otherUserId, args.getParcelable("otherUserPic"));
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
