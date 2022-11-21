@@ -17,10 +17,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
@@ -135,10 +138,9 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         tradeBtn.setOnClickListener(view1 -> {
             if (exists) { //controlla che la richiesta esista ancora
                 acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook().getIsbn());
-                Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
             } else {
-                Toast.makeText(context, "Oh no, la richiesta è stata annullata!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
             }
             dialog.dismiss();
@@ -155,7 +157,13 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
     }
 
     protected void acceptRequest(RequestTradeModel r, String isbnTradeBk) {
-        db.collection("requests").document(r.getrequestId()).update("status", "accepted");
+        //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
+        db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task -> {
+            if (task.isSuccessful())
+                Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
+        });
         db.collection("requests").document(r.getrequestId()).update("requestTradeBook", isbnTradeBk);
     }
 

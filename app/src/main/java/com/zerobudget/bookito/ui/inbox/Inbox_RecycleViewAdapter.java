@@ -230,7 +230,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                         notifyItemRemoved(holder.getAdapterPosition());
                     }
                 } else {
-                    Toast.makeText(context, "Oh no, la richiesta è stata annullata!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(holder.itemView).navigate(R.id.request_page_nav);
                 }
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
@@ -256,7 +256,13 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     protected void acceptRequest(RequestModel r) {
-        db.collection("requests").document(r.getrequestId()).update("status", "accepted");
+        //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
+        db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task -> {
+            if (task.isSuccessful())
+                Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
+        });
     }
 
     private void checkIfStillExists(RequestModel r) {
