@@ -80,6 +80,7 @@
                 android:gravity="center"
                 android:lines="3"
                 android:text="title"
+                android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/thumb" />

@@ -255,13 +255,13 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     protected void acceptRequest(RequestModel r, ViewHolder holder) {
         //controlla prima che non esista già una richiesta accettata per il libro
         db.collection("requests").get().addOnCompleteListener(task -> {
-            boolean exixtsOther = false;
+            boolean existsOther = false;
             for (QueryDocumentSnapshot doc : task.getResult()) {
                 if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
-                    exixtsOther = true;
+                    existsOther = true;
             }
 
-            if (!exixtsOther) {
+            if (!existsOther) {
                 //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
                 db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
@@ -289,17 +289,17 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     private void checkIfTheBookIsAlreadyAcceptedSomewhere(RequestModel r, ViewHolder holder, Bundle args) {
         db.collection("requests").get().addOnCompleteListener(task -> {
-            boolean exixtsOther = false;
+            boolean existsOther = false;
             for (QueryDocumentSnapshot doc : task.getResult()) {
                 if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
-                    exixtsOther = true;
+                    existsOther = true;
 
                 if (doc.contains("requestTradeBook"))
                     if (doc.get("requestTradeBook").equals(r.getRequestedBook()))
-                        exixtsOther = true;
+                        existsOther = true;
             }
 
-            if (!exixtsOther)
+            if (!existsOther)
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
             else
                 Toast.makeText(context, "Esiste già una richiesta accettata per il libro!\nAttendere o eliminare la richiesta.", Toast.LENGTH_LONG).show();

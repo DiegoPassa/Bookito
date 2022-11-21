@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -30,12 +29,14 @@ import java.util.ArrayList;
 public class InboxFragment extends Fragment {
 
     private FragmentInboxBinding binding;
-    private ArrayList<RequestModel> requests;
 
     private FirebaseFirestore db;
     private ProgressBar spinner;
 
-    public InboxFragment() {}
+    private TextView empty;
+
+    public InboxFragment() {
+    }
 
     @Nullable
     @Override
@@ -45,14 +46,13 @@ public class InboxFragment extends Fragment {
         View root = binding.getRoot();
 
         spinner = root.findViewById(R.id.progressBar);
-
+        empty = binding.empty;
 
         db = FirebaseFirestore.getInstance();
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
-            addRequestsOnPage(new ArrayList<>());
             getRequests();
         });
         getRequests();
@@ -68,7 +68,6 @@ public class InboxFragment extends Fragment {
 
     protected ArrayList<Object> getRequests() {
         //TODO I TIMESTAMP NON POSSONO ESSERE CASTATI A STRING, QUINDI FARE UNA FUNZIONE PER CONVERTIRE TIMESTAMP A STRING O PER CONTROLLARNE I VALORI
-
         spinner.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
@@ -94,7 +93,6 @@ public class InboxFragment extends Fragment {
 
     protected void getUserByRequest(ArrayList<RequestModel> arr) {
         ArrayList<Task<DocumentSnapshot>> t = new ArrayList<>();
-        int index = 0;
         for (RequestModel r : arr) {
             t.add(r.queryOtherUser(db, r.getSender()));
         }
@@ -107,12 +105,18 @@ public class InboxFragment extends Fragment {
 
     protected void addRequestsOnPage(ArrayList<RequestModel> requests) {
         if (getView() != null) {
-            RecyclerView recyclerView = binding.recycleViewInbox;
+            if (requests.size() > 0) {
+                empty.setVisibility(View.GONE);
+                RecyclerView recyclerView = binding.recycleViewInbox;
+                Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests);
 
-            Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            } else {
+                empty.setText("Ancora nessuna richiesta ricevuta...");
+                empty.setVisibility(View.VISIBLE);
+            }
 
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         }
     }
 
