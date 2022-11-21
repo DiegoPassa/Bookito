@@ -18,13 +18,10 @@ import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
@@ -218,21 +215,21 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         confirmButton.setOnClickListener(view1 -> {
             Log.d("Pos", "" + position);
             if (holder.getAdapterPosition() != -1) {
-                if(exists) { //controlla che la richiesta esista ancora
+                if (exists) { //controlla che la richiesta esista ancora
                     if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
 
-                            Bundle args = new Bundle();
-                            String bookString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
-                            args.putString("BK", bookString);
+                        Bundle args = new Bundle();
+                        String bookString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
+                        args.putString("BK", bookString);
 
-                            Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
+                        Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
                     } else {
 
                         acceptRequest(requests.get(holder.getAdapterPosition()));
                         requests.remove(holder.getAdapterPosition());
                         notifyItemRemoved(holder.getAdapterPosition());
                     }
-                }else{
+                } else {
                     Toast.makeText(context, "Oh no, la richiesta è stata annullata!", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(holder.itemView).navigate(R.id.request_page_nav);
                 }
@@ -262,17 +259,12 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         db.collection("requests").document(r.getrequestId()).update("status", "accepted");
     }
 
-    private void checkIfStillExists(RequestModel r){
-        db.collection("requests").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        if(doc.getId().equals(r.getrequestId())) {
-                            exists = true;
-                        }
-                    }
-                }
+    private void checkIfStillExists(RequestModel r) {
+        db.collection("requests").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot doc : task.getResult())
+                    if (doc.getId().equals(r.getrequestId()))
+                        exists = true;
             }
         });
     }

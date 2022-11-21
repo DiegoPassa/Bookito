@@ -17,16 +17,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.ui.search.SearchResultsModel;
 
@@ -137,11 +133,11 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
 
         tradeBtn.setOnClickListener(view1 -> {
-            if(exists) { //controlla che la richiesta esista ancora
+            if (exists) { //controlla che la richiesta esista ancora
                 acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook().getIsbn());
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
-            }else{
+            } else {
                 Toast.makeText(context, "Oh no, la richiesta è stata annullata!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
             }
@@ -163,17 +159,12 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         db.collection("requests").document(r.getrequestId()).update("requestTradeBook", isbnTradeBk);
     }
 
-    private void checkIfStillExists(RequestTradeModel r){
-        db.collection("requests").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        if(doc.getId().equals(r.getrequestId())) {
-                            exists = true;
-                        }
-                    }
-                }
+    private void checkIfStillExists(RequestTradeModel r) {
+        db.collection("requests").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot doc : task.getResult())
+                    if (doc.getId().equals(r.getrequestId()))
+                        exists = true;
             }
         });
     }

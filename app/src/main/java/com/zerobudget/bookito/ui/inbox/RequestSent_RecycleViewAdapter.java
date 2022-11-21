@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
@@ -23,9 +25,11 @@ import java.util.ArrayList;
 
 public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
     private StorageReference storageRef;
+    private boolean isUndefined;
 
     public RequestSent_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
         super(ctx, requests);
+        this.isUndefined = false;
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
@@ -50,7 +54,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
 
 
-        if(requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+        if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
             holder.user_gravatar.setVisibility(View.GONE);
             //scorre le immagini e cerca solo quella dell'utente relativo alla richiesta
             storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
@@ -73,10 +77,10 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
                     }
                 }
             });
-        }else {
-                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                holder.user_gravatar.setVisibility(View.VISIBLE);
-                holder.usr_pic.setVisibility(View.GONE);
+        } else {
+            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+            holder.user_gravatar.setVisibility(View.VISIBLE);
+            holder.usr_pic.setVisibility(View.GONE);
         }
 
         setUpColorType(holder, requests.get(position).getType());
@@ -90,6 +94,8 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
 
     @Override
     public void createNewContactDialog(int posiiton, ViewHolder holder, Flag flag) {
+        checkIfStillUndefined(requests.get(holder.getAdapterPosition()));
+
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
         View view = View.inflate(context, R.layout.popup, null);
 
@@ -108,33 +114,49 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
         confirmButton.setVisibility(View.GONE);
 
         refuseButton.setOnClickListener(view1 -> {
-            if (holder.getAdapterPosition() != -1) {
+            if (isUndefined) {
+                Log.d("UNDF", "true");
+                if (holder.getAdapterPosition() != -1) {
+                    dialog.dismiss();
+
+                    AlertDialog.Builder newDialog = new MaterialAlertDialogBuilder(context);
+                    newDialog.setTitle("Conferma cancellazione");
+                    newDialog.setMessage(Html.fromHtml("Sei sicuro di voler <b>annullare</b> la richiesta per <b>" +
+                                    requests.get(holder.getAdapterPosition()).getTitle() + "</b>?",
+                            Html.FROM_HTML_MODE_LEGACY));
+                    newDialog.setPositiveButton("SI", (dialogInterface, i) -> {
+                        super.deleteRequest(requests.get(holder.getAdapterPosition()));
+                        requests.remove(holder.getAdapterPosition());
+                        notifyItemRemoved(holder.getAdapterPosition());
+                        dialogInterface.dismiss();
+                        Toast.makeText(context, "Richiesta annullata correttamente!", Toast.LENGTH_LONG).show();
+                    });
+
+                    newDialog.setNegativeButton("NO", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    });
+
+                    newDialog.show();
+                }
+            } else {
                 dialog.dismiss();
-
-                AlertDialog.Builder newDialog = new MaterialAlertDialogBuilder(context);
-                newDialog.setTitle("Conferma cancellazione");
-                newDialog.setMessage(Html.fromHtml("Sei sicuro di voler <b>annullare</b> la richiesta per <b>" +
-                                requests.get(holder.getAdapterPosition()).getTitle() + "</b>?",
-                        Html.FROM_HTML_MODE_LEGACY));
-                newDialog.setPositiveButton("SI", (dialogInterface, i) -> {
-                    super.deleteRequest(requests.get(holder.getAdapterPosition()));
-                    requests.remove(holder.getAdapterPosition());
-                    notifyItemRemoved(holder.getAdapterPosition());
-                    dialogInterface.dismiss();
-                    Toast.makeText(context, "Richiesta annullata correttamente!", Toast.LENGTH_LONG).show();
-                });
-
-                newDialog.setNegativeButton("NO", (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                });
-
-                newDialog.show();
+                Toast.makeText(context, "Oh no, la richiesta è già stata accettata! Contatta l'utente in chat.", Toast.LENGTH_LONG).show();
+                //TODO: reload page in the sent request tab
+                //Navigation.findNavController(holder.itemView).navigate(R.id.request_page_nav);
             }
         });
 
-
         dialog.show();
+    }
 
+    private void checkIfStillUndefined(RequestModel r) {
+        db.collection("requests").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot doc : task.getResult())
+                    if (doc.getId().equals(r.getrequestId()))
+                        isUndefined = doc.get("status").equals("undefined");
+            }
+        });
     }
 
 }
