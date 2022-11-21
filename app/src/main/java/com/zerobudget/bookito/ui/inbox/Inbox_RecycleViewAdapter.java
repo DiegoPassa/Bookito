@@ -254,10 +254,10 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     protected void acceptRequest(RequestModel r, ViewHolder holder) {
         //controlla prima che non esista già una richiesta accettata per il libro
-        db.collection("requests").get().addOnCompleteListener(task -> {
+        db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("status", "accepted").get().addOnCompleteListener(task -> {
             boolean existsOther = false;
             for (QueryDocumentSnapshot doc : task.getResult()) {
-                if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
+                if (doc.get("requestedBook").equals(r.getRequestedBook()))
                     existsOther = true;
             }
 
