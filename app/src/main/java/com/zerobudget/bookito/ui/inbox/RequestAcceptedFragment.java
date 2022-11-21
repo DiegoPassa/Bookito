@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class RequestAcceptedFragment extends Fragment {
     private FragmentInboxBinding binding;
-    private ArrayList<RequestModel> requests;
+    private ArrayList<RequestModel> requests = new ArrayList<>();
     private FirebaseFirestore db;
 
     @Nullable
@@ -44,13 +44,18 @@ public class RequestAcceptedFragment extends Fragment {
             loadCompletedRequests();
         });
 
-        loadCompletedRequests();
+        if (requests.size() == 0)
+            loadCompletedRequests();
+        else {
+            binding.progressBar.setVisibility(View.GONE);
+            addRequestsOnPage(requests);
+        }
 
         return root;
     }
 
     protected void loadCompletedRequests() {
-        requests = new ArrayList<>();
+//        requests = new ArrayList<>();
         binding.progressBar.setVisibility(View.VISIBLE);
         Task<QuerySnapshot> requestSent = db.collection("requests").whereEqualTo("status", "accepted")
                 .whereEqualTo("sender", Utils.USER_ID).get();
@@ -91,14 +96,13 @@ public class RequestAcceptedFragment extends Fragment {
     }
 
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
-        if (getView() != null) {
-            Log.d("ACCEPTED", "SONO ENTRATO");
-            RecyclerView recyclerView = binding.recycleViewInbox;
 
-            Inbox_RecycleViewAdapter adapter = new RequestAccepted_RecycleViewAdapter(this.getContext(), req);
+        RecyclerView recyclerView = binding.recycleViewInbox;
 
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        }
+        Inbox_RecycleViewAdapter adapter = new RequestAccepted_RecycleViewAdapter(this.getContext(), req);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
     }
 }

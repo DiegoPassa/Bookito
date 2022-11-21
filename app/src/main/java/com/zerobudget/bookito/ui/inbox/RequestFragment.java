@@ -24,20 +24,29 @@ public class RequestFragment extends Fragment {
     ViewPager2 viewPager;
     TabLayout tabs;
 
+    RequestPageAdapter adapter;
+    int position= 0;
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        position = tabs.getSelectedTabPosition();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_request_page,container, false);
+
+
         // Setting ViewPager for each Tabs
         viewPager = view.findViewById(R.id.viewPager);
         setupViewPager(viewPager);
         // Set Tabs inside Toolbar
         tabs = view.findViewById(R.id.tabLayout);
+        Objects.requireNonNull(tabs.getTabAt(this.position)).select();
+
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -57,6 +66,8 @@ public class RequestFragment extends Fragment {
         });
 
 
+
+
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -65,12 +76,13 @@ public class RequestFragment extends Fragment {
             }
         });
 
+
         return view;
 
     }
 
     private void setupViewPager(ViewPager2 viewPager) {
-        RequestPageAdapter adapter = new RequestPageAdapter(getChildFragmentManager(), getLifecycle());
+        adapter = new RequestPageAdapter(getChildFragmentManager(), getLifecycle());
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
