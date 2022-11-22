@@ -10,7 +10,6 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:ems="10"
         android:focusable="true"
         android:hint="Nome"
@@ -71,29 +70,42 @@
             app:layout_constraintStart_toStartOf="@+id/guideline3" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/registerConfirm"
+
+    <CheckBox
+        android:id="@+id/checkBox_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:enabled="false"
-        android:text="Conferma"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cancel"
-        app:layout_constraintTop_toBottomOf="@+id/neighborhood" />
+        android:layout_marginTop="16dp"
+        android:text="Dichiaro di avere più di 13 anni"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/neighborhood"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineOutDX"
+        app:layout_constraintStart_toStartOf="@+id/guidelineOutSX" />
 
     <Button
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="Anulla"
         app:layout_constraintEnd_toStartOf="@+id/registerConfirm"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/neighborhood" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_age" />
+
+    <Button
+        android:id="@+id/registerConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
+        android:text="Conferma"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cancel"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_age" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -108,5 +120,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineOutSX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.17031631" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineOutDX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8321168" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

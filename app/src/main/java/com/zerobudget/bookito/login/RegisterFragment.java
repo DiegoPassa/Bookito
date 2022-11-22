@@ -3,15 +3,23 @@ package com.zerobudget.bookito.login;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
@@ -26,6 +34,7 @@ public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
     private String phoneNumber, name, zone, surname;
+    private Boolean age;
     private ArrayList<String> items;
     ArrayAdapter<String> adapterItems;
 
@@ -79,7 +88,7 @@ public class RegisterFragment extends Fragment {
                 if (editable.toString().isEmpty()) {
                     binding.registerConfirm.setEnabled(false);
                 } else {
-                    if (editLen > 0 && editLen < 11) {
+                    if (editLen > 0 && editLen < 12) {
                         String numWithSpace = editable + " ";
                         if (!backSpace && (editLen == 3 || editLen == 7)) {
                             binding.phoneNumberRegister.setText(numWithSpace);
@@ -93,20 +102,56 @@ public class RegisterFragment extends Fragment {
         });
 
         binding.registerConfirm.setOnClickListener(view1 -> {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            if (validateInput())
-                db.collection("users").whereEqualTo("telephone", phoneNumber)
-                        .get()
-                        .addOnCompleteListener(task -> {
-                            List<DocumentSnapshot> x = task.getResult().getDocuments();
-                            if (x.isEmpty()) {
-                                register();
-                            } else {
-                                binding.phoneNumberRegister.setError("Il numero inserito è gia registrato");
-                                binding.phoneNumberRegister.requestFocus();
-                            }
 
-                        });
+            AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getContext());
+            View viewPopup = View.inflate(getContext(), R.layout.fragment_gdpr, null);
+
+            dialogBuilder.setView(viewPopup);
+            AlertDialog dialog = dialogBuilder.create();
+
+            WebView web = viewPopup.findViewById(R.id.web);
+            //sito web contenente l'informativa sulla privacy
+            web.loadUrl("https://sites.google.com/view/bookito/home-page");
+            web.setWebViewClient(new WebViewClient());
+
+            CheckBox checkBoxGdpr = viewPopup.findViewById(R.id.checkBox_gdpr);
+            Button btnAccept = viewPopup.findViewById(R.id.btn_accept);
+            btnAccept.setEnabled(false);
+
+            Button btnRefuse = viewPopup.findViewById(R.id.btn_refuse);
+
+            dialog.show();
+
+            checkBoxGdpr.setOnCheckedChangeListener((compoundButton, b) -> {
+                if (compoundButton.isChecked()) {
+                    //può registrarsi solo se ha seezionato la checkbox
+                    btnAccept.setEnabled(true);
+                } else {
+                    btnAccept.setEnabled(false);
+                }
+            });
+
+            btnRefuse.setOnClickListener(view2 -> {
+                dialog.dismiss();
+                Toast.makeText(getContext(), "Non puoi accedere a tutte le funzionalità di Bookito\nse non accetti la policy sulla privacy!", Toast.LENGTH_LONG).show();
+            });
+
+            btnAccept.setOnClickListener(view2 -> {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                if (validateInput())
+                    db.collection("users").whereEqualTo("telephone", phoneNumber)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                List<DocumentSnapshot> x = task.getResult().getDocuments();
+                                if (x.isEmpty()) {
+                                    register();
+                                } else {
+                                    binding.phoneNumberRegister.setError("Il numero inserito è gia registrato");
+                                    binding.phoneNumberRegister.requestFocus();
+                                }
+                            });
+                dialog.dismiss();
+            });
         });
     }
 
@@ -117,6 +162,7 @@ public class RegisterFragment extends Fragment {
         name = binding.name.getText().toString().trim();
         zone = binding.autoCompleteTextView.getText().toString();
         surname = binding.surname.getText().toString().trim();
+        age = binding.checkBoxAge.isChecked();
 
         if (name.isEmpty()) {
             binding.name.setError("Il campo nome deve essere compilato");
@@ -140,7 +186,12 @@ public class RegisterFragment extends Fragment {
             flag = false;
         }
 
-        //Possible change of input insertion mode
+        if (!age) {
+            binding.checkBoxAge.setError("Devi dichiarare di avere più di 13 anni!");
+            //binding.checkBoxAge.requestFocus();
+            flag = false;
+        }
+
         if (!items.contains(zone)) {
             binding.neighborhood.setError("Deve specificare il quartiere dove abbita");
             // binding.neighborhood.requestFocus();
@@ -156,7 +207,7 @@ public class RegisterFragment extends Fragment {
         bundle.putString("name", name);
         bundle.putString("surname", surname);
         bundle.putString("zone", zone);
-        NavHostFragment.findNavController(RegisterFragment.this).navigate(R.id.action_registerFragment_to_OTPConfirmFragment,bundle);
+        NavHostFragment.findNavController(RegisterFragment.this).navigate(R.id.action_registerFragment_to_OTPConfirmFragment, bundle);
     }
 
 }
