@@ -259,26 +259,30 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     protected void acceptRequest(RequestModel r, ViewHolder holder) {
         //controlla prima che non esista già una richiesta accettata per il libro
-        db.collection("requests").get().addOnCompleteListener(task -> {
-            boolean existsOther = false;
-            for (QueryDocumentSnapshot doc : task.getResult()) {
-                if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
-                    existsOther = true;
-            }
+        db.collection("requests")
+                .whereEqualTo("receiver", Utils.USER_ID)
+                .whereEqualTo("status", "accepted")
+                .whereEqualTo("requestedBook", r.getRequestedBook())
+                .get()
+                .addOnCompleteListener(task -> {
+                    boolean existsOther = task.getResult().size() > 0;
+//                    for (QueryDocumentSnapshot doc : task.getResult()) {
+//                        if (doc.get("requestedBook").equals(r.getRequestedBook()))
+//                            existsOther = true;
 
-            if (!existsOther) {
-                //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
-                db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
-                        requests.remove(holder.getAdapterPosition());
-                        notifyItemRemoved(holder.getAdapterPosition());
-                        Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
+                    if (!existsOther) {
+                        //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
+                        db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                requests.remove(holder.getAdapterPosition());
+                                notifyItemRemoved(holder.getAdapterPosition());
+                                Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
+                            } else
+                                Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
+                        });
                     } else
-                        Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Esiste già una richiesta accettata per il libro!\nAttendere o eliminare la richiesta.", Toast.LENGTH_LONG).show();
                 });
-            } else
-                Toast.makeText(context, "Esiste già una richiesta accettata per il libro!\nAttendere o eliminare la richiesta.", Toast.LENGTH_LONG).show();
-        });
 
     }
 
