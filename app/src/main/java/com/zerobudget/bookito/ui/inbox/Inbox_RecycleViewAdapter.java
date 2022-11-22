@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -276,6 +278,13 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                             if (task1.isSuccessful()) {
                                 requests.remove(holder.getAdapterPosition());
                                 notifyItemRemoved(holder.getAdapterPosition());
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/"+r.getrequestId());
+
+                                ref.child("user1").setValue(r.getReceiver());
+                                if (r.getReceiver().equals(Utils.USER_ID))
+                                    ref.child("user2").setValue(r.getSender());
+                                else ref.child("user2").setValue(Utils.USER_ID);
+
                                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
                             } else
                                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();

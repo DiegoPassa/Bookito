@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
@@ -97,13 +98,15 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                 Bundle args = new Bundle();
                 String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
                 args.putString("otherChatUser", toJson);
+
                 if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
                     args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getSender());
-                else args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
-                args.putString("requestID", requests.get(holder.getAdapterPosition()).getrequestId());
-//                args.putString("otherUserPic", Utils.getGsonParser().toJson(otherUserPic[0]));
-                args.putParcelable("otherUserPic", otherUserPic[0]);
 
+                else args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
+
+                args.putString("requestID", requests.get(holder.getAdapterPosition()).getrequestId());
+                args.putParcelable("otherUserPic", otherUserPic[0]);
+                args.putString("receiverID",  requests.get(holder.getAdapterPosition()).getReceiver());
                 Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
 
             }

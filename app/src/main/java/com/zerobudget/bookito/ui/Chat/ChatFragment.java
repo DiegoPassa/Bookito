@@ -59,7 +59,6 @@ public class ChatFragment extends Fragment {
         otherUser = Utils.getGsonParser().fromJson(otherId, UserModel.class);
         requestID = args.getString("requestID");
         realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + requestID);
-
         String otherUserId = args.getString("otherUserId");
 
         recyclerView = binding.ChatRecycleView;
@@ -69,7 +68,10 @@ public class ChatFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
+
+
         setUpChatRoom();
+
 
         binding.sendMessage.setOnClickListener(view -> {
             String message = binding.inputMessage.getText().toString().trim();
@@ -90,7 +92,9 @@ public class ChatFragment extends Fragment {
                 messages.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    messages.add(dataSnapshot.getValue(MessageModel.class));
+                    Log.d("CHIAVE SNAPSHOT", dataSnapshot.getKey());
+                    if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2"))
+                        messages.add(dataSnapshot.getValue(MessageModel.class));
                 }
 
                 adapter.notifyDataSetChanged();
