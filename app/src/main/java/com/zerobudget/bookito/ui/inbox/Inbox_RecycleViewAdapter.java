@@ -58,12 +58,15 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     protected FirebaseAuth auth;
     private StorageReference storageRef;
 
+    protected TextView emptyWarning;
+
     private boolean exists;
 
-    public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
+    public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
         this.context = ctx;
         this.requests = requests;
         this.exists = false;
+        emptyWarning = empty;
 
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
@@ -232,6 +235,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 }
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             }
+            Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_INBOX, requests.size());
             dialog.dismiss();
         });
 
@@ -242,6 +246,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 notifyItemRemoved(holder.getAdapterPosition());
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             }
+            Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_INBOX, requests.size());
             dialog.dismiss();
         });
         dialog.show();

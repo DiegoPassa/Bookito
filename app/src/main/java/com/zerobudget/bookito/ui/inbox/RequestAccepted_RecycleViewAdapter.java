@@ -10,30 +10,24 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.net.URI;
 import java.util.ArrayList;
 
-public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter{
+public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
     private StorageReference storageRef;
 
-    public RequestAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
-        super(ctx, requests);
+    public RequestAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
+        super(ctx, requests, empty);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();

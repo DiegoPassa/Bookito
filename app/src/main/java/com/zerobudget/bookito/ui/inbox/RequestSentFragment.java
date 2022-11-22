@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -31,6 +31,7 @@ public class RequestSentFragment extends Fragment {
 
     private ArrayList<RequestModel> requests;
 
+    private TextView emptyWarning;
 
     @Nullable
     @Override
@@ -41,13 +42,13 @@ public class RequestSentFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        emptyWarning = binding.empty;
+
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            addRequestsOnPage(new ArrayList<>());
             binding.swipeRefreshLayout.setRefreshing(false);
-            getRequests(new ArrayList<>());
+            requests = new ArrayList<>();
+            getRequests(requests);
         });
-
-
         requests = new ArrayList<>();
         getRequests(requests);
 
@@ -64,9 +65,7 @@ public class RequestSentFragment extends Fragment {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             RequestModel r = RequestModel.getRequestModel((String) doc.get("type"), doc);
                             if (r != null) req.add(r);
-
                         }
-
                         addOtherUsers(req);
                     }
                 });
@@ -89,10 +88,11 @@ public class RequestSentFragment extends Fragment {
             Log.d("SENDED", "SONO ENTRATO");
             RecyclerView recyclerView = binding.recycleViewInbox;
 
-            Inbox_RecycleViewAdapter adapter = new RequestSent_RecycleViewAdapter(this.getContext(), req);
+            Inbox_RecycleViewAdapter adapter = new RequestSent_RecycleViewAdapter(this.getContext(), req, emptyWarning);
 
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_SEND, requests.size());
         }
     }
 

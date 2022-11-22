@@ -1,10 +1,10 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,15 +29,19 @@ public class RequestAcceptedFragment extends Fragment {
     private ArrayList<RequestModel> requests = new ArrayList<>();
     private FirebaseFirestore db;
 
+    private TextView emptyWarning;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        emptyWarning = binding.empty;
+
         db = FirebaseFirestore.getInstance();
 
-        binding.swipeRefreshLayout.setOnRefreshListener( () -> {
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             addRequestsOnPage(new ArrayList<>());
             requests = new ArrayList<>();
             binding.swipeRefreshLayout.setRefreshing(false);
@@ -99,7 +103,7 @@ public class RequestAcceptedFragment extends Fragment {
 
         RecyclerView recyclerView = binding.recycleViewInbox;
 
-        Inbox_RecycleViewAdapter adapter = new RequestAccepted_RecycleViewAdapter(this.getContext(), req);
+        Inbox_RecycleViewAdapter adapter = new RequestAccepted_RecycleViewAdapter(this.getContext(), req, emptyWarning);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

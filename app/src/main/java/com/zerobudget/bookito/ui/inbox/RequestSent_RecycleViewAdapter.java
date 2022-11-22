@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,8 +28,9 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
     private StorageReference storageRef;
     private boolean isUndefined;
 
-    public RequestSent_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests) {
-        super(ctx, requests);
+
+    public RequestSent_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
+        super(ctx, requests, empty);
         this.isUndefined = false;
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -128,6 +130,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
                         super.deleteRequest(requests.get(holder.getAdapterPosition()));
                         requests.remove(holder.getAdapterPosition());
                         notifyItemRemoved(holder.getAdapterPosition());
+                        Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_SEND, requests.size());
                         dialogInterface.dismiss();
                         Toast.makeText(context, "Richiesta annullata correttamente!", Toast.LENGTH_LONG).show();
                     });

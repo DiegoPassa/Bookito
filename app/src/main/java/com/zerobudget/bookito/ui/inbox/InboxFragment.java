@@ -105,18 +105,14 @@ public class InboxFragment extends Fragment {
 
     protected void addRequestsOnPage(ArrayList<RequestModel> requests) {
         if (getView() != null) {
-            if (requests.size() > 0) {
-                empty.setVisibility(View.GONE);
-                RecyclerView recyclerView = binding.recycleViewInbox;
-                Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests);
 
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-            } else {
-                empty.setText("Ancora nessuna richiesta ricevuta...");
-                empty.setVisibility(View.VISIBLE);
-            }
+            RecyclerView recyclerView = binding.recycleViewInbox;
+            Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
 
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+            Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
         }
     }
 
