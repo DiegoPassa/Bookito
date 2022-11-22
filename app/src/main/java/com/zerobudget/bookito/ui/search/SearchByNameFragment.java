@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
@@ -101,7 +100,7 @@ public class SearchByNameFragment extends Fragment {
                                 || (Objects.requireNonNull(map.get("author")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))){
                                     //Log.d("Title", "" + map.get("title"));
                                     BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
-                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
+                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResults.add(searchResultsModel);
                                 }
                             }
@@ -135,7 +134,7 @@ public class SearchByNameFragment extends Fragment {
                                         || (Objects.requireNonNull(map.get("author")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))){
                                     //Log.d("Title", "" + map.get("title"));
                                     BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
-                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, UserModel.getUserFromDocument(document));
+                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResultsTmp.add(searchResultsModel);
                                 }
                             }

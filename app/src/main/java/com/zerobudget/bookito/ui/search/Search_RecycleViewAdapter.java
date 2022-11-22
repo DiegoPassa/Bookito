@@ -65,7 +65,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
-        String owner = results.get(position).getUser().getFirst_name()+" "+results.get(position).getUser().getLast_name();
+        String owner = results.get(position).getUser().getFirstName() + " " + results.get(position).getUser().getLastName();
         holder.book_owner.setText(owner);
         holder.neighborhood_owner.setText(results.get(position).getUser().getNeighborhood());
         holder.type.setText(results.get(position).getBook().getType());
@@ -104,7 +104,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         bookDescription.setText(results.get(holder.getAdapterPosition()).getBook().getDescription());
         bookDescription.setMovementMethod(new ScrollingMovementMethod());
 
-        String owner = results.get(holder.getAdapterPosition()).getUser().getFirst_name() + " " + results.get(holder.getAdapterPosition()).getUser().getLast_name();
+        String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
         bookOwner.setText(owner);
         bookType.setText(results.get(holder.getAdapterPosition()).getBook().getType());
         Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
@@ -200,7 +200,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
                     Log.d("Sent to: ", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
-                    Notifications.sendPushNotification(UserModel.getCurrentUser().getFirst_name() + " ti ha richiesto il libro: " + rm.getTitle(), "Nuova richiesta", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
+                    Notifications.sendPushNotification(UserModel.getCurrentUser().getFirstName() + " ti ha richiesto il libro: " + rm.getTitle(), "Nuova richiesta", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
 
                 }

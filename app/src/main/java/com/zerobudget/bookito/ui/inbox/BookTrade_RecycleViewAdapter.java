@@ -17,13 +17,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
@@ -112,7 +109,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         bookDescription.setText(results.get(holder.getAdapterPosition()).getBook().getDescription());
         bookDescription.setMovementMethod(new ScrollingMovementMethod());
 
-        String owner = results.get(holder.getAdapterPosition()).getUser().getFirst_name() + " " + results.get(holder.getAdapterPosition()).getUser().getLast_name();
+        String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
         bookOwner.setText(owner);
         Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
 

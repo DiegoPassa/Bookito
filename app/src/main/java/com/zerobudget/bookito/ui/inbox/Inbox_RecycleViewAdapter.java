@@ -93,7 +93,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         String idSender = requests.get(holder.getAdapterPosition()).getSender();
 
         if (senderModel != null) {
-            String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(position).getOtherUser().getLast_name();
+            String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(position).getOtherUser().getLastName();
             holder.user_name.setText(other_usr);
         } else
             holder.user_name.setText("undefined");
@@ -198,7 +198,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         loadPopupViewMembers(view);
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();
+        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
         owner.setText(firstAndLastNameStr);
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 

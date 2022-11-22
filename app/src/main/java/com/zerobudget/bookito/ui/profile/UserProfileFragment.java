@@ -75,17 +75,17 @@ public class UserProfileFragment extends Fragment {
         user = UserModel.getCurrentUser();
 
         Log.d("Sent to: ", user.getNotificationToken());
-        Notifications.sendPushNotification("profilo di " + user.getFirst_name() + " " + user.getLast_name() + "\ntoken: " + user.getNotificationToken(), user.getTelephone(), user.getNotificationToken());
+        Notifications.sendPushNotification("profilo di " + user.getFirstName() + " " + user.getLastName() + "\ntoken: " + user.getNotificationToken(), user.getTelephone(), user.getNotificationToken());
 
 
-        binding.usrFirstName.setText(user.getFirst_name());
-        binding.usrLastName.setText(user.getLast_name());
+        binding.usrFirstName.setText(user.getFirstName());
+        binding.usrLastName.setText(user.getLastName());
         binding.usrTelephone.setText(user.getTelephone());
         binding.usrNeighborhood.setText(user.getNeighborhood());
 
         showPic();
 
-        Log.d("SONO_USER_PROFILE", user.getFirst_name());
+        Log.d("SONO_USER_PROFILE", user.getFirstName());
 
         binding.imgContainer.setOnClickListener(view -> {
             showImagePicDialog();

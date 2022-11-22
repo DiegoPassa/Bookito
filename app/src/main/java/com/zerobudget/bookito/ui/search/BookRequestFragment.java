@@ -14,8 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
@@ -47,7 +45,7 @@ public class BookRequestFragment extends Fragment {
         binding.bookAuthor.setText(usrBookSelected.getBook().getAuthor());
         binding.bookDescription.setText(usrBookSelected.getBook().getDescription());
         binding.bookDescription.setMovementMethod(new ScrollingMovementMethod());
-        String owner = usrBookSelected.getUser().getFirst_name() + " " + usrBookSelected.getUser().getLast_name();
+        String owner = usrBookSelected.getUser().getFirstName() + " " + usrBookSelected.getUser().getLastName();
         binding.bookOwner.setText(owner);
         binding.bookType.setText(usrBookSelected.getBook().getType());
         Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);

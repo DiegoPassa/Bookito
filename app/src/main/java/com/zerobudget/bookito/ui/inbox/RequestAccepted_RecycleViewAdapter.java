@@ -42,13 +42,13 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         Uri[] otherUserPic = new Uri[1];
 
         if (otherUser != null) {
-            String nameOtherUser = otherUser.getFirst_name();
-            String surnameOtherUser = otherUser.getLast_name();
+            String nameOtherUser = otherUser.getFirstName();
+            String surnameOtherUser = otherUser.getLastName();
 
             if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition()))) {
                 holder.user_name.setText(nameOtherUser + " " + surnameOtherUser);
             } else {
-                holder.user_name.setText(Html.fromHtml("<b> ( TU ) -> </b>" +nameOtherUser + surnameOtherUser, Html.FROM_HTML_MODE_LEGACY));
+                holder.user_name.setText(Html.fromHtml("<b> ( TU ) -> </b>" + nameOtherUser + surnameOtherUser, Html.FROM_HTML_MODE_LEGACY));
             }
         }
 

@@ -1,7 +1,5 @@
 package com.zerobudget.bookito.models.Requests;
 
-import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -119,7 +117,7 @@ public class RequestModel {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        UserModel u = UserModel.getUserFromDocument(task.getResult());
+                        UserModel u = task.getResult().toObject(UserModel.class);
                         this.setOtherUser(u);
                     }
                 });

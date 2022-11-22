@@ -45,9 +45,9 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
         if (otherModel != null) {
             String other_user = "A: " + requests.get(holder.getAdapterPosition())
                     .getOtherUser()
-                    .getFirst_name() + " " + requests.get(holder.getAdapterPosition())
+                    .getFirstName() + " " + requests.get(holder.getAdapterPosition())
                     .getOtherUser()
-                    .getLast_name();
+                    .getLastName();
 
             holder.user_name.setText(other_user);
         } else holder.user_name.setText("undefined");
@@ -108,7 +108,7 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
 
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirst_name() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLast_name();
+        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
         owner.setText(firstAndLastNameStr);
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);

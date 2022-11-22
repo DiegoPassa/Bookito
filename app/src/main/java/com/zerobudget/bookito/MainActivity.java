@@ -141,13 +141,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.getResult() != null) {
-                    UserModel u = UserModel.getUserFromDocument(task.getResult());
+                    UserModel u = task.getResult().toObject(UserModel.class);
+                    // UserModel u = UserModel.getUserFromDocument(task.getResult());
+                    assert u != null;
                     UserLibrary nowUser = new UserLibrary(u);
 
                     nowUser.setLibrary(UserLibrary.loadLibrary(task.getResult()));
                     UserModel.loadUser(nowUser);
                     getUriPic();
-                    Log.d("USER ORA AHAH", "" + UserModel.getUserFromDocument(task.getResult()).serialize());
+                    Log.d("USER ORA AHAH", "" + u.toString());
                 }
             }
         });

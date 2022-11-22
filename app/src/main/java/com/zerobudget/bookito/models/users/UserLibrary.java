@@ -15,7 +15,7 @@ public class UserLibrary extends UserModel {
     }
 
     public UserLibrary(UserModel u) {
-        super(u.getFirst_name(), u.getLast_name(), u.getTelephone(), u.getNeighborhood(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
+        super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getNeighborhood(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
     }
 
     public static ArrayList<BookModel> loadLibrary(DocumentSnapshot doc) {
