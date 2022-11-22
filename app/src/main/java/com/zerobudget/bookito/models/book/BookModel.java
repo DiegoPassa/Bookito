@@ -5,14 +5,14 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookModel{
-    private String thumbnail = "";
-    private String isbn = "";
-    private String title = "";
-    private String author = "";
-    private String description = "";
-    private String type = "";
+public class BookModel {
 
+    private String author;
+    private String description;
+    private String isbn;
+    private String thumbnail;
+    private String title;
+    private String type;
 
     public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description, @NonNull String type) {
         this.thumbnail = thumbnail;
@@ -76,9 +76,23 @@ public class BookModel{
         this.description = description;
     }
 
-    public void setType(String type) { this.type = type; }
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return "BookModel{" +
+                "author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", title='" + title + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

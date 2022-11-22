@@ -15,13 +15,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
@@ -29,9 +26,12 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.login.LoginActivity;
+import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -137,20 +137,24 @@ public class MainActivity extends AppCompatActivity {
         // FirebaseUser currentUser = mAuth.getCurrentUser();
         //TODO aspettiamo la registrazione ed il login
         //String id = currentUser.getUid();
-        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.getResult() != null) {
-                    UserModel u = task.getResult().toObject(UserModel.class);
-                    // UserModel u = UserModel.getUserFromDocument(task.getResult());
-                    assert u != null;
-                    UserLibrary nowUser = new UserLibrary(u);
+        AtomicReference<UserModel> userModel = new AtomicReference<>(new UserModel());
+        AtomicReference<UserLibrary> userLibrary = new AtomicReference<>(new UserLibrary());
 
-                    nowUser.setLibrary(UserLibrary.loadLibrary(task.getResult()));
-                    UserModel.loadUser(nowUser);
-                    getUriPic();
-                    Log.d("USER ORA AHAH", "" + u.toString());
-                }
+        // get user
+        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+            if (task.getResult() != null) {
+                System.out.println(task.getResult().toString());
+                // initialize user
+                userModel.set(task.getResult().toObject(UserModel.class));
+                // get user library
+                db.collection("users").document(Utils.USER_ID).collection("library").get().addOnCompleteListener(task1 -> {
+                    // initialize user's library
+                    userLibrary.set(new UserLibrary(userModel.get(), task1.getResult().toObjects(BookModel.class)));
+                    UserModel.setCurrentUser(userLibrary.get());
+                    Log.d("USER PRIMAAAAA AHAH", userLibrary.toString());
+                });
+
+                getUriPic();
             }
         });
     }
