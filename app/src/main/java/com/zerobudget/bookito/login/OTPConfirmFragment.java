@@ -129,16 +129,16 @@ public class OTPConfirmFragment extends Fragment {
     }
 
     private void addUserToDatabase() {
-        String first_name = bundle.getString("name");
-        String last_name = bundle.getString("surname");
+        String firstName = bundle.getString("name");
+        String lastName = bundle.getString("surname");
         String phone = bundle.getString("phone_number");
         String neighborhood = bundle.getString("zone");
         HashMap<String, Object> user = new HashMap<>();
         HashMap<String, Object> karma = new HashMap<>();
         karma.put("points", 0L);
         karma.put("numbers", 0L);
-        user.put("first_name", first_name);
-        user.put("last_name", last_name);
+        user.put("firstName", firstName);
+        user.put("lastName", lastName);
         user.put("telephone", phone);
         user.put("karma", karma);
         user.put("neighborhood", neighborhood);
@@ -149,7 +149,7 @@ public class OTPConfirmFragment extends Fragment {
         db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())
                 .set(user)
                 .addOnCompleteListener(task -> {
-                    Toast.makeText(requireActivity(), "Il suo account e stato corretamente registrato.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireActivity(), "Il suo account è stato corretamente registrato.", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(requireActivity(), MainActivity.class);
                     startActivity(intent);
                     Utils.setUserId(mAuth.getCurrentUser().getUid());
