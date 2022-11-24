@@ -38,7 +38,11 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder> {
@@ -211,8 +215,12 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         //TODO: sistemare la data del prestito
         if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
-            String date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate().toString();
-            returnDate.setText(date);
+            Date date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String dateString = "Data di restituzione:\n"+sdf.format(date);
+
+            returnDate.setText(dateString);
             returnDate.setVisibility(View.VISIBLE);
         }
 
