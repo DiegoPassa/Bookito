@@ -212,8 +212,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
 
-
-        //TODO: sistemare la data del prestito
         if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
             Date date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate();
 
