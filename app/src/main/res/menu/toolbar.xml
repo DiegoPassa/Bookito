@@ -16,6 +16,13 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/info"
+        android:icon="@drawable/ic_baseline_logout_24"
+        android:title="Informazioni"
+        android:contentDescription="Vedi informazioni"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="@string/logout"

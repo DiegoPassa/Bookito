@@ -1,15 +1,21 @@
 package com.zerobudget.bookito;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,6 +23,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference storageRef;
 
     private AppBarConfiguration appBarConfiguration;
+
+    private  ProgressBar progressBar;
+    private  ConstraintLayout constr;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +130,39 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.info:
+                AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this);
+                View viewPopup = View.inflate(MainActivity.this, R.layout.fragment_gdpr, null);
+
+                dialogBuilder.setView(viewPopup);
+                AlertDialog dialog = dialogBuilder.create();
+
+                //WebView
+                WebView web = viewPopup.findViewById(R.id.web);
+
+                //sito web contenente l'informativa sulla privacy
+                web.loadUrl("https://sites.google.com/view/bookito/home-page");
+                web.setWebViewClient(new WebViewClient());
+
+                progressBar = viewPopup.findViewById(R.id.progressBar);
+
+                viewPopup.findViewById(R.id.btn_refuse).setVisibility(View.GONE);
+                viewPopup.findViewById(R.id.checkBox_gdpr).setVisibility(View.GONE);
+                Button btn = viewPopup.findViewById(R.id.btn_accept);
+                btn.setEnabled(true);
+                btn.setText("OK, torna indietro!");
+
+                btn.setOnClickListener(view -> {
+                    Toast.makeText(MainActivity.this, "Grazie per aver letto la nostra\ninformativa sulla privacy!", Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                });
+
+                constr = viewPopup.findViewById(R.id.constr);
+                constr.setVisibility(View.GONE);
+
+                dialog.show();
+
+            break;
             case R.id.logout:
                 // TODO: Logout utente
                 FirebaseAuth.getInstance().signOut();
@@ -126,12 +170,33 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), "Disconnessione...", Toast.LENGTH_SHORT).show();
                 finish();
-
+            break;
             default:
                 NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
                 return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
         }
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
+
+
     }
+
+    private class WebViewClient extends android.webkit.WebViewClient {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            progressBar.setVisibility(View.GONE);
+            constr.setVisibility(View.VISIBLE);
+        }
+    }
+
+
 
     protected void getQueryCurrentUser() {
         // FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -179,5 +244,4 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
-
 }
