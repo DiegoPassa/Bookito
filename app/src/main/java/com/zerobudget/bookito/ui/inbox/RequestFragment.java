@@ -45,13 +45,15 @@ public class RequestFragment extends Fragment {
         setupViewPager(viewPager);
         // Set Tabs inside Toolbar
         tabs = view.findViewById(R.id.tabLayout);
-        Objects.requireNonNull(tabs.getTabAt(this.position)).select();
+        tabs.getTabAt(Wrapper.position).select();
+        viewPager.setCurrentItem(position);
 
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                Wrapper.setPosition(tab.getPosition());
             }
 
             @Override
