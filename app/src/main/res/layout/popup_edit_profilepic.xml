@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.cardview.widget.CardView
+        style="@style/color_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/title_popup"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:background="?attr/colorPrimaryContainer"
+                android:gravity="left|center_vertical"
+                android:paddingHorizontal="32dp"
+                android:text="Cosa vuoi fare?"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/take_pic"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:gravity="left|center_vertical"
+                android:paddingHorizontal="32dp"
+                android:text="Scatta foto"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_popup" />
+
+
+            <TextView
+                android:id="@+id/choose_from_gallery"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:gravity="left|center_vertical"
+                android:paddingHorizontal="32dp"
+                android:text="Scegli dalla galleria"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/take_pic" />
+
+            <TextView
+                android:id="@+id/remove"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:gravity="left|center_vertical"
+                android:paddingHorizontal="32dp"
+                android:text="Elimina foto"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/choose_from_gallery" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

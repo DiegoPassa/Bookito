@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.profile;
 
-import android.app.AlertDialog;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,15 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -147,12 +149,46 @@ public class UserProfileFragment extends Fragment {
 
 
     private void showImagePicDialog() {
-        String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        //String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
+
+        AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(this.getContext());
+        View view = View.inflate(this.getContext(), R.layout.popup_edit_profilepic, null);
+
+        dialogBuilder.setView(view);
+        AlertDialog dialog = dialogBuilder.create();
+
+        TextView takePhoto = view.findViewById(R.id.take_pic);
+        TextView chooseFromGallery = view.findViewById(R.id.choose_from_gallery);
+        TextView removePhoto = view.findViewById(R.id.remove);
+
+        takePhoto.setOnClickListener(view1 -> {
+            //TODO: pick from camera
+            Toast.makeText(getContext().getApplicationContext(), "Funzionalità da implementare", Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+        });
+
+        chooseFromGallery.setOnClickListener(view1 -> {
+            openImagePicker();//prende l'immagine dalla gallera
+        });
+
+        removePhoto.setOnClickListener(view1 -> {
+            if(!binding.userGravatar.isShown()) {
+                deletePicOnFirebase();
+                Utils.setUriPic("");
+                Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
+                Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
+            }
+        });
+
+
+        dialogBuilder.setView(view);
+        dialog.show();
+
+       /* AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
         builder.setTitle("Cosa vuoi fare?");
         builder.setItems(options, (dialogInterface, i) -> {
             if (i == 0) {
-                //TODO: pick from camera
+
             } else if (i == 1) {
                 openImagePicker();//prende l'immagine dalla gallera
             } else if (i == 2 && !binding.userGravatar.isShown()) {
@@ -162,7 +198,7 @@ public class UserProfileFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
             }
         });
-        builder.create().show();
+        builder.create().show();*/
     }
 
 

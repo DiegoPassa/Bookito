@@ -25,10 +25,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:background="?attr/colorPrimaryContainer"
+                    android:gravity="left|center_vertical"
+                    android:paddingHorizontal="32dp"
+                    android:text="Informativa sulla privacy"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/web"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <WebView
                     android:id="@+id/web"

@@ -6,7 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".login.LoginActivity">
 
+
+    <ImageView
+        android:id="@+id/background"
+        style="@style/img_background_login"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,11 +63,11 @@
                     style="@style/img_logo"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:contentDescription="@string/bookito_logo"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toStartOf="@+id/guideline9"
                     app:layout_constraintStart_toStartOf="@+id/guideline8"
-                    app:layout_constraintTop_toTopOf="@+id/guideline10"
-                    android:contentDescription="@string/bookito_logo" />
+                    app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

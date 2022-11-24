@@ -39,7 +39,7 @@
     <color name="md_theme_light_onTertiary">#FFFFFF</color>
     <color name="md_theme_light_tertiaryContainer">#FFDCBB</color>
     <color name="md_theme_light_onTertiaryContainer">#2C1700</color>
-    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_error">#DCBA1A1A</color>
     <color name="md_theme_light_errorContainer">#FFDAD6</color>
     <color name="md_theme_light_onError">#FFFFFF</color>
     <color name="md_theme_light_onErrorContainer">#410002</color>
@@ -58,6 +58,9 @@
     <color name="md_theme_light_outlineVariant">#D8C2BB</color>
     <color name="md_theme_light_scrim">#000000</color>
 
+    <color name="light_card">#FAF5F1</color>
+
+
     <color name="md_theme_dark_primary">#FFB599</color>
     <color name="md_theme_dark_onPrimary">#5A1C00</color>
     <color name="md_theme_dark_primaryContainer">#7B2F0A</color>
@@ -71,8 +74,8 @@
     <color name="md_theme_dark_tertiaryContainer">#673D00</color>
     <color name="md_theme_dark_onTertiaryContainer">#FFDCBB</color>
     <color name="md_theme_dark_error">#FFB4AB</color>
-    <color name="md_theme_dark_errorContainer">#93000A</color>
-    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_errorContainer">#A1383F</color>
+    <color name="md_theme_dark_onError">#ABA3161C</color>
     <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
     <color name="md_theme_dark_background">#2D1600</color>
     <color name="md_theme_dark_onBackground">#FFDCC0</color>
@@ -88,6 +91,8 @@
     <color name="md_theme_dark_surfaceTint">#FFB599</color>
     <color name="md_theme_dark_outlineVariant">#53433E</color>
     <color name="md_theme_dark_scrim">#000000</color>
+
+    <color name="dark_card">#181818</color>
 
     <!--  Material3 generated colors  -->
     <!--  https://m3.material.io/theme-builder#/custom  -->

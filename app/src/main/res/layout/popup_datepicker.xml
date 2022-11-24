@@ -16,21 +16,36 @@
             android:layout_height="match_parent">
 
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:background="?attr/colorPrimaryContainer"
+                    android:gravity="left|center_vertical"
+                    android:paddingHorizontal="32dp"
+                    android:text="Seleziona data di restituzione"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/date_picker"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <DatePicker
                     android:id="@+id/date_picker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

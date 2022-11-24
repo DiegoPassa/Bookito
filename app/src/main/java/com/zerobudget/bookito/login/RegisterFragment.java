@@ -189,25 +189,25 @@ public class RegisterFragment extends Fragment {
             flag = false;
         }
         if (phoneNumber.isEmpty()) {
-            binding.phoneNumberRegister.setError("Deve inserire il suo numero di telefono");
+            binding.phoneNumberRegister.setError("Devi inserire il tuo numero di telefono");
             // binding.phoneNumberRegister.requestFocus();
             flag = false;
         }
 
         if (phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3') {
-            binding.phoneNumberRegister.setError("Il numero inserito non e valido");
+            binding.phoneNumberRegister.setError("Il numero inserito non è valido");
             // binding.phoneNumberRegister.requestFocus();
             flag = false;
         }
 
         if (!age) {
-            binding.checkBoxAge.setError("Devi dichiarare di avere più di 13 anni!");
+            binding.checkBoxAge.setError("Devi dichiarare di avere più di 13 anni");
             //binding.checkBoxAge.requestFocus();
             flag = false;
         }
 
         if (!items.contains(zone)) {
-            binding.neighborhood.setError("Deve specificare il quartiere dove abbita");
+            binding.neighborhood.setError("Devi specificare il quartiere dove abiti");
             // binding.neighborhood.requestFocus();
             flag = false;
         }

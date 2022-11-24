@@ -40,7 +40,15 @@
     </style>
 
     <style name="img_background">
-        <item name="android:background">@drawable/dark_background_image</item>
+        <item name="android:background">@drawable/bg_dark_main</item>
+    </style>
+
+    <style name="img_background_login">
+        <item name="android:background">@drawable/bg_dark_login</item>
+    </style>
+
+    <style name="color_card">
+        <item name="android:backgroundTint">@color/dark_card</item>
     </style>
 
     <style name="buttonAccept">
