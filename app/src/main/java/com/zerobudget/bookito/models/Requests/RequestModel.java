@@ -1,10 +1,14 @@
 package com.zerobudget.bookito.models.Requests;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.models.users.UserModel;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +37,9 @@ public class RequestModel {
         this.requestId = id;
     }
 
-    public Map<String, String> serialize() {
+    public Map<String, Object> serialize() {
 
-        Map<String, String> bookMap = new HashMap<>();
+        Map<String, Object> bookMap = new HashMap<>();
         bookMap.put("receiver", this.getReceiver());
         bookMap.put("requestedBook", this.getRequestedBook());
         bookMap.put("sender", this.getSender());
@@ -130,7 +134,8 @@ public class RequestModel {
                 return new RequestModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId());
             }
             case("Prestito"): {
-                return new RequestShareModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), null);
+                Log.d("COSTRUISCO", ""+o.get("date"));
+                return new RequestShareModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), (Timestamp) o.get("date"));
             }
             case("Scambio"): {
                 return new RequestTradeModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("thumbnail"), type, (String) o.get("title"), o.getId(), (String) o.get("requested_book"));

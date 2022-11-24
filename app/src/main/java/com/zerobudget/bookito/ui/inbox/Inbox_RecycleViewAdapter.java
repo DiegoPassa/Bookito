@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.UserFlag;
@@ -204,12 +205,16 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         owner.setText(firstAndLastNameStr);
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 
+
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
 
 
         //TODO: sistemare la data del prestito
-        if (requests.get(holder.getAdapterPosition()).getType().equals("Prestito"))
+        if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
+            String date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate().toString();
+            returnDate.setText(date);
             returnDate.setVisibility(View.VISIBLE);
+        }
 
 
         if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {

@@ -3,6 +3,8 @@ package com.zerobudget.bookito.models.Requests;
 import com.google.firebase.Timestamp;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestShareModel extends RequestModel {
     private Timestamp date; //data di restituzione
@@ -13,4 +15,22 @@ public class RequestShareModel extends RequestModel {
         super(requestedBook, requester, recipient, status, thumbnail, type, title, id);
         this.date = date;
     }
+
+    public Date getDate() {
+        return this.date.toDate();
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        HashMap<String, Object> ser = (HashMap<String, Object>) super.serialize();
+        ser.put("date", this.date);
+
+        return ser;
+
+    }
+
 }

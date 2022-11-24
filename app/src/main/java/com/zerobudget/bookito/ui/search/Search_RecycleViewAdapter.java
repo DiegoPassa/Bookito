@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,10 +28,13 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_RecycleViewAdapter.ViewHolder> {
 
@@ -129,13 +134,14 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
         btnRequest.setOnClickListener(view1 -> {
             FirebaseUser currentUser = auth.getCurrentUser();
-            //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato, cambiare anche id nei set sotto
-            //if (currentUser != null) {
-            //   String id = currentUser.getUid();
-
+            String type = results.get(holder.getAdapterPosition()).getBook().getType();
             //preleva l'id dell'utente dal database
             db.collection("users").get().addOnCompleteListener(task -> {
-                RequestModel rm = new RequestModel();
+                RequestModel rm;
+                if (type.equals("Prestito"))
+                    rm = new RequestShareModel();
+                else rm = new RequestModel();
+
                 rm.setRequestedBook(results.get(holder.getAdapterPosition()).getBook().getIsbn());
                 rm.setTitle(results.get(holder.getAdapterPosition()).getBook().getTitle());
                 rm.setThumbnail(results.get(holder.getAdapterPosition()).getBook().getThumbnail());
@@ -145,18 +151,19 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        if (doc.get("telephone") == null) Log.d("ERRORE", "SUPREMOOOO");
                         if (doc.get("telephone").equals(results.get(holder.getAdapterPosition()).getUser().getTelephone())) {
                             rm.setReceiver(doc.getId());
                             Log.d("REC", rm.getReceiver());
-                            requestBook(rm, view, holder); //prova a inserire la richiesta del libro
+
+                            if (rm instanceof RequestShareModel)
+                                openCalendarPopup((RequestShareModel) rm, holder, dialog);
+                            else requestBook(rm, holder, dialog); //prova a inserire la richiesta del libro
 
                         }
                     }
                 }
             });
 
-            dialog.dismiss();
         });
 
         dialogBuilder.setView(view);
@@ -164,6 +171,34 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         dialog.show();
     }
 
+    private void openCalendarPopup(RequestShareModel rm, ViewHolder holder, AlertDialog dialog) {
+        MaterialAlertDialogBuilder calendarPopup = new MaterialAlertDialogBuilder(context);
+        View popup_view = View.inflate(context, R.layout.popup_datepicker, null);
+
+        DatePicker datePicker = popup_view.findViewById(R.id.date_picker);
+
+        calendarPopup.setView(popup_view);
+        AlertDialog builderDate = calendarPopup.create();
+
+        Button acceptButton = popup_view.findViewById(R.id.acceptButton);
+        Button refuseButton = popup_view.findViewById(R.id.refuseButton);
+
+        acceptButton.setOnClickListener(click -> {
+            Calendar calendar = new GregorianCalendar(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+            rm.setDate(new Timestamp(calendar.getTime()));
+            requestBook(rm, holder, dialog);
+            builderDate.dismiss();
+            dialog.dismiss();
+        });
+
+        refuseButton.setOnClickListener(click -> {
+            builderDate.dismiss();
+            dialog.dismiss();
+        });
+
+        builderDate.show();
+
+    }
 
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
         boolean err = false;
@@ -179,8 +214,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         return err;
     }
 
-    private void requestBook(RequestModel rm, View view, ViewHolder holder) {
-
+    private void requestBook(RequestModel rm, ViewHolder holder, AlertDialog dialog) {
+        dialog.dismiss();
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 boolean err = false;
