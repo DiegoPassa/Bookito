@@ -47,4 +47,9 @@
         <item name="android:backgroundTint">#81C784</item>
         <item name="android:textColor">#132A13</item>
     </style>
+
+    <style name="backgroundImage">
+        <item name="android:src">@drawable/background_image</item>
+        <!-- <item name="android:src">@drawable/paper_texture_dark</item> -->
+    </style>
 </resources>
