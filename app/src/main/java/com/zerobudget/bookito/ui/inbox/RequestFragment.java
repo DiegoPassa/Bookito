@@ -45,6 +45,7 @@ public class RequestFragment extends Fragment {
         setupViewPager(viewPager);
         // Set Tabs inside Toolbar
         tabs = view.findViewById(R.id.tabLayout);
+
         tabs.getTabAt(Wrapper.position).select();
         viewPager.setCurrentItem(position);
 
@@ -91,5 +92,14 @@ public class RequestFragment extends Fragment {
 //        viewPager.setUserInputEnabled(false);
 
     }
+
+    public static class Wrapper {
+        public static Integer position = 0;
+
+        public static void setPosition(Integer i) {
+            position = i;
+        }
+    }
+
 
 }
