@@ -17,7 +17,6 @@
 
     <item
         android:id="@+id/info"
-        android:icon="@drawable/ic_baseline_logout_24"
         android:title="Informazioni"
         android:contentDescription="Vedi informazioni"
         app:showAsAction="never"/>
