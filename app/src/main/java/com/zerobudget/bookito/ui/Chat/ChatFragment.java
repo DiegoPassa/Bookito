@@ -81,7 +81,6 @@ public class ChatFragment extends Fragment {
             }
         });
 
-
         return root;
     }
 
@@ -92,7 +91,6 @@ public class ChatFragment extends Fragment {
                 messages.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Log.d("CHIAVE SNAPSHOT", dataSnapshot.getKey());
                     if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2"))
                         messages.add(dataSnapshot.getValue(MessageModel.class));
                 }
