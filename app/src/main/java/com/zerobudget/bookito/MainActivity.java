@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), "Disconnessione...", Toast.LENGTH_SHORT).show();
+                removeToken();
                 finish();
                 break;
             default:
@@ -182,6 +183,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    protected void removeToken() {
+        db.collection("users").document(Utils.USER_ID)
+                .update("notificationToken", "");
+    }
+
 
     protected void getQueryCurrentUser() {
         // FirebaseUser currentUser = mAuth.getCurrentUser();

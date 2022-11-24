@@ -28,9 +28,6 @@ public class RequestShareModel extends RequestModel {
     public Map<String, Object> serialize() {
         HashMap<String, Object> ser = (HashMap<String, Object>) super.serialize();
         ser.put("date", this.date);
-
         return ser;
-
     }
-
 }
