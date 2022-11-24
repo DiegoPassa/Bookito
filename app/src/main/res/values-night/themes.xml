@@ -39,6 +39,10 @@
         <item name="android:src">@drawable/bookito_logo_darktheme</item>
     </style>
 
+    <style name="img_background">
+        <item name="android:background">@drawable/dark_background_image</item>
+    </style>
+
     <style name="buttonAccept">
         <item name="android:backgroundTint">#81C784</item>
         <item name="android:textColor">#132A13</item>

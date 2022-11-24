@@ -35,6 +35,10 @@
         <item name="android:src">@drawable/bookito_logo</item>
     </style>
 
+    <style name="img_background">
+        <item name="android:background">@drawable/background_image</item>
+    </style>
+
     <style name="buttonAccept">
         <item name="android:backgroundTint">@color/green</item>
         <item name="android:textColor">@color/white</item>
