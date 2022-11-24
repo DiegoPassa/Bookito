@@ -1,13 +1,13 @@
 package com.zerobudget.bookito;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference storageRef;
 
     private AppBarConfiguration appBarConfiguration;
-
-    private  ProgressBar progressBar;
-    private  ConstraintLayout constr;
 
 
     @Override
@@ -107,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFirebaseMessaging() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()){
+            if (!task.isSuccessful()) {
                 return;
             }
             // Get new FCM registration token
@@ -137,14 +134,22 @@ public class MainActivity extends AppCompatActivity {
                 dialogBuilder.setView(viewPopup);
                 AlertDialog dialog = dialogBuilder.create();
 
+                ProgressBar progressBar = viewPopup.findViewById(R.id.progressBar);
+
+                ConstraintLayout constr = viewPopup.findViewById(R.id.constr);
+                constr.setVisibility(View.GONE);
                 //WebView
                 WebView web = viewPopup.findViewById(R.id.web);
-
                 //sito web contenente l'informativa sulla privacy
                 web.loadUrl("https://sites.google.com/view/bookito/home-page");
-                web.setWebViewClient(new WebViewClient());
-
-                progressBar = viewPopup.findViewById(R.id.progressBar);
+                web.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
+                        progressBar.setVisibility(View.GONE);
+                        constr.setVisibility(View.VISIBLE);
+                    }
+                });
 
                 viewPopup.findViewById(R.id.btn_refuse).setVisibility(View.GONE);
                 viewPopup.findViewById(R.id.checkBox_gdpr).setVisibility(View.GONE);
@@ -157,12 +162,8 @@ public class MainActivity extends AppCompatActivity {
                     dialog.dismiss();
                 });
 
-                constr = viewPopup.findViewById(R.id.constr);
-                constr.setVisibility(View.GONE);
-
                 dialog.show();
-
-            break;
+                break;
             case R.id.logout:
                 // TODO: Logout utente
                 FirebaseAuth.getInstance().signOut();
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), "Disconnessione...", Toast.LENGTH_SHORT).show();
                 finish();
-            break;
+                break;
             default:
                 NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
                 return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
@@ -181,22 +182,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    private class WebViewClient extends android.webkit.WebViewClient {
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            progressBar.setVisibility(View.GONE);
-            constr.setVisibility(View.VISIBLE);
-        }
-    }
-
-
 
     protected void getQueryCurrentUser() {
         // FirebaseUser currentUser = mAuth.getCurrentUser();

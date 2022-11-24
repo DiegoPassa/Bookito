@@ -2,12 +2,14 @@ package com.zerobudget.bookito.login;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceGroup;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -38,10 +40,6 @@ public class RegisterFragment extends Fragment {
     private Boolean age;
     private ArrayList<String> items;
     ArrayAdapter<String> adapterItems;
-
-
-    private ProgressBar progressBar;
-    private ConstraintLayout constr;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,15 +112,21 @@ public class RegisterFragment extends Fragment {
             dialogBuilder.setView(viewPopup);
             AlertDialog dialog = dialogBuilder.create();
 
+            ProgressBar progressBar = viewPopup.findViewById(R.id.progressBar);
+            ConstraintLayout constr = viewPopup.findViewById(R.id.constr);
+            constr.setVisibility(View.GONE);
+
             WebView web = viewPopup.findViewById(R.id.web);
             //sito web contenente l'informativa sulla privacy
             web.loadUrl("https://sites.google.com/view/bookito/home-page");
-            web.setWebViewClient(new WebViewClient());
-
-            progressBar = viewPopup.findViewById(R.id.progressBar);
-
-            constr = viewPopup.findViewById(R.id.constr);
-            constr.setVisibility(View.GONE);
+            web.setWebViewClient(new WebViewClient(){
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    progressBar.setVisibility(View.GONE);
+                    constr.setVisibility(View.VISIBLE);
+                }
+            });
 
             CheckBox checkBoxGdpr = viewPopup.findViewById(R.id.checkBox_gdpr);
             Button btnAccept = viewPopup.findViewById(R.id.btn_accept);
@@ -163,21 +167,6 @@ public class RegisterFragment extends Fragment {
                 dialog.dismiss();
             });
         });
-    }
-
-
-    private class WebViewClient extends android.webkit.WebViewClient {
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            progressBar.setVisibility(View.GONE);
-            constr.setVisibility(View.VISIBLE);
-        }
     }
 
     private boolean validateInput() {
