@@ -176,6 +176,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         View popup_view = View.inflate(context, R.layout.popup_datepicker, null);
 
         DatePicker datePicker = popup_view.findViewById(R.id.date_picker);
+        datePicker.setMinDate(System.currentTimeMillis());
 
         calendarPopup.setView(popup_view);
         AlertDialog builderDate = calendarPopup.create();
@@ -192,6 +193,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         });
 
         refuseButton.setOnClickListener(click -> {
+            Toast.makeText(context, "Richiesta non effettuata", Toast.LENGTH_LONG).show();
             builderDate.dismiss();
             dialog.dismiss();
         });
