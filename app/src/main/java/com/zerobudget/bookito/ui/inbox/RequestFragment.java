@@ -25,12 +25,10 @@ public class RequestFragment extends Fragment {
     TabLayout tabs;
 
     RequestPageAdapter adapter;
-    int position= 0;
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        position = tabs.getSelectedTabPosition();
     }
 
 
@@ -47,7 +45,7 @@ public class RequestFragment extends Fragment {
         tabs = view.findViewById(R.id.tabLayout);
 
         tabs.getTabAt(Wrapper.position).select();
-        viewPager.setCurrentItem(position);
+        viewPager.setCurrentItem(Wrapper.position);
 
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
