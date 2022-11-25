@@ -19,7 +19,7 @@ public class BookModel {
     public static final boolean DISABLE = false;
 
 
-    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description, @NonNull String type, @NonNull boolean status) {
+    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description, @NonNull String type, boolean status) {
         this.thumbnail = thumbnail;
         this.isbn = isbn;
         this.title = title;

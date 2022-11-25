@@ -16,18 +16,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
@@ -37,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.BlurTransformation;
-import jp.wasabeef.picasso.transformations.GrayscaleTransformation;
 
 public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleViewAdapter.ViewHolder> {
 
@@ -80,7 +75,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         holder.author.setText(bookModels.get(position).getAuthor());
 
-
         switch (bookModels.get(position).getType()) {
             case "Scambio":
                 holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
@@ -100,11 +94,11 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         }
 
         holder.book_selected.setOnClickListener(view -> {
-            createNewDeletePopup(position, holder);
+            createNewDeletePopup(holder);
         });
     }
 
-    private void createNewDeletePopup(int position, ViewHolder holder) {
+    private void createNewDeletePopup(ViewHolder holder) {
         dialogBuilder = new MaterialAlertDialogBuilder(context);
         View view = View.inflate(context, R.layout.fragment_delete_book, null);
 
@@ -123,32 +117,27 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         btnDelete.setOnClickListener(view1 -> {
             //conferma dell'eliminazione
 
-
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma eliminazione");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler eliminare il libro: <br><b>" + bookModels.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
             builder.setPositiveButton("SI", (dialogInterface, i) -> {
-                Log.d("ELIMINO:", ""+bookModels.get(holder.getAdapterPosition()));
+                Log.d("ELIMINO:", "" + bookModels.get(holder.getAdapterPosition()));
                 //rimuove il libro selezionato
                 db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
 
                 //rimuove la richiesta relativa a quel libro se esiste!
                 //TODO controllare che la richiesta non sia stata accettata
-                db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                        for (DocumentSnapshot document : documents) {
-                            DocumentReference documentReference = document.getReference();
-                            documentReference.delete();
-                        }
+                db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(task -> {
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    for (DocumentSnapshot document : documents) {
+                        DocumentReference documentReference = document.getReference();
+                        documentReference.delete();
                     }
-
                 });
 
-                Toast.makeText(context,  bookModels.get(holder.getAdapterPosition()).getTitle()+" eliminato!", Toast.LENGTH_LONG).show();
-                bookModels.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
+                Toast.makeText(context, bookModels.get(holder.getAdapterPosition()).getTitle() + " eliminato!", Toast.LENGTH_LONG).show();
+                // bookModels.remove(holder.getAdapterPosition());
+                // notifyItemRemoved(holder.getAdapterPosition());
                 dialogInterface.dismiss();
             }).setNegativeButton("NO",  (dialogInterface, i) -> {
                 dialogInterface.dismiss();
