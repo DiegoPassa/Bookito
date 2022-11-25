@@ -69,7 +69,7 @@ public class BookTradeFragment extends Fragment {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
                                 //mostra solo i libri che non sono già in una qualche richiesta di scambio accettata
                                 if (map.get("type").equals("Scambio") && !senderTradedBooks.contains(map.get("isbn"))) {
-                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResults.add(searchResultsModel);
                                 }

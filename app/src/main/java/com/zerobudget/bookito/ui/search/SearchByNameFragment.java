@@ -99,7 +99,7 @@ public class SearchByNameFragment extends Fragment {
                                 if ((Objects.requireNonNull(map.get("title")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))
                                 || (Objects.requireNonNull(map.get("author")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))){
                                     //Log.d("Title", "" + map.get("title"));
-                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResults.add(searchResultsModel);
                                 }
@@ -133,7 +133,7 @@ public class SearchByNameFragment extends Fragment {
                                 if ((Objects.requireNonNull(map.get("title")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))
                                         || (Objects.requireNonNull(map.get("author")).toString().toLowerCase(Locale.ROOT).contains(searched_book.toLowerCase(Locale.ROOT)))){
                                     //Log.d("Title", "" + map.get("title"));
-                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResultsTmp.add(searchResultsModel);
                                 }

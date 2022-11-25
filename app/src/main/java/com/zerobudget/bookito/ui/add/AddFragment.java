@@ -65,6 +65,8 @@ public class AddFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.newBook = new BookModel();
 
+        this.newBook.setStatus(BookModel.ENABLE);
+
         db = FirebaseFirestore.getInstance();
 
         binding = FragmentAddBinding.inflate(inflater, container, false);

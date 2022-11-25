@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment {
                         if (arr != null) { //si assicura di cercare solo se esiste quache libro
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                 SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResults.add(searchResultsModel);
                             }
@@ -110,7 +110,7 @@ public class SearchFragment extends Fragment {
 
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                 SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                 arrResultsTmp.add(searchResultsModel);
                             }

@@ -58,7 +58,7 @@ public class UserLibrary extends UserModel {
     public Map<String, Object> serialize() {
         Map<String, Object> user_info = super.serialize();
 
-        ArrayList<Map<String, String>> libraryBooks = new ArrayList<>();
+        ArrayList<Map<String, Object>> libraryBooks = new ArrayList<>();
 
         for (BookModel book : library) {
             libraryBooks.add(book.serialize());

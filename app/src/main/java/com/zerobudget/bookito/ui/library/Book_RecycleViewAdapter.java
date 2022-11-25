@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +35,9 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.picasso.transformations.BlurTransformation;
+import jp.wasabeef.picasso.transformations.GrayscaleTransformation;
 
 public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleViewAdapter.ViewHolder> {
 
@@ -67,8 +72,14 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
 
-        Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
+        if (bookModels.get(holder.getAdapterPosition()).isBookEnable()) {
+            Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
+        } else {
+            Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context)).into(holder.thumbnail);
+        }
+
         holder.author.setText(bookModels.get(position).getAuthor());
+
 
         switch (bookModels.get(position).getType()) {
             case "Scambio":
@@ -90,14 +101,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         holder.book_selected.setOnClickListener(view -> {
             createNewDeletePopup(position, holder);
-            //passaggio dei dati del new book al prossimo fragment
-/*
-            Bundle args = new Bundle();
-            String bookString = Utils.getGsonParser().toJson(bookModels.get(position));
-            args.putString("BK", bookString);
-*/
-
-            // Navigation.findNavController(holder.itemView).navigate(R.id.action_navigation_library_to_bookDeleteFragment, args);
         });
     }
 

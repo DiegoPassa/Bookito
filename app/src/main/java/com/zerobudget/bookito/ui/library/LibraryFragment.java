@@ -53,7 +53,7 @@ public class LibraryFragment extends Fragment {
                         if(arr != null) { //si assicura di cercare solo se esiste quache libro
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"));
+                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                 arrBkm.add(tmp);//aggiunge il bookmodel tmp all'array list
                             }
 

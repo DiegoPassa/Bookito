@@ -34,6 +34,7 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
+import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;

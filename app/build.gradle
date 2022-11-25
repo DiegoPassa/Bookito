@@ -34,6 +34,10 @@ android {
 
 dependencies {
 
+    implementation'jp.wasabeef:picasso-transformations:2.4.0'
+    // If you want to use the GPU Filters
+    implementation'jp.co.cyberagent.android:gpuimage:2.1.0'
+
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -56,6 +60,7 @@ dependencies {
 
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'jp.wasabeef:picasso-transformations:2.2.1'
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
@@ -65,4 +70,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+
 }

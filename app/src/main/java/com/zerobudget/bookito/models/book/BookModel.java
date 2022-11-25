@@ -13,27 +13,34 @@ public class BookModel {
     private String thumbnail;
     private String title;
     private String type;
+    private boolean status;
 
-    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description, @NonNull String type) {
+    public static final boolean ENABLE = true;
+    public static final boolean DISABLE = false;
+
+
+    public BookModel(@NonNull String thumbnail, @NonNull String isbn, @NonNull String title, @NonNull String author, @NonNull String description, @NonNull String type, @NonNull boolean status) {
         this.thumbnail = thumbnail;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.description = description;
         this.type = type;
+        this.status = status;
     }
 
     public BookModel() {}
 
-    public Map<String, String> serialize() {
+    public Map<String, Object> serialize() {
 
-        Map<String, String> bookMap = new HashMap<>();
+        Map<String, Object> bookMap = new HashMap<>();
         bookMap.put("thumbnail", this.getThumbnail());
         bookMap.put("title", this.getTitle());
         bookMap.put("author", this.getAuthor());
         bookMap.put("isbn", this.getIsbn());
         bookMap.put("description", this.getDescription());
         bookMap.put("type", this.getType());
+        bookMap.put("status", this.status);
 
         return bookMap;
     }
@@ -84,6 +91,11 @@ public class BookModel {
         return type;
     }
 
+
+    public boolean isBookEnable() { return status; }
+
+    public void setStatus(boolean status) { this.status = status; }
+
     @Override
     public String toString() {
         return "BookModel{" +
@@ -93,6 +105,7 @@ public class BookModel {
                 ", thumbnail='" + thumbnail + '\'' +
                 ", title='" + title + '\'' +
                 ", type='" + type + '\'' +
+                ", status ='" + status + '\'' +
                 '}';
     }
 }
