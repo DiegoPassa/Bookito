@@ -22,6 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -41,9 +42,7 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder> {
@@ -272,6 +271,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     protected void acceptRequest(RequestModel r, ViewHolder holder) {
+        changeBookStatus(r.getRequestedBook());
+
         //controlla prima che non esista già una richiesta accettata per il libro
         db.collection("requests")
                 .whereEqualTo("receiver", Utils.USER_ID)
@@ -313,6 +314,26 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                 for (QueryDocumentSnapshot doc : task.getResult())
                     if (doc.getId().equals(r.getrequestId()))
                         exists = true;
+            }
+        });
+    }
+
+    private void changeBookStatus(String bookRequested){
+        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Object arr = task.getResult().get("books"); //array dei books
+                if (arr != null) //si assicura di cercare solo se esiste quache libro
+                    for (Object o : (ArrayList<Object>) arr) {
+                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                        if(map.get("isbn").equals(bookRequested)){
+                            BookModel oldBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                            BookModel newBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
+
+                            //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
+                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(oldBook));
+                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayUnion(newBook));
+                        }
+                    }
             }
         });
     }
