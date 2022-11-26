@@ -8,22 +8,39 @@
     tools:context=".ui.Chat.ChatFragment">
 
 
-        <LinearLayout
-            android:id="@+id/layout_chat_const"
-            android:layout_width="0dp"
-            android:layout_height="75dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent">
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        style="@style/img_background_chat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_chat_const"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ChatRecycleView"
         android:layout_width="match_parent"
+
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/input_message"
-        app:layout_constraintTop_toBottomOf="@+id/layout_chat_const"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_chat_const" />
 
     <EditText
         android:id="@+id/input_message"

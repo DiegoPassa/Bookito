@@ -66,12 +66,16 @@
         <item name="android:background">@drawable/bg_light_main</item>
     </style>
 
+    <style name="img_background_chat">
+        <item name="android:background">@drawable/bg_light_chat</item>
+    </style>
+
     <style name="img_background_login">
         <item name="android:background">@drawable/bg_light_login</item>
     </style>
 
     <style name="color_card">
-        <item name="android:background">@color/light_card</item>
+        <item name="android:backgroundTint">@color/light_card</item>
     </style>
 
     <style name="filter_bar">

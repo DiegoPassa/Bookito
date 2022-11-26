@@ -74,6 +74,10 @@
         <item name="android:background">@drawable/bg_dark_login</item>
     </style>
 
+    <style name="img_background_chat">
+        <item name="android:background">@drawable/bg_dark_chat</item>
+    </style>
+
     <style name="color_card">
         <item name="android:backgroundTint">@color/dark_card</item>
     </style>
