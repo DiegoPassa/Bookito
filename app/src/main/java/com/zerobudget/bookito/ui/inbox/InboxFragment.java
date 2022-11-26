@@ -50,6 +50,9 @@ public class InboxFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        binding.textView.setVisibility(View.VISIBLE);
+        binding.filterBar.setVisibility(View.INVISIBLE);
+
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);

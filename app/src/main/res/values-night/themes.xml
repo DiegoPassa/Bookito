@@ -78,6 +78,19 @@
         <item name="android:backgroundTint">@color/dark_card</item>
     </style>
 
+    <style name="filter_bar">
+        <item name="android:background">@color/dark_filter_bar</item>
+    </style>
+
+
+    <style name="filter_text">
+        <item name="android:textColor">@color/md_theme_dark_secondaryContainer</item>
+    </style>
+
+    <style name="selected_filter_text">
+        <item name="android:textColor">@color/md_theme_dark_primary</item>
+    </style>
+
     <style name="buttonAccept">
         <item name="android:backgroundTint">#81C784</item>
         <item name="android:textColor">#132A13</item>

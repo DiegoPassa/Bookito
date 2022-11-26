@@ -71,7 +71,19 @@
     </style>
 
     <style name="color_card">
-        <item name="android:backgroundTint">@color/light_card</item>
+        <item name="android:background">@color/light_card</item>
+    </style>
+
+    <style name="filter_bar">
+        <item name="android:background">@color/light_filter_bar</item>
+    </style>
+
+    <style name="filter_text">
+        <item name="android:textColor">@color/md_theme_light_secondaryContainer</item>
+    </style>
+
+    <style name="selected_filter_text">
+        <item name="android:textColor">@color/md_theme_light_primary</item>
     </style>
 
     <style name="buttonAccept">

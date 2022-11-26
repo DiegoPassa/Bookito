@@ -60,6 +60,10 @@
 
     <color name="light_card">#FAF5F1</color>
 
+    <color name="light_filter_texts">#85736D</color>
+    <color name="light_filter_bar">#FAF5F1</color>
+
+
 
     <color name="md_theme_dark_primary">#FFB599</color>
     <color name="md_theme_dark_onPrimary">#5A1C00</color>
@@ -93,6 +97,10 @@
     <color name="md_theme_dark_scrim">#000000</color>
 
     <color name="dark_card">#181818</color>
+
+
+    <color name="dark_filter_texts">#D8C2BB</color>
+    <color name="dark_filter_bar">#53433E</color>
 
     <!--  Material3 generated colors  -->
     <!--  https://m3.material.io/theme-builder#/custom  -->

@@ -42,6 +42,9 @@ public class RequestSentFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        binding.textView.setVisibility(View.VISIBLE);
+        binding.filterBar.setVisibility(View.INVISIBLE);
+
         emptyWarning = binding.empty;
 
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
