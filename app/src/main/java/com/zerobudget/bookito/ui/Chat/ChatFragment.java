@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -37,6 +38,7 @@ public class ChatFragment extends Fragment {
     private DatabaseReference realTimedb;
     private String requestID;
 
+    private ProgressBar progressBar;
     private RecyclerView recyclerView;
 
     private Chat_RecycleViewAdapter adapter;
@@ -51,6 +53,10 @@ public class ChatFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        progressBar = binding.progressBar;
+
+        progressBar.setVisibility(View.VISIBLE);
 
         Bundle args = getArguments();
 
@@ -114,6 +120,7 @@ public class ChatFragment extends Fragment {
 
                 recyclerView.scrollToPosition(messages.size()-1);
                 recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
