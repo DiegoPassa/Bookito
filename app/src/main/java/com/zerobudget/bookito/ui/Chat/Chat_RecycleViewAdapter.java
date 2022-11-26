@@ -3,7 +3,6 @@ package com.zerobudget.bookito.ui.Chat;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.common.net.InternetDomainName;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
@@ -26,7 +23,6 @@ import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleViewAdapter.ViewHolder> {
@@ -72,6 +68,9 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.messageSent.setText(messages.get(position).getMessage());
 
+        if(messages.get(position).getMessageSentAt() != null)
+            holder.messageSentAt.setText(messages.get(position).getMessageSentAt());
+
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(holder.constraintLayout);
@@ -79,6 +78,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.clear(R.id.message_content, ConstraintSet.LEFT);
             constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.RIGHT, R.id.chat_layout, ConstraintSet.RIGHT, 0);
             constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
+            constraintSet.connect(R.id.message_sent_at, ConstraintSet.RIGHT, R.id.message_content, ConstraintSet.LEFT, 0);
             constraintSet.applyTo(holder.constraintLayout);
             loadUserProfilePicture(UserModel.getCurrentUser(), holder, position);
             holder.messageSent.setBackgroundResource(R.drawable.message_view);
@@ -90,9 +90,10 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.clear(R.id.message_content, ConstraintSet.RIGHT);
             constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.LEFT, R.id.chat_layout, ConstraintSet.LEFT, 0);
             constraintSet.connect(R.id.message_content, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
+            constraintSet.connect(R.id.message_sent_at, ConstraintSet.LEFT, R.id.message_content, ConstraintSet.RIGHT, 0);
             constraintSet.applyTo(holder.constraintLayout);
             holder.messageSent.setBackgroundResource(R.drawable.enemy_message);
-            loadUserProfilePicture(otherUser, holder, position);;
+            loadUserProfilePicture(otherUser, holder, position);
         }
 
     }
@@ -126,6 +127,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         protected TextView messageSent;
         protected ImageView profileImg;
         protected ClassicIdenticonView gravatarImg;
+        protected TextView messageSentAt;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -134,6 +136,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             messageSent = itemView.findViewById(R.id.message_content);
             profileImg = itemView.findViewById(R.id.small_profile_img);
             gravatarImg = itemView.findViewById(R.id.gravater_pic);
+            messageSentAt = itemView.findViewById(R.id.message_sent_at);
 
         }
     }

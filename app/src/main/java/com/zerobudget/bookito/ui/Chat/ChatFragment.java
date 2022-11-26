@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.ui.Chat;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,16 +19,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.ChatFragmentBinding;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.ui.inbox.Inbox_RecycleViewAdapter;
 import com.zerobudget.bookito.utils.Utils;
 
-import org.checkerframework.checker.units.qual.A;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ChatFragment extends Fragment {
     private FirebaseAuth mAuth;
@@ -68,15 +67,17 @@ public class ChatFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-
-
         setUpChatRoom();
 
 
         binding.sendMessage.setOnClickListener(view -> {
             String message = binding.inputMessage.getText().toString().trim();
             if (!message.isEmpty()) {
-                realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, null));
+                Date now = Timestamp.now().toDate();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                String currentTime = sdf.format(now);
+                realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, currentTime));
                 binding.inputMessage.setText("");
             }
         });
@@ -91,8 +92,16 @@ public class ChatFragment extends Fragment {
                 messages.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2"))
-                        messages.add(dataSnapshot.getValue(MessageModel.class));
+                    if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")){
+
+                        MessageModel msg = new MessageModel();
+                        msg.setMessage(dataSnapshot.child("message").getValue(String.class));
+                        msg.setSender(dataSnapshot.child("sender").getValue(String.class));
+                        msg.setReceiver(dataSnapshot.child("receiver").getValue(String.class));
+                        msg.setMessageSentAt(dataSnapshot.child("messageSentAt").getValue(String.class));
+                        //messages.add(dataSnapshot.getValue(MessageModel.class));
+                        messages.add(msg);
+                    }
                 }
 
                 adapter.notifyDataSetChanged();

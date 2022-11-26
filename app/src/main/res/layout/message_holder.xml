@@ -50,6 +50,17 @@
             android:padding="8dp"
             tools:text="@string/lorem_ipsum_long" />
 
+        <TextView
+            android:id="@+id/message_sent_at"
+            android:textColor="?colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:maxWidth="200dp"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/message_content"
+            android:text="11:11"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

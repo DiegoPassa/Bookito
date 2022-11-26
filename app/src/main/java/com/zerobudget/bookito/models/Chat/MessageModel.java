@@ -1,7 +1,5 @@
 package com.zerobudget.bookito.models.Chat;
 
-import com.google.firebase.Timestamp;
-
 import java.util.ArrayList;
 
 public class MessageModel {
@@ -9,19 +7,20 @@ public class MessageModel {
     private String receiver;
     private String message;
     private String messageId;
-    private Timestamp messageSentAt;
+    private String messageSentAt;
+    //private Timestamp messageSentAt;
 
     public MessageModel(){}
 
-    public MessageModel(String sender, String receiver, String message, Timestamp timeStamp) {
+    public MessageModel(String sender, String receiver, String message, String time) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
-        this.messageSentAt = timeStamp;
+        this.messageSentAt = time;
     }
 
-    public MessageModel(String sender, String receiver, String message, Timestamp timeStamp, String id) {
-       this(sender, receiver, message, timeStamp);
+    public MessageModel(String sender, String receiver, String message, String time, String id) {
+       this(sender, receiver, message, time);
        this.messageId = id;
     }
 
@@ -57,11 +56,11 @@ public class MessageModel {
         this.messageId = messageId;
     }
 
-    public Timestamp getMessageSentAt() {
+    public String getMessageSentAt() {
         return messageSentAt;
     }
 
-    public void setMessageSentAt(Timestamp messageSentAt) {
+    public void setMessageSentAt(String messageSentAt) {
         this.messageSentAt = messageSentAt;
     }
 
