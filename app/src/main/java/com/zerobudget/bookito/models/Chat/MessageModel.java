@@ -7,20 +7,22 @@ public class MessageModel {
     private String receiver;
     private String message;
     private String messageId;
-    private String messageSentAt;
+    private String messageTime;
+    private String messageDate;
     //private Timestamp messageSentAt;
 
     public MessageModel(){}
 
-    public MessageModel(String sender, String receiver, String message, String time) {
+    public MessageModel(String sender, String receiver, String message, String messageTime, String messageDate) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
-        this.messageSentAt = time;
+        this.messageTime = messageTime;
+        this.messageDate = messageDate;
     }
 
-    public MessageModel(String sender, String receiver, String message, String time, String id) {
-       this(sender, receiver, message, time);
+    public MessageModel(String sender, String receiver, String message, String messageTime, String messageDate, String id) {
+       this(sender, receiver, message, messageTime, messageDate);
        this.messageId = id;
     }
 
@@ -56,16 +58,26 @@ public class MessageModel {
         this.messageId = messageId;
     }
 
-    public String getMessageSentAt() {
-        return messageSentAt;
+    public String getMessageTime() {
+        return messageTime;
     }
 
-    public void setMessageSentAt(String messageSentAt) {
-        this.messageSentAt = messageSentAt;
+    public void setMessageTime(String messageTime) {
+        this.messageTime = messageTime;
+    }
+
+
+    public String getMessageDate() {
+        return messageDate;
+    }
+
+    public void setMessageDate(String messageDate) {
+        this.messageDate = messageDate;
     }
 
     public static ArrayList<MessageModel> getMessages(String user1, String user2, String requestID) {
         //TODO get un array of message between two users (maybe could be useful?)
         return null;
     }
+
 }

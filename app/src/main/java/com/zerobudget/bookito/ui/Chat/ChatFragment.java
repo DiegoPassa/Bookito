@@ -77,7 +77,11 @@ public class ChatFragment extends Fragment {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String currentTime = sdf.format(now);
-                realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, currentTime));
+
+                SimpleDateFormat sdf1 = new SimpleDateFormat("hh/MM/yyyy", Locale.getDefault());
+                String currentDate = sdf.format(now);
+
+                realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, currentTime, currentDate));
                 binding.inputMessage.setText("");
             }
         });
@@ -98,7 +102,9 @@ public class ChatFragment extends Fragment {
                         msg.setMessage(dataSnapshot.child("message").getValue(String.class));
                         msg.setSender(dataSnapshot.child("sender").getValue(String.class));
                         msg.setReceiver(dataSnapshot.child("receiver").getValue(String.class));
-                        msg.setMessageSentAt(dataSnapshot.child("messageSentAt").getValue(String.class));
+                        //il timestamp dava problemi brutti perché non ha un costruttore senza argomenti
+                        msg.setMessageTime(dataSnapshot.child("messageTime").getValue(String.class));
+                        msg.setMessageDate(dataSnapshot.child("messageDate").getValue(String.class));
                         //messages.add(dataSnapshot.getValue(MessageModel.class));
                         messages.add(msg);
                     }

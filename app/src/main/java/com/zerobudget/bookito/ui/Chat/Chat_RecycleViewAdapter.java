@@ -68,8 +68,8 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.messageSent.setText(messages.get(position).getMessage());
 
-        if(messages.get(position).getMessageSentAt() != null)
-            holder.messageSentAt.setText(messages.get(position).getMessageSentAt());
+        if(messages.get(position).getMessageTime() != null)
+            holder.messageSentAt.setText(messages.get(position).getMessageTime());
 
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
             ConstraintSet constraintSet = new ConstraintSet();
