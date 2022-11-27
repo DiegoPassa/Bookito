@@ -114,6 +114,9 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         bookDescription.setMovementMethod(new ScrollingMovementMethod());
         Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(bookThumbnail);
 
+        if(!bookModels.get(holder.getAdapterPosition()).getStatus())
+            btnDelete.setEnabled(false);
+
         btnDelete.setOnClickListener(view1 -> {
             //conferma dell'eliminazione
 
@@ -125,9 +128,8 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 //rimuove il libro selezionato
                 db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
 
-                //rimuove la richiesta relativa a quel libro se esiste!
-                //TODO controllare che la richiesta non sia stata accettata
-                db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(task -> {
+                //rimuove la richiesta relativa a quel libro se esiste ed è undefined
+                db.collection("requests").whereEqualTo("status", "undefined").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(task -> {
                     List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     for (DocumentSnapshot document : documents) {
                         DocumentReference documentReference = document.getReference();

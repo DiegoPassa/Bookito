@@ -62,7 +62,7 @@ public class BookDeleteFragment extends Fragment {
             db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookSelected));
 
             //rimuove la richiesta relativa a quel libro se esiste!
-            db.collection("requests").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookSelected.getIsbn()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("requests").whereEqualTo("status", "undefined").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookSelected.getIsbn()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     List<DocumentSnapshot> documents = task.getResult().getDocuments();
