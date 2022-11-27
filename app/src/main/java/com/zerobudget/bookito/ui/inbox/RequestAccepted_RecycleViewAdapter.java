@@ -28,6 +28,7 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -127,13 +128,13 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             @Override
             public boolean onLongClick(View view) {
 
-                showImagePicDialog(holder);
+                showImagePicDialog(holder, requests.get(holder.getAdapterPosition()));
                 return false;
             }
         });
     }
 
-    private void showImagePicDialog(ViewHolder holder) {
+    private void showImagePicDialog(ViewHolder holder, RequestModel request) {
         //String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
 
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
@@ -148,6 +149,20 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         TextView feedback = view.findViewById(R.id.feedback);
         TextView closeRequest = view.findViewById(R.id.close_request);
         TextView cancelRequest = view.findViewById(R.id.cancel_request);
+        TextView confirmBookGiven = view.findViewById(R.id.confirm_book_given);
+
+        Log.d("CLASS", ""+requests.get(holder.getAdapterPosition()).getClass());
+
+
+        if (request instanceof RequestShareModel) {
+            if (request.getStatus().equals("ongoing")) {
+                cancelRequest.setVisibility(View.GONE);
+            }
+            else {
+                confirmBookGiven.setVisibility(View.VISIBLE);
+                closeRequest.setVisibility(View.GONE);
+            }
+        }
 
         title.setText("Cosa vuoi fare?");
 

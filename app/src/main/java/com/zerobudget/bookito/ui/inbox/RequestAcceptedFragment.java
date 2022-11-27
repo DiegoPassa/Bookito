@@ -127,9 +127,18 @@ public class RequestAcceptedFragment extends Fragment {
         Task<QuerySnapshot> requestReceived = db.collection("requests").whereEqualTo("status", "accepted")
                 .whereEqualTo("receiver", Utils.USER_ID).get();
 
-        Tasks.whenAllSuccess(requestSent, requestReceived).addOnSuccessListener(list -> {
+        Task<QuerySnapshot> requestSentOnGoing = db.collection("requests").whereEqualTo("status", "ongoing")
+                .whereEqualTo("sender", Utils.USER_ID).get();
+
+        Task<QuerySnapshot> requestReceivedOnGoing = db.collection("requests").whereEqualTo("status", "ongoing")
+                .whereEqualTo("receiver", Utils.USER_ID).get();
+
+        Tasks.whenAllSuccess(requestSent, requestReceived, requestSentOnGoing, requestReceivedOnGoing).addOnSuccessListener(list -> {
             QuerySnapshot queryRequestSent = (QuerySnapshot) list.get(0);
             QuerySnapshot queryRequestReceived = (QuerySnapshot) list.get(1);
+            QuerySnapshot queryRequestSentOnGoing = (QuerySnapshot) list.get(2);
+            QuerySnapshot queryRequestReceivedOnGoing = (QuerySnapshot) list.get(3);
+
 
             for (QueryDocumentSnapshot doc : queryRequestReceived) {
                 //salvo le richieste ricevute per poterle filtrare
@@ -141,6 +150,20 @@ public class RequestAcceptedFragment extends Fragment {
             for (QueryDocumentSnapshot doc : queryRequestSent) {
                 //salvo le richieste inviate per poterle filtrare
                 requestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+
+                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+            }
+
+            for (QueryDocumentSnapshot doc : queryRequestSentOnGoing) {
+                //salvo le richieste inviate per poterle filtrare
+                requestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+
+                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+            }
+
+            for (QueryDocumentSnapshot doc : queryRequestReceivedOnGoing) {
+                //salvo le richieste inviate per poterle filtrare
+                 requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
 
                 requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
