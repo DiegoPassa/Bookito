@@ -3,6 +3,7 @@ package com.zerobudget.bookito.ui.inbox;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -161,9 +164,17 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
         db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/"+r.getrequestId());
+
+                ref.child("user1").setValue(r.getReceiver());
+                if (r.getReceiver().equals(Utils.USER_ID))
+                    ref.child("user2").setValue(r.getSender());
+                else ref.child("user2").setValue(Utils.USER_ID);
+
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
-                changeBookStatusCurrentUsr(r.getRequestedBook());
-                changeBookStatusOtherUsr(r.getSender(), isbnTradeBk);
+                changeBookStatus(Utils.USER_ID, r.getRequestedBook());
+                changeBookStatus(r.getSender(), isbnTradeBk);
             }else
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
         });
@@ -180,8 +191,9 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         });
     }
 
-    private void changeBookStatusCurrentUsr(String isbn){
-        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+    private void changeBookStatus(String userID, String isbn){
+        Log.d("USER", userID);
+        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Object arr = task.getResult().get("books"); //array dei books
                 if (arr != null) //si assicura di cercare solo se esiste quache libro
@@ -192,30 +204,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                             BookModel newBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
 
                             //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
-                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(oldBook));
-                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayUnion(newBook));
-                        }
-                    }
-            }
-        });
-    }
-
-    /* TODO: trovare un modo per cambiare lo status del libro dell'altro utente nello scambio (eludere i permessi)
-    Write failed at users/EnKAs9DVThSOFRjDHalzWJCGZpZ2: Status{code=PERMISSION_DENIED, description=Missing or insufficient permissions., cause=null}*/
-    private void changeBookStatusOtherUsr(String idOtherUser, String isbn){
-        db.collection("users").document(idOtherUser).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Object arr = task.getResult().get("books"); //array dei books
-                if (arr != null) //si assicura di cercare solo se esiste quache libro
-                    for (Object o : (ArrayList<Object>) arr) {
-                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if(map.get("isbn").equals(isbn)){
-                            BookModel oldBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
-
-                            //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
-                            db.collection("users").document(idOtherUser).update("books", FieldValue.arrayRemove(oldBook));
-                            db.collection("users").document(idOtherUser).update("books", FieldValue.arrayUnion(newBook));
+                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(oldBook));
+                            db.collection("users").document(userID).update("books", FieldValue.arrayUnion(newBook));
                         }
                     }
             }

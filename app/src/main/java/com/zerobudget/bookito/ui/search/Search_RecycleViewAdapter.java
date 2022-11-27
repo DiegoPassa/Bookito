@@ -158,7 +158,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                             if (rm instanceof RequestShareModel)
                                 openCalendarPopup((RequestShareModel) rm, holder, dialog);
                             else requestBook(rm, holder, dialog); //prova a inserire la richiesta del libro
-
                         }
                     }
                 }
@@ -205,13 +204,14 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
         boolean err = false;
 
-        if (doc.get("receiver").equals(rm.getReceiver())
-                && doc.get("requestedBook").equals(rm.getRequestedBook())
-                && doc.get("sender").equals(rm.getSender())
-                && doc.get("thumbnail").equals(rm.getThumbnail())
-                && doc.get("title").equals(rm.getTitle())
-                && doc.get("type").equals(rm.getType()))
-            err = true;
+        if(doc.get("status").equals(rm.getStatus())
+            && (doc.get("receiver").equals(rm.getReceiver())
+                    && doc.get("requestedBook").equals(rm.getRequestedBook())
+                    && doc.get("sender").equals(rm.getSender())
+                    && doc.get("thumbnail").equals(rm.getThumbnail())
+                    && doc.get("title").equals(rm.getTitle())
+                    && doc.get("type").equals(rm.getType())))
+                err = true;
 
         return err;
     }
@@ -219,17 +219,31 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     private void requestBook(RequestModel rm, ViewHolder holder, AlertDialog dialog) {
         dialog.dismiss();
         db.collection("requests").get().addOnCompleteListener(task -> {
+            boolean err = false;
             if (task.isSuccessful()) {
-                boolean err = false;
 
                 for (QueryDocumentSnapshot doc : task.getResult()) {
                     //TODO: aggiungere un flag nel libro per impedire la visualizzazione nelle ricerche se esiste già una richiesta
                     //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
-                    if (checkRequests(doc, rm))
+                    if (checkRequests(doc, rm)) {
                         err = true;
+                    }
+
+                    if(doc.get("status").equals(rm.getStatus())
+                            && (doc.get("receiver").equals(rm.getReceiver())
+                            && doc.get("requestedBook").equals(rm.getRequestedBook())
+                            && doc.get("sender").equals(rm.getSender())
+                            && doc.get("thumbnail").equals(rm.getThumbnail())
+                            && doc.get("title").equals(rm.getTitle())
+                            && doc.get("type").equals(rm.getType())))
+                        err = true;
+                    else
+                       Log.d("not", "not eq");
                 }
                 //se esiste già una richiesta da errore
                 if (err) {
+                    Log.d("HEEELP", "boh");
+
                     Toast.makeText(context, "Attenzione! La richiesta per "+results.get(holder.getAdapterPosition()).getBook().getTitle()+" esiste già!", Toast.LENGTH_LONG).show();
                 } else {
                     db.collection("requests").add(rm.serialize()).addOnSuccessListener(documentReference -> {
@@ -246,7 +260,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                                       .getNotificationToken());
                     } catch(Exception e) {}
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
-
                 }
 
             } else {

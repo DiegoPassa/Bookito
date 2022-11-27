@@ -9,4 +9,12 @@ public class RequestTradeModel extends RequestModel{
         super(requestedBook, requester, recipient, status, thumbnail, type, title, id);
         this.requestTradeBook = requestTradeBook;
     }
+
+    public String getRequestTradeBook() {
+        return requestTradeBook;
+    }
+
+    public void setRequestTradeBook(String requestTradeBook) {
+        this.requestTradeBook = requestTradeBook;
+    }
 }

@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -126,26 +128,31 @@ public class RequestAcceptedFragment extends Fragment {
                 .whereEqualTo("receiver", Utils.USER_ID).get();
 
         Tasks.whenAllSuccess(requestSent, requestReceived).addOnSuccessListener(list -> {
-           QuerySnapshot queryRequestSent = (QuerySnapshot) list.get(0);
-           QuerySnapshot queryRequestReceived = (QuerySnapshot) list.get(1);
+            QuerySnapshot queryRequestSent = (QuerySnapshot) list.get(0);
+            QuerySnapshot queryRequestReceived = (QuerySnapshot) list.get(1);
 
-           for (QueryDocumentSnapshot doc : queryRequestReceived) {
-               //salvo le richieste ricevute per poterle filtrare
-               requestsReceived.add(RequestModel.getRequestModel( (String) doc.get("type"), doc) );
+            for (QueryDocumentSnapshot doc : queryRequestReceived) {
+                //salvo le richieste ricevute per poterle filtrare
+                requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
 
-               requests.add(RequestModel.getRequestModel( (String) doc.get("type"), doc) );
-           }
+                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+            }
 
-           for (QueryDocumentSnapshot doc : queryRequestSent) {
-               //salvo le richieste inviate per poterle filtrare
-               requestsSent.add(RequestModel.getRequestModel( (String) doc.get("type"), doc) );
+            for (QueryDocumentSnapshot doc : queryRequestSent) {
+                //salvo le richieste inviate per poterle filtrare
+                requestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
 
-               requests.add(RequestModel.getRequestModel( (String) doc.get("type"), doc));
-           }
+                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+            }
 
-           addOtherUsers(requestsSent, false);
-           addOtherUsers(requestsReceived, false);
-           addOtherUsers(requests, true);
+
+            for (int i = 0; i < requests.size(); i++)
+                if (requests.get(i) instanceof RequestTradeModel)
+                    Log.d("TRADE", ((RequestTradeModel) requests.get(i)).getRequestTradeBook() + "");
+
+            addOtherUsers(requestsSent, false);
+            addOtherUsers(requestsReceived, false);
+            addOtherUsers(requests, true);
 
         });
     }
@@ -162,7 +169,7 @@ public class RequestAcceptedFragment extends Fragment {
         Tasks.whenAllSuccess(tasks).addOnSuccessListener(task -> {
             binding.progressBar.setVisibility(View.GONE);
 
-            if(all)
+            if (all)
                 addRequestsOnPage(req);
         });
     }

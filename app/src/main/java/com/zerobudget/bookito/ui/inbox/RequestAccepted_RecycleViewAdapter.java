@@ -33,7 +33,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
     private StorageReference storageRef;
@@ -67,7 +66,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
 
-        if(requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+        if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
             //holder.usr_pic.setVisibility(View.VISIBLE);
             holder.user_gravatar.setVisibility(View.GONE);
             storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
@@ -80,7 +79,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                             // Utils.setUriPic(uri.toString());
                             //Log.d("PIC", Utils.URI_PIC);
                             otherUserPic[0] = uri;
-                            Log.d("carico immaginme", ""+uri.getClass());
+                            Log.d("carico immaginme", "" + uri.getClass());
                             Picasso.get().load(uri).into(holder.usr_pic);
                             holder.usr_pic.setVisibility(View.VISIBLE);
                             //holder.user_gravatar.setVisibility(View.GONE);
@@ -96,7 +95,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                     }
                 }
             });
-        }else{
+        } else {
             holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
             holder.user_gravatar.setVisibility(View.VISIBLE);
             holder.usr_pic.setVisibility(View.GONE);
@@ -113,11 +112,12 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                 if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
                     args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getSender());
 
-                else args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
+                else
+                    args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
 
                 args.putString("requestID", requests.get(holder.getAdapterPosition()).getrequestId());
                 args.putParcelable("otherUserPic", otherUserPic[0]);
-                args.putString("receiverID",  requests.get(holder.getAdapterPosition()).getReceiver());
+                args.putString("receiverID", requests.get(holder.getAdapterPosition()).getReceiver());
                 Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
 
             }
@@ -161,6 +161,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             dialog.dismiss();
         });
 
+        //richiesta CONCLUSA
         closeRequest.setOnClickListener(view1 -> {
             dialog.dismiss();
 
@@ -168,67 +169,83 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             builder.setTitle("Conferma");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler segnare la richiesta di <br><b>" + requests.get(holder.getAdapterPosition()).getTitle() + "</b> come conlusa?", Html.FROM_HTML_MODE_LEGACY));
             builder.setPositiveButton("SI", (dialogInterface, i) -> {
-                if(!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
+                if (!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
                     //la richiesta è segnata come conclusa
-                    //db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+                    db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+
                     if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
-                        Toast.makeText(context, "Scambio da implementare", Toast.LENGTH_LONG).show();
-                        //scambio non ho i permessi per cancellare anche quello dell'altro utente
-                        //deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
-                    }else {
-                        //cambia lo status della richiesta
-                        db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
-
+                        //cancella i libri scambiati
+                        if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
+                            deleteUserBook(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+                            deleteUserBook(requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                        } else {
+                            deleteUserBook(Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                            deleteUserBook(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        }
+                        Toast.makeText(context, "Scambio concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
+                    } else {
                         //cancella il libro regalato
-                        deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
-
-                        Toast.makeText(context, "Richiesta conclusa, libro cancellato dalla libreria!", Toast.LENGTH_LONG).show();
-                        requests.remove(holder.getAdapterPosition());
-                        notifyItemRemoved(holder.getAdapterPosition());
+                        deleteUserBook(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        Toast.makeText(context, "Regalo concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
                     }
 
-                }else{
+                    requests.remove(holder.getAdapterPosition());
+                    notifyItemRemoved(holder.getAdapterPosition());
+                } else {
                     //richiesta di prestito, visualizzare pagina per recensione
                     Date now = Timestamp.now().toDate();
 
-                    if(now.compareTo(((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate()) < 0)
+                    if (now.compareTo(((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate()) < 0)
                         Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
                     else {
                         //TODO: recensione!
                         //cambia lo stato del libro
-                        changeBookStatus(requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
                         //segna la richiesta come conlusa
                         db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+                        requests.remove(holder.getAdapterPosition());
+                        notifyItemRemoved(holder.getAdapterPosition());
                         Toast.makeText(context, "Prestito concluso, il libro è nuovamente disponibile nella libreria!", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 dialogInterface.dismiss();
-            }).setNegativeButton("NO",  (dialogInterface, i) -> {
+            }).setNegativeButton("NO", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
             }).show();
 
-           // dialog.dismiss();
+            // dialog.dismiss();
         });
 
-
-
+        //richiesta annullata mentre è ancora in corso
         cancelRequest.setOnClickListener(view1 -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler annullare la richiesta di <br><b>" + requests.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
             builder.setPositiveButton("SI", (dialogInterface, i) -> {
-                //torna disponibile perchè è un prestito, altrimenti no
-                //if(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
-                changeBookStatus(requests.get(holder.getAdapterPosition()).getRequestedBook());
-                //TODO in caso di scambio rendere disponibile anche il libro dell'altro, non ci sono i permessi per farlo, trovare un altro modo
+                //TODO sistemare i permessi su firebase
+                //se è uno scambio  devono tornare disponibili entrambi i libri
+                if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+                    if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
+                        changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        changeBookStatus(requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                    } else {
+                        changeBookStatus(Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                        changeBookStatus(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                    }
+
+                } else {
+                    changeBookStatus(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                }
 
                 db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "cancelled");
 
                 Toast.makeText(context, "Richiesta annullata!", Toast.LENGTH_LONG).show();
+                requests.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
 
                 dialogInterface.dismiss();
-            }).setNegativeButton("NO",  (dialogInterface, i) -> {
+            }).setNegativeButton("NO", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
             }).show();
 
@@ -239,35 +256,35 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         dialog.show();
     }
 
-    private void changeBookStatus(String bookRequested){
-        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+    private void changeBookStatus(String userID, String isbn) {
+        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Object arr = task.getResult().get("books"); //array dei books
                 if (arr != null) //si assicura di cercare solo se esiste quache libro
                     for (Object o : (ArrayList<Object>) arr) {
                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if(map.get("isbn").equals(bookRequested)){
-                            BookModel oldBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), true);
+                        if (map.get("isbn").equals(isbn)) {
+                            BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), true);
 
                             //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
-                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(oldBook));
-                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayUnion(newBook));
+                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(oldBook));
+                            db.collection("users").document(userID).update("books", FieldValue.arrayUnion(newBook));
                         }
                     }
             }
         });
     }
 
-    void deleteCurrentUserReqBook(String bookRequested){
-        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+    void deleteUserBook(String userID, String bookRequested) {
+        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Object arr = task.getResult().get("books"); //array dei books
                 if (arr != null) //si assicura di cercare solo se esiste quache libro
                     for (Object o : (ArrayList<Object>) arr) {
                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if(map.get("isbn").equals(bookRequested)) {
-                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(map));
+                        if (map.get("isbn").equals(bookRequested)) {
+                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(map));
                         }
                     }
             }
@@ -297,7 +314,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             Date date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate();
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            String dateString = "Data di restituzione:\n"+sdf.format(date);
+            String dateString = "Data di restituzione:\n" + sdf.format(date);
 
             returnDate.setText(dateString);
             returnDate.setVisibility(View.VISIBLE);
