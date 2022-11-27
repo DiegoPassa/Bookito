@@ -13,8 +13,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -23,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
+import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
@@ -33,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
     private StorageReference storageRef;
@@ -146,7 +144,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
 
         TextView infoRequest = view.findViewById(R.id.info_request);
         TextView feedback = view.findViewById(R.id.feedback);
-        TextView reportUser = view.findViewById(R.id.report_user);
+        TextView closeRequest = view.findViewById(R.id.close_request);
         TextView cancelRequest = view.findViewById(R.id.cancel_request);
 
         title.setText("Cosa vuoi fare?");
@@ -161,9 +159,37 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             dialog.dismiss();
         });
 
+        closeRequest.setOnClickListener(view1 -> {
+            if(!(requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel)) {
+
+                if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
+                    Toast.makeText(context, "Scambio da implementare", Toast.LENGTH_LONG).show();
+                    //scambio non ho i permessi per cancellare anche quello dell'altro utente
+                    //deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
+                }else {
+                    //cambia lo status della richiesta
+                    db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+
+                    //cancella il libro regalato
+                    deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
+
+                    Toast.makeText(context, "Richiesta conclusa, libro cancellato dalla libreria!", Toast.LENGTH_LONG).show();
+                    requests.remove(holder.getAdapterPosition());
+                    notifyItemRemoved(holder.getAdapterPosition());
+                }
+
+            }else{
+                //richiesta di scambio, visualizzare pagina per recensione
+                Toast.makeText(context, "Prestito da implementare", Toast.LENGTH_LONG).show();
+            }
+
+            dialog.dismiss();
+
+
+        });
+
 
         cancelRequest.setOnClickListener(view1 -> {
-            //TODO: visualizzare la pagina per mettere la recensione
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler annullare la richiesta di <br><b>" + requests.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
@@ -173,7 +199,7 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                     changeBookStatus(requests.get(holder.getAdapterPosition()).getRequestedBook());
 
 
-                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).delete();
+                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "cancelled");
 
                 Toast.makeText(context, "Richiesta annullata!", Toast.LENGTH_LONG).show();
 
@@ -203,6 +229,21 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
                             //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
                             db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(oldBook));
                             db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayUnion(newBook));
+                        }
+                    }
+            }
+        });
+    }
+
+    void deleteCurrentUserReqBook(String bookRequested){
+        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Object arr = task.getResult().get("books"); //array dei books
+                if (arr != null) //si assicura di cercare solo se esiste quache libro
+                    for (Object o : (ArrayList<Object>) arr) {
+                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                        if(map.get("isbn").equals(bookRequested)) {
+                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(map));
                         }
                     }
             }

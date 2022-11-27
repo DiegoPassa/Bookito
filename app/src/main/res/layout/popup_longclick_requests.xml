@@ -52,21 +52,21 @@
                 android:clickable="true"
                 android:gravity="left|center_vertical"
                 android:paddingHorizontal="32dp"
-                android:text="Recensione (richiesta conclusa)"
+                android:text="Recensione"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/info_request" />
 
             <TextView
-                android:id="@+id/report_user"
+                android:id="@+id/close_request"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:clickable="true"
                 android:gravity="left|center_vertical"
-                android:visibility="gone"
+
                 android:paddingHorizontal="32dp"
-                android:text="Segnala utente"
+                android:text="Segna come conclusa"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/report_user" />
+                app:layout_constraintTop_toBottomOf="@id/close_request" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
