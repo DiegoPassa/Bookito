@@ -71,7 +71,9 @@ public class ChatFragment extends Fragment {
         adapter = new Chat_RecycleViewAdapter(this.getContext(), messages, otherUser, otherUserId, args.getParcelable("otherUserPic"));
 
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        LinearLayoutManager l = new LinearLayoutManager(this.getContext());
+        l.setStackFromEnd(true);
+        recyclerView.setLayoutManager(l);
 
         setUpChatRoom();
 
