@@ -86,8 +86,8 @@ public class ChatFragment extends Fragment {
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String currentTime = sdf.format(now);
 
-                SimpleDateFormat sdf1 = new SimpleDateFormat("hh/MM/yyyy", Locale.getDefault());
-                String currentDate = sdf.format(now);
+                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String currentDate = sdf1.format(now);
 
                 realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, currentTime, currentDate));
                 binding.inputMessage.setText("");

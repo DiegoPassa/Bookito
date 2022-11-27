@@ -69,7 +69,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         holder.messageSent.setText(messages.get(position).getMessage());
 
         if(messages.get(position).getMessageTime() != null)
-            holder.messageSentAt.setText(messages.get(position).getMessageTime());
+            holder.messageSentAt.setText(messages.get(holder.getAdapterPosition()).getMessageTime());
 
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
             ConstraintSet constraintSet = new ConstraintSet();
