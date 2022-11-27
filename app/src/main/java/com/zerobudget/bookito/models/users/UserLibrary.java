@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UserLibrary extends UserModel {
-    private List<BookModel> library;
+    protected List<BookModel> library;
 
     public UserLibrary(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma, Boolean hasPicture, String notificationToken) {
         super(first_name, last_name, telephone, neighborhood, karma, hasPicture, notificationToken);
@@ -18,6 +18,11 @@ public class UserLibrary extends UserModel {
     public UserLibrary(UserModel u, List<BookModel> bookModels) {
         super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getNeighborhood(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
         library = bookModels;
+    }
+
+    public UserLibrary(UserModel u) {
+        super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getNeighborhood(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
+        library = new ArrayList<>();
     }
 
     public UserLibrary() {
@@ -73,8 +78,13 @@ public class UserLibrary extends UserModel {
     public String toString() {
         return "UserLibrary{" +
                 "library=" + library +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", notificationToken='" + notificationToken + '\'' +
+                ", hasPicture=" + hasPicture +
+                ", karma=" + karma +
                 '}';
     }
-
-
 }

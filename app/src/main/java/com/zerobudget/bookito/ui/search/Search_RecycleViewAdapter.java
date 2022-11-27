@@ -29,7 +29,6 @@ import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
-import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
 
         holder.book_selected.setOnClickListener(view -> {
-            createNewSearchPopup(position, holder);
+            createNewSearchPopup(holder);
 
             /*Bundle args = new Bundle();
             String usrBookString = Utils.getGsonParser().toJson(results.get(position));
@@ -88,7 +87,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         });
     }
 
-    private void createNewSearchPopup(int position, ViewHolder holder){
+    private void createNewSearchPopup(ViewHolder holder) {
         dialogBuilder = new MaterialAlertDialogBuilder(context);
         View view = View.inflate(context, R.layout.fragment_request_book, null);
 
@@ -252,12 +251,12 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
                     Log.d("Sent to: ", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
                     try {
-                        Notifications.sendPushNotification(UserModel.getCurrentUser()
-                                .getFirstName() + " ti ha richiesto il libro: " + rm.getTitle(),
+                        Notifications.sendPushNotification(Utils.CURRENT_USER
+                                        .getFirstName() + " ti ha richiesto il libro: " + rm.getTitle(),
                                 "Nuova richiesta",
-                                      results.get(holder.getAdapterPosition())
-                                      .getUser()
-                                      .getNotificationToken());
+                                results.get(holder.getAdapterPosition())
+                                        .getUser()
+                                        .getNotificationToken());
                     } catch(Exception e) {}
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
                 }

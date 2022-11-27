@@ -80,7 +80,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
             constraintSet.connect(R.id.message_sent_at, ConstraintSet.RIGHT, R.id.message_content, ConstraintSet.LEFT, 0);
             constraintSet.applyTo(holder.constraintLayout);
-            loadUserProfilePicture(UserModel.getCurrentUser(), holder, position);
+            loadUserProfilePicture(Utils.CURRENT_USER, holder, position);
             holder.messageSent.setBackgroundResource(R.drawable.message_view);
 
         } else {
@@ -106,7 +106,8 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
     private void loadUserProfilePicture(UserModel user, ViewHolder holder, int position) {
         if (user.isHasPicture()) {
             holder.profileImg.setVisibility(View.VISIBLE);
-            if (user == UserModel.getCurrentUser()) Picasso.get().load(Utils.URI_PIC).into(holder.profileImg);
+            if (user == Utils.CURRENT_USER)
+                Picasso.get().load(Utils.URI_PIC).into(holder.profileImg);
             else Picasso.get().load(otherUserPic).into(holder.profileImg);
 
         } else {

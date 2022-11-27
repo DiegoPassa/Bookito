@@ -15,15 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentConfirmAddBinding;
 import com.zerobudget.bookito.models.book.BookModel;
-import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 
@@ -110,17 +107,8 @@ public class AddConfirmFragment extends Fragment {
      */
     private void addBook() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
-        //if (currentUser != null) {
-        //   String id = currentUser.getUid();
         db.collection("users").document(Utils.USER_ID)
-                .update("books", FieldValue.arrayUnion(newBook.serialize())).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (UserModel.getCurrentUser() != null)
-                            UserModel.getCurrentUser().appendBook(newBook);
-                    }
-                });
+                .update("books", FieldValue.arrayUnion(newBook.serialize()));
         // }
     }
 }

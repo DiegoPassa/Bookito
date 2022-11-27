@@ -5,12 +5,14 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.zerobudget.bookito.models.users.UserLibrary;
 
 public class Utils {
     //contiene metodi statici per funzionalità
     private static Gson gson;
 
     public static String USER_ID;
+    public static UserLibrary CURRENT_USER = new UserLibrary();
 
     public static String URI_PIC = "";
 

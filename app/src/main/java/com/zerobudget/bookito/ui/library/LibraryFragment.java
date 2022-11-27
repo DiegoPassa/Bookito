@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public class LibraryFragment extends Fragment {
 
-    ArrayList<BookModel> bookModels = new ArrayList<>();
+    // ArrayList<BookModel> bookModels = new ArrayList<>();
     private FragmentLibraryBinding binding;
     private FirebaseFirestore db;
     private RecyclerView recyclerView;
@@ -50,14 +50,22 @@ public class LibraryFragment extends Fragment {
                 });
     }
 
+    public void getBooksFromDB() {
+        db.collection("users").document(Utils.USER_ID)
+                .get().addOnSuccessListener(documentSnapshot -> {
+                    loadLibrary(documentSnapshot.get("books"));
+                });
+    }
+
     private void loadLibrary(Object books) {
         spinner.setVisibility(View.VISIBLE);
-        bookModels.clear();
+        Utils.CURRENT_USER.getLibrary().clear();
         for (Object o : (ArrayList<Object>) books) {
             HashMap<String, Object> map = (HashMap<String, Object>) o;
             BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-            bookModels.add(tmp);//aggiunge il bookmodel tmp all'array list
+            Utils.CURRENT_USER.getLibrary().add(tmp);//aggiunge il bookmodel tmp all'array list
         }
+        Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
         spinner.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
     }
@@ -77,19 +85,22 @@ public class LibraryFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         // setUpBookModel();
-        adapter = new Book_RecycleViewAdapter(this.getContext(), bookModels);
+        adapter = new Book_RecycleViewAdapter(this.getContext(), (ArrayList<BookModel>) Utils.CURRENT_USER.getLibrary());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
 
-        getLibraryRealtime();
+        // getLibraryRealtime();
+
+        getBooksFromDB();
 
         binding.floatingActionButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
-            getLibraryRealtime();
+            // getLibraryRealtime();
+            getBooksFromDB();
         });
 
         binding.recycleViewMyLibrary.addOnScrollListener(new RecyclerView.OnScrollListener() {

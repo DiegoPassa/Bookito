@@ -33,12 +33,9 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.login.LoginActivity;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,34 +69,6 @@ public class MainActivity extends AppCompatActivity {
         Utils.setUserId(currentUser.getUid());
 
         initFirebaseMessaging();
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.topAppBar);
-
-        binding.topAppBar.setNavigationOnClickListener(view -> {
-            onBackPressed();
-        });
-
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
-                .build();
-        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
-
-        navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
-                navView.setVisibility(View.GONE);
-            } else {
-                navView.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     private void initFirebaseMessaging() {
@@ -113,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             db.collection("users").document(Utils.USER_ID).update("notificationToken", token).addOnSuccessListener(task1 -> {
                 getQueryCurrentUser();
             });
-            System.out.println(token);
+            Log.d("TOKEN GENERATO!!", "initFirebaseMessaging: " + token);
 
         });
     }
@@ -194,21 +163,40 @@ public class MainActivity extends AppCompatActivity {
         // FirebaseUser currentUser = mAuth.getCurrentUser();
         //TODO aspettiamo la registrazione ed il login
         //String id = currentUser.getUid();
-        AtomicReference<UserModel> userModel = new AtomicReference<>(new UserModel());
-        AtomicReference<UserLibrary> userLibrary = new AtomicReference<>(new UserLibrary());
 
         // get user
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
             if (task.getResult() != null) {
-                System.out.println(task.getResult().toString());
                 // initialize user
-                userModel.set(task.getResult().toObject(UserModel.class));
-                // get user library
-                db.collection("users").document(Utils.USER_ID).collection("library").get().addOnCompleteListener(task1 -> {
-                    // initialize user's library
-                    userLibrary.set(new UserLibrary(userModel.get(), task1.getResult().toObjects(BookModel.class)));
-                    UserModel.setCurrentUser(userLibrary.get());
-                    Log.d("USER PRIMAAAAA AHAH", userLibrary.toString());
+                Utils.CURRENT_USER = new UserLibrary(task.getResult().toObject(UserModel.class));
+                Log.d("UTENTE CREATO!!", "getQueryCurrentUser: " + Utils.CURRENT_USER);
+
+                binding = ActivityMainBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+
+                setSupportActionBar(binding.topAppBar);
+
+                binding.topAppBar.setNavigationOnClickListener(view -> {
+                    onBackPressed();
+                });
+
+                BottomNavigationView navView = findViewById(R.id.nav_view);
+                // Passing each menu ID as a set of Ids because each
+                // menu should be considered as top level destinations.
+                appBarConfiguration = new AppBarConfiguration.Builder(
+                        R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
+                        .build();
+                MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+                NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+                NavigationUI.setupWithNavController(binding.navView, navController);
+
+                navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
+                    if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
+                        navView.setVisibility(View.GONE);
+                    } else {
+                        navView.setVisibility(View.VISIBLE);
+                    }
                 });
 
                 getUriPic();

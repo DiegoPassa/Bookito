@@ -4,17 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserModel {
-    private String firstName;
-    private String lastName;
-    private String telephone;
-    private String neighborhood;
+    protected String firstName;
+    protected String lastName;
+    protected String telephone;
+    protected String neighborhood;
     //private String id; id utente facilmente ottenibile con FirebaseAuth.getInstance().getCurrentUser().getId()
-    private static UserLibrary currentUser; //modello dell'utente attuale
-    private String notificationToken;
-
-    private boolean hasPicture = false;
-
-    private HashMap<String, Object> karma;
+    protected String notificationToken;
+    protected boolean hasPicture = false;
+    protected HashMap<String, Object> karma;
 
     public UserModel() {
     }
@@ -28,17 +25,6 @@ public class UserModel {
         this.hasPicture = hasPicture;
         this.notificationToken = notificationToken;
     }
-
-    public static void loadUser(UserModel user) {
-
-        UserModel.currentUser = (UserLibrary) user;
-
-    }
-
-    public static UserLibrary getCurrentUser() {
-        return currentUser;
-    }
-
 /*    public static UserModel getUserFromDocument(DocumentSnapshot result) {
         UserModel u = new UserModel();
 
@@ -63,10 +49,6 @@ public class UserModel {
 
         return (HashMap<String, Object>) doc.get("karma");
     }*/
-
-    public static void setCurrentUser(UserLibrary currentUser) {
-        UserModel.currentUser = currentUser;
-    }
 
     public Map<String, Object> serialize() {
         HashMap<String, Object> user = new HashMap<>();

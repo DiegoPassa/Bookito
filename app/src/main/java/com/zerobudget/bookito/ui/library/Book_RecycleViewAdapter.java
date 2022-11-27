@@ -136,8 +136,8 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 });
 
                 Toast.makeText(context, bookModels.get(holder.getAdapterPosition()).getTitle() + " eliminato!", Toast.LENGTH_LONG).show();
-                // bookModels.remove(holder.getAdapterPosition());
-                // notifyItemRemoved(holder.getAdapterPosition());
+                bookModels.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
                 dialogInterface.dismiss();
             }).setNegativeButton("NO",  (dialogInterface, i) -> {
                 dialogInterface.dismiss();

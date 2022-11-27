@@ -74,7 +74,7 @@ public class UserProfileFragment extends Fragment {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        user = UserModel.getCurrentUser();
+        user = Utils.CURRENT_USER;
 
         Log.d("Sent to: ", user.getNotificationToken());
         Notifications.sendPushNotification("profilo di " + user.getFirstName() + " " + user.getLastName() + "\ntoken: " + user.getNotificationToken(), user.getTelephone(), user.getNotificationToken());
