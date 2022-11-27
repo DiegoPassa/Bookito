@@ -177,12 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.logout:
                 // TODO: Logout utente
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "Disconnessione...", Toast.LENGTH_SHORT).show();
-                removeToken();
-                finish();
+                removeTokenAndLogout();
                 break;
             default:
                 NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -195,9 +190,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void removeToken() {
+    protected void removeTokenAndLogout() {
         db.collection("users").document(Utils.USER_ID)
-                .update("notificationToken", "");
+                .update("notificationToken", "").addOnSuccessListener(unused -> {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(getApplicationContext(), "Disconnessione...", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
     }
 
     private void getUriPic() {
