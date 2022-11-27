@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -32,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
     private StorageReference storageRef;
@@ -160,33 +162,55 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         });
 
         closeRequest.setOnClickListener(view1 -> {
-            if(!(requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel)) {
-
-                if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
-                    Toast.makeText(context, "Scambio da implementare", Toast.LENGTH_LONG).show();
-                    //scambio non ho i permessi per cancellare anche quello dell'altro utente
-                    //deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
-                }else {
-                    //cambia lo status della richiesta
-                    db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
-
-                    //cancella il libro regalato
-                    deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
-
-                    Toast.makeText(context, "Richiesta conclusa, libro cancellato dalla libreria!", Toast.LENGTH_LONG).show();
-                    requests.remove(holder.getAdapterPosition());
-                    notifyItemRemoved(holder.getAdapterPosition());
-                }
-
-            }else{
-                //richiesta di scambio, visualizzare pagina per recensione
-                Toast.makeText(context, "Prestito da implementare", Toast.LENGTH_LONG).show();
-            }
-
             dialog.dismiss();
 
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+            builder.setTitle("Conferma");
+            builder.setMessage(Html.fromHtml("Sei sicuro di voler segnare la richiesta di <br><b>" + requests.get(holder.getAdapterPosition()).getTitle() + "</b> come conlusa?", Html.FROM_HTML_MODE_LEGACY));
+            builder.setPositiveButton("SI", (dialogInterface, i) -> {
+                if(!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
+                    //la richiesta è segnata come conclusa
+                    //db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+                    if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+                        Toast.makeText(context, "Scambio da implementare", Toast.LENGTH_LONG).show();
+                        //scambio non ho i permessi per cancellare anche quello dell'altro utente
+                        //deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
+                    }else {
+                        //cambia lo status della richiesta
+                        db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
 
+                        //cancella il libro regalato
+                        deleteCurrentUserReqBook(requests.get(holder.getAdapterPosition()).getRequestedBook());
+
+                        Toast.makeText(context, "Richiesta conclusa, libro cancellato dalla libreria!", Toast.LENGTH_LONG).show();
+                        requests.remove(holder.getAdapterPosition());
+                        notifyItemRemoved(holder.getAdapterPosition());
+                    }
+
+                }else{
+                    //richiesta di prestito, visualizzare pagina per recensione
+                    Date now = Timestamp.now().toDate();
+
+                    if(now.compareTo(((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate()) < 0)
+                        Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
+                    else {
+                        //TODO: recensione!
+                        //cambia lo stato del libro
+                        changeBookStatus(requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        //segna la richiesta come conlusa
+                        db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+                        Toast.makeText(context, "Prestito concluso, il libro è nuovamente disponibile nella libreria!", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                dialogInterface.dismiss();
+            }).setNegativeButton("NO",  (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            }).show();
+
+           // dialog.dismiss();
         });
+
 
 
         cancelRequest.setOnClickListener(view1 -> {
@@ -195,9 +219,9 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
             builder.setMessage(Html.fromHtml("Sei sicuro di voler annullare la richiesta di <br><b>" + requests.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
             builder.setPositiveButton("SI", (dialogInterface, i) -> {
                 //torna disponibile perchè è un prestito, altrimenti no
-                if(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
-                    changeBookStatus(requests.get(holder.getAdapterPosition()).getRequestedBook());
-
+                //if(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
+                changeBookStatus(requests.get(holder.getAdapterPosition()).getRequestedBook());
+                //TODO in caso di scambio rendere disponibile anche il libro dell'altro, non ci sono i permessi per farlo, trovare un altro modo
 
                 db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "cancelled");
 
