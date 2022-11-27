@@ -166,6 +166,28 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
 
         title.setText("Cosa vuoi fare?");
 
+        confirmBookGiven.setOnClickListener(view1 -> {
+            if (request.getStatus().equals("ongoing")) return;
+
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+            builder.setTitle("Conferma");
+            builder.setMessage(Html.fromHtml("Sei sicuro di voler confermare l'inizio del prestito di <br><b>" + request.getTitle() + "</b>", Html.FROM_HTML_MODE_LEGACY));
+            builder.setPositiveButton("SI", (dialogInterface, i) -> {
+                db.collection("requests").document(request.getrequestId()).update("status", "ongoing").addOnSuccessListener(task -> {
+                    request.setStatus("ongoing");
+                });
+                dialogInterface.dismiss();
+                dialog.dismiss();
+            });
+            builder.setNegativeButton("NO", (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            });
+
+            builder.show();
+
+        });
+
+
         infoRequest.setOnClickListener(view1 -> {
             createNewContactDialog(holder);
         });
