@@ -41,19 +41,17 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
     private StorageReference storageRef;
 
     private AppBarConfiguration appBarConfiguration;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("STO_CREANDO", "AHHAHAHAHAHAHAHAH STO CREANDOOOOO");
         super.onCreate(savedInstanceState);
-//
+        Log.d("STO_CREANDO", "AHHAHAHAHAHAHAHAH STO CREANDOOOOO");
+
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
@@ -68,22 +66,66 @@ public class MainActivity extends AppCompatActivity {
 
         Utils.setUserId(currentUser.getUid());
 
-        initFirebaseMessaging();
+        updateNotificationToken();
     }
 
-    private void initFirebaseMessaging() {
+    private void updateNotificationToken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                return;
+            if (task.isSuccessful()) {
+                // Get new FCM registration token
+                String token = task.getResult();
+                db.collection("users").document(Utils.USER_ID).update("notificationToken", token).addOnSuccessListener(task1 -> {
+                    getCurrentUserFromDB();
+                });
+                Log.d("TOKEN GENERATO!!", "TOKEN: " + token);
+            } else {
+                Log.e("TOKEN ERROR", "updateNotificationToken: ", task.getException());
             }
-            // Get new FCM registration token
-            String token = task.getResult();
+        });
+    }
 
-            db.collection("users").document(Utils.USER_ID).update("notificationToken", token).addOnSuccessListener(task1 -> {
-                getQueryCurrentUser();
-            });
-            Log.d("TOKEN GENERATO!!", "initFirebaseMessaging: " + token);
+    private void getCurrentUserFromDB() {
+        // get user
+        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+            if (task.getResult() != null) {
+                // initialize user
+                Utils.CURRENT_USER = new UserLibrary(task.getResult().toObject(UserModel.class));
+                Log.d("UTENTE CREATO!!", "getQueryCurrentUser: " + Utils.CURRENT_USER);
+                if (Utils.CURRENT_USER.isHasPicture()) {
+                    getUriPic();
+                }
+                mainActivitySetup();
+            }
+        });
+    }
 
+    private void mainActivitySetup() {
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.topAppBar);
+
+        binding.topAppBar.setNavigationOnClickListener(view -> {
+            onBackPressed();
+        });
+
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
+                .build();
+        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
+
+        navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
+            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
+                navView.setVisibility(View.GONE);
+            } else {
+                navView.setVisibility(View.VISIBLE);
+            }
         });
     }
 
@@ -158,55 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 .update("notificationToken", "");
     }
 
-
-    protected void getQueryCurrentUser() {
-        // FirebaseUser currentUser = mAuth.getCurrentUser();
-        //TODO aspettiamo la registrazione ed il login
-        //String id = currentUser.getUid();
-
-        // get user
-        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
-            if (task.getResult() != null) {
-                // initialize user
-                Utils.CURRENT_USER = new UserLibrary(task.getResult().toObject(UserModel.class));
-                Log.d("UTENTE CREATO!!", "getQueryCurrentUser: " + Utils.CURRENT_USER);
-
-                binding = ActivityMainBinding.inflate(getLayoutInflater());
-                setContentView(binding.getRoot());
-
-                setSupportActionBar(binding.topAppBar);
-
-                binding.topAppBar.setNavigationOnClickListener(view -> {
-                    onBackPressed();
-                });
-
-                BottomNavigationView navView = findViewById(R.id.nav_view);
-                // Passing each menu ID as a set of Ids because each
-                // menu should be considered as top level destinations.
-                appBarConfiguration = new AppBarConfiguration.Builder(
-                        R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
-                        .build();
-                MaterialToolbar toolbar = findViewById(R.id.topAppBar);
-                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-                NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-                NavigationUI.setupWithNavController(binding.navView, navController);
-
-                navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-                    if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
-                        navView.setVisibility(View.GONE);
-                    } else {
-                        navView.setVisibility(View.VISIBLE);
-                    }
-                });
-
-                getUriPic();
-            }
-        });
-    }
-
     private void getUriPic() {
         StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
-
         load.getDownloadUrl().addOnSuccessListener(uri -> {
             Utils.setUriPic(uri.toString());
             Log.d("PIC", Utils.URI_PIC);
@@ -214,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
             int code = ((StorageException) exception).getErrorCode();
             if (code == StorageException.ERROR_OBJECT_NOT_FOUND)
                 Log.d("ERR", "L'immagine non esiste");
-
         });
     }
 
