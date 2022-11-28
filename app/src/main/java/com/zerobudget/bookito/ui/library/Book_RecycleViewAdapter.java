@@ -42,12 +42,15 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
+    private TextView emptyWarning;
+
     FirebaseFirestore db;
     FirebaseAuth auth;
 
-    public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels) {
+    public Book_RecycleViewAdapter(Context context, ArrayList<BookModel> bookModels, TextView emptyWarning) {
         this.context = context;
         this.bookModels = bookModels;
+        this.emptyWarning = emptyWarning;
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -66,9 +69,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     @Override
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
-
-        // Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 2, 2)).into(holder.thumbnail);
-
 
         if (bookModels.get(holder.getAdapterPosition()).getStatus()) {
             holder.wait_icon.setVisibility(View.GONE);
@@ -145,6 +145,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 Toast.makeText(context, bookModels.get(holder.getAdapterPosition()).getTitle() + " eliminato!", Toast.LENGTH_LONG).show();
                 bookModels.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
+                Utils.toggleEmptyWarning(emptyWarning, Utils.CURRENT_USER.getLibrary().size());
                 dialogInterface.dismiss();
             }).setNegativeButton("NO",  (dialogInterface, i) -> {
                 dialogInterface.dismiss();

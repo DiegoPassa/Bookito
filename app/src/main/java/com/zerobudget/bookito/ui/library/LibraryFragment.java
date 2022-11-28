@@ -50,6 +50,7 @@ public class LibraryFragment extends Fragment {
         Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
         spinner.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
+        Utils.toggleEmptyWarning(binding.emptyLibrary, Utils.CURRENT_USER.getLibrary().size());
     }
 
 
@@ -67,7 +68,7 @@ public class LibraryFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         // setUpBookModel();
-        adapter = new Book_RecycleViewAdapter(this.getContext(), (ArrayList<BookModel>) Utils.CURRENT_USER.getLibrary());
+        adapter = new Book_RecycleViewAdapter(this.getContext(), (ArrayList<BookModel>) Utils.CURRENT_USER.getLibrary(), binding.emptyLibrary);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));

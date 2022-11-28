@@ -85,14 +85,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent=".25" />
+                        app:layout_constraintGuide_percent=".33" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent=".75" />
+                        app:layout_constraintGuide_percent=".66" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

@@ -36,4 +36,5 @@
     <string name="non_sei_ancora_registrato">Non sei ancora registrato?</string>
     <string name="crea_utente">Crea utente!</string>
     <string name="bookito_logo">bookito_logo</string>
+    <string name="emptyLibrary">La tua libreria è vuota…\n\nPremi il pulsante qui sotto per cominciare ad aggiungere libri!</string>
 </resources>

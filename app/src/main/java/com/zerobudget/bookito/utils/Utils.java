@@ -57,6 +57,14 @@ public class Utils {
         }
     }
 
+    public static void toggleEmptyWarning(TextView empty, int size) {
+        if (size == 0) {
+            empty.setVisibility(View.VISIBLE);
+        } else {
+            empty.setVisibility(View.GONE);
+        }
+    }
+
     public static boolean isAValidISBN(long isbn) {
         return getSum(isbn) % 10 == 0;
     }
