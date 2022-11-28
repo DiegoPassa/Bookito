@@ -3,6 +3,7 @@ package com.zerobudget.bookito.ui.Chat;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModel;
+import com.zerobudget.bookito.models.Chat.MessageModelTrade;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
@@ -68,6 +70,15 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.messageSent.setText(messages.get(position).getMessage());
 
+        //se è uno scambio viene mandato un messaggio di default con il libro scelto
+        if(messages.get(position) instanceof MessageModelTrade) {
+            Log.d("AAA", "soadpsifasd");
+            holder.book_thumbnail.setVisibility(View.VISIBLE);
+            Picasso.get().load(((MessageModelTrade) messages.get(position)).getThumbnailBookTrade()).into(holder.book_thumbnail);
+        }else{
+            holder.book_thumbnail.setVisibility(View.GONE);
+        }
+
         if(messages.get(position).getMessageTime() != null)
             holder.messageSentAt.setText(messages.get(holder.getAdapterPosition()).getMessageTime());
 
@@ -78,6 +89,8 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.clear(R.id.message_content, ConstraintSet.LEFT);
             constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.RIGHT, R.id.chat_layout, ConstraintSet.RIGHT, 0);
             constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
+            constraintSet.connect(R.id.book_thumbnail, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
+
             constraintSet.connect(R.id.message_sent_at, ConstraintSet.RIGHT, R.id.message_content, ConstraintSet.LEFT, 0);
             constraintSet.applyTo(holder.constraintLayout);
             loadUserProfilePicture(Utils.CURRENT_USER, holder, position);
@@ -90,6 +103,8 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.clear(R.id.message_content, ConstraintSet.RIGHT);
             constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.LEFT, R.id.chat_layout, ConstraintSet.LEFT, 0);
             constraintSet.connect(R.id.message_content, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
+            constraintSet.connect(R.id.book_thumbnail, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
+
             constraintSet.connect(R.id.message_sent_at, ConstraintSet.LEFT, R.id.message_content, ConstraintSet.RIGHT, 0);
             constraintSet.applyTo(holder.constraintLayout);
             holder.messageSent.setBackgroundResource(R.drawable.enemy_message);
@@ -129,6 +144,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         protected ImageView profileImg;
         protected ClassicIdenticonView gravatarImg;
         protected TextView messageSentAt;
+        protected ImageView book_thumbnail;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -138,7 +154,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             profileImg = itemView.findViewById(R.id.small_profile_img);
             gravatarImg = itemView.findViewById(R.id.gravater_pic);
             messageSentAt = itemView.findViewById(R.id.message_sent_at);
-
+            book_thumbnail = itemView.findViewById(R.id.book_thumbnail);
         }
     }
 

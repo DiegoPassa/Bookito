@@ -50,6 +50,17 @@
             android:padding="8dp"
             tools:text="@string/lorem_ipsum_long" />
 
+        <ImageView
+            android:id="@+id/book_thumbnail"
+            android:layout_width="167dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:layout_constraintDimensionRatio="h,1:1.4375"
+            app:layout_constraintTop_toBottomOf="@id/message_content"
+            android:padding="8dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
         <TextView
             android:id="@+id/message_sent_at"
             android:textColor="?colorPrimary"

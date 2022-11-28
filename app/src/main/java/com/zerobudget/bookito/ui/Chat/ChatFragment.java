@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.databinding.ChatFragmentBinding;
 import com.zerobudget.bookito.models.Chat.MessageModel;
+import com.zerobudget.bookito.models.Chat.MessageModelTrade;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
@@ -106,13 +107,24 @@ public class ChatFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")){
 
-                        MessageModel msg = new MessageModel();
+
+                        MessageModel msg;
+
+                        if(dataSnapshot.hasChild("isbnBookTrade")){
+                            msg = new MessageModelTrade();
+                            ((MessageModelTrade) msg).setIsbnBookTrade(dataSnapshot.child("isbnBookTrade").getValue(String.class));
+                            ((MessageModelTrade) msg).setThumbnailBookTrade(dataSnapshot.child("thumbnailBookTrade").getValue(String.class));
+                        }else{
+                            msg = new MessageModel();
+                        }
+
                         msg.setMessage(dataSnapshot.child("message").getValue(String.class));
                         msg.setSender(dataSnapshot.child("sender").getValue(String.class));
                         msg.setReceiver(dataSnapshot.child("receiver").getValue(String.class));
                         //il timestamp dava problemi brutti perché non ha un costruttore senza argomenti
                         msg.setMessageTime(dataSnapshot.child("messageTime").getValue(String.class));
                         msg.setMessageDate(dataSnapshot.child("messageDate").getValue(String.class));
+
                         //messages.add(dataSnapshot.getValue(MessageModel.class));
                         messages.add(msg);
                     }

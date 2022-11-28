@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -27,13 +28,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.models.Chat.MessageModel;
+import com.zerobudget.bookito.models.Chat.MessageModelTrade;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.ui.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade_RecycleViewAdapter.ViewHolder> {
 
@@ -141,7 +147,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
         tradeBtn.setOnClickListener(view1 -> {
             if (exists) { //controlla che la richiesta esista ancora
-                acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook().getIsbn());
+                acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook());
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
             } else {
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
@@ -160,7 +166,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         dialog.show();
     }
 
-    protected void acceptRequest(RequestTradeModel r, String isbnTradeBk) {
+    protected void acceptRequest(RequestTradeModel r, BookModel bookTrade) {
         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
         db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -172,13 +178,25 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                     ref.child("user2").setValue(r.getSender());
                 else ref.child("user2").setValue(Utils.USER_ID);
 
+                Date now = Timestamp.now().toDate();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                String currentTime = sdf.format(now);
+                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String currentDate = sdf1.format(now);
+
+                String messageTxt = "Ho scelto il libro '"+bookTrade.getTitle()+"' per lo scambio!";
+                MessageModelTrade msgT = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, currentTime, currentDate);
+
+                ref.push().setValue(msgT);
+
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
                 changeBookStatus(Utils.USER_ID, r.getRequestedBook());
-                changeBookStatus(r.getSender(), isbnTradeBk);
+                changeBookStatus(r.getSender(), bookTrade.getIsbn());
             }else
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
         });
-        db.collection("requests").document(r.getrequestId()).update("requestTradeBook", isbnTradeBk);
+        db.collection("requests").document(r.getrequestId()).update("requestTradeBook", bookTrade.getIsbn());
     }
 
     private void checkIfStillExists(RequestTradeModel r) {
