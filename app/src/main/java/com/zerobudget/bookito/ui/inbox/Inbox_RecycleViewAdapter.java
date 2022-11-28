@@ -95,7 +95,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //TODO GET MORE INFORMATION ABOUT THE REQUESTER (HIS NAME INSTEAD OF HIS ID)
         UserModel senderModel = requests.get(holder.getAdapterPosition()).getOtherUser();
         String idSender = requests.get(holder.getAdapterPosition()).getSender();
 

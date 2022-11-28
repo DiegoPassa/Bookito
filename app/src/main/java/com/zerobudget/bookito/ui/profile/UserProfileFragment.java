@@ -105,7 +105,6 @@ public class UserProfileFragment extends Fragment {
                 binding.editNeighborhood.setError("Seleziona un nuovo quartiere!");
                 binding.editNeighborhood.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
             } else {
-                //TODO: cambia id con current user
                 db.collection("users").document(Utils.USER_ID).update("neighborhood", new_neighborhood).addOnSuccessListener(unused -> {
                     user.setNeighborhood(new_neighborhood);
                     //aggiorna la pagina

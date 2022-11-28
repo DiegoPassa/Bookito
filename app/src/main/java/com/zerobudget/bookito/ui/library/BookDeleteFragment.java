@@ -46,10 +46,6 @@ public class BookDeleteFragment extends Fragment {
         String str = args.getString("BK");
         bookSelected = Utils.getGsonParser().fromJson(str, BookModel.class);
 
-        //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato
-        //if (currentUser != null) {
-        //   String id = currentUser.getUid();
-
         binding.bookTitle.setText(bookSelected.getTitle());
         binding.bookAuthor.setText(bookSelected.getAuthor());
         binding.bookDescription.setText(bookSelected.getDescription());

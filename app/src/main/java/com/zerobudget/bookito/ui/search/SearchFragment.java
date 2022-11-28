@@ -31,7 +31,6 @@ public class SearchFragment extends Fragment {
 
     private boolean showedAll = false;
 
-    //TODO: cercare nel quartire del current user
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();

@@ -70,11 +70,6 @@ public class BookRequestFragment extends Fragment {
         }
 
         binding.btnRequest.setOnClickListener(view -> {
-
-            //TODO: in attesa dell'autenticazione dell'utente qusto resta commentato, cambiare anche id nei set sotto
-            //if (currentUser != null) {
-            //   String id = currentUser.getUid();
-
             //preleva l'id dell'utente dal database
             db.collection("users").get().addOnCompleteListener(task -> {
                 RequestModel rm = new RequestModel();
@@ -123,7 +118,6 @@ public class BookRequestFragment extends Fragment {
                 boolean err = false;
 
                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                    //TODO: aggiungere un flag nel libro per impedire la visualizzazione nelle ricerche se esiste già una richiesta
                     //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
                     if (checkRequests(doc, rm))
                         err = true;

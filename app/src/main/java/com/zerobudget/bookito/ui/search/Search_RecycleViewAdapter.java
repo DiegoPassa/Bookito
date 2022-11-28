@@ -222,7 +222,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             if (task.isSuccessful()) {
 
                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                    //TODO: aggiungere un flag nel libro per impedire la visualizzazione nelle ricerche se esiste già una richiesta
                     //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
                     if (checkRequests(doc, rm)) {
                         err = true;

@@ -14,6 +14,7 @@
     <string name="profile">Profile</string>
     <string name="vedi_profilo">Vedi profilo</string>
     <string name="disconnetti">Disconnetti</string>
+
     <string-array name="quartieri">
         <item>Venezia</item>
         <item>Mestre</item>
@@ -21,13 +22,13 @@
         <item>Favaro</item>
         <item>Marghera</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string-array name="azioni_libro">
         <item>Regalo</item>
         <item>Prestito</item>
         <item>Scambio</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="vedi_notifiche">Vedi notifiche</string>
     <string name="numero_di_telefono">Numero di telefono</string>

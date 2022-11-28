@@ -19,11 +19,6 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 public class LoginActivity extends AppCompatActivity {
-    //TODO aggiungere le stringhe hardcoded dal XML al file strings.xml
-    //TODO grammar check per gli errori.
-    //TODO Update UI + bugfixing
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

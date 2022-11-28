@@ -33,8 +33,6 @@
 
             </SearchView>-->
 
-            <!--TODO: mettere questo pulsante come freccia nella toolbar se possibile-->
-
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"

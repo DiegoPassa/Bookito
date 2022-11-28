@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_baseline_local_library_24"
         android:title="@string/title_library"/>
 
-<!-- TODO: rimuovere item non necessario
+<!--
     <item
         android:id="@+id/navigation_insertNew"
         android:icon="@drawable/ic_baseline_add_24"
