@@ -67,10 +67,15 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
 
+        // Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 2, 2)).into(holder.thumbnail);
+
+
         if (bookModels.get(holder.getAdapterPosition()).getStatus()) {
+            holder.wait_icon.setVisibility(View.GONE);
             Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
         } else {
-            Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context)).into(holder.thumbnail);
+            Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(holder.thumbnail);
+            holder.wait_icon.setVisibility(View.VISIBLE);
         }
 
         holder.author.setText(bookModels.get(position).getAuthor());
@@ -167,6 +172,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         private final TextView owner;
         private final ImageView bookmark;
         private final ImageView bookmark_outline;
+        private final ImageView wait_icon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -177,6 +183,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             book_selected = itemView.findViewById(R.id.book);
             bookmark = itemView.findViewById(R.id.bookmark);
             bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
+            wait_icon = itemView.findViewById(R.id.wait_icon);
         }
     }
 

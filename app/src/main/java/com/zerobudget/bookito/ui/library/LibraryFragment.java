@@ -1,7 +1,5 @@
 package com.zerobudget.bookito.ui.library;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,22 +31,6 @@ public class LibraryFragment extends Fragment {
     private Book_RecycleViewAdapter adapter;
 
     private ProgressBar spinner;
-
-    public void getLibraryRealtime() {
-        db.collection("users").document(Utils.USER_ID)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e(TAG, "onEvent: ", error);
-                        return;
-                    }
-                    if (value != null) {
-                        Log.d(TAG, "onEvent: " + value.get("books"));
-                        loadLibrary(value.get("books"));
-                    } else {
-                        Log.e(TAG, "onEvent: NULL");
-                    }
-                });
-    }
 
     public void getBooksFromDB() {
         db.collection("users").document(Utils.USER_ID)
