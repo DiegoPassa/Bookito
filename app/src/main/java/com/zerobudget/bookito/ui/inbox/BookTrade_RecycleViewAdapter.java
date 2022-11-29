@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
+import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.ui.search.SearchResultsModel;
@@ -185,10 +186,15 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String currentDate = sdf1.format(now);
 
-                String messageTxt = "Ho scelto il libro '"+bookTrade.getTitle()+"' per lo scambio!";
-                MessageModelTrade msgT = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, currentTime, currentDate);
+                //messaggio di default da sender a receiver che viene inviato con il libro della richiesta
+                String messageTxtSender = "Ciao, ti contatto per il tuo libro '"+r.getTitle()+"'!";
+                MessageModelWithImage defaultMsgSender = new MessageModelWithImage(r.getThumbnail(), r.getSender(), Utils.USER_ID, messageTxtSender, currentTime, currentDate);
+                ref.push().setValue(defaultMsgSender);
 
-                ref.push().setValue(msgT);
+                //messaggio di default da receiver a sender inviato con il libro scelto per lo scambio dalla libreria del sender
+                String messageTxt = "Ciao, ho scelto il libro '"+bookTrade.getTitle()+"' da scambiare!";
+                MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, currentTime, currentDate);
+                ref.push().setValue(defaultMsgReceiver);
 
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
                 changeBookStatus(Utils.USER_ID, r.getRequestedBook());

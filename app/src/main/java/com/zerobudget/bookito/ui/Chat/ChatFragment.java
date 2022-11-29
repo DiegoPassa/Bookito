@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.databinding.ChatFragmentBinding;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
+import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
@@ -114,6 +115,9 @@ public class ChatFragment extends Fragment {
                             msg = new MessageModelTrade();
                             ((MessageModelTrade) msg).setIsbnBookTrade(dataSnapshot.child("isbnBookTrade").getValue(String.class));
                             ((MessageModelTrade) msg).setThumbnailBookTrade(dataSnapshot.child("thumbnailBookTrade").getValue(String.class));
+                        }else if(dataSnapshot.hasChild("thumbnailBookRequested")){
+                            msg = new MessageModelWithImage();
+                            ((MessageModelWithImage) msg).setThumbnailBookRequested(dataSnapshot.child("thumbnailBookRequested").getValue(String.class));
                         }else{
                             msg = new MessageModel();
                         }

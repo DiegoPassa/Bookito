@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
+import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
@@ -70,11 +71,14 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.messageSent.setText(messages.get(position).getMessage());
 
-        //se è uno scambio viene mandato un messaggio di default con il libro scelto
+        //viene visualizzato un messaggio di default con il libro scelto dal ricevente della richiesta in caso di scambio
+        //in caso di prestito/regalo viene visualizzato solo il messaggio col libro scelto per il prestito/regalo
         if(messages.get(position) instanceof MessageModelTrade) {
-            Log.d("AAA", "soadpsifasd");
             holder.book_thumbnail.setVisibility(View.VISIBLE);
             Picasso.get().load(((MessageModelTrade) messages.get(position)).getThumbnailBookTrade()).into(holder.book_thumbnail);
+        }else if(messages.get(position) instanceof MessageModelWithImage){
+            holder.book_thumbnail.setVisibility(View.VISIBLE);
+            Picasso.get().load(((MessageModelWithImage) messages.get(position)).getThumbnailBookRequested()).into(holder.book_thumbnail);
         }else{
             holder.book_thumbnail.setVisibility(View.GONE);
         }

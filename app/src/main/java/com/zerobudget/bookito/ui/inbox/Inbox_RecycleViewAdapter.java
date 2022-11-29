@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,6 +33,8 @@ import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.models.Chat.MessageModel;
+import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
@@ -44,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder> {
 
@@ -296,6 +300,18 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                                 if (r.getReceiver().equals(Utils.USER_ID))
                                     ref.child("user2").setValue(r.getSender());
                                 else ref.child("user2").setValue(Utils.USER_ID);
+
+                                Date now = Timestamp.now().toDate();
+
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                                String currentTime = sdf.format(now);
+                                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                                String currentDate = sdf1.format(now);
+
+                                //messaggio di default per visualizzare il libro richiesto e per iniziare la conversazione
+                                String messageTxt = "Ciao, ti contatto per il tuo libro in "+r.getType()+" di '"+r.getTitle()+"'!";
+                                MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, currentTime, currentDate);
+                                ref.push().setValue(defaultMsg);
 
                                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
                             } else
