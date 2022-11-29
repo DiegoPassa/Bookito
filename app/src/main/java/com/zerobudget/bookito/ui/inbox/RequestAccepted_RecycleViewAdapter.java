@@ -382,6 +382,10 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         owner.setText(firstAndLastNameStr);
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 
+        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
+        Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
+
+        reputation.setText("Reputazione : " + points.doubleValue()/feedbacks.doubleValue() + " ( " + feedbacks + " ) ");
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
 
