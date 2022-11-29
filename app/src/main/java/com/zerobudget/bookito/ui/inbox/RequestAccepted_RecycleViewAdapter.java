@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.zerobudget.bookito.utils.Utils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -193,9 +196,40 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
         });
 
         feedback.setOnClickListener(view1 -> {
-            //TODO: fare le recensioni con le stelline
-            Toast.makeText(context, "Funzionalità da implementare", Toast.LENGTH_LONG).show();
+
             dialog.dismiss();
+            //TODO: fare le recensioni con le stelline
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+            View view2 = View.inflate(context, R.layout.feedback_popup, null);
+
+            builder.setView(view2);
+
+            AlertDialog starDialog = builder.create();
+
+            starDialog.show();
+
+            RatingBar mRatingBar = view2.findViewById(R.id.rating);
+            Button confirmFeedback = view2.findViewById(R.id.feedback_button);
+
+            mRatingBar.setOnRatingBarChangeListener( (ratingBar, rating, isUser) -> {
+
+            });
+
+            confirmFeedback.setOnClickListener(click -> {
+                String otherUserID = "";
+                if (request.getSender().equals(Utils.USER_ID)) {
+                    otherUserID = request.getReceiver();
+                } else {
+                    otherUserID = request.getSender();
+                }
+
+                sendFeedbackToUser(otherUserID, mRatingBar.getRating());
+                starDialog.dismiss();
+
+                Toast.makeText(context, "Feedback inviato correttamente!", Toast.LENGTH_LONG).show();
+
+
+            });
         });
 
         //richiesta CONCLUSA
@@ -291,6 +325,10 @@ public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter
 
         dialogBuilder.setView(view);
         dialog.show();
+    }
+
+    private void sendFeedbackToUser(String id, float feedback) {
+        db.collection("users").document(id).update("karma.points", FieldValue.increment(feedback), "karma.numbers", FieldValue.increment(1));
     }
 
     private void changeBookStatus(String userID, String isbn) {
