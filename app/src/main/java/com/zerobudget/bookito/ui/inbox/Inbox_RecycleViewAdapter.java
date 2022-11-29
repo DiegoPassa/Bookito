@@ -61,6 +61,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     protected TextView ownerLocation;
     protected TextView returnDate;
     protected ImageView thumbnail;
+    protected TextView reputation;
 
     // private AlertDialog.Builder dialogBuilder;
     // private AlertDialog dialog;
@@ -151,10 +152,9 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         holder.request_selected.setOnClickListener(view -> {
             if (senderModel != null && holder.getAdapterPosition() != -1) {
                 HashMap<String, Object> karma = senderModel.getKarma(); //HashMap<String, Long>
-                Long points = (Long) karma.get("points");
-                Long feedback_numbers = (Long) karma.get("numbers");
+                Number points = (Number) karma.get("points");
+                Number feedback_numbers = (Number) karma.get("numbers");
                 Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
-
                 createNewContactDialog(position, holder, flag);
 
             }
@@ -191,6 +191,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         ownerLocation = view.findViewById(R.id.user_location);
         returnDate = view.findViewById(R.id.return_date);
         thumbnail = view.findViewById(R.id.imageView);
+        reputation = view.findViewById(R.id.flag);
     }
 
     public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
@@ -204,6 +205,12 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         AlertDialog dialog = dialogBuilder.create();
 
         loadPopupViewMembers(view);
+
+        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
+        Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
+
+        reputation.setText("Reputazione : " + points.doubleValue()/feedbacks.doubleValue() + " ( " + feedbacks + " ) ");
+
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
         String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
@@ -385,6 +392,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         protected final ClassicIdenticonView user_gravatar;
         protected final ImageView usr_pic;
         protected final TextView type;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
