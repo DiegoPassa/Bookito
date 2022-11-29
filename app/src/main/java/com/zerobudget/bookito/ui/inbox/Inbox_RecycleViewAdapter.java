@@ -209,11 +209,29 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
         Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
 
-        if (feedbacks.longValue() >= 8l) {
-            reputation.setText("Reputazione : " + points.doubleValue() / feedbacks.doubleValue() + " ( " + feedbacks + " ) ");
+        if (feedbacks.longValue() >= UserFlag.MIN_FEEDBACKS_FLAG) {
+            String reputationMessage = "Reputazione: " + points.doubleValue() / feedbacks.doubleValue() + "/5.0 ( " + feedbacks  + " )\n";
+            switch (flag) {
+                case GREEN_FLAG: {
+                    reputation.setTextColor(ContextCompat.getColor(context, R.color.green));
+                    reputationMessage += "Utente affidabile!";
+                    break;
+                }
+                case RED_FLAG: {
+                    //è già di default settato a red
+//                    reputation.setTextColor(com.google.android.material.R.color.design_default_color_error);
+                    reputationMessage += "Attenzione! Utente inaffidabile!";
+                    break;
+                }
+                default: break;
+            }
+            reputation.setText(reputationMessage);
         } else {
             reputation.setText("UTENTE NUOVO");
+            reputation.setTextColor(ContextCompat.getColor(context, R.color.black));
         }
+
+
 
 
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
