@@ -159,8 +159,6 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
             }
         });
-
-
     }
 
     protected void setUpColorType(ViewHolder holder, String type) {

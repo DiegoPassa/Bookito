@@ -25,6 +25,7 @@ import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InboxFragment extends Fragment {
 
@@ -34,6 +35,11 @@ public class InboxFragment extends Fragment {
     private ProgressBar spinner;
 
     private TextView empty;
+
+    private RecyclerView recyclerView;
+    private ArrayList<RequestModel> requests = new ArrayList<>();
+
+    private Inbox_RecycleViewAdapter adapter;
 
     public InboxFragment() {
     }
@@ -45,20 +51,26 @@ public class InboxFragment extends Fragment {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        spinner = root.findViewById(R.id.progressBar);
+        spinner = binding.progressBar;
         empty = binding.empty;
+        recyclerView = binding.recycleViewInbox;
 
         db = FirebaseFirestore.getInstance();
 
         binding.textView.setVisibility(View.VISIBLE);
         binding.filterBar.setVisibility(View.INVISIBLE);
 
+        getRequests();
+
+        adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
             getRequests();
         });
-        getRequests();
 
         return root;
     }
@@ -69,28 +81,28 @@ public class InboxFragment extends Fragment {
         binding = null;
     }
 
-    protected ArrayList<Object> getRequests() {
+    protected void getRequests() {
         spinner.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<RequestModel> req = new ArrayList<>();
-
-                        QuerySnapshot result = task.getResult();
+                .addSnapshotListener((value, error) -> {
+                    if (error != null){
+                        return;
+                    }
+                    if (value != null){
+                        requests.clear();
+                        List<DocumentSnapshot> result = value.getDocuments();
 
                         for (DocumentSnapshot o : result) {
                             String type = (String) o.get("type");
                             RequestModel r = RequestModel.getRequestModel(type, o);
                             Log.d("RICHIESTA", r.getTitle());
-                            if (r != null) req.add(r);
+                            if (r != null) requests.add(r);
                         }
                         // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
-                        getUserByRequest(req);
+                        getUserByRequest(requests);
                     }
                 });
-        return null;
     }
 
     protected void getUserByRequest(ArrayList<RequestModel> arr) {
@@ -101,21 +113,10 @@ public class InboxFragment extends Fragment {
 
         Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
             spinner.setVisibility(View.GONE);
-            addRequestsOnPage(arr);
-        });
-    }
-
-    protected void addRequestsOnPage(ArrayList<RequestModel> requests) {
-        if (getView() != null) {
-
-            RecyclerView recyclerView = binding.recycleViewInbox;
-            Inbox_RecycleViewAdapter adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
-
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
             Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
-        }
+            adapter.notifyDataSetChanged();
+            Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
+        });
     }
 
 }

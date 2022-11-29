@@ -106,7 +106,7 @@
     <fragment
         android:id="@+id/bookTradeFragment"
         android:name="com.zerobudget.bookito.ui.inbox.BookTradeFragment"
-        android:label="fragment_trade_book"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_trade_book" >
         <action
             android:id="@+id/action_bookTradeFragment_to_request_page_nav"
