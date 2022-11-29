@@ -309,7 +309,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                                 String currentDate = sdf1.format(now);
 
                                 //messaggio di default per visualizzare il libro richiesto e per iniziare la conversazione
-                                String messageTxt = "Ciao, ti contatto per il tuo libro in "+r.getType()+" di '"+r.getTitle()+"'!";
+                                String messageTxt = "Ciao, ti contatto per il tuo libro in "+r.getType()+" dal titolo '"+r.getTitle()+"'!";
                                 MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, currentTime, currentDate);
                                 ref.push().setValue(defaultMsg);
 

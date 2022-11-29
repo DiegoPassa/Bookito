@@ -26,7 +26,11 @@ import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleViewAdapter.ViewHolder> {
 
@@ -83,6 +87,31 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             holder.book_thumbnail.setVisibility(View.GONE);
         }
 
+
+        holder.messagesDate.setText(messages.get(position).getMessageDate());
+
+        boolean isShowedDate = false;
+        if(position > 0 ){
+            Date previousMsgDate = new Date();
+            Date currentMsgDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            try {
+                previousMsgDate = dateFormat.parse(messages.get(position-1).getMessageDate());
+                currentMsgDate = dateFormat.parse(messages.get(position).getMessageDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if(currentMsgDate.after(previousMsgDate)) {
+                holder.messagesDate.setVisibility(View.VISIBLE);
+                isShowedDate = true;
+            }else
+                holder.messagesDate.setVisibility(View.GONE);
+        }else{
+            isShowedDate = true;
+            holder.messagesDate.setVisibility(View.VISIBLE);
+        }
+
         if(messages.get(position).getMessageTime() != null)
             holder.messageSentAt.setText(messages.get(holder.getAdapterPosition()).getMessageTime());
 
@@ -94,6 +123,11 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.RIGHT, R.id.chat_layout, ConstraintSet.RIGHT, 0);
             constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
             constraintSet.connect(R.id.book_thumbnail, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
+
+            if(isShowedDate) {
+                constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
+                constraintSet.connect(R.id.message_content, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
+            }
 
             constraintSet.connect(R.id.message_sent_at, ConstraintSet.RIGHT, R.id.message_content, ConstraintSet.LEFT, 0);
             constraintSet.applyTo(holder.constraintLayout);
@@ -108,6 +142,11 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.LEFT, R.id.chat_layout, ConstraintSet.LEFT, 0);
             constraintSet.connect(R.id.message_content, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
             constraintSet.connect(R.id.book_thumbnail, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
+
+            if(isShowedDate) {
+                constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
+                constraintSet.connect(R.id.message_content, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
+            }
 
             constraintSet.connect(R.id.message_sent_at, ConstraintSet.LEFT, R.id.message_content, ConstraintSet.RIGHT, 0);
             constraintSet.applyTo(holder.constraintLayout);
@@ -149,6 +188,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         protected ClassicIdenticonView gravatarImg;
         protected TextView messageSentAt;
         protected ImageView book_thumbnail;
+        protected TextView messagesDate;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -159,6 +199,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             gravatarImg = itemView.findViewById(R.id.gravater_pic);
             messageSentAt = itemView.findViewById(R.id.message_sent_at);
             book_thumbnail = itemView.findViewById(R.id.book_thumbnail);
+            messagesDate = itemView.findViewById(R.id.messages_date);
         }
     }
 
