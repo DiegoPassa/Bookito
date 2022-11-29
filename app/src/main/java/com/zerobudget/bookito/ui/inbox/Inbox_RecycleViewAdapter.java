@@ -209,7 +209,12 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
         Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
 
-        reputation.setText("Reputazione : " + points.doubleValue()/feedbacks.doubleValue() + " ( " + feedbacks + " ) ");
+        if (feedbacks.longValue() >= 8l) {
+            reputation.setText("Reputazione : " + points.doubleValue() / feedbacks.doubleValue() + " ( " + feedbacks + " ) ");
+        } else {
+            reputation.setText("UTENTE NUOVO");
+        }
+
 
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
