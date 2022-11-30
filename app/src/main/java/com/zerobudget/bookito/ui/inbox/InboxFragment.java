@@ -59,12 +59,8 @@ public class InboxFragment extends Fragment {
 
         binding.textView.setVisibility(View.VISIBLE);
         binding.filterBar.setVisibility(View.INVISIBLE);
-
         // getRequests();
 
-        adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -75,10 +71,20 @@ public class InboxFragment extends Fragment {
         return root;
     }
 
+    protected void setUpRecycleView() {
+        if (getView() != null) {
+            adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         getRequests();
+
+        setUpRecycleView();
     }
 
     @Override
