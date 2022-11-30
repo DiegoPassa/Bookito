@@ -124,6 +124,9 @@ public class RequestModel {
                         UserModel u = task.getResult().toObject(UserModel.class);
                         this.setOtherUser(u);
                     }
+                    else {
+                        Log.d("SUPER_WARING", "HO PROVATO A COSTRUIRE L'ALTRO USER MA HO FALLITO NON SO IL PERCHÉ!!!! NON CANCELLARE!!!!");
+                    }
                 });
     }
 
