@@ -306,6 +306,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     protected void deleteRequest(RequestModel r) {
+        Log.d("REQUEST_DELETED", r.getrequestId());
         db.collection("requests").document(r.getrequestId()).delete();
     }
 

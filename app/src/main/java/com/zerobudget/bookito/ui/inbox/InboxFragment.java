@@ -106,21 +106,7 @@ public class InboxFragment extends Fragment {
                     if (value != null){
                         requests.clear();
                         for (DocumentSnapshot doc : value) {
-                            switch ((String) doc.get("type")) {
-                                case "Prestito": {
-                                    requests.add(doc.toObject(RequestShareModel.class));
-                                    break;
-                                }
-                                case "Scambio": {
-                                    requests.add(doc.toObject(RequestTradeModel.class));
-                                    break;
-                                }
-                                default: {
-                                    requests.add(doc.toObject(RequestModel.class));
-                                    break;
-                                }
-                            }
-//                            requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                            requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
 
                         }
                         getUserByRequest(requests);
