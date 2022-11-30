@@ -138,7 +138,6 @@ public class RequestModel {
                 return new RequestModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId());
             }
             case("Prestito"): {
-                Log.d("COSTRUISCO", ""+o.get("date"));
                 return new RequestShareModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), (Timestamp) o.get("date"));
             }
             case("Scambio"): {

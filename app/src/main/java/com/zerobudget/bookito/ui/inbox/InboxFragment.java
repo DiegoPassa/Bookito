@@ -22,6 +22,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.Requests.RequestShareModel;
+import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -103,11 +105,24 @@ public class InboxFragment extends Fragment {
                     }
                     if (value != null){
                         requests.clear();
-                        List<DocumentSnapshot> result = value.getDocuments();
-                        for (DocumentSnapshot documentSnapshot : result) {
-                            requests.add(RequestModel.getRequestModel((String)documentSnapshot.get("type"), documentSnapshot));
+                        for (DocumentSnapshot doc : value) {
+                            switch ((String) doc.get("type")) {
+                                case "Prestito": {
+                                    requests.add(doc.toObject(RequestShareModel.class));
+                                    break;
+                                }
+                                case "Scambio": {
+                                    requests.add(doc.toObject(RequestTradeModel.class));
+                                    break;
+                                }
+                                default: {
+                                    requests.add(doc.toObject(RequestModel.class));
+                                    break;
+                                }
+                            }
+//                            requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+
                         }
-                        // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
                         getUserByRequest(requests);
                     }
                 });
