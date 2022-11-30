@@ -60,7 +60,7 @@ public class InboxFragment extends Fragment {
         binding.textView.setVisibility(View.VISIBLE);
         binding.filterBar.setVisibility(View.INVISIBLE);
 
-        getRequests();
+        // getRequests();
 
         adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
         recyclerView.setAdapter(adapter);
@@ -73,6 +73,12 @@ public class InboxFragment extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getRequests();
     }
 
     @Override
@@ -92,12 +98,8 @@ public class InboxFragment extends Fragment {
                     if (value != null){
                         requests.clear();
                         List<DocumentSnapshot> result = value.getDocuments();
-
-                        for (DocumentSnapshot o : result) {
-                            String type = (String) o.get("type");
-                            RequestModel r = RequestModel.getRequestModel(type, o);
-                            Log.d("RICHIESTA", r.getTitle());
-                            if (r != null) requests.add(r);
+                        for (DocumentSnapshot documentSnapshot : result) {
+                            requests.add(documentSnapshot.toObject(RequestModel.class));
                         }
                         // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
                         getUserByRequest(requests);
