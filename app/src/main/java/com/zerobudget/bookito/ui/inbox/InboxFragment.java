@@ -105,7 +105,7 @@ public class InboxFragment extends Fragment {
                         requests.clear();
                         List<DocumentSnapshot> result = value.getDocuments();
                         for (DocumentSnapshot documentSnapshot : result) {
-                            requests.add(documentSnapshot.toObject(RequestModel.class));
+                            requests.add(RequestModel.getRequestModel((String)documentSnapshot.get("type"), documentSnapshot));
                         }
                         // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
                         getUserByRequest(requests);

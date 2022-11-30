@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.utils;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,8 +11,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.Requests.RequestShareModel;
 
 import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PopupInbox extends MaterialAlertDialogBuilder {
 
@@ -50,6 +55,21 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
             reputation.setText("UTENTE NUOVO");
             reputation.setTextColor(ContextCompat.getColor(this.getContext(), R.color.black));
         }
+    }
+
+    public void setUpUserFullName(TextView owner, RequestModel request) {
+        String firstAndLastNameStr = request.getOtherUser().getFirstName() + " " + request.getOtherUser().getLastName();
+        owner.setText(firstAndLastNameStr);
+    }
+
+    public void setUpDate(RequestShareModel request, TextView returnDate) {
+        Date date = request.getDate();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String dateString = "Data di restituzione:\n"+sdf.format(date);
+
+        returnDate.setText(dateString);
+        returnDate.setVisibility(View.VISIBLE);
     }
 
 }
