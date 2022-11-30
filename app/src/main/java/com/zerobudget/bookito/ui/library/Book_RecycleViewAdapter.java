@@ -84,14 +84,17 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             case "Scambio":
                 holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
                 holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
+                Picasso.get().load(R.drawable.swap).into(holder.book_type);
                 break;
             case "Prestito":
                 holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_prestito), PorterDuff.Mode.SRC_ATOP);
                 holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_prestito), PorterDuff.Mode.SRC_ATOP);
+                Picasso.get().load(R.drawable.calendar).into(holder.book_type);
                 break;
             case "Regalo":
                 holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outine_regalo), PorterDuff.Mode.SRC_ATOP);
                 holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_regalo), PorterDuff.Mode.SRC_ATOP);
+                Picasso.get().load(R.drawable.gift).into(holder.book_type);
                 break;
             default:
                 Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
@@ -174,6 +177,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         private final ImageView bookmark;
         private final ImageView bookmark_outline;
         private final ImageView wait_icon;
+        private final ImageView book_type;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -185,6 +189,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             bookmark = itemView.findViewById(R.id.bookmark);
             bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
             wait_icon = itemView.findViewById(R.id.wait_icon);
+            book_type = itemView.findViewById(R.id.icon_type);
         }
     }
 

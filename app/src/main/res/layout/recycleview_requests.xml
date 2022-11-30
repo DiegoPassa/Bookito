@@ -61,11 +61,11 @@
 
             <ImageView
                 android:id="@+id/book_image_request"
-                android:layout_width="0dp"
+                android:layout_width="80dp"
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="w,1:1.4375"
+                app:layout_constraintDimensionRatio="h,1:1.4375"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
