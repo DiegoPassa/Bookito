@@ -111,7 +111,7 @@ public class InboxFragment extends Fragment {
             t.add(r.queryOtherUser(db, r.getSender()));
         }
 
-        Tasks.whenAllComplete(t).addOnCompleteListener(task -> {
+        Tasks.whenAllSuccess(t).addOnCompleteListener(task -> {
             spinner.setVisibility(View.GONE);
             Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
             adapter.notifyDataSetChanged();
