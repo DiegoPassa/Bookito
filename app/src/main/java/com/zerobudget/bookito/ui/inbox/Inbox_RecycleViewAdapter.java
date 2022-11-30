@@ -14,11 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +31,6 @@ import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
@@ -165,22 +162,20 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     protected void setUpColorType(ViewHolder holder, String type) {
         switch (type) {
             case "Regalo":
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_regalo));
+                Picasso.get().load(R.drawable.gift).into(holder.type);
                 break;
 
             case "Prestito":
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_prestito));
+                Picasso.get().load(R.drawable.calendar).into(holder.type);
                 break;
 
             case "Scambio":
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.bookmark_scambio));
+                Picasso.get().load(R.drawable.swap).into(holder.type);
                 break;
 
             default:
-                holder.type.setTextColor(ContextCompat.getColor(context, R.color.black));
                 break;
         }
-        holder.type.setText(type);
     }
 
     //TODO DALLE RIGHE 113-127 C'È MOLTA RIPETIZIONE DI CODICE, MEGLIO FARE UN METOOD A POSTA DA RICBHIAMARE
@@ -423,7 +418,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         protected final ImageView book_image;
         protected final ClassicIdenticonView user_gravatar;
         protected final ImageView usr_pic;
-        protected final TextView type;
+        protected final ImageView type;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -434,7 +429,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
             request_selected = itemView.findViewById(R.id.request);
             user_gravatar = itemView.findViewById(R.id.user_gravatar);
             usr_pic = itemView.findViewById(R.id.profile_pic);
-            type = itemView.findViewById(R.id.request_type);
+            type = itemView.findViewById(R.id.icon_type2);
         }
     }
 

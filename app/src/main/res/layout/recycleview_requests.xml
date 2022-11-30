@@ -33,12 +33,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:text="Nome Cognome"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/cardView2"
-                app:layout_constraintEnd_toStartOf="@+id/request_type"
                 app:layout_constraintStart_toEndOf="@+id/cardView2"
                 app:layout_constraintTop_toTopOf="@+id/cardView2" />
 
@@ -69,6 +67,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/icon_type2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/requester_name"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@+id/requestTitle"
+                app:layout_constraintTop_toTopOf="@+id/requester_name"
+                tools:scaleType="fitXY"
+                tools:srcCompat="@drawable/calendar" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView2"
@@ -116,17 +125,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/request_type"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:text="type"
-                android:textColor="@color/green"
-                app:layout_constraintBottom_toBottomOf="@+id/requester_name"
-                app:layout_constraintEnd_toStartOf="@+id/book_image_request"
-                app:layout_constraintTop_toTopOf="@+id/requester_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
