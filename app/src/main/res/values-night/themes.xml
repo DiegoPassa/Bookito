@@ -33,6 +33,7 @@
                 <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
                 <item name="colorPrimary">@color/md_theme_dark_primary</item>
                 <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>-->
+
         <item name="colorControlNormal">@color/black</item>
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
@@ -88,11 +89,11 @@
 
 
     <style name="filter_text">
-        <item name="android:textColor">@color/md_theme_dark_secondaryContainer</item>
+        <item name="android:textColor">#96AC89</item>
     </style>
 
     <style name="selected_filter_text">
-        <item name="android:textColor">@color/md_theme_dark_primary</item>
+        <item name="android:textColor">@color/md_theme_dark_secondary</item>
     </style>
 
     <style name="buttonAccept">

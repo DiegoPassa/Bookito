@@ -15,7 +15,6 @@
     <color name="bookmark_regalo">#EFDD13</color>
     <color name="bookmark_outine_regalo">#AC9E09</color>
 
-
     <!--  my colors  -->
     <!--    <color name="green_primary">#D2EAD8</color>-->
     <!--    <color name="green_primary_light">#E0EED5</color>-->
@@ -27,6 +26,7 @@
     <color name="blue">#768AD0</color>
     <color name="seed">#BD643F</color>
 
+    <!--light theme colors-->
     <color name="md_theme_light_primary">#9A4520</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#FFDBCE</color>
@@ -63,44 +63,42 @@
     <color name="light_filter_texts">#85736D</color>
     <color name="light_filter_bar">#FAF5F1</color>
 
-
-
-    <color name="md_theme_dark_primary">#FFB599</color>
-    <color name="md_theme_dark_onPrimary">#5A1C00</color>
-    <color name="md_theme_dark_primaryContainer">#7B2F0A</color>
-    <color name="md_theme_dark_onPrimaryContainer">#FFDBCE</color>
-    <color name="md_theme_dark_secondary">#E8C349</color>
-    <color name="md_theme_dark_onSecondary">#3C2F00</color>
-    <color name="md_theme_dark_secondaryContainer">#FAD8CB</color>
-    <color name="md_theme_dark_onSecondaryContainer">#988E8B</color>
-    <color name="md_theme_dark_tertiary">#FFB869</color>
-    <color name="md_theme_dark_onTertiary">#482900</color>
-    <color name="md_theme_dark_tertiaryContainer">#673D00</color>
-    <color name="md_theme_dark_onTertiaryContainer">#FFDCBB</color>
+    <!--dark theme colors-->
+    <color name="md_theme_dark_primary">#5F8774</color>
+    <color name="md_theme_dark_onPrimary">#15574E</color>
+    <color name="md_theme_dark_primaryContainer">#3C6C4C</color>
+    <color name="md_theme_dark_onPrimaryContainer">#77AE93</color>
+    <color name="md_theme_dark_secondary">#bbcbb2</color>
+    <color name="md_theme_dark_onSecondary">#263422</color>
+    <color name="md_theme_dark_secondaryContainer">#3c4b37</color>
+    <color name="md_theme_dark_onSecondaryContainer">#d7e8cd</color>
+    <color name="md_theme_dark_tertiary">#ffb4a3</color>
+    <color name="md_theme_dark_onTertiary">#5e1606</color>
+    <color name="md_theme_dark_tertiaryContainer">#7d2c1a</color>
+    <color name="md_theme_dark_onTertiaryContainer">#ffdad2</color>
     <color name="md_theme_dark_error">#FFB4AB</color>
-    <color name="md_theme_dark_errorContainer">#A1383F</color>
-    <color name="md_theme_dark_onError">#ABA3161C</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onError">#690005</color>
     <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
-    <color name="md_theme_dark_background">#2D1600</color>
-    <color name="md_theme_dark_onBackground">#FFDCC0</color>
-    <color name="md_theme_dark_surface">#2D1600</color>
-    <color name="md_theme_dark_onSurface">#FFDCC0</color>
-    <color name="md_theme_dark_surfaceVariant">#53433E</color>
-    <color name="md_theme_dark_onSurfaceVariant">#D8C2BB</color>
-    <color name="md_theme_dark_outline">#A08D86</color>
-    <color name="md_theme_dark_inverseOnSurface">#2D1600</color>
-    <color name="md_theme_dark_inverseSurface">#FFDCC0</color>
-    <color name="md_theme_dark_inversePrimary">#9A4520</color>
+    <color name="md_theme_dark_background">#191C19</color>
+    <color name="md_theme_dark_onBackground">#E1E3DE</color>
+    <color name="md_theme_dark_surface">#191C19</color>
+    <color name="md_theme_dark_onSurface">#E1E3DE</color>
+    <color name="md_theme_dark_surfaceVariant">#414942</color>
+    <color name="md_theme_dark_onSurfaceVariant">#C0C9BF</color>
+    <color name="md_theme_dark_outline">#8B938A</color>
+    <color name="md_theme_dark_inverseOnSurface">#191C19</color>
+    <color name="md_theme_dark_inverseSurface">#E1E3DE</color>
+    <color name="md_theme_dark_inversePrimary">#006D3C</color>
     <color name="md_theme_dark_shadow">#000000</color>
-    <color name="md_theme_dark_surfaceTint">#FFB599</color>
-    <color name="md_theme_dark_outlineVariant">#53433E</color>
+    <color name="md_theme_dark_surfaceTint">#7CDA9C</color>
+    <color name="md_theme_dark_outlineVariant">#414942</color>
     <color name="md_theme_dark_scrim">#000000</color>
 
     <color name="dark_card">#181818</color>
 
-
     <color name="dark_filter_texts">#D8C2BB</color>
-    <color name="dark_filter_bar">#53433E</color>
+    <color name="dark_filter_bar">#414942</color>
 
     <!--  Material3 generated colors  -->
     <!--  https://m3.material.io/theme-builder#/custom  -->
