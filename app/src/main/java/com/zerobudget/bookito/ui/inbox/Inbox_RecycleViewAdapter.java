@@ -40,6 +40,7 @@ import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.PopupInbox;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 
@@ -197,39 +198,42 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
         checkIfStillExists(requests.get(holder.getAdapterPosition()));
 
-        AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
+        PopupInbox dialogBuilder = new PopupInbox(context);
 
         View view = View.inflate(context, R.layout.popup, null);
 
         dialogBuilder.setView(view);
+
         AlertDialog dialog = dialogBuilder.create();
 
         loadPopupViewMembers(view);
 
-        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
-        Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
 
-        if (feedbacks.longValue() >= UserFlag.MIN_FEEDBACKS_FLAG) {
-            String reputationMessage = "Reputazione: " + points.doubleValue() / feedbacks.doubleValue() + "/5.0 ( " + feedbacks  + " )\n";
-            switch (flag) {
-                case GREEN_FLAG: {
-                    reputation.setTextColor(ContextCompat.getColor(context, R.color.green));
-                    reputationMessage += "Utente affidabile!";
-                    break;
-                }
-                case RED_FLAG: {
-                    //è già di default settato a red
-//                    reputation.setTextColor(com.google.android.material.R.color.design_default_color_error);
-                    reputationMessage += "Attenzione! Utente inaffidabile!";
-                    break;
-                }
-                default: break;
-            }
-            reputation.setText(reputationMessage);
-        } else {
-            reputation.setText("UTENTE NUOVO");
-            reputation.setTextColor(ContextCompat.getColor(context, R.color.black));
-        }
+        dialogBuilder.setReputationMessage(reputation, requests.get(position), flag);
+//        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
+//        Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
+//
+//        if (feedbacks.longValue() >= UserFlag.MIN_FEEDBACKS_FLAG) {
+//            String reputationMessage = "Reputazione: " + points.doubleValue() / feedbacks.doubleValue() + "/5.0 ( " + feedbacks  + " )\n";
+//            switch (flag) {
+//                case GREEN_FLAG: {
+//                    reputation.setTextColor(ContextCompat.getColor(context, R.color.green));
+//                    reputationMessage += "Utente affidabile!";
+//                    break;
+//                }
+//                case RED_FLAG: {
+//                    //è già di default settato a red
+////                    reputation.setTextColor(com.google.android.material.R.color.design_default_color_error);
+//                    reputationMessage += "Attenzione! Utente inaffidabile!";
+//                    break;
+//                }
+//                default: break;
+//            }
+//            reputation.setText(reputationMessage);
+//        } else {
+//            reputation.setText("UTENTE NUOVO");
+//            reputation.setTextColor(ContextCompat.getColor(context, R.color.black));
+ //       }
 
 
 
