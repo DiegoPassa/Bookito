@@ -62,7 +62,40 @@
                             app:layout_constraintTop_toTopOf="parent"
                             tools:srcCompat="@tools:sample/avatars" />
 
-                        <ImageView
+                        <androidx.cardview.widget.CardView
+                            style="@style/color_card"
+                            android:layout_width="35dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="8dp"
+                            app:cardCornerRadius="6dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/book_thumbnail"
+                            app:layout_constraintDimensionRatio="w,1:1"
+                            app:layout_constraintStart_toStartOf="@id/book_thumbnail">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/icon_type"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginBottom="8dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintDimensionRatio="h,1:1"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    tools:scaleType="fitXY"
+                                    tools:srcCompat="@drawable/calendar" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+                        <!--ImageView
                             android:id="@+id/bookmark"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -70,16 +103,16 @@
                             android:layout_marginEnd="12dp"
                             app:layout_constraintEnd_toEndOf="@+id/book_thumbnail"
                             app:layout_constraintTop_toTopOf="@+id/book_thumbnail"
-                            app:srcCompat="@drawable/bookmark_template" />
+                            app:srcCompat="@drawable/bookmark_template" /-->
 
-                        <ImageView
+                        <!--ImageView
                             android:id="@+id/bookmark_outline"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="12dp"
                             app:layout_constraintEnd_toEndOf="@+id/book_thumbnail"
                             app:layout_constraintTop_toTopOf="@+id/book_thumbnail"
-                            app:srcCompat="@drawable/bookmark_outline" />
+                            app:srcCompat="@drawable/bookmark_outline" /-->
 
                         <TextView
                             android:id="@+id/book_title"

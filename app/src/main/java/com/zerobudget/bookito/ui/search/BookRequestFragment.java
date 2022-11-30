@@ -53,37 +53,7 @@ public class BookRequestFragment extends Fragment {
         String owner = usrBookSelected.getUser().getFirstName() + " " + usrBookSelected.getUser().getLastName();
         binding.bookOwner.setText(owner);
         binding.bookType.setText(usrBookSelected.getBook().getType());
-        //Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);
-
-        //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
-        Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                binding.bookThumbnail.setImageBitmap(bitmap);
-                Palette.from(bitmap)
-                        .generate(palette -> {
-                            Palette.Swatch textSwatch = palette.getMutedSwatch();
-                            Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
-                            if (textSwatch == null) {
-                                Toast.makeText(getContext(), "Null swatch :(", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            binding.bookmarkOutline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
-                            binding.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
-                        });
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });
+        Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);
 
         /*switch (usrBookSelected.getBook().getType()) {
             case "Scambio":

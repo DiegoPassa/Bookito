@@ -1,9 +1,6 @@
 package com.zerobudget.bookito.ui.search;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -28,7 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
@@ -106,6 +101,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
         ImageView bookmark = view.findViewById(R.id.bookmark);
         ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
+        ImageView book_type = view.findViewById(R.id.icon_type);
 
         bookTitle.setText(results.get(holder.getAdapterPosition()).getBook().getTitle());
         bookAuthor.setText(results.get(holder.getAdapterPosition()).getBook().getAuthor());
@@ -115,58 +111,21 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
         bookOwner.setText(owner);
         bookType.setText(results.get(holder.getAdapterPosition()).getBook().getType());
-        //Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
+        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
 
-        //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
-        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                assert  bookThumbnail != null;
-                bookThumbnail.setImageBitmap(bitmap);
-                Palette.from(bitmap)
-                        .generate(palette -> {
-                            assert palette != null;
-                            Palette.Swatch textSwatch = palette.getMutedSwatch();
-                            Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
-                            if (textSwatch == null) {
-                                Toast.makeText(context, "Null swatch :(", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            if(textSwatch2 != null)
-                                bookmarkOutline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
-
-                            bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
-                        });
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });
-        /*switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
+        switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
             case "Scambio":
-                bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
-                bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
+                Picasso.get().load(R.drawable.swap).into(book_type);
                 break;
             case "Prestito":
-                bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outline_prestito), PorterDuff.Mode.SRC_ATOP);
-                bookmark.setColorFilter(context.getColor(R.color.bookmark_prestito), PorterDuff.Mode.SRC_ATOP);
+                Picasso.get().load(R.drawable.calendar).into(book_type);
                 break;
             case "Regalo":
-                bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outine_regalo), PorterDuff.Mode.SRC_ATOP);
-                bookmark.setColorFilter(context.getColor(R.color.bookmark_regalo), PorterDuff.Mode.SRC_ATOP);
+                Picasso.get().load(R.drawable.gift).into(book_type);
                 break;
             default:
-                Picasso.get().load(R.drawable.bookmark_template).into(bookmark);
                 break;
-        }*/
+        }
 
         btnRequest.setOnClickListener(view1 -> {
             FirebaseUser currentUser = auth.getCurrentUser();
@@ -193,7 +152,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
                             if (rm instanceof RequestShareModel)
                                 openCalendarPopup((RequestShareModel) rm, holder, dialog);
-                            else requestBook(rm, holder, dialog); //prova a inserire la richiesta del libro
+                            else
+                                requestBook(rm, holder, dialog); //prova a inserire la richiesta del libro
                         }
                     }
                 }
@@ -240,14 +200,14 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
         boolean err = false;
 
-        if(doc.get("status").equals(rm.getStatus())
-            && (doc.get("receiver").equals(rm.getReceiver())
-                    && doc.get("requestedBook").equals(rm.getRequestedBook())
-                    && doc.get("sender").equals(rm.getSender())
-                    && doc.get("thumbnail").equals(rm.getThumbnail())
-                    && doc.get("title").equals(rm.getTitle())
-                    && doc.get("type").equals(rm.getType())))
-                err = true;
+        if (doc.get("status").equals(rm.getStatus())
+                && (doc.get("receiver").equals(rm.getReceiver())
+                && doc.get("requestedBook").equals(rm.getRequestedBook())
+                && doc.get("sender").equals(rm.getSender())
+                && doc.get("thumbnail").equals(rm.getThumbnail())
+                && doc.get("title").equals(rm.getTitle())
+                && doc.get("type").equals(rm.getType())))
+            err = true;
 
         return err;
     }
@@ -264,7 +224,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                         err = true;
                     }
 
-                    if(doc.get("status").equals(rm.getStatus())
+                    if (doc.get("status").equals(rm.getStatus())
                             && (doc.get("receiver").equals(rm.getReceiver())
                             && doc.get("requestedBook").equals(rm.getRequestedBook())
                             && doc.get("sender").equals(rm.getSender())
@@ -273,13 +233,13 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                             && doc.get("type").equals(rm.getType())))
                         err = true;
                     else
-                       Log.d("not", "not eq");
+                        Log.d("not", "not eq");
                 }
                 //se esiste già una richiesta da errore
                 if (err) {
                     Log.d("HEEELP", "boh");
 
-                    Toast.makeText(context, "Attenzione! La richiesta per "+results.get(holder.getAdapterPosition()).getBook().getTitle()+" esiste già!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Attenzione! La richiesta per " + results.get(holder.getAdapterPosition()).getBook().getTitle() + " esiste già!", Toast.LENGTH_LONG).show();
                 } else {
                     db.collection("requests").add(rm.serialize()).addOnSuccessListener(documentReference -> {
                         Log.d("OKK", documentReference.getId());
@@ -293,7 +253,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                                 results.get(holder.getAdapterPosition())
                                         .getUser()
                                         .getNotificationToken());
-                    } catch(Exception e) {}
+                    } catch (Exception e) {
+                    }
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
                 }
 
@@ -315,6 +276,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         // Layout
         private final RelativeLayout book_selected;
         private final ImageView thumbnail;
+        private final ImageView book_type;
         private final TextView title;
         private final TextView author;
         private final TextView book_owner;
@@ -331,6 +293,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             book_owner = itemView.findViewById(R.id.book_owner);
             neighborhood_owner = itemView.findViewById(R.id.neighborhood_owner);
             type = itemView.findViewById(R.id.type);
+            book_type = itemView.findViewById(R.id.icon_type);
         }
     }
 

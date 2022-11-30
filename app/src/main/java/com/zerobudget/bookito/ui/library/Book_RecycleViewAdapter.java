@@ -77,7 +77,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         if (bookModels.get(holder.getAdapterPosition()).getStatus()) {
             holder.wait_icon.setVisibility(View.GONE);
             //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
-            Picasso.get().load(bookModels.get(position).getThumbnail()).into(new Target() {
+            Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                     assert holder.thumbnail != null;
@@ -87,98 +87,75 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                                 assert palette != null;
                                 Palette.Swatch textSwatch = palette.getMutedSwatch();
                                 Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
-                                if (textSwatch == null) {
-                                    Toast.makeText(context, "Null swatch :(", Toast.LENGTH_SHORT).show();
+
+                                if (textSwatch == null)
                                     return;
-                                }
+                                if (textSwatch2 == null)
+                                    return;
 
-                                if(textSwatch2 != null)
-                                    holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                                holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
                                 holder.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
-
-                                switch (bookModels.get(holder.getAdapterPosition()).getType()){
-                                    case "Scambio":
-                                        Picasso.get().load(R.drawable.swap).into(holder.book_type);
-                                        break;
-                                    case "Prestito":
-                                        Picasso.get().load(R.drawable.calendar).into(holder.book_type);
-                                        break;
-                                    case "Regalo":
-                                        Picasso.get().load(R.drawable.gift).into(holder.book_type);
-                                        break;
-                                    default:
-                                        Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
-                                        break;
-                                }
                             });
                 }
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
 
                 @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
+                public void onPrepareLoad(Drawable placeHolderDrawable) {}
             });
-
             // Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
         } else {
             //Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(holder.thumbnail);
 
             //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
-            Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(new Target() {
+            Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                     assert holder.thumbnail != null;
                     holder.thumbnail.setImageBitmap(bitmap);
                     Palette.from(bitmap)
                             .generate(palette -> {
+                                assert palette != null;
                                 Palette.Swatch textSwatch = palette.getMutedSwatch();
                                 Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
-                                if (textSwatch == null) {
-                                    Toast.makeText(context, "Null swatch :(", Toast.LENGTH_SHORT).show();
+
+                                if (textSwatch == null)
                                     return;
-                                }
+                                if (textSwatch2 == null)
+                                    return;
 
                                 holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
                                 holder.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
-
-                                switch (bookModels.get(holder.getAdapterPosition()).getType()){
-                                    case "Scambio":
-                                        Picasso.get().load(R.drawable.swap).into(holder.book_type);
-                                        break;
-                                    case "Prestito":
-                                        Picasso.get().load(R.drawable.calendar).into(holder.book_type);
-                                        break;
-                                    case "Regalo":
-                                        Picasso.get().load(R.drawable.gift).into(holder.book_type);
-                                        break;
-                                    default:
-                                        Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
-                                        break;
-                                }
                             });
                 }
 
                 @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
 
                 @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
+                public void onPrepareLoad(Drawable placeHolderDrawable) {}
             });
 
             holder.wait_icon.setVisibility(View.VISIBLE);
         }
 
         holder.author.setText(bookModels.get(position).getAuthor());
+
+
+        switch (bookModels.get(holder.getAdapterPosition()).getType()) {
+            case "Scambio":
+                Picasso.get().load(R.drawable.swap).into(holder.book_type);
+                break;
+            case "Prestito":
+                Picasso.get().load(R.drawable.calendar).into(holder.book_type);
+                break;
+            case "Regalo":
+                Picasso.get().load(R.drawable.gift).into(holder.book_type);
+                break;
+            default:
+                Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
+                break;
+        }
 /*
         switch (bookModels.get(position).getType()) {
             case "Scambio":
@@ -222,7 +199,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         bookDescription.setMovementMethod(new ScrollingMovementMethod());
         Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(bookThumbnail);
 
-        if(!bookModels.get(holder.getAdapterPosition()).getStatus())
+        if (!bookModels.get(holder.getAdapterPosition()).getStatus())
             btnDelete.setEnabled(false);
 
         btnDelete.setOnClickListener(view1 -> {
@@ -250,7 +227,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 notifyItemRemoved(holder.getAdapterPosition());
                 Utils.toggleEmptyWarning(emptyWarning, Utils.CURRENT_USER.getLibrary().size());
                 dialogInterface.dismiss();
-            }).setNegativeButton("NO",  (dialogInterface, i) -> {
+            }).setNegativeButton("NO", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
             }).show();
 
@@ -267,7 +244,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         return bookModels.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ConstraintLayout book_selected;
         private final ImageView thumbnail;
