@@ -1,22 +1,27 @@
 package com.zerobudget.bookito.ui.search;
 
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.palette.graphics.Palette;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRequestBookBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
@@ -48,10 +53,39 @@ public class BookRequestFragment extends Fragment {
         String owner = usrBookSelected.getUser().getFirstName() + " " + usrBookSelected.getUser().getLastName();
         binding.bookOwner.setText(owner);
         binding.bookType.setText(usrBookSelected.getBook().getType());
-        Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);
+        //Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);
 
+        //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
+        Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                binding.bookThumbnail.setImageBitmap(bitmap);
+                Palette.from(bitmap)
+                        .generate(palette -> {
+                            Palette.Swatch textSwatch = palette.getMutedSwatch();
+                            Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
+                            if (textSwatch == null) {
+                                Toast.makeText(getContext(), "Null swatch :(", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-        switch (usrBookSelected.getBook().getType()) {
+                            binding.bookmarkOutline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                            binding.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                        });
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
+
+        /*switch (usrBookSelected.getBook().getType()) {
             case "Scambio":
                 binding.bookmarkOutline.setColorFilter(getContext().getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
                 binding.bookmark.setColorFilter(getContext().getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
@@ -67,7 +101,7 @@ public class BookRequestFragment extends Fragment {
             default:
                 Picasso.get().load(R.drawable.bookmark_template).into(binding.bookmark);
                 break;
-        }
+        }*/
 
         binding.btnRequest.setOnClickListener(view -> {
             //preleva l'id dell'utente dal database

@@ -1,7 +1,9 @@
 package com.zerobudget.bookito.ui.library;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.utils.Utils;
@@ -72,14 +76,110 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         if (bookModels.get(holder.getAdapterPosition()).getStatus()) {
             holder.wait_icon.setVisibility(View.GONE);
-            Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
+            //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
+            Picasso.get().load(bookModels.get(position).getThumbnail()).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    assert holder.thumbnail != null;
+                    holder.thumbnail.setImageBitmap(bitmap);
+                    Palette.from(bitmap)
+                            .generate(palette -> {
+                                assert palette != null;
+                                Palette.Swatch textSwatch = palette.getMutedSwatch();
+                                Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
+                                if (textSwatch == null) {
+                                    Toast.makeText(context, "Null swatch :(", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                if(textSwatch2 != null)
+                                    holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                                holder.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
+
+                                switch (bookModels.get(holder.getAdapterPosition()).getType()){
+                                    case "Scambio":
+                                        Picasso.get().load(R.drawable.swap).into(holder.book_type);
+                                        break;
+                                    case "Prestito":
+                                        Picasso.get().load(R.drawable.calendar).into(holder.book_type);
+                                        break;
+                                    case "Regalo":
+                                        Picasso.get().load(R.drawable.gift).into(holder.book_type);
+                                        break;
+                                    default:
+                                        Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
+                                        break;
+                                }
+                            });
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
+
+            // Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
         } else {
-            Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(holder.thumbnail);
+            //Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(holder.thumbnail);
+
+            //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
+            Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    assert holder.thumbnail != null;
+                    holder.thumbnail.setImageBitmap(bitmap);
+                    Palette.from(bitmap)
+                            .generate(palette -> {
+                                Palette.Swatch textSwatch = palette.getMutedSwatch();
+                                Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
+                                if (textSwatch == null) {
+                                    Toast.makeText(context, "Null swatch :(", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                                holder.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
+
+                                switch (bookModels.get(holder.getAdapterPosition()).getType()){
+                                    case "Scambio":
+                                        Picasso.get().load(R.drawable.swap).into(holder.book_type);
+                                        break;
+                                    case "Prestito":
+                                        Picasso.get().load(R.drawable.calendar).into(holder.book_type);
+                                        break;
+                                    case "Regalo":
+                                        Picasso.get().load(R.drawable.gift).into(holder.book_type);
+                                        break;
+                                    default:
+                                        Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
+                                        break;
+                                }
+                            });
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
+
             holder.wait_icon.setVisibility(View.VISIBLE);
         }
 
         holder.author.setText(bookModels.get(position).getAuthor());
-
+/*
         switch (bookModels.get(position).getType()) {
             case "Scambio":
                 holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
@@ -100,7 +200,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
                 break;
         }
-
+*/
         holder.book_selected.setOnClickListener(view -> {
             createNewDeletePopup(holder);
         });

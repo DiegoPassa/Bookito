@@ -1,7 +1,9 @@
 package com.zerobudget.bookito.ui.search;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -25,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
@@ -111,9 +115,42 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
         bookOwner.setText(owner);
         bookType.setText(results.get(holder.getAdapterPosition()).getBook().getType());
-        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
+        //Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
 
-        switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
+        //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
+        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                assert  bookThumbnail != null;
+                bookThumbnail.setImageBitmap(bitmap);
+                Palette.from(bitmap)
+                        .generate(palette -> {
+                            assert palette != null;
+                            Palette.Swatch textSwatch = palette.getMutedSwatch();
+                            Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
+                            if (textSwatch == null) {
+                                Toast.makeText(context, "Null swatch :(", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            if(textSwatch2 != null)
+                                bookmarkOutline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
+
+                            bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                        });
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
+        /*switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
             case "Scambio":
                 bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
                 bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
@@ -129,7 +166,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             default:
                 Picasso.get().load(R.drawable.bookmark_template).into(bookmark);
                 break;
-        }
+        }*/
 
         btnRequest.setOnClickListener(view1 -> {
             FirebaseUser currentUser = auth.getCurrentUser();
