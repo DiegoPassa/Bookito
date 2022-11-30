@@ -123,6 +123,7 @@ public class RequestModel {
                     if (task.isSuccessful()) {
                         UserModel u = task.getResult().toObject(UserModel.class);
                         this.setOtherUser(u);
+                        Log.d("QQQQQQQQQQ", "queryOtherUser: " + this);
                     }
                     else {
                         Log.d("SUPER_WARING", "HO PROVATO A COSTRUIRE L'ALTRO USER MA HO FALLITO NON SO IL PERCHÉ!!!! NON CANCELLARE!!!!");
@@ -137,7 +138,6 @@ public class RequestModel {
                 return new RequestModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId());
             }
             case("Prestito"): {
-                Log.d("COSTRUISCO", ""+o.get("date"));
                 return new RequestShareModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), (Timestamp) o.get("date"));
             }
             case("Scambio"): {
@@ -145,6 +145,21 @@ public class RequestModel {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestModel{" +
+                "requestedBook='" + requestedBook + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", status='" + status + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", otherUser=" + otherUser +
+                ", requestId='" + requestId + '\'' +
+                '}';
     }
 }
 

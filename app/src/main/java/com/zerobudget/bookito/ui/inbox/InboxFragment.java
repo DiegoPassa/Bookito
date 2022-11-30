@@ -22,6 +22,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.Requests.RequestShareModel;
+import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -59,12 +61,8 @@ public class InboxFragment extends Fragment {
 
         binding.textView.setVisibility(View.VISIBLE);
         binding.filterBar.setVisibility(View.INVISIBLE);
+        // getRequests();
 
-        getRequests();
-
-        adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -73,6 +71,22 @@ public class InboxFragment extends Fragment {
         });
 
         return root;
+    }
+
+    protected void setUpRecycleView() {
+        if (getView() != null) {
+            adapter = new Inbox_RecycleViewAdapter(this.getContext(), requests, empty);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getRequests();
+
+        setUpRecycleView();
     }
 
     @Override
@@ -91,15 +105,10 @@ public class InboxFragment extends Fragment {
                     }
                     if (value != null){
                         requests.clear();
-                        List<DocumentSnapshot> result = value.getDocuments();
+                        for (DocumentSnapshot doc : value) {
+                            requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
 
-                        for (DocumentSnapshot o : result) {
-                            String type = (String) o.get("type");
-                            RequestModel r = RequestModel.getRequestModel(type, o);
-                            Log.d("RICHIESTA", r.getTitle());
-                            if (r != null) requests.add(r);
                         }
-                        // Log.d("COSASUCCEDE", ""+req.get(0).getThumbnail());
                         getUserByRequest(requests);
                     }
                 });

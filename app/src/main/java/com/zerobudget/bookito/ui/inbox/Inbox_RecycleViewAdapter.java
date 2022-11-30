@@ -240,21 +240,25 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
-        owner.setText(firstAndLastNameStr);
+
+//        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
+//        owner.setText(firstAndLastNameStr);
+
+        dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
+
         ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
-
         if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
-            Date date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate();
-
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            String dateString = "Data di restituzione:\n"+sdf.format(date);
-
-            returnDate.setText(dateString);
-            returnDate.setVisibility(View.VISIBLE);
+//            Date date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate();
+//
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//            String dateString = "Data di restituzione:\n"+sdf.format(date);
+//
+//            returnDate.setText(dateString);
+//            returnDate.setVisibility(View.VISIBLE);
+            dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()), returnDate);
         }
 
 
@@ -302,6 +306,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     }
 
     protected void deleteRequest(RequestModel r) {
+        Log.d("REQUEST_DELETED", r.getrequestId());
         db.collection("requests").document(r.getrequestId()).delete();
     }
 
