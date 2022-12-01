@@ -107,7 +107,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         TextView bookAuthor = view.findViewById(R.id.book_author);
         TextView bookDescription = view.findViewById(R.id.book_description);
         TextView bookOwner = view.findViewById(R.id.book_owner);
-        TextView bookType = view.findViewById(R.id.book_type);
         TextView requestNote = view.findViewById(R.id.request_note);
 
         Button btnRequest = view.findViewById(R.id.btn_request);
@@ -124,7 +123,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
         String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
         bookOwner.setText(owner);
-        bookType.setText(results.get(holder.getAdapterPosition()).getBook().getType());
         Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
 
         switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
