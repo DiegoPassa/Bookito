@@ -112,8 +112,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         Button btnRequest = view.findViewById(R.id.btn_request);
 
         ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
-        ImageView bookmark = view.findViewById(R.id.bookmark);
-        ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
+        //ImageView bookmark = view.findViewById(R.id.bookmark);
+        //ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
         ImageView book_type = view.findViewById(R.id.icon_type);
 
         bookTitle.setText(results.get(holder.getAdapterPosition()).getBook().getTitle());

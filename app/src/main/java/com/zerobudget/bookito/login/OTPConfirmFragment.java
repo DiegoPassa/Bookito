@@ -39,17 +39,18 @@ public class OTPConfirmFragment extends Fragment {
     private Bundle bundle;
     private boolean isRegister;
     FirebaseFirestore db;
+    private boolean back;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+            binding.btnGoback.setEnabled(true);
             binding.otpConfirmButton.setEnabled(true);
             binding.codeSentProgressBar.setVisibility(View.GONE);
             binding.doneCheck.setVisibility(View.VISIBLE);
 
             code = s;
-            binding.otpUser.setText(code);
         }
 
         @Override
@@ -115,8 +116,6 @@ public class OTPConfirmFragment extends Fragment {
             signInWithPhoneCredential(credential);
         });
 
-        binding.btnGoback.setOnClickListener(view1 -> NavHostFragment.findNavController(OTPConfirmFragment.this)
-                .navigate(R.id.action_OTPConfirmFragment_to_loginFragment));
     }
 
     private void signInWithPhoneCredential(PhoneAuthCredential credential) {

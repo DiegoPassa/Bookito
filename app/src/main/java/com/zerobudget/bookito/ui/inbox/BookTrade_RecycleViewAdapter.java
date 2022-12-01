@@ -87,17 +87,17 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
     @Override
     public void onBindViewHolder(@NonNull BookTrade_RecycleViewAdapter.ViewHolder holder, int position) {
-        holder.card_type.setVisibility(View.GONE);
-        //Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
+        //holder.card_type.setVisibility(View.GONE);
+        Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
         //holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
         //holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
 
-        int book_number = holder.getAdapterPosition() + 1;
-        holder.book_id.setText(book_number + "");
+        //int book_number = holder.getAdapterPosition() + 1;
+        //holder.book_id.setText(book_number + "");
 
-        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(new Target() {
+        /*Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 assert holder.thumbnail != null;
@@ -128,7 +128,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
             public void onPrepareLoad(Drawable placeHolderDrawable) {
 
             }
-        });
+        });*/
 
 
         holder.book_selected.setOnClickListener(view -> {
@@ -161,9 +161,9 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
 
         ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
-        ImageView bookmark = view.findViewById(R.id.bookmark);
+        /*ImageView bookmark = view.findViewById(R.id.bookmark);
         ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
-        TextView book_id = view.findViewById(R.id.book_id);
+        TextView book_id = view.findViewById(R.id.book_id);*/
 
         bookTitle.setText(results.get(holder.getAdapterPosition()).getBook().getTitle());
         bookAuthor.setText(results.get(holder.getAdapterPosition()).getBook().getAuthor());
@@ -295,9 +295,9 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         private final ImageView thumbnail;
         private final TextView title;
         private final TextView author;
-        private final ImageView bookmark;
+        /*private final ImageView bookmark;
         private final ImageView bookmark_outline;
-        private final TextView book_id;
+        private final TextView book_id;*/
         private final CardView card_type;
 
 
@@ -308,9 +308,9 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
             thumbnail = itemView.findViewById(R.id.book_thumbnail);
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);
-            bookmark = itemView.findViewById(R.id.bookmark);
+            /*bookmark = itemView.findViewById(R.id.bookmark);
             bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
-            book_id = itemView.findViewById(R.id.book_id);
+            book_id = itemView.findViewById(R.id.book_id);*/
             card_type = itemView.findViewById(R.id.card_type);
         }
     }
