@@ -195,6 +195,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+                    <EditText
+                        android:id="@+id/request_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Inserisci un messaggio..."
+                        android:maxHeight="150dp"
+                        android:gravity="top"
+                        android:minHeight="100dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <Button
                         android:id="@+id/btn_request"

@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
     protected TextView returnDate;
     protected ImageView thumbnail;
     protected TextView reputation;
+    protected TextView noteText;
 
     // private AlertDialog.Builder dialogBuilder;
     // private AlertDialog dialog;
@@ -188,6 +190,9 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
         returnDate = view.findViewById(R.id.return_date);
         thumbnail = view.findViewById(R.id.imageView);
         reputation = view.findViewById(R.id.flag);
+        noteText = view.findViewById(R.id.note_text);
+
+        noteText.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
@@ -203,6 +208,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
         loadPopupViewMembers(view);
 
+        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
 
         dialogBuilder.setReputationMessage(reputation, requests.get(position), flag);
 //        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");

@@ -22,11 +22,12 @@ public class RequestModel {
     private String title;
     private UserModel otherUser;
     private String requestId;
+    private String note;
 
 
     public RequestModel() {}
 
-    public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title, String id) {
+    public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title, String id, String note) {
         this.requestedBook = requestedBook;
         this.sender = requester;
         this.receiver = recipient;
@@ -35,11 +36,13 @@ public class RequestModel {
         this.type = type;
         this.title = title;
         this.requestId = id;
+        this.note = note;
     }
 
     public Map<String, Object> serialize() {
 
         Map<String, Object> bookMap = new HashMap<>();
+
         bookMap.put("receiver", this.getReceiver());
         bookMap.put("requestedBook", this.getRequestedBook());
         bookMap.put("sender", this.getSender());
@@ -47,6 +50,7 @@ public class RequestModel {
         bookMap.put("thumbnail", this.getThumbnail());
         bookMap.put("title", this.getTitle());
         bookMap.put("type", this.getType());
+        bookMap.put("note", this.getNote());
 
 
         return bookMap;
@@ -116,6 +120,10 @@ public class RequestModel {
         return this.requestId;
     }
 
+    public String getNote() { return this.note;}
+
+    public void setNote(String note) { this.note = note;}
+
     public Task<DocumentSnapshot> queryOtherUser(FirebaseFirestore db, String id) {
         return db.collection("users").document(id)
                 .get()
@@ -135,13 +143,13 @@ public class RequestModel {
 
         switch (type) {
             case ("Regalo"): {
-                return new RequestModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId());
+                return new RequestModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId(), (String) o.get("note"));
             }
             case("Prestito"): {
-                return new RequestShareModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), (Timestamp) o.get("date"));
+                return new RequestShareModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), (Timestamp) o.get("date"), (String) o.get("note"));
             }
             case("Scambio"): {
-                return new RequestTradeModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("thumbnail"), type, (String) o.get("title"), o.getId(), (String) o.get("requestTradeBook"));
+                return new RequestTradeModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("thumbnail"), type, (String) o.get("title"), o.getId(), (String) o.get("requestTradeBook"), (String) o.get("note"));
             }
         }
         return null;
@@ -159,6 +167,7 @@ public class RequestModel {
                 ", title='" + title + '\'' +
                 ", otherUser=" + otherUser +
                 ", requestId='" + requestId + '\'' +
+                ", note='" + note + '\'' +
                 '}';
     }
 }

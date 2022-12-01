@@ -11,8 +11,8 @@ public class RequestShareModel extends RequestModel {
 
     public RequestShareModel(){}
 
-    public RequestShareModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title, String id, Timestamp date) {
-        super(requestedBook, requester, recipient, status, thumbnail, type, title, id);
+    public RequestShareModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title, String id, Timestamp date, String note) {
+        super(requestedBook, requester, recipient, status, thumbnail, type, title, id, note);
         this.date = date;
     }
 

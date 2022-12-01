@@ -25,11 +25,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:text="Accetta"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/refuseButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/refuseButton"
+                app:layout_constraintTop_toTopOf="@+id/refuseButton"
                 app:layout_constraintVertical_chainStyle="packed" />
 
             <Button
@@ -82,6 +82,23 @@
                 app:layout_constraintBottom_toTopOf="@+id/return_date"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/user" />
+
+            <TextView
+                android:id="@+id/note_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="DIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+                app:layout_constraintBottom_toTopOf="@+id/refuseButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:maxLines="4"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+
 
             <TextView
                 android:id="@+id/return_date"

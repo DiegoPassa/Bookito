@@ -108,6 +108,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         TextView bookDescription = view.findViewById(R.id.book_description);
         TextView bookOwner = view.findViewById(R.id.book_owner);
         TextView bookType = view.findViewById(R.id.book_type);
+        TextView requestNote = view.findViewById(R.id.request_note);
 
         Button btnRequest = view.findViewById(R.id.btn_request);
 
@@ -156,6 +157,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                 rm.setStatus("undefined");
                 rm.setType(results.get(holder.getAdapterPosition()).getBook().getType());
                 rm.setSender(Utils.USER_ID);
+                rm.setNote(requestNote.getText().toString());
 
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
