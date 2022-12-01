@@ -71,9 +71,22 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         String owner = results.get(position).getUser().getFirstName() + " " + results.get(position).getUser().getLastName();
         holder.book_owner.setText(owner);
         holder.neighborhood_owner.setText(results.get(position).getUser().getNeighborhood());
-        holder.type.setText(results.get(position).getBook().getType());
+        //holder.type.setText(results.get(position).getBook().getType());
 
 
+        switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
+            case "Scambio":
+                Picasso.get().load(R.drawable.swap).into(holder.book_type);
+                break;
+            case "Prestito":
+                Picasso.get().load(R.drawable.calendar).into(holder.book_type);
+                break;
+            case "Regalo":
+                Picasso.get().load(R.drawable.gift).into(holder.book_type);
+                break;
+            default:
+                break;
+        }
         holder.book_selected.setOnClickListener(view -> {
             createNewSearchPopup(holder);
 
@@ -281,7 +294,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         private final TextView author;
         private final TextView book_owner;
         private final TextView neighborhood_owner;
-        private final TextView type;
+        //private final TextView type;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -292,7 +305,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             author = itemView.findViewById(R.id.book_author);
             book_owner = itemView.findViewById(R.id.book_owner);
             neighborhood_owner = itemView.findViewById(R.id.neighborhood_owner);
-            type = itemView.findViewById(R.id.type);
+            //type = itemView.findViewById(R.id.type);
             book_type = itemView.findViewById(R.id.icon_type);
         }
     }
