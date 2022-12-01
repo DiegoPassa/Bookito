@@ -1,8 +1,6 @@
 package com.zerobudget.bookito.login;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.PreferenceGroup;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;

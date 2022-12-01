@@ -70,7 +70,7 @@ public class LoginFragment extends Fragment {
                 if(editable.toString().isEmpty()) {
                     binding.login.setEnabled(false);
                 } else {
-                    if(editLen > 0 && editLen < 11){
+                    if(editLen > 0 && editLen < 12){
                         String numWithSpace = editable +" ";
                         if(!backSpace && (editLen == 3 || editLen == 7)) {
                             binding.phoneNumber.setText(numWithSpace);

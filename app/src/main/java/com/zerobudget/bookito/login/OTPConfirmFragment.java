@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.firebase.FirebaseException;
@@ -46,7 +47,9 @@ public class OTPConfirmFragment extends Fragment {
             binding.otpConfirmButton.setEnabled(true);
             binding.codeSentProgressBar.setVisibility(View.GONE);
             binding.doneCheck.setVisibility(View.VISIBLE);
+
             code = s;
+            binding.otpUser.setText(code);
         }
 
         @Override
@@ -98,7 +101,9 @@ public class OTPConfirmFragment extends Fragment {
                         .setActivity(requireActivity())                 // Activity (for callback binding)
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                         .build();
+
         PhoneAuthProvider.verifyPhoneNumber(options);
+
         binding.otpConfirmButton.setOnClickListener(view1 -> {
             String userInput = binding.otpUser.getText().toString().trim();
             if(userInput.isEmpty()){
@@ -109,6 +114,9 @@ public class OTPConfirmFragment extends Fragment {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(code,userInput);
             signInWithPhoneCredential(credential);
         });
+
+        binding.btnGoback.setOnClickListener(view1 -> NavHostFragment.findNavController(OTPConfirmFragment.this)
+                .navigate(R.id.action_OTPConfirmFragment_to_loginFragment));
     }
 
     private void signInWithPhoneCredential(PhoneAuthCredential credential) {
@@ -156,4 +164,5 @@ public class OTPConfirmFragment extends Fragment {
                     requireActivity().finish();
                 });
     }
+
 }
