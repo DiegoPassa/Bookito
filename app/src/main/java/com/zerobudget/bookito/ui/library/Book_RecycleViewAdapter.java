@@ -74,6 +74,8 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
 
+        int book_number = holder.getAdapterPosition()+1;
+        holder.book_id.setText(book_number+"");
         if (bookModels.get(holder.getAdapterPosition()).getStatus()) {
             holder.wait_icon.setVisibility(View.GONE);
             //cambia dinamicamente i colori del bookmark sulla base dell'immagine di copertina del libro
@@ -95,6 +97,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
                                 holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
                                 holder.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                                holder.book_id.setTextColor(textSwatch.getBodyTextColor());
                             });
                 }
                 @Override
@@ -153,7 +156,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 Picasso.get().load(R.drawable.gift).into(holder.book_type);
                 break;
             default:
-                Picasso.get().load(R.drawable.bookmark_template).into(holder.bookmark);
                 break;
         }
 /*
@@ -256,6 +258,8 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         private final ImageView wait_icon;
         private final ImageView book_type;
 
+        private final TextView book_id;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.book_thumbnail);
@@ -267,6 +271,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
             wait_icon = itemView.findViewById(R.id.wait_icon);
             book_type = itemView.findViewById(R.id.icon_type);
+            book_id = itemView.findViewById(R.id.book_id);
         }
     }
 

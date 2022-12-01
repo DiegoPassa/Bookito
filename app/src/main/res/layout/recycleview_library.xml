@@ -69,6 +69,22 @@
                         app:layout_constraintTop_toTopOf="@+id/book_thumbnail"
                         app:srcCompat="@drawable/bookmark_outline" />
 
+
+                    <TextView
+                        android:id="@+id/book_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="100"
+                        android:textColor="@color/md_theme_dark_tertiary"
+                        android:textSize="11sp"
+                        android:textAlignment="gravity"
+                        android:gravity="center_horizontal|center_vertical"
+                        app:layout_constraintBottom_toBottomOf="@id/bookmark_outline"
+                        app:layout_constraintEnd_toEndOf="@+id/bookmark_outline"
+                        app:layout_constraintStart_toStartOf="@id/bookmark_outline"
+                        app:layout_constraintTop_toTopOf="@+id/bookmark_outline" />
+
                     <ImageView
                         android:id="@+id/wait_icon"
                         android:layout_width="0dp"

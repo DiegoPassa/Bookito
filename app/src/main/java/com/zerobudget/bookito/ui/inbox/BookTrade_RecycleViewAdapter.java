@@ -82,8 +82,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
-        holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
-        holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
+        //holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
+        //holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
 
         holder.book_selected.setOnClickListener(view -> {
             createNewSelectPopup(position, holder);
@@ -126,7 +126,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
         bookOwner.setText(owner);
         Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
-
+/*
         switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
             case "Scambio":
                 bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
@@ -144,7 +144,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 Picasso.get().load(R.drawable.bookmark_template).into(bookmark);
                 break;
         }
-
+*/
 
         tradeBtn.setOnClickListener(view1 -> {
             if (exists) { //controlla che la richiesta esista ancora
