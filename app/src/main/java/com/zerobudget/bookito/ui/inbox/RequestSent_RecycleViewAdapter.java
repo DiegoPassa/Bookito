@@ -106,6 +106,8 @@ public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
 
         loadPopupViewMembers(view);
 
+        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
+
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
         String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
