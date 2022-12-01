@@ -52,7 +52,6 @@ public class BookRequestFragment extends Fragment {
         binding.bookDescription.setMovementMethod(new ScrollingMovementMethod());
         String owner = usrBookSelected.getUser().getFirstName() + " " + usrBookSelected.getUser().getLastName();
         binding.bookOwner.setText(owner);
-        binding.bookType.setText(usrBookSelected.getBook().getType());
         Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);
 
         /*switch (usrBookSelected.getBook().getType()) {
