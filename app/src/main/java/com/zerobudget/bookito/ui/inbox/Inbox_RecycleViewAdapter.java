@@ -330,8 +330,8 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
                         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
                         db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
-                                requests.remove(holder.getAdapterPosition());
-                                notifyItemRemoved(holder.getAdapterPosition());
+                                //requests.remove(holder.getAdapterPosition());
+                                //notifyItemRemoved(holder.getAdapterPosition());
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/"+r.getrequestId());
 
                                 ref.child("user1").setValue(r.getReceiver());

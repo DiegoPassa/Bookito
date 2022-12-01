@@ -45,7 +45,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_popup" />
 
-            <TextView
+            <!--TextView
                 android:id="@+id/feedback"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -56,7 +56,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_request" />
+                app:layout_constraintTop_toBottomOf="@id/info_request" /-->
 
             <TextView
                 android:id="@+id/close_request"
@@ -70,7 +70,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/feedback" />
+                app:layout_constraintTop_toBottomOf="@id/info_request" />
 
             <TextView
                 android:id="@+id/confirm_book_given"
