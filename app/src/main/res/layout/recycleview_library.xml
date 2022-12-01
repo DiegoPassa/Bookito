@@ -118,6 +118,7 @@
                         app:layout_constraintGuide_begin="110dp" />
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/card_type"
                         style="@style/color_card"
                         android:layout_width="35dp"
                         android:layout_height="0dp"

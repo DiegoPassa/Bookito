@@ -1,7 +1,10 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +17,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -27,6 +32,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
@@ -41,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade_RecycleViewAdapter.ViewHolder> {
 
@@ -79,11 +87,49 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
     @Override
     public void onBindViewHolder(@NonNull BookTrade_RecycleViewAdapter.ViewHolder holder, int position) {
-        Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
+        holder.card_type.setVisibility(View.GONE);
+        //Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
         //holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
         //holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
+
+        int book_number = holder.getAdapterPosition() + 1;
+        holder.book_id.setText(book_number + "");
+
+        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                assert holder.thumbnail != null;
+                holder.thumbnail.setImageBitmap(bitmap);
+                Palette.from(bitmap)
+                        .generate(palette -> {
+                            assert palette != null;
+                            Palette.Swatch textSwatch = palette.getMutedSwatch();
+                            Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
+
+                            if (textSwatch == null)
+                                return;
+                            if (textSwatch2 == null)
+                                return;
+
+                            holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                            holder.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
+                            holder.book_id.setTextColor(textSwatch.getBodyTextColor());
+                        });
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
+
 
         holder.book_selected.setOnClickListener(view -> {
             createNewSelectPopup(position, holder);
@@ -117,6 +163,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
         ImageView bookmark = view.findViewById(R.id.bookmark);
         ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
+        TextView book_id = view.findViewById(R.id.book_id);
 
         bookTitle.setText(results.get(holder.getAdapterPosition()).getBook().getTitle());
         bookAuthor.setText(results.get(holder.getAdapterPosition()).getBook().getAuthor());
@@ -126,7 +173,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
         bookOwner.setText(owner);
         Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
-/*
+
+        /*
         switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
             case "Scambio":
                 bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
@@ -172,7 +220,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/"+r.getrequestId());
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/" + r.getrequestId());
 
                 ref.child("user1").setValue(r.getReceiver());
                 if (r.getReceiver().equals(Utils.USER_ID))
@@ -187,19 +235,19 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 String currentDate = sdf1.format(now);
 
                 //messaggio di default da sender a receiver che viene inviato con il libro della richiesta
-                String messageTxtSender = "Ciao, ti contatto per il tuo libro '"+r.getTitle()+"'!";
+                String messageTxtSender = "Ciao, ti contatto per il tuo libro '" + r.getTitle() + "'!";
                 MessageModelWithImage defaultMsgSender = new MessageModelWithImage(r.getThumbnail(), r.getSender(), Utils.USER_ID, messageTxtSender, currentTime, currentDate);
                 ref.push().setValue(defaultMsgSender);
 
                 //messaggio di default da receiver a sender inviato con il libro scelto per lo scambio dalla libreria del sender
-                String messageTxt = "Ciao, ho scelto il libro '"+bookTrade.getTitle()+"' da scambiare!";
+                String messageTxt = "Ciao, ho scelto il libro '" + bookTrade.getTitle() + "' da scambiare!";
                 MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, currentTime, currentDate);
                 ref.push().setValue(defaultMsgReceiver);
 
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
                 changeBookStatus(Utils.USER_ID, r.getRequestedBook());
                 changeBookStatus(r.getSender(), bookTrade.getIsbn());
-            }else
+            } else
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
         });
         db.collection("requests").document(r.getrequestId()).update("requestTradeBook", bookTrade.getIsbn());
@@ -215,7 +263,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         });
     }
 
-    private void changeBookStatus(String userID, String isbn){
+    private void changeBookStatus(String userID, String isbn) {
         Log.d("USER", userID);
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -223,9 +271,9 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 if (arr != null) //si assicura di cercare solo se esiste quache libro
                     for (Object o : (ArrayList<Object>) arr) {
                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if(map.get("isbn").equals(isbn)){
-                            BookModel oldBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
+                        if (map.get("isbn").equals(isbn)) {
+                            BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
 
                             //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
                             db.collection("users").document(userID).update("books", FieldValue.arrayRemove(oldBook));
@@ -249,6 +297,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         private final TextView author;
         private final ImageView bookmark;
         private final ImageView bookmark_outline;
+        private final TextView book_id;
+        private final CardView card_type;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -260,6 +310,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
             author = itemView.findViewById(R.id.book_author);
             bookmark = itemView.findViewById(R.id.bookmark);
             bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
+            book_id = itemView.findViewById(R.id.book_id);
+            card_type = itemView.findViewById(R.id.card_type);
         }
     }
 }

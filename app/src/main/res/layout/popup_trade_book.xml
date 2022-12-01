@@ -57,24 +57,6 @@
                             app:layout_constraintTop_toTopOf="parent"
                             tools:srcCompat="@tools:sample/avatars" />
 
-                        <ImageView
-                            android:id="@+id/bookmark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:layout_marginEnd="16dp"
-                            app:layout_constraintEnd_toEndOf="@+id/book_thumbnail"
-                            app:layout_constraintTop_toTopOf="@+id/book_thumbnail"
-                            app:srcCompat="@drawable/bookmark_template" />
-
-                        <ImageView
-                            android:id="@+id/bookmark_outline"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
-                            app:layout_constraintEnd_toEndOf="@+id/book_thumbnail"
-                            app:layout_constraintTop_toTopOf="@+id/book_thumbnail"
-                            app:srcCompat="@drawable/bookmark_outline" />
 
                         <TextView
                             android:id="@+id/book_title"
