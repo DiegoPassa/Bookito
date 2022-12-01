@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         style="@style/color_card"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,8 +45,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/acceptButton"
                 app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView"
@@ -54,9 +53,7 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
                 android:scaleType="fitXY"
-                app:layout_constraintBottom_toTopOf="@+id/refuseButton"
                 app:layout_constraintDimensionRatio="h,1:1.45"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_popup"
@@ -64,23 +61,25 @@
 
             <TextView
                 android:id="@+id/user"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Marco Chinellato"
-                app:layout_constraintBottom_toTopOf="@+id/user_location"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                tools:text="@string/nome_utente"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="@+id/imageView" />
 
             <TextView
                 android:id="@+id/user_location"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:text="Venezia - Campalto"
-                app:layout_constraintBottom_toTopOf="@+id/return_date"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintEnd_toEndOf="@+id/user"
+                app:layout_constraintStart_toStartOf="@+id/user"
                 app:layout_constraintTop_toBottomOf="@+id/user" />
 
             <TextView
@@ -88,40 +87,39 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="DIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+                android:layout_marginBottom="16dp"
+                android:maxLines="4"
+                android:scrollbars="vertical"
+                android:text="@string/lorem_ipsum_long"
                 app:layout_constraintBottom_toTopOf="@+id/refuseButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:maxLines="4"
                 app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
 
 
             <TextView
                 android:id="@+id/return_date"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="data restituzione: 25/12/2022"
+                android:text="Data restituzione: dd/hh/yyyy"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/flag"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/user_location" />
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintEnd_toEndOf="@+id/user"
+                app:layout_constraintStart_toStartOf="@+id/user"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/flag"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Reputazione"
                 android:textColor="?colorError"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/return_date" />
+                app:layout_constraintEnd_toEndOf="@+id/user"
+                app:layout_constraintStart_toStartOf="@+id/user"
+                app:layout_constraintTop_toBottomOf="@+id/user_location" />
 
             <TextView
                 android:id="@+id/title_popup"
@@ -133,7 +131,6 @@
                 android:text="Richiesta di prestito"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/imageView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
