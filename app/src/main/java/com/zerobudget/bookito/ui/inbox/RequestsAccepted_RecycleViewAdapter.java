@@ -30,18 +30,16 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.w3c.dom.Text;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class RequestAccepted_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
+public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_RecycleViewAdapter {
     private StorageReference storageRef;
 
-    public RequestAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
+    public RequestsAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
         super(ctx, requests, empty);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();

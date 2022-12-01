@@ -24,12 +24,12 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
-public class RequestSent_RecycleViewAdapter extends Inbox_RecycleViewAdapter {
+public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleViewAdapter {
     private StorageReference storageRef;
     private boolean isUndefined;
 
 
-    public RequestSent_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
+    public RequestsSent_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
         super(ctx, requests, empty);
         this.isUndefined = false;
 

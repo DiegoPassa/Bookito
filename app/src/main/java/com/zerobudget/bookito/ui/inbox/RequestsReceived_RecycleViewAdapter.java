@@ -48,7 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_RecycleViewAdapter.ViewHolder> {
+public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<RequestsReceived_RecycleViewAdapter.ViewHolder> {
 
     protected final Context context;
     protected ArrayList<RequestModel> requests;
@@ -74,7 +74,7 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     private boolean exists;
 
-    public Inbox_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
+    public RequestsReceived_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
         this.context = ctx;
         this.requests = requests;
         this.exists = false;
@@ -90,12 +90,12 @@ public class Inbox_RecycleViewAdapter extends RecyclerView.Adapter<Inbox_Recycle
 
     @NonNull
     @Override
-    public Inbox_RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RequestsReceived_RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(R.layout.recycleview_requests, parent, false);
 
-        return new Inbox_RecycleViewAdapter.ViewHolder(view);
+        return new RequestsReceived_RecycleViewAdapter.ViewHolder(view);
     }
 
     @Override

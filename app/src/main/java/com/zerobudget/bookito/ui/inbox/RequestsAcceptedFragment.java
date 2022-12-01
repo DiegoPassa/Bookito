@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +26,7 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
-public class RequestAcceptedFragment extends Fragment {
+public class RequestsAcceptedFragment extends InboxFragment {
     private FragmentInboxBinding binding;
     private ArrayList<RequestModel> requests = new ArrayList<>();
     private ArrayList<RequestModel> requestsSent = new ArrayList<>();
@@ -201,7 +200,7 @@ public class RequestAcceptedFragment extends Fragment {
 
         RecyclerView recyclerView = binding.recycleViewInbox;
 
-        Inbox_RecycleViewAdapter adapter = new RequestAccepted_RecycleViewAdapter(this.getContext(), req, emptyWarning);
+        RequestsReceived_RecycleViewAdapter adapter = new RequestsAccepted_RecycleViewAdapter(this.getContext(), req, emptyWarning);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
