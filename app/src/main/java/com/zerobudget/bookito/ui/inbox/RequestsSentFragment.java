@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,12 +23,10 @@ import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 
-public class RequestSentFragment extends Fragment {
+public class RequestsSentFragment extends InboxFragment {
     private FragmentInboxBinding binding;
 
     private FirebaseFirestore db;
-
-    private ArrayList<RequestModel> requests;
 
     private TextView emptyWarning;
 
@@ -91,7 +88,7 @@ public class RequestSentFragment extends Fragment {
             Log.d("SENDED", "SONO ENTRATO");
             RecyclerView recyclerView = binding.recycleViewInbox;
 
-            Inbox_RecycleViewAdapter adapter = new RequestSent_RecycleViewAdapter(this.getContext(), req, emptyWarning);
+            RequestsReceived_RecycleViewAdapter adapter = new RequestsSent_RecycleViewAdapter(this.getContext(), req, emptyWarning);
 
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
