@@ -308,7 +308,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     protected void deleteRequest(RequestModel r) {
         // Log.d("REQUEST_DELETED", r.getrequestId());
-        db.collection("requests").document(r.getrequestId()).delete();
+        db.collection("requests").document(r.getRequestId()).delete();
     }
 
     protected void acceptRequest(RequestModel r, ViewHolder holder) {
@@ -328,11 +328,11 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
                     if (!existsOther) {
                         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
-                        db.collection("requests").document(r.getrequestId()).update("status", "accepted").addOnCompleteListener(task1 -> {
+                        db.collection("requests").document(r.getRequestId()).update("status", "accepted").addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 //requests.remove(holder.getAdapterPosition());
                                 //notifyItemRemoved(holder.getAdapterPosition());
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/"+r.getrequestId());
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/" + r.getRequestId());
 
                                 ref.child("user1").setValue(r.getReceiver());
                                 if (r.getReceiver().equals(Utils.USER_ID))
@@ -365,7 +365,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot doc : task.getResult())
-                    if (doc.getId().equals(r.getrequestId()))
+                    if (doc.getId().equals(r.getRequestId()))
                         exists = true;
             }
         });

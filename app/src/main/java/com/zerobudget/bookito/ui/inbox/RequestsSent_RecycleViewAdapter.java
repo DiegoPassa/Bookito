@@ -158,7 +158,7 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot doc : task.getResult())
-                    if (doc.getId().equals(r.getrequestId()))
+                    if (doc.getId().equals(r.getRequestId()))
                         isUndefined = doc.get("status").equals("undefined");
             }
         });

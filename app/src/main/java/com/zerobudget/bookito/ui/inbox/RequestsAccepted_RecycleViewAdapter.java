@@ -30,6 +30,7 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,7 +117,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                 else
                     args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
 
-                args.putString("requestID", requests.get(holder.getAdapterPosition()).getrequestId());
+                args.putString("requestID", requests.get(holder.getAdapterPosition()).getRequestId());
                 args.putParcelable("otherUserPic", otherUserPic[0]);
                 args.putString("receiverID", requests.get(holder.getAdapterPosition()).getReceiver());
                 Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
@@ -173,7 +174,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
             builder.setTitle("Conferma");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler confermare l'inizio del prestito di <br><b>" + request.getTitle() + "</b>", Html.FROM_HTML_MODE_LEGACY));
             builder.setPositiveButton("SI", (dialogInterface, i) -> {
-                db.collection("requests").document(request.getrequestId()).update("status", "ongoing").addOnSuccessListener(task -> {
+                db.collection("requests").document(request.getRequestId()).update("status", "ongoing").addOnSuccessListener(task -> {
                     request.setStatus("ongoing");
                 });
                 dialogInterface.dismiss();
@@ -264,7 +265,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                     changeBookStatus(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
                 }
 
-                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "cancelled");
+                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "cancelled");
 
                 Toast.makeText(context, "Richiesta annullata!", Toast.LENGTH_LONG).show();
                 requests.remove(holder.getAdapterPosition());
@@ -286,7 +287,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
 
             if (!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
                 //la richiesta è segnata come conclusa
-                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
 
                 if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
                     //cancella i libri scambiati
@@ -317,7 +318,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                     //cambia lo stato del libro
                     changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
                     //segna la richiesta come conlusa
-                    db.collection("requests").document(requests.get(holder.getAdapterPosition()).getrequestId()).update("status", "concluded");
+                    db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
                     requests.remove(holder.getAdapterPosition());
                     notifyItemRemoved(holder.getAdapterPosition());
                     Toast.makeText(context, "Prestito concluso, il libro è nuovamente disponibile nella libreria!", Toast.LENGTH_LONG).show();

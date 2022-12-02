@@ -50,7 +50,6 @@ public class RequestsReceivedFragment extends InboxFragment {
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.swipeRefreshLayout.setRefreshing(false);
             // do nothing
         });
 
@@ -89,16 +88,22 @@ public class RequestsReceivedFragment extends InboxFragment {
                     }
                     if (value != null) {
                         for (DocumentChange dc : value.getDocumentChanges()) {
+                            spinner.setVisibility(View.VISIBLE);
                             switch (dc.getType()) {
                                 case ADDED:
-                                    getUserByRequest(RequestModel.getRequestModel(dc.getDocument().toObject(RequestModel.class).getType(), dc.getDocument()), dc.getNewIndex());
+                                    RequestModel addedRequestModel = RequestModel.getRequestModel(dc.getDocument().toObject(RequestModel.class).getType(), dc.getDocument());
+                                    requests.add(dc.getNewIndex(), addedRequestModel);
+                                    getUserByRequest(addedRequestModel, dc.getNewIndex());
                                     break;
                                 case REMOVED:
                                     requests.remove(dc.getOldIndex());
                                     adapter.notifyItemRemoved(dc.getOldIndex());
+                                    spinner.setVisibility(View.GONE);
                                     break;
                             }
                         }
+                        Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
+                        spinner.setVisibility(View.GONE);
                     }
                 });
     }
@@ -110,9 +115,8 @@ public class RequestsReceivedFragment extends InboxFragment {
                     if (task.isSuccessful()) {
                         UserModel u = task.getResult().toObject(UserModel.class);
                         r.setOtherUser(u);
-                        requests.add(position, r);
-                        spinner.setVisibility(View.GONE);
                         adapter.notifyItemInserted(position);
+                        spinner.setVisibility(View.GONE);
                     }
                 });
     }

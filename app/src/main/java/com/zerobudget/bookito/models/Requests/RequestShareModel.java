@@ -30,4 +30,21 @@ public class RequestShareModel extends RequestModel {
         ser.put("date", this.date);
         return ser;
     }
+
+    @Override
+    public String toString() {
+        return "RequestShareModel{" +
+                "requestedBook='" + requestedBook + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", status='" + status + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", otherUser=" + otherUser +
+                ", requestId='" + requestId + '\'' +
+                ", note='" + note + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

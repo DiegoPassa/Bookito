@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.models.Requests;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -10,19 +9,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestModel {
-    private String requestedBook; //isbn libro richiesto
-    private String sender; //id utente che fa la richiesta
-    private String receiver; //id utente che RICEVE la richiesta (id utente attuale basically)
-    private String status; //stato della richiesta, può assumere 3 valori: undefined, refused and accepted
-    private String thumbnail;
-    private String type; //Scambio, Prestito o Regalo
-    private String title;
-    private UserModel otherUser;
-    private String requestId;
-    private String note;
+    protected String requestedBook; //isbn libro richiesto
+    protected String sender; //id utente che fa la richiesta
+    protected String receiver; //id utente che RICEVE la richiesta (id utente attuale basically)
+    protected String status; //stato della richiesta, può assumere 3 valori: undefined, refused and accepted
+    protected String thumbnail;
+    protected String type; //Scambio, Prestito o Regalo
+    protected String title;
+    protected UserModel otherUser;
+    protected String requestId;
+    protected String note;
 
 
-    public RequestModel() {}
+    public RequestModel() {
+    }
 
     public RequestModel(String requestedBook, String requester, String recipient, String status, String thumbnail, String type, String title, String id, String note) {
         this.requestedBook = requestedBook;
@@ -53,74 +53,6 @@ public class RequestModel {
         return bookMap;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getRequestedBook() {
-        return requestedBook;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public UserModel getOtherUser() { return this.otherUser; }
-
-    public void setRequestedBook(String requestedBook) {
-        this.requestedBook = requestedBook;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public void setOtherUser(UserModel u) { this.otherUser = u; }
-
-    public String getrequestId() {
-        return this.requestId;
-    }
-
-    public String getNote() { return this.note;}
-
-    public void setNote(String note) { this.note = note;}
-
     public Task<DocumentSnapshot> queryOtherUser(FirebaseFirestore db, String id) {
         return db.collection("users").document(id)
                 .get()
@@ -133,19 +65,103 @@ public class RequestModel {
     }
 
     public static RequestModel getRequestModel(String type, DocumentSnapshot o) {
-
+        RequestModel r = new RequestModel();
         switch (type) {
             case ("Regalo"): {
-                return new RequestModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"), type, (String)o.get("title"), o.getId(), (String) o.get("note"));
+                r = o.toObject(RequestModel.class);
+                break;
             }
-            case("Prestito"): {
-                return new RequestShareModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String)o.get("thumbnail"),  type, (String) o.get("title"), o.getId(), (Timestamp) o.get("date"), (String) o.get("note"));
+            case ("Prestito"): {
+                r = o.toObject(RequestShareModel.class);
+                break;
             }
-            case("Scambio"): {
-                return new RequestTradeModel((String) o.get("requestedBook"), (String) o.get("sender"), (String) o.get("receiver"), (String) o.get("status"), (String) o.get("thumbnail"), type, (String) o.get("title"), o.getId(), (String) o.get("requestTradeBook"), (String) o.get("note"));
+            case ("Scambio"): {
+                r = o.toObject(RequestTradeModel.class);
+                break;
             }
         }
-        return null;
+        r.setRequestId(o.getId());
+        return r;
+    }
+
+    public String getRequestedBook() {
+        return requestedBook;
+    }
+
+    public void setRequestedBook(String requestedBook) {
+        this.requestedBook = requestedBook;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public UserModel getOtherUser() {
+        return otherUser;
+    }
+
+    public void setOtherUser(UserModel otherUser) {
+        this.otherUser = otherUser;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override

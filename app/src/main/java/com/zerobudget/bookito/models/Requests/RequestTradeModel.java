@@ -17,4 +17,21 @@ public class RequestTradeModel extends RequestModel{
     public void setRequestTradeBook(String requestTradeBook) {
         this.requestTradeBook = requestTradeBook;
     }
+
+    @Override
+    public String toString() {
+        return "RequestTradeModel{" +
+                "requestedBook='" + requestedBook + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", status='" + status + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", otherUser=" + otherUser +
+                ", requestId='" + requestId + '\'' +
+                ", note='" + note + '\'' +
+                ", requestTradeBook='" + requestTradeBook + '\'' +
+                '}';
+    }
 }
