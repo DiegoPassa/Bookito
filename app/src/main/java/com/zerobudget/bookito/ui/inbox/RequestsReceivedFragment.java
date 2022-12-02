@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -83,6 +85,7 @@ public class RequestsReceivedFragment extends InboxFragment {
         db.collection("requests")
                 .whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         return;
@@ -92,6 +95,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                             spinner.setVisibility(View.GONE);
                         }
                         for (DocumentChange dc : value.getDocumentChanges()) {
+                            Log.d("OOI", "getRequestsRealTime: " + dc.getDocument().toObject(RequestModel.class));
                             spinner.setVisibility(View.VISIBLE);
                             switch (dc.getType()) {
                                 case ADDED:
@@ -119,6 +123,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                         UserModel u = task.getResult().toObject(UserModel.class);
                         r.setOtherUser(u);
                         adapter.notifyItemInserted(position);
+                        recyclerView.scrollToPosition(position);
                         spinner.setVisibility(View.GONE);
                     }
                 });

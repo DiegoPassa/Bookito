@@ -5,6 +5,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.models.users.UserModel;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class RequestModel {
         bookMap.put("title", this.getTitle());
         bookMap.put("type", this.getType());
         bookMap.put("note", this.getNote());
-
+        bookMap.put("timestamp", new Timestamp(System.currentTimeMillis()).getTime());
 
         return bookMap;
     }
