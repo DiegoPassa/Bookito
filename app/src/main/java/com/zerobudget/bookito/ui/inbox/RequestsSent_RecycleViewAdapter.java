@@ -85,17 +85,17 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
             holder.usr_pic.setVisibility(View.GONE);
         }
 
-        setUpColorType(holder, requests.get(position).getType());
+        setupIconType(holder, requests.get(position).getType());
 
         holder.request_selected.setOnClickListener(view -> {
             if (otherModel != null && holder.getAdapterPosition() != -1) {
-                createNewContactDialog(position, holder, null);
+                createNewContactDialog(holder, null);
             }
         });
     }
 
     @Override
-    public void createNewContactDialog(int posiiton, ViewHolder holder, Flag flag) {
+    public void createNewContactDialog(ViewHolder holder, Flag flag) {
         checkIfStillUndefined(requests.get(holder.getAdapterPosition()));
 
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);

@@ -1,14 +1,11 @@
 package com.zerobudget.bookito.models.Requests;
 
-import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.models.users.UserModel;
 
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -131,10 +128,6 @@ public class RequestModel {
                     if (task.isSuccessful()) {
                         UserModel u = task.getResult().toObject(UserModel.class);
                         this.setOtherUser(u);
-                        Log.d("QQQQQQQQQQ", "queryOtherUser: " + this);
-                    }
-                    else {
-                        Log.d("SUPER_WARING", "HO PROVATO A COSTRUIRE L'ALTRO USER MA HO FALLITO NON SO IL PERCHÉ!!!! NON CANCELLARE!!!!");
                     }
                 });
     }

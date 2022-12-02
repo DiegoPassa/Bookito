@@ -104,7 +104,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         String idSender = requests.get(holder.getAdapterPosition()).getSender();
 
         if (senderModel != null) {
-            String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(position).getOtherUser().getLastName();
+            String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
             holder.user_name.setText(other_usr);
         } else
             holder.user_name.setText("undefined");
@@ -114,7 +114,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         String type = requests.get(holder.getAdapterPosition()).getType();
 
-        setUpColorType(holder, type);
+        setupIconType(holder, type);
 
         if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
             holder.user_gravatar.setVisibility(View.GONE);
@@ -155,13 +155,13 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 Number points = (Number) karma.get("points");
                 Number feedback_numbers = (Number) karma.get("numbers");
                 Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
-                createNewContactDialog(position, holder, flag);
+                createNewContactDialog(holder, flag);
 
             }
         });
     }
 
-    protected void setUpColorType(ViewHolder holder, String type) {
+    protected void setupIconType(ViewHolder holder, String type) {
         switch (type) {
             case "Regalo":
                 Picasso.get().load(R.drawable.gift).into(holder.type);
@@ -195,7 +195,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         noteText.setMovementMethod(new ScrollingMovementMethod());
     }
 
-    public void createNewContactDialog(int position, ViewHolder holder, Flag flag) {
+    public void createNewContactDialog(ViewHolder holder, Flag flag) {
         checkIfStillExists(requests.get(holder.getAdapterPosition()));
 
         PopupInbox dialogBuilder = new PopupInbox(context);
@@ -210,7 +210,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
 
-        dialogBuilder.setReputationMessage(reputation, requests.get(position), flag);
+        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
 //        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
 //        Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
 //
@@ -268,7 +268,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         }
 
         confirmButton.setOnClickListener(view1 -> {
-            Log.d("Pos", "" + position);
+            Log.d("Pos", "" + holder.getAdapterPosition());
             if (holder.getAdapterPosition() != -1) {
                 if (exists) { //controlla che la richiesta esista ancora
                     if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
@@ -295,8 +295,8 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         refuseButton.setOnClickListener(view1 -> {
             if (holder.getAdapterPosition() != -1) {
                 deleteRequest(requests.get(holder.getAdapterPosition()));
-                requests.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
+                // requests.remove(holder.getAdapterPosition());
+                // notifyItemRemoved(holder.getAdapterPosition());
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             }
             Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_INBOX, requests.size());
@@ -307,7 +307,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     protected void deleteRequest(RequestModel r) {
-        Log.d("REQUEST_DELETED", r.getrequestId());
+        // Log.d("REQUEST_DELETED", r.getrequestId());
         db.collection("requests").document(r.getrequestId()).delete();
     }
 

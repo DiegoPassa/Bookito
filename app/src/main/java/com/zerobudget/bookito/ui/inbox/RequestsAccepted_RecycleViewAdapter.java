@@ -103,7 +103,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
             holder.usr_pic.setVisibility(View.GONE);
         }
 
-        setUpColorType(holder, requests.get(position).getType());
+        setupIconType(holder, requests.get(position).getType());
 
         holder.request_selected.setOnClickListener(view1 -> {
             if (otherUser != null && holder.getAdapterPosition() != -1) {

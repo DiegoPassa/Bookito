@@ -11,15 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
-
-import java.util.ArrayList;
 
 public class RequestsReceivedFragment extends InboxFragment {
 
@@ -50,13 +47,11 @@ public class RequestsReceivedFragment extends InboxFragment {
 
         binding.textView.setVisibility(View.VISIBLE);
         binding.filterBar.setVisibility(View.INVISIBLE);
-        // getRequests();
-
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
-            getRequests();
+            // do nothing
         });
 
         return root;
@@ -73,9 +68,8 @@ public class RequestsReceivedFragment extends InboxFragment {
     @Override
     public void onStart() {
         super.onStart();
-        getRequests();
-
         setUpRecycleView();
+        getRequestsRealTime();
     }
 
     @Override
@@ -84,37 +78,43 @@ public class RequestsReceivedFragment extends InboxFragment {
         binding = null;
     }
 
-    protected void getRequests() {
+    protected void getRequestsRealTime() {
         spinner.setVisibility(View.VISIBLE);
-        db.collection("requests").whereEqualTo("receiver", Utils.USER_ID)
+        db.collection("requests")
+                .whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
                 .addSnapshotListener((value, error) -> {
-                    if (error != null){
+                    if (error != null) {
                         return;
                     }
-                    if (value != null){
-                        requests.clear();
-                        for (DocumentSnapshot doc : value) {
-                            requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-
+                    if (value != null) {
+                        for (DocumentChange dc : value.getDocumentChanges()) {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    getUserByRequest(RequestModel.getRequestModel(dc.getDocument().toObject(RequestModel.class).getType(), dc.getDocument()), dc.getNewIndex());
+                                    break;
+                                case REMOVED:
+                                    requests.remove(dc.getOldIndex());
+                                    adapter.notifyItemRemoved(dc.getOldIndex());
+                                    break;
+                            }
                         }
-                        getUserByRequest(requests);
                     }
                 });
     }
 
-    protected void getUserByRequest(ArrayList<RequestModel> arr) {
-        ArrayList<Task<DocumentSnapshot>> t = new ArrayList<>();
-        for (RequestModel r : arr) {
-            t.add(r.queryOtherUser(db, r.getSender()));
-        }
-
-        Tasks.whenAllSuccess(t).addOnCompleteListener(task -> {
-            spinner.setVisibility(View.GONE);
-            Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
-            adapter.notifyDataSetChanged();
-            Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
-        });
+    protected void getUserByRequest(RequestModel r, int position) {
+        db.collection("users").document(r.getSender())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        UserModel u = task.getResult().toObject(UserModel.class);
+                        r.setOtherUser(u);
+                        requests.add(position, r);
+                        spinner.setVisibility(View.GONE);
+                        adapter.notifyItemInserted(position);
+                    }
+                });
     }
 
 }
