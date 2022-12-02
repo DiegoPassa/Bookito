@@ -1,10 +1,6 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +16,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -32,9 +27,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
 import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
@@ -47,8 +40,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-
-import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade_RecycleViewAdapter.ViewHolder> {
 

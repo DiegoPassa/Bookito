@@ -1,5 +1,6 @@
 package com.zerobudget.bookito.ui.add;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -22,6 +23,9 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentConfirmAddBinding;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class AddConfirmFragment extends Fragment {
@@ -68,9 +72,8 @@ public class AddConfirmFragment extends Fragment {
                 binding.InputText.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
             } else {
                 newBook.setType(action);
-                addBook();//inserimento libro nel database
+                addBook(getContext());//inserimento libro nel database
 
-                Toast.makeText(getContext(), "Libro " + newBook.getTitle() + " inserito correttamente!", Toast.LENGTH_LONG).show();
 
                 Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
 
@@ -105,10 +108,33 @@ public class AddConfirmFragment extends Fragment {
     /**
      * inserisce il nuovo libro nel database, nel documento dell'utente corrente
      */
-    private void addBook() {
+    private void addBook(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(Utils.USER_ID)
-                .update("books", FieldValue.arrayUnion(newBook.serialize()));
-        // }
+
+        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
+
+            if (task.isSuccessful()) {
+                boolean alreadyExists = false;
+                Object books = task.getResult().get("books");
+                for (Object o : (ArrayList<Object>) books) {
+                    HashMap<String, Object> map = (HashMap<String, Object>) o;
+                    if (map.get("isbn").equals(newBook.getIsbn())) {
+                        alreadyExists = true;
+                    }
+                }
+
+                //controlla che il libro non sia già presente
+                if (!alreadyExists) {
+                    db.collection("users").document(Utils.USER_ID)
+                            .update("books", FieldValue.arrayUnion(newBook.serialize()));
+
+                    Toast.makeText(context, "Libro " + newBook.getTitle() + " inserito correttamente!", Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(context, "Il libro è già presente nella libreria", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
     }
 }

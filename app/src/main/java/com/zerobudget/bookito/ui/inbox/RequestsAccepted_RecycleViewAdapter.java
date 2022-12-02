@@ -30,7 +30,6 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
