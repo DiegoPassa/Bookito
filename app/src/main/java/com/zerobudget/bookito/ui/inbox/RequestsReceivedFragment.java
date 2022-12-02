@@ -61,6 +61,7 @@ public class RequestsReceivedFragment extends InboxFragment {
 
     protected void setUpRecycleView() {
         if (getView() != null) {
+            requests.clear();
             adapter = new RequestsReceived_RecycleViewAdapter(this.getContext(), requests, empty);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
