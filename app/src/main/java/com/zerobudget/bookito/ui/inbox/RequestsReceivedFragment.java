@@ -50,6 +50,7 @@ public class RequestsReceivedFragment extends InboxFragment {
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.swipeRefreshLayout.setRefreshing(false);
             // do nothing
         });
 
@@ -87,6 +88,9 @@ public class RequestsReceivedFragment extends InboxFragment {
                         return;
                     }
                     if (value != null) {
+                        if (value.isEmpty()) {
+                            spinner.setVisibility(View.GONE);
+                        }
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             spinner.setVisibility(View.VISIBLE);
                             switch (dc.getType()) {
@@ -103,7 +107,6 @@ public class RequestsReceivedFragment extends InboxFragment {
                             }
                         }
                         Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
-                        spinner.setVisibility(View.GONE);
                     }
                 });
     }

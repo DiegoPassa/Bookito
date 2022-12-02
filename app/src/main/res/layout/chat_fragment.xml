@@ -31,9 +31,9 @@
 
     </LinearLayout>
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
+        android:indeterminate="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,15 +54,15 @@
     <EditText
         android:id="@+id/input_message"
         android:layout_width="0dp"
-        android:minHeight="45dp"
-        android:maxHeight="100dp"
-        android:paddingVertical="10dp"
-        android:paddingHorizontal="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginHorizontal="9dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="9dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/enemy_message"
         android:hint="Scrivi il tuo messaggio"
+        android:maxHeight="100dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send_message"
         app:layout_constraintStart_toStartOf="parent" />
