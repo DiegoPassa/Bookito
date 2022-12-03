@@ -1,29 +1,34 @@
 package com.zerobudget.bookito.models.Chat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MessageModel {
     private String sender;
     private String receiver;
     private String message;
+    private String status;
     private String messageId;
     private String messageTime;
     private String messageDate;
     //private Timestamp messageSentAt;
 
-    public MessageModel(){}
+    public MessageModel() {
+    }
 
-    public MessageModel(String sender, String receiver, String message, String messageTime, String messageDate) {
+    public MessageModel(String sender, String receiver, String message, String status, String messageTime, String messageDate) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+        this.status = status;
         this.messageTime = messageTime;
         this.messageDate = messageDate;
     }
 
-    public MessageModel(String sender, String receiver, String message, String messageTime, String messageDate, String id) {
-       this(sender, receiver, message, messageTime, messageDate);
-       this.messageId = id;
+    public MessageModel(String sender, String receiver, String message, String status, String messageTime, String messageDate, String id) {
+        this(sender, receiver, message, status, messageTime, messageDate);
+        this.messageId = id;
     }
 
     public String getSender() {
@@ -80,4 +85,24 @@ public class MessageModel {
         return null;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public Map<String, Object> serialize() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("message", this.message);
+        map.put("messageDate", this.messageDate);
+        map.put("messageTime", this.messageTime);
+        map.put("receiver", this.receiver);
+        map.put("sender", this.sender);
+        map.put("status", this.status);
+
+        return map;
+    }
 }

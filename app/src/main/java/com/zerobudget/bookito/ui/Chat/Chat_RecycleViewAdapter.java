@@ -87,35 +87,25 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             holder.book_thumbnail.setVisibility(View.GONE);
         }
 
-
         holder.messagesDate.setText(messages.get(position).getMessageDate());
 
-        boolean isShowedDate = false;
-        if(position > 0 ){
-            Date previousMsgDate = new Date();
-            Date currentMsgDate = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            try {
-                previousMsgDate = dateFormat.parse(messages.get(position-1).getMessageDate());
-                currentMsgDate = dateFormat.parse(messages.get(position).getMessageDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        //visualizzazione della data solo nel caso essa sia diversa da quella del messaggio precedente
+        boolean isShowedDate = haveToShowDate(holder, position);
 
-            if(currentMsgDate.after(previousMsgDate)) {
-                holder.messagesDate.setVisibility(View.VISIBLE);
-                isShowedDate = true;
-            }else
-                holder.messagesDate.setVisibility(View.GONE);
-        }else{
-            isShowedDate = true;
-            holder.messagesDate.setVisibility(View.VISIBLE);
-        }
+
+
+        if(messages.get(position).getStatus()!= null)
+        if(messages.get(position).getStatus().equals("read"))
+            holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_all_16);
+        else
+            holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_16);
+
 
         if(messages.get(position).getMessageTime() != null)
             holder.messageSentAt.setText(messages.get(holder.getAdapterPosition()).getMessageTime());
 
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
+            holder.messageStauts.setVisibility(View.VISIBLE);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(holder.constraintLayout);
             constraintSet.clear(R.id.chat_profile_card_view, ConstraintSet.LEFT);
@@ -130,11 +120,17 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             }
 
             constraintSet.connect(R.id.message_sent_at, ConstraintSet.RIGHT, R.id.message_content, ConstraintSet.LEFT, 0);
+
+            //se il current user apre la chat ha visibile la spunta che indica quando il messaggio è stato letto
+            holder.messageSent.setPadding(70, 14, 40, 14);
+            constraintSet.connect(R.id.message_status, ConstraintSet.LEFT, R.id.message_content, ConstraintSet.LEFT, 0);
+
             constraintSet.applyTo(holder.constraintLayout);
             loadUserProfilePicture(Utils.CURRENT_USER, holder, position);
             holder.messageSent.setBackgroundResource(R.drawable.message_view);
 
         } else {
+            holder.messageStauts.setVisibility(View.GONE);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(holder.constraintLayout);
             constraintSet.clear(R.id.chat_profile_card_view, ConstraintSet.RIGHT);
@@ -149,11 +145,39 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             }
 
             constraintSet.connect(R.id.message_sent_at, ConstraintSet.LEFT, R.id.message_content, ConstraintSet.RIGHT, 0);
+            holder.messageSent.setPadding(40, 14, 40, 14);
+
             constraintSet.applyTo(holder.constraintLayout);
             holder.messageSent.setBackgroundResource(R.drawable.enemy_message);
             loadUserProfilePicture(otherUser, holder, position);
         }
 
+    }
+
+    private boolean haveToShowDate(ViewHolder holder, int position){
+        if(position > 0 ){
+            Date previousMsgDate = new Date();
+            Date currentMsgDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            try {
+                previousMsgDate = dateFormat.parse(messages.get(position-1).getMessageDate());
+                currentMsgDate = dateFormat.parse(messages.get(position).getMessageDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            assert currentMsgDate != null;
+            if(currentMsgDate.after(previousMsgDate)) {
+                holder.messagesDate.setVisibility(View.VISIBLE);
+                return true;
+            }else {
+                holder.messagesDate.setVisibility(View.GONE);
+                return false;
+            }
+        }else{
+            holder.messagesDate.setVisibility(View.VISIBLE);
+            return true;
+        }
     }
 
     protected boolean isNightMode(Context context) {
@@ -182,13 +206,14 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        protected ConstraintLayout constraintLayout;
-        protected TextView messageSent;
-        protected ImageView profileImg;
-        protected ClassicIdenticonView gravatarImg;
-        protected TextView messageSentAt;
-        protected ImageView book_thumbnail;
-        protected TextView messagesDate;
+        private final ConstraintLayout constraintLayout;
+        private final TextView messageSent;
+        private final ImageView profileImg;
+        private final ClassicIdenticonView gravatarImg;
+        private final TextView messageSentAt;
+        private final ImageView book_thumbnail;
+        private final TextView messagesDate;
+        private final ImageView messageStauts;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -200,6 +225,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             messageSentAt = itemView.findViewById(R.id.message_sent_at);
             book_thumbnail = itemView.findViewById(R.id.book_thumbnail);
             messagesDate = itemView.findViewById(R.id.messages_date);
+            messageStauts = itemView.findViewById(R.id.message_status);
         }
     }
 

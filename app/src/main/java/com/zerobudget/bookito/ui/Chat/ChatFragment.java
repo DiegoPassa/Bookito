@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +34,9 @@ import com.zerobudget.bookito.utils.Utils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class ChatFragment extends Fragment {
     private FirebaseAuth mAuth;
@@ -80,6 +86,9 @@ public class ChatFragment extends Fragment {
         setUpChatRoom();
 
 
+        Log.d("SONO QUI", "current userentrato in chat");
+
+
         binding.sendMessage.setOnClickListener(view -> {
             String message = binding.inputMessage.getText().toString().trim();
             if (!message.isEmpty()) {
@@ -91,7 +100,7 @@ public class ChatFragment extends Fragment {
                 SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String currentDate = sdf1.format(now);
 
-                realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, currentTime, currentDate));
+                realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, "sent", currentTime, currentDate));
                 binding.inputMessage.setText("");
             }
         });
@@ -106,22 +115,29 @@ public class ChatFragment extends Fragment {
                 messages.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")){
-
+                    if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")) {
 
                         MessageModel msg;
-
-                        if(dataSnapshot.hasChild("isbnBookTrade")){
+                        if (dataSnapshot.hasChild("isbnBookTrade")) {
                             msg = new MessageModelTrade();
                             ((MessageModelTrade) msg).setIsbnBookTrade(dataSnapshot.child("isbnBookTrade").getValue(String.class));
                             ((MessageModelTrade) msg).setThumbnailBookTrade(dataSnapshot.child("thumbnailBookTrade").getValue(String.class));
-                        }else if(dataSnapshot.hasChild("thumbnailBookRequested")){
+                        } else if (dataSnapshot.hasChild("thumbnailBookRequested")) {
                             msg = new MessageModelWithImage();
                             ((MessageModelWithImage) msg).setThumbnailBookRequested(dataSnapshot.child("thumbnailBookRequested").getValue(String.class));
-                        }else{
+                        } else {
                             msg = new MessageModel();
                         }
 
+                        //se lo status del messaggio dell'altro utente è segnato come sent,
+                        //appena l'utente corrente apre la chat esso passa a read
+                        if (dataSnapshot.hasChild("status"))
+                            if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
+                                    && dataSnapshot.child("status").getValue(String.class).equals("sent")) {
+                                realTimedb.child(dataSnapshot.getKey()).child("status").setValue("read");
+                            }
+
+                        msg.setStatus(dataSnapshot.child("status").getValue(String.class));
                         msg.setMessage(dataSnapshot.child("message").getValue(String.class));
                         msg.setSender(dataSnapshot.child("sender").getValue(String.class));
                         msg.setReceiver(dataSnapshot.child("receiver").getValue(String.class));
@@ -133,10 +149,11 @@ public class ChatFragment extends Fragment {
                         messages.add(msg);
                     }
                 }
+                //checkStatusPreviousMessages();
 
                 adapter.notifyDataSetChanged();
 
-                recyclerView.scrollToPosition(messages.size()-1);
+                recyclerView.scrollToPosition(messages.size() - 1);
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }

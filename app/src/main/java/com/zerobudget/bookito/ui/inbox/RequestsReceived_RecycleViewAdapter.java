@@ -110,42 +110,44 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
             holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
-        Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
+        if(requests.get(holder.getAdapterPosition()).getOtherUser() != null) {
+            Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
-        String type = requests.get(holder.getAdapterPosition()).getType();
+            String type = requests.get(holder.getAdapterPosition()).getType();
 
-        setupIconType(holder, type);
+            setupIconType(holder, type);
 
-        if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
-            holder.user_gravatar.setVisibility(View.GONE);
-            storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
-                for (StorageReference item : listResult.getItems()) {
-                    // All the items under listRef.
-                    if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(idSender)) {
-                        //Log.d("item", item.getName());
-                        item.getDownloadUrl().addOnSuccessListener(uri -> {
-                            // Utils.setUriPic(uri.toString());
-                            //Log.d("PIC", Utils.URI_PIC);
+            if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+                holder.user_gravatar.setVisibility(View.GONE);
+                storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
+                    for (StorageReference item : listResult.getItems()) {
+                        // All the items under listRef.
+                        if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(idSender)) {
+                            //Log.d("item", item.getName());
+                            item.getDownloadUrl().addOnSuccessListener(uri -> {
+                                // Utils.setUriPic(uri.toString());
+                                //Log.d("PIC", Utils.URI_PIC);
 
-                            Picasso.get().load(uri).into(holder.usr_pic);
-                            holder.usr_pic.setVisibility(View.VISIBLE);
-                            //holder.user_gravatar.setVisibility(View.GONE);
+                                Picasso.get().load(uri).into(holder.usr_pic);
+                                holder.usr_pic.setVisibility(View.VISIBLE);
+                                //holder.user_gravatar.setVisibility(View.GONE);
 
-                        }).addOnFailureListener(exception -> {
-                            int code = ((StorageException) exception).getErrorCode();
-                            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                                holder.user_gravatar.setVisibility(View.VISIBLE);
-                                holder.usr_pic.setVisibility(View.GONE);
-                            }
-                        });
+                            }).addOnFailureListener(exception -> {
+                                int code = ((StorageException) exception).getErrorCode();
+                                if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                    holder.user_gravatar.setVisibility(View.VISIBLE);
+                                    holder.usr_pic.setVisibility(View.GONE);
+                                }
+                            });
+                        }
                     }
-                }
-            });
-        } else {
-            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-            holder.user_gravatar.setVisibility(View.VISIBLE);
-            holder.usr_pic.setVisibility(View.GONE);
+                });
+            } else {
+                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                holder.user_gravatar.setVisibility(View.VISIBLE);
+                holder.usr_pic.setVisibility(View.GONE);
+            }
         }
 
 
@@ -348,7 +350,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
                                 //messaggio di default per visualizzare il libro richiesto e per iniziare la conversazione
                                 String messageTxt = "Ciao, ti contatto per il tuo libro in "+r.getType()+" dal titolo '"+r.getTitle()+"'!";
-                                MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, currentTime, currentDate);
+                                MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, "sent", currentTime, currentDate);
                                 ref.push().setValue(defaultMsg);
 
                                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();

@@ -63,8 +63,20 @@
             android:layout_marginHorizontal="8dp"
             android:background="@drawable/message_view"
             android:maxWidth="200dp"
-            android:padding="8dp"
+            android:padding="15dp"
             tools:text="@string/lorem_ipsum_long" />
+
+        <ImageView
+            android:id="@+id/message_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_done_16"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+
+            app:layout_constraintBottom_toBottomOf="@id/message_content"
+            />
 
         <ImageView
             android:id="@+id/book_thumbnail"

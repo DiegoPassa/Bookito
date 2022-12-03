@@ -227,12 +227,12 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
                 //messaggio di default da sender a receiver che viene inviato con il libro della richiesta
                 String messageTxtSender = "Ciao, ti contatto per il tuo libro '" + r.getTitle() + "'!";
-                MessageModelWithImage defaultMsgSender = new MessageModelWithImage(r.getThumbnail(), r.getSender(), Utils.USER_ID, messageTxtSender, currentTime, currentDate);
+                MessageModelWithImage defaultMsgSender = new MessageModelWithImage(r.getThumbnail(), r.getSender(), Utils.USER_ID, messageTxtSender, "sent", currentTime, currentDate);
                 ref.push().setValue(defaultMsgSender);
 
                 //messaggio di default da receiver a sender inviato con il libro scelto per lo scambio dalla libreria del sender
                 String messageTxt = "Ciao, ho scelto il libro '" + bookTrade.getTitle() + "' da scambiare!";
-                MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, currentTime, currentDate);
+                MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), "sent", messageTxt, currentTime, currentDate);
                 ref.push().setValue(defaultMsgReceiver);
 
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
