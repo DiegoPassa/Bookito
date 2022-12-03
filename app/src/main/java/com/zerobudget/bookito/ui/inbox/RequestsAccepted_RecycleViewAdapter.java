@@ -166,6 +166,10 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
 
         //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
         confirmBookGiven.setOnClickListener(view1 -> {
+            if (!Utils.USER_ID.equals(request.getReceiver())) return; //solo chi riceve il libro può confermare di averlo ricevuto
+            /*
+            da rivedere in ogni caso questo sistema, si potrebbe fare che serva una doppia conferma da parte di entrambi gli utenti
+             */
             if (request.getStatus().equals("ongoing")) return;
 
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
@@ -192,6 +196,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
 
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
+            if (request instanceof RequestShareModel)
+                if (!Utils.USER_ID.equals(request.getSender())) return;  //è solo il sender che può confermare che la richiesta è satta effettivamente conclusa
+                    /*
+                    anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
+                    Possiamo aggiungere una sorta di flag per far concludere la richiesta in caso l'utente non dovesse restituire il libro al suo proprietario
+                     */
             dialog.dismiss();
 
             MaterialAlertDialogBuilder builderConfirm = new MaterialAlertDialogBuilder(context);

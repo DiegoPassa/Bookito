@@ -216,10 +216,11 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         loadPopupViewMembers(view);
 
-        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
-        titlePopup.setText(requestTypeStr);
-        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
-        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
+//        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
+//        titlePopup.setText(requestTypeStr);
+//        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
+//        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
+        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
 
         dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
         dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
