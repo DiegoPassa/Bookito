@@ -68,7 +68,7 @@ public class LibraryFragment extends Fragment {
 
         recyclerView = binding.recycleViewMyLibrary;
 
-        spinner = root.findViewById(R.id.progressBar);
+        spinner = binding.progressBar;
 
         db = FirebaseFirestore.getInstance();
 

@@ -44,11 +44,11 @@
         android:id="@+id/ChatRecycleView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingBottom="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/input_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_chat_const" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/input_message"

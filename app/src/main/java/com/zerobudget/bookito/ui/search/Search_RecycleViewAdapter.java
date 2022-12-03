@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
@@ -140,7 +139,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         }
 
         btnRequest.setOnClickListener(view1 -> {
-            FirebaseUser currentUser = auth.getCurrentUser();
             String type = results.get(holder.getAdapterPosition()).getBook().getType();
             //preleva l'id dell'utente dal database
             db.collection("users").get().addOnCompleteListener(task -> {
