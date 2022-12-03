@@ -152,14 +152,13 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         TextView cancelRequest = view.findViewById(R.id.cancel_request);
         TextView confirmBookGiven = view.findViewById(R.id.confirm_book_given);
 
-        Log.d("CLASS", ""+requests.get(holder.getAdapterPosition()).getClass());
+        Log.d("CLASS", "" + requests.get(holder.getAdapterPosition()).getClass());
 
 
         if (request instanceof RequestShareModel) {
             if (request.getStatus().equals("ongoing")) {
                 cancelRequest.setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 confirmBookGiven.setVisibility(View.VISIBLE);
                 closeRequest.setVisibility(View.GONE);
             }
@@ -167,6 +166,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
 
         title.setText("Cosa vuoi fare?");
 
+        //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
         confirmBookGiven.setOnClickListener(view1 -> {
             if (request.getStatus().equals("ongoing")) return;
 
@@ -188,36 +188,36 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
 
         });
 
-
         infoRequest.setOnClickListener(view1 -> {
             createNewContactDialog(holder);
         });
 
-
-
-        //richiesta CONCLUSA
+        //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
             dialog.dismiss();
-            //TODO: fare le recensioni con le stelline
 
             MaterialAlertDialogBuilder builderConfirm = new MaterialAlertDialogBuilder(context);
             builderConfirm.setTitle("Conferma");
             builderConfirm.setMessage(Html.fromHtml("Sei sicuro di voler segnare la richiesta di <br><b>" + requests.get(holder.getAdapterPosition()).getTitle() + "</b> come conlusa?", Html.FROM_HTML_MODE_LEGACY));
-                builderConfirm.setPositiveButton("SI", (dialogInterface, i) -> {
+            builderConfirm.setPositiveButton("SI", (dialogInterface, i) -> {
+                Date now = Timestamp.now().toDate();
+                //richiesta di prestito, conttrolla che sia stata raggiunta la data di fine prestito
+                if (request instanceof RequestShareModel && now.compareTo(((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate()) < 0)
+                    Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
+                else {
+                    //popup recensioni
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                     View view2 = View.inflate(context, R.layout.feedback_popup, null);
 
                     builder.setView(view2);
 
                     AlertDialog starDialog = builder.create();
-
                     starDialog.show();
 
                     RatingBar mRatingBar = view2.findViewById(R.id.rating);
                     Button confirmFeedback = view2.findViewById(R.id.feedback_button);
 
                     mRatingBar.setOnRatingBarChangeListener((ratingBar, rating, isUser) -> {
-
                     });
 
                     confirmFeedback.setOnClickListener(click -> {
@@ -231,20 +231,18 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                         sendFeedbackToUser(otherUserID, mRatingBar.getRating());
                         starDialog.dismiss();
 
-                        closeRequest(holder);
+                        closeRequest(holder);//chiude la richiesta in base al tipo
 
                         Toast.makeText(context, "Feedback inviato correttamente!", Toast.LENGTH_LONG).show();
-
-
                     });
-                        dialogInterface.dismiss();
-        }).setNegativeButton("NO", (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-        }).show();
-
+                }
+                dialogInterface.dismiss();
+            }).setNegativeButton("NO", (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            }).show();
         });
 
-        //richiesta annullata mentre è ancora in corso
+        //richiesta (CANCELLED) annullata mentre è ancora in corso
         cancelRequest.setOnClickListener(view1 -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma");
@@ -283,49 +281,46 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         dialog.show();
     }
 
-    private void closeRequest(ViewHolder holder){
+    private void closeRequest(ViewHolder holder) {
+        if (!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
+            //la richiesta è segnata con status CONCLUDED
+            db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
 
-            if (!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
-                //la richiesta è segnata come conclusa
-                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
-
-                if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
-                    //cancella i libri scambiati
-                    if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
-                        deleteUserBook(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
-                        deleteUserBook(requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
-                    } else {
-                        deleteUserBook(Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
-                        deleteUserBook(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
-                    }
-                    Toast.makeText(context, "Scambio concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
+            if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+                //cancella i libri scambiati
+                if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
+                    deleteUserBook(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+                    deleteUserBook(requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
                 } else {
-                    //cancella il libro regalato
+                    deleteUserBook(Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
                     deleteUserBook(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
-                    Toast.makeText(context, "Regalo concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
                 }
-
-                requests.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
+                Toast.makeText(context, "Scambio concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
             } else {
-                //richiesta di prestito, visualizzare pagina per recensione
-                Date now = Timestamp.now().toDate();
-
-                if (now.compareTo(((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate()) < 0)
-                    Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
-                else {
-                    //TODO: recensione!
-                    //cambia lo stato del libro
-                    changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
-                    //segna la richiesta come conlusa
-                    db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
-                    requests.remove(holder.getAdapterPosition());
-                    notifyItemRemoved(holder.getAdapterPosition());
-                    Toast.makeText(context, "Prestito concluso, il libro è nuovamente disponibile nella libreria!", Toast.LENGTH_LONG).show();
-                }
+                //cancella il libro regalato
+                deleteUserBook(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                Toast.makeText(context, "Regalo concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
             }
 
+            //riadattano gli item presenti sullo schermo
+            requests.remove(holder.getAdapterPosition());
+            notifyItemRemoved(holder.getAdapterPosition());
+        } else {
+            //richiesta di prestito
+            /*Date now = Timestamp.now().toDate();
 
+            if (now.compareTo(((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate()) < 0)
+                Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
+            else {*/
+                //cambia lo stato del libro
+                changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+                //segna la richiesta come conlusa
+                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
+                requests.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+                Toast.makeText(context, "Prestito concluso, il libro è nuovamente disponibile nella libreria!", Toast.LENGTH_LONG).show();
+           // }
+        }
         // dialog.dismiss();
     }
 
