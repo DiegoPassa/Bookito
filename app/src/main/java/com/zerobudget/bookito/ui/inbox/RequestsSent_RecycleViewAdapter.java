@@ -25,7 +25,7 @@ import com.zerobudget.bookito.utils.Utils;
 import java.util.ArrayList;
 
 public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleViewAdapter {
-    private StorageReference storageRef;
+    private final StorageReference storageRef;
     private boolean isUndefined;
 
 

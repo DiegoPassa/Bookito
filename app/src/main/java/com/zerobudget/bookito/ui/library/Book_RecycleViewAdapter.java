@@ -1,9 +1,6 @@
 package com.zerobudget.bookito.ui.library;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -18,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -28,7 +24,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.utils.Utils;
@@ -46,7 +41,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
-    private TextView emptyWarning;
+    private final TextView emptyWarning;
 
     FirebaseFirestore db;
     FirebaseAuth auth;
@@ -108,7 +103,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
 
             });*/
-             Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
+            Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
         } else {
             Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(holder.thumbnail);
 

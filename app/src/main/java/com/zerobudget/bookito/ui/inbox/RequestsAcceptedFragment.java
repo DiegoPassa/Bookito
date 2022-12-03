@@ -162,7 +162,7 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
             for (QueryDocumentSnapshot doc : queryRequestReceivedOnGoing) {
                 //salvo le richieste inviate per poterle filtrare
-                 requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
 
                 requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }

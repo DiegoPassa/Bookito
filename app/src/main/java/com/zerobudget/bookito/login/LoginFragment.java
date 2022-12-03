@@ -23,14 +23,16 @@ import java.util.List;
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
-        binding = FragmentLoginBinding.inflate(inflater,container,false);
+                             Bundle savedInstanceState) {
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -45,7 +47,6 @@ public class LoginFragment extends Fragment {
 
         binding.register.setOnClickListener(view12 -> NavHostFragment.findNavController(LoginFragment.this)
                 .navigate(R.id.action_loginFragment_to_registerFragment));
-
 
 
         binding.phoneNumber.addTextChangedListener(new TextWatcher() {
@@ -67,17 +68,17 @@ public class LoginFragment extends Fragment {
                 int editLen = editable.length();
                 backSpace = previousLength > editLen;
 
-                if(editable.toString().isEmpty()) {
+                if (editable.toString().isEmpty()) {
                     binding.login.setEnabled(false);
                 } else {
-                    if(editLen > 0 && editLen < 12){
-                        String numWithSpace = editable +" ";
-                        if(!backSpace && (editLen == 3 || editLen == 7)) {
+                    if (editLen > 0 && editLen < 12) {
+                        String numWithSpace = editable + " ";
+                        if (!backSpace && (editLen == 3 || editLen == 7)) {
                             binding.phoneNumber.setText(numWithSpace);
-                            binding.phoneNumber.setSelection(editLen+1);
+                            binding.phoneNumber.setSelection(editLen + 1);
                         }
                         binding.login.setEnabled(false);
-                    }else{
+                    } else {
                         binding.login.setEnabled(true);
                     }
                 }
@@ -89,12 +90,12 @@ public class LoginFragment extends Fragment {
             String phoneNumber = binding.phoneNumber.getText().toString().replaceAll("\\s", "");
 
             Log.d("P", phoneNumber);
-            if(phoneNumber.isEmpty()){
+            if (phoneNumber.isEmpty()) {
                 binding.phoneNumber.setError("Inserisci il tuo numero di telefono");
                 binding.phoneNumber.requestFocus();
                 return;
             }
-            if(phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3'){
+            if (phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3') {
                 binding.phoneNumber.setError("Il numero inserito non e valido");
                 binding.phoneNumber.requestFocus();
                 return;
@@ -105,12 +106,12 @@ public class LoginFragment extends Fragment {
                     .get()
                     .addOnCompleteListener(task -> {
                         List<DocumentSnapshot> x = task.getResult().getDocuments();
-                        if(!x.isEmpty()){
+                        if (!x.isEmpty()) {
                             Bundle bundle = new Bundle();
                             bundle.putString("phone_number", phoneNumber);
-                            bundle.putBoolean("register",false);
-                            NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_OTPConfirmFragment,bundle);
-                        }else{
+                            bundle.putBoolean("register", false);
+                            NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_OTPConfirmFragment, bundle);
+                        } else {
                             binding.phoneNumber.setError("Il numero inserito non e registrato");
                             binding.phoneNumber.requestFocus();
                         }

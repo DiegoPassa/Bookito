@@ -117,7 +117,7 @@ public class RegisterFragment extends Fragment {
             WebView web = viewPopup.findViewById(R.id.web);
             //sito web contenente l'informativa sulla privacy
             web.loadUrl("https://sites.google.com/view/bookito/home-page");
-            web.setWebViewClient(new WebViewClient(){
+            web.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
@@ -135,12 +135,8 @@ public class RegisterFragment extends Fragment {
             dialog.show();
 
             checkBoxGdpr.setOnCheckedChangeListener((compoundButton, b) -> {
-                if (compoundButton.isChecked()) {
-                    //può registrarsi solo se ha seezionato la checkbox
-                    btnAccept.setEnabled(true);
-                } else {
-                    btnAccept.setEnabled(false);
-                }
+                //può registrarsi solo se ha seezionato la checkbox
+                btnAccept.setEnabled(compoundButton.isChecked());
             });
 
             btnRefuse.setOnClickListener(view2 -> {

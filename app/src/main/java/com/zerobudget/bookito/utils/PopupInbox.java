@@ -13,13 +13,10 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PopupInbox extends MaterialAlertDialogBuilder {
-
 
 
     public PopupInbox(@NonNull Context context, int overrideThemeResId) {
@@ -35,7 +32,7 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
         Number feedbacks = (Number) request.getOtherUser().getKarma().get("numbers");
 
         if (feedbacks.longValue() >= UserFlag.MIN_FEEDBACKS_FLAG) {
-            String reputationMessage = "Reputazione: " + points.doubleValue() / feedbacks.doubleValue() + "/5.0 ( " + feedbacks  + " )\n";
+            String reputationMessage = "Reputazione: " + points.doubleValue() / feedbacks.doubleValue() + "/5.0 ( " + feedbacks + " )\n";
             switch (flag) {
                 case GREEN_FLAG: {
                     reputation.setTextColor(ContextCompat.getColor(this.getContext(), R.color.green));
@@ -48,7 +45,8 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
                     reputationMessage += "Attenzione! Utente inaffidabile!";
                     break;
                 }
-                default: break;
+                default:
+                    break;
             }
             reputation.setText(reputationMessage);
         } else {
@@ -66,7 +64,7 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
         Date date = request.getDate();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String dateString = "Data di restituzione:\n"+sdf.format(date);
+        String dateString = "Data di restituzione:\n" + sdf.format(date);
 
         returnDate.setText(dateString);
         returnDate.setVisibility(View.VISIBLE);

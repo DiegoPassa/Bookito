@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.firebase.FirebaseException;
@@ -40,8 +39,8 @@ public class OTPConfirmFragment extends Fragment {
     private boolean isRegister;
     FirebaseFirestore db;
     private boolean back;
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        
+    private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
@@ -62,10 +61,9 @@ public class OTPConfirmFragment extends Fragment {
         public void onVerificationFailed(@NonNull FirebaseException e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
             Log.d("ER_Verification_Failed", e.toString());
-            if(isRegister){
+            if (isRegister) {
                 NavHostFragment.findNavController(OTPConfirmFragment.this).navigate(R.id.action_OTPConfirmFragment_to_registerFragment);
-            }
-            else {
+            } else {
                 NavHostFragment.findNavController(OTPConfirmFragment.this).navigate(R.id.action_OTPConfirmFragment_to_loginFragment);
             }
         }
@@ -83,7 +81,7 @@ public class OTPConfirmFragment extends Fragment {
 
         bundle = this.getArguments();
         mAuth = FirebaseAuth.getInstance();
-        binding = FragmentOtpConfirmBinding.inflate(inflater,container,false);
+        binding = FragmentOtpConfirmBinding.inflate(inflater, container, false);
         isRegister = bundle.getBoolean("register");
         return binding.getRoot();
 
@@ -107,12 +105,12 @@ public class OTPConfirmFragment extends Fragment {
 
         binding.otpConfirmButton.setOnClickListener(view1 -> {
             String userInput = binding.otpUser.getText().toString().trim();
-            if(userInput.isEmpty()){
+            if (userInput.isEmpty()) {
                 binding.otpUser.setError("Inserisci il codice OTP");
                 binding.otpUser.requestFocus();
                 return;
             }
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(code,userInput);
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(code, userInput);
             signInWithPhoneCredential(credential);
         });
 
@@ -122,8 +120,8 @@ public class OTPConfirmFragment extends Fragment {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), task -> {
                     //TODO aggiungere l'informazione utente all'interno del DATABASE
-                    if(task.isSuccessful()){
-                        if(isRegister)
+                    if (task.isSuccessful()) {
+                        if (isRegister)
                             addUserToDatabase();
                         else {
                             Intent intent = new Intent(requireActivity(), MainActivity.class);

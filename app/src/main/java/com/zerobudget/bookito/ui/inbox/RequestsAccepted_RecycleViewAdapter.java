@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_RecycleViewAdapter {
-    private StorageReference storageRef;
+    private final StorageReference storageRef;
 
     public RequestsAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
         super(ctx, requests, empty);
@@ -210,7 +210,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                     View view2 = View.inflate(context, R.layout.popup_feedback, null);
 
                     TextView text = view2.findViewById(R.id.text);
-                    String strTxt = "Dai una recensione da una a cinque stelle a "+request.getOtherUser().getFirstName()+" "+request.getOtherUser().getLastName()+
+                    String strTxt = "Dai una recensione da una a cinque stelle a " + request.getOtherUser().getFirstName() + " " + request.getOtherUser().getLastName() +
                             ".\nValuta correttamente, ricorda che il tuo voto influirà sulla sua reputazione.";
                     text.setText(strTxt);
                     builder.setView(view2);
@@ -316,14 +316,14 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
             if (now.compareTo(((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate()) < 0)
                 Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
             else {*/
-                //cambia lo stato del libro
-                changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
-                //segna la richiesta come conlusa
-                db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
-                requests.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
-                Toast.makeText(context, "Prestito concluso, il libro è nuovamente disponibile nella libreria!", Toast.LENGTH_LONG).show();
-           // }
+            //cambia lo stato del libro
+            changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+            //segna la richiesta come conlusa
+            db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
+            requests.remove(holder.getAdapterPosition());
+            notifyItemRemoved(holder.getAdapterPosition());
+            Toast.makeText(context, "Prestito concluso, il libro è nuovamente disponibile nella libreria!", Toast.LENGTH_LONG).show();
+            // }
         }
         // dialog.dismiss();
     }

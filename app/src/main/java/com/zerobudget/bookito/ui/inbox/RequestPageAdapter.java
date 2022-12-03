@@ -22,9 +22,12 @@ public class RequestPageAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
 
         switch (position) {
-            case 0: return new RequestsReceivedFragment();
-            case 1: return new RequestsSentFragment();
-            case 2: return new RequestsAcceptedFragment();
+            case 0:
+                return new RequestsReceivedFragment();
+            case 1:
+                return new RequestsSentFragment();
+            case 2:
+                return new RequestsAcceptedFragment();
             //case2: retutn new CompletedRequestFragment();
         }
         return null;

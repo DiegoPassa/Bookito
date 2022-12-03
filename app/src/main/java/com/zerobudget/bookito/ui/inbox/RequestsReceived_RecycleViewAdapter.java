@@ -68,7 +68,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     protected FirebaseFirestore db;
     protected FirebaseAuth auth;
-    private StorageReference storageRef;
+    private final StorageReference storageRef;
 
     protected TextView emptyWarning;
 
@@ -110,7 +110,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
             holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
-        if(requests.get(holder.getAdapterPosition()).getOtherUser() != null) {
+        if (requests.get(holder.getAdapterPosition()).getOtherUser() != null) {
             Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
             String type = requests.get(holder.getAdapterPosition()).getType();
@@ -236,9 +236,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 //        } else {
 //            reputation.setText("UTENTE NUOVO");
 //            reputation.setTextColor(ContextCompat.getColor(context, R.color.black));
- //       }
-
-
+        //       }
 
 
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
@@ -349,7 +347,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                                 String currentDate = sdf1.format(now);
 
                                 //messaggio di default per visualizzare il libro richiesto e per iniziare la conversazione
-                                String messageTxt = "Ciao, ti contatto per il tuo libro in "+r.getType()+" dal titolo '"+r.getTitle()+"'!";
+                                String messageTxt = "Ciao, ti contatto per il tuo libro in " + r.getType() + " dal titolo '" + r.getTitle() + "'!";
                                 MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, "sent", currentTime, currentDate);
                                 ref.push().setValue(defaultMsg);
 
@@ -373,16 +371,16 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         });
     }
 
-    private void changeBookStatus(String bookRequested){
+    private void changeBookStatus(String bookRequested) {
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Object arr = task.getResult().get("books"); //array dei books
                 if (arr != null) //si assicura di cercare solo se esiste quache libro
                     for (Object o : (ArrayList<Object>) arr) {
                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if(map.get("isbn").equals(bookRequested)){
-                            BookModel oldBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook =  new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
+                        if (map.get("isbn").equals(bookRequested)) {
+                            BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
 
                             //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
                             db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(oldBook));

@@ -29,7 +29,8 @@ public class BookModel {
         this.status = status;
     }
 
-    public BookModel() {}
+    public BookModel() {
+    }
 
     public Map<String, Object> serialize() {
 
@@ -45,7 +46,9 @@ public class BookModel {
         return bookMap;
     }
 
-    public String getIsbn() { return this.isbn; }
+    public String getIsbn() {
+        return this.isbn;
+    }
 
     public String getThumbnail() {
         return thumbnail;
@@ -92,9 +95,13 @@ public class BookModel {
     }
 
 
-    public boolean getStatus() { return status; }
+    public boolean getStatus() {
+        return status;
+    }
 
-    public void setStatus(boolean status) { this.status = status; }
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {

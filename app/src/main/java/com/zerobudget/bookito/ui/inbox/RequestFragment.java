@@ -1,21 +1,15 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.databinding.FragmentInboxBinding;
-import com.zerobudget.bookito.databinding.FragmentRequestPageBinding;
 
 import java.util.Objects;
 
@@ -33,9 +27,9 @@ public class RequestFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_request_page,container, false);
+        View view = inflater.inflate(R.layout.fragment_request_page, container, false);
 
 
         // Setting ViewPager for each Tabs
@@ -65,8 +59,6 @@ public class RequestFragment extends Fragment {
 
             }
         });
-
-
 
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {

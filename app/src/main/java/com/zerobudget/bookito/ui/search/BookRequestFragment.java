@@ -1,27 +1,21 @@
 package com.zerobudget.bookito.ui.search;
 
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.palette.graphics.Palette;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRequestBookBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
@@ -101,15 +95,12 @@ public class BookRequestFragment extends Fragment {
     }
 
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
-        boolean err = false;
-
-        if (doc.get("receiver").equals(rm.getReceiver())
+        boolean err = doc.get("receiver").equals(rm.getReceiver())
                 && doc.get("requestedBook").equals(rm.getRequestedBook())
                 && doc.get("sender").equals(rm.getSender())
                 && doc.get("thumbnail").equals(rm.getThumbnail())
                 && doc.get("title").equals(rm.getTitle())
-                && doc.get("type").equals(rm.getType()))
-            err = true;
+                && doc.get("type").equals(rm.getType());
 
         return err;
     }

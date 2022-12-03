@@ -3,7 +3,6 @@ package com.zerobudget.bookito.ui.Chat;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +33,13 @@ import java.util.Locale;
 
 public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleViewAdapter.ViewHolder> {
 
-    private Context context;
-    private ArrayList<MessageModel> messages;
-    private UserModel otherUser;
-    private String otherUserId;
-    private Uri otherUserPic;
+    private final Context context;
+    private final ArrayList<MessageModel> messages;
+    private final UserModel otherUser;
+    private final String otherUserId;
+    private final Uri otherUserPic;
 
-    private StorageReference storageRef;
+    private final StorageReference storageRef;
 
     public Chat_RecycleViewAdapter(Context context, ArrayList<MessageModel> messages, UserModel otherUser, String otherUserId, Uri otherUserPic) {
         this.context = context;
@@ -77,13 +76,13 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
         //viene visualizzato un messaggio di default con il libro scelto dal ricevente della richiesta in caso di scambio
         //in caso di prestito/regalo viene visualizzato solo il messaggio col libro scelto per il prestito/regalo
-        if(messages.get(position) instanceof MessageModelTrade) {
+        if (messages.get(position) instanceof MessageModelTrade) {
             holder.book_thumbnail.setVisibility(View.VISIBLE);
             Picasso.get().load(((MessageModelTrade) messages.get(position)).getThumbnailBookTrade()).into(holder.book_thumbnail);
-        }else if(messages.get(position) instanceof MessageModelWithImage){
+        } else if (messages.get(position) instanceof MessageModelWithImage) {
             holder.book_thumbnail.setVisibility(View.VISIBLE);
             Picasso.get().load(((MessageModelWithImage) messages.get(position)).getThumbnailBookRequested()).into(holder.book_thumbnail);
-        }else{
+        } else {
             holder.book_thumbnail.setVisibility(View.GONE);
         }
 
@@ -93,15 +92,14 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         boolean isShowedDate = haveToShowDate(holder, position);
 
 
+        if (messages.get(position).getStatus() != null)
+            if (messages.get(position).getStatus().equals("read"))
+                holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_all_16);
+            else
+                holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_16);
 
-        if(messages.get(position).getStatus()!= null)
-        if(messages.get(position).getStatus().equals("read"))
-            holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_all_16);
-        else
-            holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_16);
 
-
-        if(messages.get(position).getMessageTime() != null)
+        if (messages.get(position).getMessageTime() != null)
             holder.messageSentAt.setText(messages.get(holder.getAdapterPosition()).getMessageTime());
 
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
@@ -114,7 +112,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
             constraintSet.connect(R.id.book_thumbnail, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
 
-            if(isShowedDate) {
+            if (isShowedDate) {
                 constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
                 constraintSet.connect(R.id.message_content, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
             }
@@ -139,7 +137,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             constraintSet.connect(R.id.message_content, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
             constraintSet.connect(R.id.book_thumbnail, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
 
-            if(isShowedDate) {
+            if (isShowedDate) {
                 constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
                 constraintSet.connect(R.id.message_content, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
             }
@@ -154,27 +152,27 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     }
 
-    private boolean haveToShowDate(ViewHolder holder, int position){
-        if(position > 0 ){
+    private boolean haveToShowDate(ViewHolder holder, int position) {
+        if (position > 0) {
             Date previousMsgDate = new Date();
             Date currentMsgDate = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             try {
-                previousMsgDate = dateFormat.parse(messages.get(position-1).getMessageDate());
+                previousMsgDate = dateFormat.parse(messages.get(position - 1).getMessageDate());
                 currentMsgDate = dateFormat.parse(messages.get(position).getMessageDate());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
             assert currentMsgDate != null;
-            if(currentMsgDate.after(previousMsgDate)) {
+            if (currentMsgDate.after(previousMsgDate)) {
                 holder.messagesDate.setVisibility(View.VISIBLE);
                 return true;
-            }else {
+            } else {
                 holder.messagesDate.setVisibility(View.GONE);
                 return false;
             }
-        }else{
+        } else {
             holder.messagesDate.setVisibility(View.VISIBLE);
             return true;
         }

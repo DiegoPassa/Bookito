@@ -39,7 +39,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     private final Context context;
     private final ArrayList<SearchResultsModel> results;
 
-    private FirebaseFirestore db;
+    private final FirebaseFirestore db;
     FirebaseAuth auth;
 
     private AlertDialog.Builder dialogBuilder;
@@ -211,16 +211,13 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     }
 
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
-        boolean err = false;
-
-        if (doc.get("status").equals(rm.getStatus())
+        boolean err = doc.get("status").equals(rm.getStatus())
                 && (doc.get("receiver").equals(rm.getReceiver())
                 && doc.get("requestedBook").equals(rm.getRequestedBook())
                 && doc.get("sender").equals(rm.getSender())
                 && doc.get("thumbnail").equals(rm.getThumbnail())
                 && doc.get("title").equals(rm.getTitle())
-                && doc.get("type").equals(rm.getType())))
-            err = true;
+                && doc.get("type").equals(rm.getType()));
 
         return err;
     }

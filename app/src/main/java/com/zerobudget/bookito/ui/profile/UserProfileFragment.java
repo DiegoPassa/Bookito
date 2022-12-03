@@ -126,7 +126,7 @@ public class UserProfileFragment extends Fragment {
         if (user.isHasPicture()) {
             binding.profilePic.setVisibility(View.VISIBLE);
             binding.userGravatar.setVisibility(View.GONE);
-            if(Utils.URI_PIC.equals("")) {
+            if (Utils.URI_PIC.equals("")) {
                 StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
 
                 load.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -136,7 +136,7 @@ public class UserProfileFragment extends Fragment {
                     String errorMessage = exception.getMessage();
                     Log.d("ERR", errorMessage);
                 });
-            }else{
+            } else {
                 Picasso.get().load(Utils.URI_PIC).into(binding.profilePic);
             }
         } else {
@@ -171,7 +171,7 @@ public class UserProfileFragment extends Fragment {
         });
 
         removePhoto.setOnClickListener(view1 -> {
-            if(!binding.userGravatar.isShown()) {
+            if (!binding.userGravatar.isShown()) {
                 deletePicOnFirebase();
                 Utils.setUriPic("");
                 Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();

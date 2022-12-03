@@ -48,7 +48,7 @@ public class BookTradeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-       // getAllSenderTradedBooks();
+        // getAllSenderTradedBooks();
         setUpBookModel();
         return root;
     }
@@ -62,7 +62,7 @@ public class BookTradeFragment extends Fragment {
 
                 for (DocumentSnapshot document : task.getResult()) {
                     //deve cercare i libri di chi ha fatto la richiesta
-                    if (document.getId().equals(requestTradeModel.getSender())) { 
+                    if (document.getId().equals(requestTradeModel.getSender())) {
                         Object arr = document.get("books"); //array dei books
                         if (arr != null) { //si assicura di cercare solo se esiste quache libro
                             for (Object o : (ArrayList<Object>) arr) {
@@ -78,10 +78,10 @@ public class BookTradeFragment extends Fragment {
                     }
                 }
 
-                if(arrResults.size() > 0) {
+                if (arrResults.size() > 0) {
                     binding.noBooksFound.setVisibility(View.GONE);
                     viewBooks(arrResults);
-                }else{
+                } else {
                     //nessun libro disponibile
                     binding.noBooksFound.setVisibility(View.VISIBLE);
                 }
@@ -96,14 +96,14 @@ public class BookTradeFragment extends Fragment {
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                    if(doc.contains("requestTradeBook")) {
+                    if (doc.contains("requestTradeBook")) {
                         //Log.d("AA", (String) doc.get("requestTradeBook"));
                         //libri del sender già in una richiesta di scambio accettata
-                        if(doc.get("type").equals("Scambio")
+                        if (doc.get("type").equals("Scambio")
                                 && ((doc.get("sender").equals(requestTradeModel.getSender()) || doc.get("receiver").equals(requestTradeModel.getSender())))
-                                && doc.get("status").equals("accepted")){
+                                && doc.get("status").equals("accepted")) {
                             senderTradedBooks.add((String) doc.get("requestTradeBook"));
-                          // Log.d("REQ", (String) doc.get("requestTradeBook"));
+                            // Log.d("REQ", (String) doc.get("requestTradeBook"));
                         }
                     }
                 }
@@ -112,7 +112,7 @@ public class BookTradeFragment extends Fragment {
             }
         });
     }
-    
+
 
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
         if (getView() != null) { //evita il crash dell'applicazione

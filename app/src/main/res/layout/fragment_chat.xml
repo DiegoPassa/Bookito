@@ -10,15 +10,14 @@
 
     <ImageView
         android:id="@+id/background"
+        style="@style/img_background_chat"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
-        style="@style/img_background_chat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 
     <LinearLayout
@@ -33,9 +32,9 @@
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
-        android:indeterminate="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminate="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,8 +43,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ChatRecycleView"
         android:layout_width="match_parent"
-        android:paddingBottom="16dp"
         android:layout_height="0dp"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/input_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,15 +65,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send_message"
         app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/send_message"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/send_message_img"
         android:layout_marginRight="13dp"
-        android:layout_marginBottom="13dp"/>
+        android:layout_marginBottom="13dp"
+        android:src="@drawable/send_message_img"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,7 +45,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
     private final Context context;
     private final ArrayList<SearchResultsModel> results;
-    private RequestTradeModel requestTradeModel;
+    private final RequestTradeModel requestTradeModel;
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;

@@ -3,8 +3,6 @@ package com.zerobudget.bookito.ui.search;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
 
-import java.util.Comparator;
-
 public class SearchResultsModel implements Comparable<SearchResultsModel> {
     private BookModel book;
     private UserModel user;

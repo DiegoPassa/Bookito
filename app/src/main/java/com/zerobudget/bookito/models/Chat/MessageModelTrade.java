@@ -1,13 +1,13 @@
 package com.zerobudget.bookito.models.Chat;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class MessageModelTrade extends MessageModel{
+public class MessageModelTrade extends MessageModel {
     private String isbnBookTrade;
     private String thumbnailBookTrade;
 
-    public MessageModelTrade(){}
+    public MessageModelTrade() {
+    }
 
     public MessageModelTrade(String isbnBookTrade, String thumbnailBookTrade, String sender, String receiver, String message, String status, String messageTime, String messageDate) {
         super(sender, receiver, message, status, messageTime, messageDate);

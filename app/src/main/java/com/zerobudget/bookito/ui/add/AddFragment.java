@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
-import com.zerobudget.bookito.MainActivity;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.models.book.BookModel;
-import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.json.JSONArray;
@@ -118,7 +115,7 @@ public class AddFragment extends Fragment {
             if (isAValidISBN(Long.parseLong(isbn))) {
                 searchBookAPI(isbn);
 
-            }else {
+            } else {
                 AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Attenzione");
                 builder.setMessage("L'isbn inserito non è valido, si prega di riprovare");
@@ -149,7 +146,6 @@ public class AddFragment extends Fragment {
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-
 
 
     static public class CaptureAct extends CaptureActivity {

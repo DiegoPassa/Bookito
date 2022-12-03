@@ -12,10 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.zerobudget.bookito.databinding.ChatFragmentBinding;
+import com.zerobudget.bookito.databinding.FragmentChatBinding;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
 import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
@@ -34,14 +30,12 @@ import com.zerobudget.bookito.utils.Utils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class ChatFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private ChatFragmentBinding binding;
+    private FragmentChatBinding binding;
     private UserModel otherUser;
     private DatabaseReference realTimedb;
     private String requestID;
@@ -51,11 +45,11 @@ public class ChatFragment extends Fragment {
 
     private Chat_RecycleViewAdapter adapter;
 
-    private ArrayList<MessageModel> messages = new ArrayList<>();
+    private final ArrayList<MessageModel> messages = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = ChatFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
 

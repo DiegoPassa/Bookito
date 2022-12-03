@@ -1,14 +1,14 @@
 package com.zerobudget.bookito.models.Chat;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class MessageModelWithImage extends MessageModel{
+public class MessageModelWithImage extends MessageModel {
     private String thumbnailBookRequested;
 
-    public MessageModelWithImage(){}
+    public MessageModelWithImage() {
+    }
 
-    public MessageModelWithImage(String thumbnailBookRequested, String sender, String receiver, String message, String status, String messageTime, String messageDate){
+    public MessageModelWithImage(String thumbnailBookRequested, String sender, String receiver, String message, String status, String messageTime, String messageDate) {
         super(sender, receiver, message, status, messageTime, messageDate);
         this.thumbnailBookRequested = thumbnailBookRequested;
     }

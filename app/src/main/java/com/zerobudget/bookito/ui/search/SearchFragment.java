@@ -45,7 +45,7 @@ public class SearchFragment extends Fragment {
         });
 
         binding.btnSeeAllBooks.setOnClickListener(view -> {
-            showedAll  = true;
+            showedAll = true;
             searchAllBooks_UsrNeighborhood();
         });
 
@@ -69,7 +69,7 @@ public class SearchFragment extends Fragment {
     }
 
 
-    private void searchAllBooks_UsrNeighborhood(){
+    private void searchAllBooks_UsrNeighborhood() {
         db.collection("users").whereEqualTo("neighborhood", Utils.CURRENT_USER.getNeighborhood()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
@@ -80,7 +80,7 @@ public class SearchFragment extends Fragment {
                         if (arr != null) { //si assicura di cercare solo se esiste quache libro
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                if((boolean) map.get("status")) {
+                                if ((boolean) map.get("status")) {
                                     BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResults.add(searchResultsModel);
@@ -111,7 +111,7 @@ public class SearchFragment extends Fragment {
 
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                if((boolean) map.get("status")) {
+                                if ((boolean) map.get("status")) {
                                     BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                     SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                     arrResultsTmp.add(searchResultsModel);
@@ -130,7 +130,7 @@ public class SearchFragment extends Fragment {
     }
 
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
-        if(getView() != null) { //evita il crash dell'applicazione
+        if (getView() != null) { //evita il crash dell'applicazione
             RecyclerView recyclerView = binding.recycleViewSearch;
 
             Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
