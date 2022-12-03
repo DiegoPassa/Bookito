@@ -45,6 +45,13 @@ public class RequestsReceivedFragment extends InboxFragment {
         empty = binding.empty;
         recyclerView = binding.recycleViewInbox;
 
+        //to fix error E/Recyclerview: No Adapter Attached; Skipping Layout
+        requests.clear();
+        adapter = new RequestsReceived_RecycleViewAdapter(this.getContext(), requests, empty);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        //end of fixing it
+
         db = FirebaseFirestore.getInstance();
 
         binding.textView.setVisibility(View.VISIBLE);

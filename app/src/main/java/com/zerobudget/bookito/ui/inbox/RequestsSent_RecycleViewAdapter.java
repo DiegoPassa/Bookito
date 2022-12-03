@@ -164,4 +164,8 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
         });
     }
 
+    @Override
+    public int getItemCount() {
+        return requests.size();
+    }
 }

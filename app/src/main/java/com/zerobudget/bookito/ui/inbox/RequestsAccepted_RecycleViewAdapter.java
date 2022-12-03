@@ -457,4 +457,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
     protected boolean isCurrentUserReceiver(RequestModel r) {
         return r.getReceiver().equals(Utils.USER_ID);
     }
+
+    @Override
+    public int getItemCount() {
+        return requests.size();
+    }
 }

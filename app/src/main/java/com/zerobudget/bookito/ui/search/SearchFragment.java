@@ -38,6 +38,13 @@ public class SearchFragment extends Fragment {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        //to fix error E/Recyclerview: No Adapter Attached; Skipping Layout
+        RecyclerView recyclerView = binding.recycleViewSearch;
+        Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        //end of fixing it
+
         viewBooks(new ArrayList<>());
 
         binding.btnSearch.setOnClickListener(view -> {

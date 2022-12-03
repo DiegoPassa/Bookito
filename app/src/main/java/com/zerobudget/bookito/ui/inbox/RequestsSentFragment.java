@@ -44,6 +44,15 @@ public class RequestsSentFragment extends InboxFragment {
 
         emptyWarning = binding.empty;
 
+        //to fix error E/Recyclerview: No Adapter Attached; Skipping Layout
+        RecyclerView recyclerView = binding.recycleViewInbox;
+        RequestsReceived_RecycleViewAdapter adapter = new RequestsSent_RecycleViewAdapter(this.getContext(), new ArrayList<>(), emptyWarning);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        //end of fixing it
+
+        Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_SEND, requests.size());
+
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
             requests = new ArrayList<>();
