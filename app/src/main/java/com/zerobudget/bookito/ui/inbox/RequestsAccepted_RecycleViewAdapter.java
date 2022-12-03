@@ -207,8 +207,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                 else {
                     //popup recensioni
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
-                    View view2 = View.inflate(context, R.layout.feedback_popup, null);
+                    View view2 = View.inflate(context, R.layout.popup_feedback, null);
 
+                    TextView text = view2.findViewById(R.id.text);
+                    String strTxt = "Dai una recensione da una a cinque stelle a "+request.getOtherUser().getFirstName()+" "+request.getOtherUser().getLastName()+
+                            ".\nValuta correttamente, ricorda che il tuo voto influirà sulla sua reputazione.";
+                    text.setText(strTxt);
                     builder.setView(view2);
 
                     AlertDialog starDialog = builder.create();
