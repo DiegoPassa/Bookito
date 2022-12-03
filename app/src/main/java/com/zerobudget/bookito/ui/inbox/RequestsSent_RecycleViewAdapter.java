@@ -20,9 +20,12 @@ import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.PopupInbox;
+import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleViewAdapter {
     private final StorageReference storageRef;
@@ -89,7 +92,11 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
 
         holder.request_selected.setOnClickListener(view -> {
             if (otherModel != null && holder.getAdapterPosition() != -1) {
-                createNewContactDialog(holder, null);
+                HashMap<String, Object> karma = otherModel.getKarma(); //HashMap<String, Long>
+                Number points = (Number) karma.get("points");
+                Number feedback_numbers = (Number) karma.get("numbers");
+                Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
+                createNewContactDialog(holder, flag);
             }
         });
     }
@@ -98,7 +105,7 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
         checkIfStillUndefined(requests.get(holder.getAdapterPosition()));
 
-        AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
+        PopupInbox dialogBuilder = new PopupInbox(context);
         View view = View.inflate(context, R.layout.popup, null);
 
         dialogBuilder.setView(view);
@@ -106,13 +113,17 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
 
         loadPopupViewMembers(view);
 
-        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
+        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
+        dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
+        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
+//        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
+//
+//        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
+//        titlePopup.setText(requestTypeStr);
+//        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
+//        owner.setText(firstAndLastNameStr);
+//        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
 
-        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
-        titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
-        owner.setText(firstAndLastNameStr);
-        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
         refuseButton.setText("Annulla richiesta");
         confirmButton.setVisibility(View.GONE);
