@@ -48,6 +48,14 @@ public class Utils {
         return sum;
     }
 
+    public static double truncateDoubleValue(double value, int decimalpoint) {
+        value = value * Math.pow(10, decimalpoint);
+        value = Math.floor(value);
+        value = value / Math.pow(10, decimalpoint);
+
+        return value;
+    }
+
     public static void toggleEmptyWarning(TextView empty, String text, int size) {
         if (size == 0) {
             empty.setText(text);

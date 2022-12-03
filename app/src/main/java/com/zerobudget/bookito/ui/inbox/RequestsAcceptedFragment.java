@@ -55,7 +55,6 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
         db = FirebaseFirestore.getInstance();
 
-
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.seeAllReq.setTextSize(clicked_textSize);
             binding.currentUsrReq.setTextSize(textSize);
@@ -79,6 +78,7 @@ public class RequestsAcceptedFragment extends InboxFragment {
             addRequestsOnPage(requests);
         }
 
+        //tutte le richieste, inivate e ricevute
         binding.seeAllReq.setOnClickListener(view -> {
             binding.seeAllReq.setTextSize(clicked_textSize);
             binding.currentUsrReq.setTextSize(textSize);
@@ -117,6 +117,8 @@ public class RequestsAcceptedFragment extends InboxFragment {
         return root;
     }
 
+    /**
+     * carica le richieste accettate dell'utente corrente*/
     protected void loadCompletedRequests() {
 //        requests = new ArrayList<>();
         binding.progressBar.setVisibility(View.VISIBLE);
@@ -138,32 +140,27 @@ public class RequestsAcceptedFragment extends InboxFragment {
             QuerySnapshot queryRequestSentOnGoing = (QuerySnapshot) list.get(2);
             QuerySnapshot queryRequestReceivedOnGoing = (QuerySnapshot) list.get(3);
 
-
             for (QueryDocumentSnapshot doc : queryRequestReceived) {
                 //salvo le richieste ricevute per poterle filtrare
                 requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-
                 requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
             for (QueryDocumentSnapshot doc : queryRequestSent) {
                 //salvo le richieste inviate per poterle filtrare
                 requestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-
                 requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
             for (QueryDocumentSnapshot doc : queryRequestSentOnGoing) {
                 //salvo le richieste inviate per poterle filtrare
                 requestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-
                 requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
             for (QueryDocumentSnapshot doc : queryRequestReceivedOnGoing) {
                 //salvo le richieste inviate per poterle filtrare
                 requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-
                 requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
@@ -183,11 +180,14 @@ public class RequestsAcceptedFragment extends InboxFragment {
         ArrayList<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (RequestModel r : req) {
             if (Utils.USER_ID.equals(r.getReceiver())) {
-                tasks.add(r.queryOtherUser(db, r.getSender())); //se user_id == sender allora prendo id di chi la manda
+                //se user_id == sender allora prendo id di chi la manda
+                tasks.add(r.queryOtherUser(db, r.getSender()));
             } else {
-                tasks.add(r.queryOtherUser(db, r.getReceiver())); //altrimenti prendo id di chi la riceve (in questo caso current user sta mandando la richiesta)
+                //altrimenti prendo id di chi la riceve (in questo caso current user sta mandando la richiesta)
+                tasks.add(r.queryOtherUser(db, r.getReceiver()));
             }
-        } //voglio ottenre informazioni sull'ALTRO utente
+        }
+        //voglio ottenre informazioni sull'ALTRO utente
         Tasks.whenAllSuccess(tasks).addOnSuccessListener(task -> {
             binding.progressBar.setVisibility(View.GONE);
 

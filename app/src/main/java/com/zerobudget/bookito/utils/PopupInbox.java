@@ -27,22 +27,28 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
         super(context);
     }
 
+    /**
+     * prepara il testo da visualizzare nella textview reputation*/
     public void setReputationMessage(TextView reputation, RequestModel request, Flag flag) {
         Number points = (Number) request.getOtherUser().getKarma().get("points");
         Number feedbacks = (Number) request.getOtherUser().getKarma().get("numbers");
 
+        assert feedbacks != null;
         if (feedbacks.longValue() >= UserFlag.MIN_FEEDBACKS_FLAG) {
-            String reputationMessage = "Reputazione: " + points.doubleValue() / feedbacks.doubleValue() + "/5.0 ( " + feedbacks + " )\n";
+            assert points != null;
+            double karma = Utils.truncateDoubleValue(points.doubleValue()/feedbacks.doubleValue(), 2);
+            String reputationMessage = "Reputazione: " + karma + "/5.0\nFeedback:  " + feedbacks;
+
             switch (flag) {
                 case GREEN_FLAG: {
                     reputation.setTextColor(ContextCompat.getColor(this.getContext(), R.color.green));
-                    reputationMessage += "Utente affidabile!";
+                    reputationMessage += "\nUtente affidabile!";
                     break;
                 }
                 case RED_FLAG: {
                     //è già di default settato a red
 //                    reputation.setTextColor(com.google.android.material.R.color.design_default_color_error);
-                    reputationMessage += "Attenzione! Utente inaffidabile!";
+                    reputationMessage += "\nAttenzione! Utente inaffidabile!";
                     break;
                 }
                 default:
@@ -50,16 +56,19 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
             }
             reputation.setText(reputationMessage);
         } else {
-            reputation.setText("UTENTE NUOVO");
+            String txtReputation = "UTENTE NUOVO";
+            reputation.setText(txtReputation);
             reputation.setTextColor(ContextCompat.getColor(this.getContext(), R.color.black));
         }
     }
 
+    /**prepara il testo da visalizzare nella textview owner*/
     public void setUpUserFullName(TextView owner, RequestModel request) {
         String firstAndLastNameStr = request.getOtherUser().getFirstName() + " " + request.getOtherUser().getLastName();
         owner.setText(firstAndLastNameStr);
     }
 
+    /**prepara il testo da visualizzare nella textview della data di fine prestito*/
     public void setUpDate(RequestShareModel request, TextView returnDate) {
         Date date = request.getDate();
 

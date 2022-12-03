@@ -377,6 +377,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         });
     }
 
+    /**
+     * visualizza le informazioni relative alla richiesta selezionata*/
     public void createNewContactDialog(ViewHolder holder) {
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
 
@@ -387,19 +389,38 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         AlertDialog dialog = dialogBuilder.create();
 
         loadPopupViewMembers(view);
-        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
-        titlePopup.setText(requestTypeStr);
-        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
-        owner.setText(firstAndLastNameStr);
-        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
+        String strRequestType = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
 
-        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
-        Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
+        titlePopup.setText(strRequestType);
+        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
 
-        if (feedbacks.longValue() >= 8l) {
-            reputation.setText("Reputazione : " + points.doubleValue() / feedbacks.doubleValue() + " ( " + feedbacks + " ) ");
+        String strFirstAndLastName = "Da ";
+        String strOwnerLocation;
+
+        Number points;
+        Number feedbacks;
+
+        if(requests.get(holder.getAdapterPosition()).getSender().equals(Utils.USER_ID))
+            strFirstAndLastName += Utils.CURRENT_USER.getFirstName() + " " + Utils.CURRENT_USER.getLastName()+"\na ";
+
+        strFirstAndLastName += requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
+        strOwnerLocation = requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood();
+
+        points =  (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
+        feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
+
+        owner.setText(strFirstAndLastName);
+        ownerLocation.setText(strOwnerLocation);
+
+        assert feedbacks != null;
+        if (feedbacks.longValue() >= 8L) {
+            assert points != null;
+            double karma = Utils.truncateDoubleValue(points.doubleValue()/feedbacks.doubleValue(), 2);
+            String txtReputation = "Reputazione: " + karma + "/5.0\nFeedback:  " + feedbacks;
+            reputation.setText(txtReputation);
         } else {
-            reputation.setText("UTENTE NUOVO");
+            String txtReputation = "UTENTE NUOVO";
+            reputation.setText(txtReputation);
         }
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);

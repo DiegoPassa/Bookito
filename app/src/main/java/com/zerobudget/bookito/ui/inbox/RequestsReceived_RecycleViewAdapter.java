@@ -163,6 +163,8 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         });
     }
 
+    /**
+     * mostra le immagini delle icone in base al tipo di richiesta*/
     protected void setupIconType(ViewHolder holder, String type) {
         switch (type) {
             case "Regalo":
@@ -182,7 +184,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         }
     }
 
-    //TODO DALLE RIGHE 113-127 C'È MOLTA RIPETIZIONE DI CODICE, MEGLIO FARE UN METOOD A POSTA DA RICBHIAMARE
+    /***/
     protected void loadPopupViewMembers(View view) {
         confirmButton = view.findViewById(R.id.acceptButton);
         refuseButton = view.findViewById(R.id.refuseButton);
@@ -197,72 +199,39 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         noteText.setMovementMethod(new ScrollingMovementMethod());
     }
 
+    /**
+     * crea il popup con le inforazioni relative alla richiesta
+     * l'utente potrà accettare o rifiutare
+     * in caso di scambio, prima di accettare l'utente corrente dovrà selezionare un libro dalla libreria dell'altro utente*/
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
+        //controlla se la richiesta esiste ancora
         checkIfStillExists(requests.get(holder.getAdapterPosition()));
-
-        PopupInbox dialogBuilder = new PopupInbox(context);
 
         View view = View.inflate(context, R.layout.popup, null);
 
+        PopupInbox dialogBuilder = new PopupInbox(context);
         dialogBuilder.setView(view);
 
         AlertDialog dialog = dialogBuilder.create();
 
         loadPopupViewMembers(view);
 
-        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
-
-        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
-//        Number points = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
-//        Number feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
-//
-//        if (feedbacks.longValue() >= UserFlag.MIN_FEEDBACKS_FLAG) {
-//            String reputationMessage = "Reputazione: " + points.doubleValue() / feedbacks.doubleValue() + "/5.0 ( " + feedbacks  + " )\n";
-//            switch (flag) {
-//                case GREEN_FLAG: {
-//                    reputation.setTextColor(ContextCompat.getColor(context, R.color.green));
-//                    reputationMessage += "Utente affidabile!";
-//                    break;
-//                }
-//                case RED_FLAG: {
-//                    //è già di default settato a red
-////                    reputation.setTextColor(com.google.android.material.R.color.design_default_color_error);
-//                    reputationMessage += "Attenzione! Utente inaffidabile!";
-//                    break;
-//                }
-//                default: break;
-//            }
-//            reputation.setText(reputationMessage);
-//        } else {
-//            reputation.setText("UTENTE NUOVO");
-//            reputation.setTextColor(ContextCompat.getColor(context, R.color.black));
-        //       }
-
-
         String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
         titlePopup.setText(requestTypeStr);
-
-//        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
-//        owner.setText(firstAndLastNameStr);
+        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
+        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
 
         dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
-
-        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
-
+        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
+
+        //se è un  prestito visualizza la data di restituzione
         if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
-//            Date date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate();
-//
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//            String dateString = "Data di restituzione:\n"+sdf.format(date);
-//
-//            returnDate.setText(dateString);
-//            returnDate.setVisibility(View.VISIBLE);
             dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()), returnDate);
         }
 
-
+        //pulsante per visualizzare la libreria dell'altro utente, in caso di scambio
         if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
             confirmButton.setText("Libreria Utente");
         }
@@ -306,11 +275,15 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     }
 
+    /**
+     * elimina la richiesta in caso di rifiuto*/
     protected void deleteRequest(RequestModel r) {
         // Log.d("REQUEST_DELETED", r.getrequestId());
         db.collection("requests").document(r.getRequestId()).delete();
     }
 
+    /**
+     * accetta la richiesta cambiando lo status del libro e della richiesta*/
     protected void acceptRequest(RequestModel r, ViewHolder holder) {
         changeBookStatus(r.getRequestedBook());
 
@@ -322,9 +295,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 .get()
                 .addOnCompleteListener(task -> {
                     boolean existsOther = task.getResult().size() > 0;
-//                    for (QueryDocumentSnapshot doc : task.getResult()) {
-//                        if (doc.get("requestedBook").equals(r.getRequestedBook()))
-//                            existsOther = true;
 
                     if (!existsOther) {
                         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
@@ -361,6 +331,8 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     }
 
+    /**
+     * controlla se la richiesta esiste ancora (quindi se il sender non l'ha annullata)*/
     private void checkIfStillExists(RequestModel r) {
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -371,6 +343,8 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         });
     }
 
+    /**
+     * cambia lo stato del libro*/
     private void changeBookStatus(String bookRequested) {
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -391,16 +365,22 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         });
     }
 
+    /**
+     * controlla se esiste già una richiesta accettata per quel libro dell'utente corrente da qualche parte*/
     private void checkIfTheBookIsAlreadyAcceptedSomewhere(RequestModel r, ViewHolder holder, Bundle args) {
         db.collection("requests").get().addOnCompleteListener(task -> {
             boolean existsOther = false;
             for (QueryDocumentSnapshot doc : task.getResult()) {
-                if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
-                    existsOther = true;
-
-                if (doc.contains("requestTradeBook"))
-                    if (doc.get("requestTradeBook").equals(r.getRequestedBook()))
+                //controllo se il receiver è il current user, perché mi interessa verificare se ci sono altre richieste per il suo libro
+                //può essere che esista un altro utente con lo stesso libro ma non sono interessata a quello
+                if(doc.get("receiver").equals(Utils.USER_ID)) {
+                    if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
                         existsOther = true;
+
+                    if (doc.contains("requestTradeBook"))
+                        if (doc.get("requestTradeBook").equals(r.getRequestedBook()))
+                            existsOther = true;
+                }
             }
 
             if (!existsOther)
