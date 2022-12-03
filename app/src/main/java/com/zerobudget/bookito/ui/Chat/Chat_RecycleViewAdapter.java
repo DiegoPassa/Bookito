@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.Chat;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,12 +47,26 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         this.storageRef = FirebaseStorage.getInstance().getReference();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (messages.get(position).getSender().equals(Utils.USER_ID)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     @NonNull
     @Override
     public Chat_RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.message_holder, parent, false);
-
-        return new ViewHolder(view);
+        switch (viewType) {
+            case 1:
+                return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.message_sent, parent, false));
+            case 0:
+                return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.message_received, parent, false));
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -79,64 +90,18 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         //visualizzazione della data solo nel caso essa sia diversa da quella del messaggio precedente
         boolean isShowedDate = haveToShowDate(holder, position);
 
-
-        if (messages.get(position).getStatus() != null)
+        if (messages.get(position).getSender().equals(Utils.USER_ID)) {
+            loadUserProfilePicture(Utils.CURRENT_USER, holder);
             if (messages.get(position).getStatus().equals("read"))
-                holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_all_16);
+                holder.messageStatus.setImageResource(R.drawable.ic_baseline_done_all_16);
             else
-                holder.messageStauts.setImageResource(R.drawable.ic_baseline_done_16);
-
+                holder.messageStatus.setImageResource(R.drawable.ic_baseline_done_16);
+        } else {
+            loadUserProfilePicture(otherUser, holder);
+        }
 
         if (messages.get(position).getMessageTime() != null)
             holder.messageSentAt.setText(messages.get(holder.getAdapterPosition()).getMessageTime());
-
-        if (messages.get(position).getSender().equals(Utils.USER_ID)) {
-            holder.messageStauts.setVisibility(View.VISIBLE);
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(holder.constraintLayout);
-            constraintSet.clear(R.id.chat_profile_card_view, ConstraintSet.LEFT);
-            constraintSet.clear(R.id.message_content, ConstraintSet.LEFT);
-            constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.RIGHT, R.id.chat_layout, ConstraintSet.RIGHT, 0);
-            constraintSet.connect(R.id.message_content, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
-            constraintSet.connect(R.id.book_thumbnail, ConstraintSet.RIGHT, R.id.chat_profile_card_view, ConstraintSet.LEFT, 0);
-
-            if (isShowedDate) {
-                constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
-                constraintSet.connect(R.id.message_content, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
-            }
-
-            constraintSet.connect(R.id.message_sent_at, ConstraintSet.RIGHT, R.id.message_content, ConstraintSet.LEFT, 0);
-
-            //se il current user apre la chat ha visibile la spunta che indica quando il messaggio è stato letto
-            holder.messageSent.setPadding(70, 14, 40, 14);
-            constraintSet.connect(R.id.message_status, ConstraintSet.LEFT, R.id.message_content, ConstraintSet.LEFT, 0);
-
-            constraintSet.applyTo(holder.constraintLayout);
-            loadUserProfilePicture(Utils.CURRENT_USER, holder, position);
-            holder.messageSent.setBackgroundResource(R.drawable.message_view);
-
-        } else {
-            holder.messageStauts.setVisibility(View.GONE);
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(holder.constraintLayout);
-            constraintSet.clear(R.id.chat_profile_card_view, ConstraintSet.RIGHT);
-            constraintSet.clear(R.id.message_content, ConstraintSet.RIGHT);
-            constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.LEFT, R.id.chat_layout, ConstraintSet.LEFT, 0);
-            constraintSet.connect(R.id.message_content, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
-            constraintSet.connect(R.id.book_thumbnail, ConstraintSet.LEFT, R.id.chat_profile_card_view, ConstraintSet.RIGHT, 0);
-
-            if (isShowedDate) {
-                constraintSet.connect(R.id.chat_profile_card_view, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
-                constraintSet.connect(R.id.message_content, ConstraintSet.TOP, R.id.messages_date, ConstraintSet.BOTTOM, 0);
-            }
-
-            constraintSet.connect(R.id.message_sent_at, ConstraintSet.LEFT, R.id.message_content, ConstraintSet.RIGHT, 0);
-            holder.messageSent.setPadding(40, 14, 40, 14);
-
-            constraintSet.applyTo(holder.constraintLayout);
-            holder.messageSent.setBackgroundResource(R.drawable.enemy_message);
-            loadUserProfilePicture(otherUser, holder, position);
-        }
 
     }
 
@@ -169,14 +134,10 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         }
     }
 
-    protected boolean isNightMode(Context context) {
-        int nightModeFlags = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
-    }
-
     /**
-     * carica le immagini di profilo dei due utenti*/
-    private void loadUserProfilePicture(UserModel user, ViewHolder holder, int position) {
+     * carica le immagini di profilo dei due utenti
+     */
+    private void loadUserProfilePicture(UserModel user, ViewHolder holder) {
         if (user.isHasPicture()) {
             holder.profileImg.setVisibility(View.VISIBLE);
             if (user == Utils.CURRENT_USER)
@@ -197,26 +158,24 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ConstraintLayout constraintLayout;
         private final TextView messageSent;
         private final ImageView profileImg;
         private final ClassicIdenticonView gravatarImg;
         private final TextView messageSentAt;
         private final ImageView book_thumbnail;
         private final TextView messagesDate;
-        private final ImageView messageStauts;
+        private final ImageView messageStatus;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            constraintLayout = itemView.findViewById(R.id.chat_layout);
-            messageSent = itemView.findViewById(R.id.message_content);
+            messageSent = itemView.findViewById(R.id.message_body);
             profileImg = itemView.findViewById(R.id.small_profile_img);
             gravatarImg = itemView.findViewById(R.id.gravater_pic);
-            messageSentAt = itemView.findViewById(R.id.message_sent_at);
-            book_thumbnail = itemView.findViewById(R.id.book_thumbnail);
+            messageSentAt = itemView.findViewById(R.id.message_time);
+            book_thumbnail = itemView.findViewById(R.id.message_book_thumbnail);
             messagesDate = itemView.findViewById(R.id.messages_date);
-            messageStauts = itemView.findViewById(R.id.message_status);
+            messageStatus = itemView.findViewById(R.id.message_read);
         }
     }
 

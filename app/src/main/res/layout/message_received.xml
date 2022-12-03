@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/book_thumbnail3"
+        android:id="@+id/message_book_thumbnail"
         android:layout_width="130dp"
         android:layout_height="0dp"
         android:padding="8dp"
@@ -51,7 +51,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/messages_date2"
+        android:id="@+id/messages_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
@@ -68,13 +68,16 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:backgroundTint="?colorTertiary"
         app:cardCornerRadius="14dp"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/guideline20"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/chat_profile_card_view"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -83,13 +86,11 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView3"
-                android:layout_width="0dp"
+                android:id="@+id/message_body"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
                 android:textColor="?colorOnTertiary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -97,18 +98,29 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/lorem_ipsum_long" />
 
+            <ImageView
+                android:id="@+id/read_checkmark2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/ic_baseline_done_16"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/message_body"
+                app:srcCompat="@drawable/ic_baseline_done_all_16" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/message_sent_at2"
+        android:id="@+id/message_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:maxWidth="200dp"
         android:text="11:11"
-        android:textColor="?colorPrimary"
+        android:textColor="?colorTertiary"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/cardView3"
         app:layout_constraintStart_toEndOf="@+id/cardView3" />
