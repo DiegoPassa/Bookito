@@ -12,8 +12,8 @@ public class BookModel {
     private String isbn;
     private String thumbnail;
     private String title;
-    private String type;
-    private boolean status;
+    private String type; // Scambio, Prestito, Regalo
+    private boolean status; //true se enabled, false se disabled
 
     public static final boolean ENABLE = true;
     public static final boolean DISABLE = false;

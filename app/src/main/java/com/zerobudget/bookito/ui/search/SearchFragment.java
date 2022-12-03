@@ -68,7 +68,8 @@ public class SearchFragment extends Fragment {
         binding = null;
     }
 
-
+    /**
+     * ricerca dei libri degli altri utenti nel quartiere dell'utente*/
     private void searchAllBooks_UsrNeighborhood() {
         db.collection("users").whereEqualTo("neighborhood", Utils.CURRENT_USER.getNeighborhood()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -99,7 +100,8 @@ public class SearchFragment extends Fragment {
         });
     }
 
-
+    /**
+     * ricerca dei libri degli altri utenti negli altri quartieri*/
     private void searchAllBooks_OthersNeighborhood(ArrayList<SearchResultsModel> arrResults) {
         db.collection("users").whereNotEqualTo("neighborhood", Utils.CURRENT_USER.getNeighborhood()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -129,6 +131,8 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    /**
+     * permette la visualizzazione dei libri*/
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
         if (getView() != null) { //evita il crash dell'applicazione
             RecyclerView recyclerView = binding.recycleViewSearch;

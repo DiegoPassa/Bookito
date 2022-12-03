@@ -36,7 +36,6 @@ public class SearchResultsModel implements Comparable<SearchResultsModel> {
                 '}';
     }
 
-
     @Override
     public int compareTo(SearchResultsModel searchResultsModel) {
         return this.getBook().getTitle().compareTo(searchResultsModel.getBook().getTitle());

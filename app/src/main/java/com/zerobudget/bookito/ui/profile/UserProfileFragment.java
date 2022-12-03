@@ -122,6 +122,9 @@ public class UserProfileFragment extends Fragment {
         return root;
     }
 
+    /**
+     * visualizza l'immagine di profilo
+     * se esso l'ha impostata viene prelevata dal database, altrimenti è generata una di default*/
     private void showPic() {
         if (user.isHasPicture()) {
             binding.profilePic.setVisibility(View.VISIBLE);
@@ -147,8 +150,9 @@ public class UserProfileFragment extends Fragment {
     }
 
 
+    /**
+     * visualizza il popup con le opzioni per scattare foro, selezionarla dalla galleria o eliminarla*/
     private void showImagePicDialog() {
-        //String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
 
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(this.getContext());
         View view = View.inflate(this.getContext(), R.layout.popup_edit_profilepic, null);
@@ -182,33 +186,19 @@ public class UserProfileFragment extends Fragment {
 
         dialogBuilder.setView(view);
         dialog.show();
-
-       /* AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-        builder.setTitle("Cosa vuoi fare?");
-        builder.setItems(options, (dialogInterface, i) -> {
-            if (i == 0) {
-
-            } else if (i == 1) {
-                openImagePicker();//prende l'immagine dalla gallera
-            } else if (i == 2 && !binding.userGravatar.isShown()) {
-                deletePicOnFirebase();
-                Utils.setUriPic("");
-                Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
-                Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
-            }
-        });
-        builder.create().show();*/
     }
 
 
+    /**
+     * aggiunde l'immagine nel database*/
     private void addPicOnFirebase(Uri uri) {
+        //salvata in profile_pics/<id dell'utente>
         StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);
         UploadTask uploadTask = riversRef.putFile(uri);
 
         user.setHasPicture(true);
 
         uploadTask.addOnFailureListener(exception -> {
-            int errorCode = ((StorageException) exception).getErrorCode();
             String errorMessage = exception.getMessage();
             Log.d("ERR", errorMessage);
         }).addOnSuccessListener(taskSnapshot -> {
@@ -219,15 +209,14 @@ public class UserProfileFragment extends Fragment {
                 db.collection("users").document(Utils.USER_ID).update("hasPicture", true).addOnSuccessListener(unused -> {
                     showPic();
                 });
-                Log.d("URIIDB", downloadUri.toString());
                 Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                 // Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
-            } else {
-                //
             }
         });
     }
 
+    /**
+     * elimina la foto profilo dal database*/
     private void deletePicOnFirebase() {
         StorageReference desertRef = storageRef.child("profile_pics/" + Utils.USER_ID);
 
@@ -245,6 +234,9 @@ public class UserProfileFragment extends Fragment {
     }
 
 
+    /**
+     * cambia gli elementi visualizzati quando si effettuano modifiche al profilo
+     * (in seguito alla pressione del float button sul fondo dello schermo)*/
     private void changeVisibility() {
         if (binding.floatingActionButton.isShown()) {
             binding.usrNeighborhood.setVisibility(View.GONE);

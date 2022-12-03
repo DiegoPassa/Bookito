@@ -161,6 +161,10 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         });
     }
 
+    /**
+     * popup creato qunado l'utente seleziona un libro
+     * permette di visualizzare le informazioni relative ad esso
+     * permette di eliminare il libro se esso è abilitato (status = true)*/
     private void createNewDeletePopup(ViewHolder holder) {
         dialogBuilder = new MaterialAlertDialogBuilder(context);
         View view = View.inflate(context, R.layout.fragment_delete_book, null);

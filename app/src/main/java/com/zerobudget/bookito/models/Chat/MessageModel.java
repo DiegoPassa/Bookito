@@ -7,11 +7,11 @@ import java.util.Map;
 public class MessageModel {
     private String sender;
     private String receiver;
-    private String message;
-    private String status;
+    private String message; //contenuto del messaggio
+    private String status; //sent, read
     private String messageId;
-    private String messageTime;
-    private String messageDate;
+    private String messageTime; //orario d'inivio
+    private String messageDate; //data d'invio
     //private Timestamp messageSentAt;
 
     public MessageModel() {

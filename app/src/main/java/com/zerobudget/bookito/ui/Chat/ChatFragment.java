@@ -79,18 +79,15 @@ public class ChatFragment extends Fragment {
 
         setUpChatRoom();
 
-
-        Log.d("SONO QUI", "current userentrato in chat");
-
-
         binding.sendMessage.setOnClickListener(view -> {
             String message = binding.inputMessage.getText().toString().trim();
             if (!message.isEmpty()) {
+                //inserisce il messaggio nel realtime database
+
                 Date now = Timestamp.now().toDate();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String currentTime = sdf.format(now);
-
                 SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String currentDate = sdf1.format(now);
 
@@ -102,6 +99,8 @@ public class ChatFragment extends Fragment {
         return root;
     }
 
+    /**
+     * in realtime prende i messaggi dal database e ne permette la visualizzazione sulla chat*/
     protected void setUpChatRoom() {
         realTimedb.addValueEventListener(new ValueEventListener() {
             @Override

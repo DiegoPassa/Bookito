@@ -48,24 +48,6 @@ public class BookRequestFragment extends Fragment {
         binding.bookOwner.setText(owner);
         Picasso.get().load(usrBookSelected.getBook().getThumbnail()).into(binding.bookThumbnail);
 
-        /*switch (usrBookSelected.getBook().getType()) {
-            case "Scambio":
-                binding.bookmarkOutline.setColorFilter(getContext().getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
-                binding.bookmark.setColorFilter(getContext().getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
-                break;
-            case "Prestito":
-                binding.bookmarkOutline.setColorFilter(getContext().getColor(R.color.bookmark_outline_prestito), PorterDuff.Mode.SRC_ATOP);
-                binding.bookmark.setColorFilter(getContext().getColor(R.color.bookmark_prestito), PorterDuff.Mode.SRC_ATOP);
-                break;
-            case "Regalo":
-                binding.bookmarkOutline.setColorFilter(getContext().getColor(R.color.bookmark_outine_regalo), PorterDuff.Mode.SRC_ATOP);
-                binding.bookmark.setColorFilter(getContext().getColor(R.color.bookmark_regalo), PorterDuff.Mode.SRC_ATOP);
-                break;
-            default:
-                Picasso.get().load(R.drawable.bookmark_template).into(binding.bookmark);
-                break;
-        }*/
-
         binding.btnRequest.setOnClickListener(view -> {
             //preleva l'id dell'utente dal database
             db.collection("users").get().addOnCompleteListener(task -> {
@@ -90,23 +72,25 @@ public class BookRequestFragment extends Fragment {
                 }
             });
         });
-        //}
         return root;
     }
 
+
+    /**
+     * controlla se non esista già una richiesta in corso per lo stesso libro*/
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
-        boolean err = doc.get("receiver").equals(rm.getReceiver())
+        return (doc.get("status").equals("accepted") || doc.get("status").equals("ongoing"))
+                /*&&doc.get("receiver").equals(rm.getReceiver())*/
                 && doc.get("requestedBook").equals(rm.getRequestedBook())
-                && doc.get("sender").equals(rm.getSender())
+                /*&& doc.get("sender").equals(rm.getSender())*/
                 && doc.get("thumbnail").equals(rm.getThumbnail())
                 && doc.get("title").equals(rm.getTitle())
                 && doc.get("type").equals(rm.getType());
-
-        return err;
     }
 
+    /**
+     * effettua la richiesta del libro*/
     private void requestBook(RequestModel rm, View view) {
-
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 boolean err = false;

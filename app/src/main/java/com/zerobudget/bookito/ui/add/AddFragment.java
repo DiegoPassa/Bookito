@@ -51,8 +51,7 @@ public class AddFragment extends Fragment {
     private FirebaseFirestore db;
 
     /**
-     * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato
-     */
+     * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato*/
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) { //isbn scannerizzato
             searchBookAPI(result.getContents());
@@ -127,7 +126,6 @@ public class AddFragment extends Fragment {
             }
         });
 
-        //Log.d("USER NOW", "" + UserModel.getCurrentUser().serialize());
         return root;
     }
 
@@ -137,6 +135,8 @@ public class AddFragment extends Fragment {
         binding = null;
     }
 
+    /**
+     * metodo per nascondere la tastiera*/
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
 
@@ -149,9 +149,10 @@ public class AddFragment extends Fragment {
 
 
     static public class CaptureAct extends CaptureActivity {
-
     }
 
+    /**
+     * preleva i dati dall'api di google maps, convertendo l'oggetto json ottenuto in base al formato deciso da goolge*/
     private void searchBookAPI(String isbn) {
         mRequestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         mRequestQueue.getCache().clear();

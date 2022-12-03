@@ -48,18 +48,6 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         this.otherUserId = otherUserId;
         this.otherUserPic = otherUserPic;
         this.storageRef = FirebaseStorage.getInstance().getReference();
-
-
-//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ciao!", null));
-//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Mi mandi foto piedini?", null));
-//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ciao! No, direi di no", null));
-//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ma come no", null));
-//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Ma chi sei", null));
-//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Chi ti conosce", null));
-//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Sono marco e mi piacciono i piedi", null));
-//        messages.add(new MessageModel("PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", Utils.USER_ID, "Io sono giorgio e mi piacciono i treni", null));
-//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "ciao giorgio,posso foto piedi?", null));
-//        messages.add(new MessageModel(Utils.USER_ID, "PkxM2m4pXZeEgdyPLUXq0qAdKLZ2", "Ti prego", null));
     }
 
     @NonNull
@@ -152,6 +140,9 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     }
 
+    /**
+     * controlla se la data del messaggio deve essere visualizzata oppure no
+     * restituisce il risultato di tale controllo (boolean)*/
     private boolean haveToShowDate(ViewHolder holder, int position) {
         if (position > 0) {
             Date previousMsgDate = new Date();
@@ -183,6 +174,8 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
     }
 
+    /**
+     * carica le immagini di profilo dei due utenti*/
     private void loadUserProfilePicture(UserModel user, ViewHolder holder, int position) {
         if (user.isHasPicture()) {
             holder.profileImg.setVisibility(View.VISIBLE);

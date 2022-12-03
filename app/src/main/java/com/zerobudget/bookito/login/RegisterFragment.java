@@ -163,6 +163,8 @@ public class RegisterFragment extends Fragment {
         });
     }
 
+    /**
+     * controlla che gli input siano corretti*/
     private boolean validateInput() {
         boolean flag = true;
 

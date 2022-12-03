@@ -81,7 +81,9 @@ public class SearchByNameFragment extends Fragment {
         binding = null;
     }
 
-    //ricerca libro per titolo nel quartiere dell'utente
+    /**
+     * ricerca libro per titolo nel quartiere dell'utente
+     */
     private void searchBookByTitle_UsrNeighborhood(String searched_book) {
         db.collection("users").whereEqualTo("neighborhood", Utils.CURRENT_USER.getNeighborhood()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -116,6 +118,8 @@ public class SearchByNameFragment extends Fragment {
         });
     }
 
+    /**
+     * ricerca del libro per titolo anche negli altri quartieri*/
     private void searchBookByTitle_OthersNeighborhood(String searched_book, ArrayList<SearchResultsModel> arrResults) {
         db.collection("users").whereNotEqualTo("neighborhood", Utils.CURRENT_USER.getNeighborhood()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

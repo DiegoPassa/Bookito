@@ -210,18 +210,21 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
     }
 
+    /**
+     * controlla se non esista già una richiesta in corso per lo stesso libro*/
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
-        boolean err = doc.get("status").equals(rm.getStatus())
-                && (doc.get("receiver").equals(rm.getReceiver())
+        return (doc.get("status").equals("accepted") || doc.get("status").equals("ongoing"))
+                /*&&doc.get("receiver").equals(rm.getReceiver())*/
                 && doc.get("requestedBook").equals(rm.getRequestedBook())
-                && doc.get("sender").equals(rm.getSender())
+                /*&& doc.get("sender").equals(rm.getSender())*/
                 && doc.get("thumbnail").equals(rm.getThumbnail())
                 && doc.get("title").equals(rm.getTitle())
-                && doc.get("type").equals(rm.getType()));
-
-        return err;
+                && doc.get("type").equals(rm.getType());
     }
 
+
+    /**
+     * effettua la richiesta del libro*/
     private void requestBook(RequestModel rm, ViewHolder holder, AlertDialog dialog) {
         dialog.dismiss();
         db.collection("requests").get().addOnCompleteListener(task -> {
@@ -233,22 +236,9 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     if (checkRequests(doc, rm)) {
                         err = true;
                     }
-
-                    if (doc.get("status").equals(rm.getStatus())
-                            && (doc.get("receiver").equals(rm.getReceiver())
-                            && doc.get("requestedBook").equals(rm.getRequestedBook())
-                            && doc.get("sender").equals(rm.getSender())
-                            && doc.get("thumbnail").equals(rm.getThumbnail())
-                            && doc.get("title").equals(rm.getTitle())
-                            && doc.get("type").equals(rm.getType())))
-                        err = true;
-                    else
-                        Log.d("not", "not eq");
                 }
                 //se esiste già una richiesta da errore
                 if (err) {
-                    Log.d("HEEELP", "boh");
-
                     Toast.makeText(context, "Attenzione! La richiesta per " + results.get(holder.getAdapterPosition()).getBook().getTitle() + " esiste già!", Toast.LENGTH_LONG).show();
                 } else {
                     db.collection("requests").add(rm.serialize()).addOnSuccessListener(documentReference -> {

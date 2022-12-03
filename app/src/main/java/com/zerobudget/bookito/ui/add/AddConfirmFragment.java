@@ -74,16 +74,7 @@ public class AddConfirmFragment extends Fragment {
                 newBook.setType(action);
                 addBook(getContext());//inserimento libro nel database
 
-
                 Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
-
-/*                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
-                builder.setTitle("Conferma");
-                builder.setMessage("Libro " + newBook.getTitle() + " è stato inserito correttamente");
-                builder.setPositiveButton("OK", (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
-                }).show();*/
             }
         });
 
@@ -91,22 +82,14 @@ public class AddConfirmFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.to_navigation_library);
 
             Toast.makeText(getContext(), "Inserimento annullato", Toast.LENGTH_LONG).show();
-
-/*            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
-            builder.setTitle("Attenzione");
-            builder.setMessage("Inserimento annullato");
-            builder.setPositiveButton("OK", (dialogInterface, i) -> {
-                dialogInterface.dismiss();
-                Navigation.findNavController(view).navigate(R.id.to_navigation_library);
-            }).show();*/
         });
 
         return root;
     }
 
-
     /**
      * inserisce il nuovo libro nel database, nel documento dell'utente corrente
+     * controlla che non esista già un libro con lo stesso isbn
      */
     private void addBook(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

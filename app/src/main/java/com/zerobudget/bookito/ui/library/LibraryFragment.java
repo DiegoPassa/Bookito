@@ -32,6 +32,9 @@ public class LibraryFragment extends Fragment {
 
     private ProgressBar spinner;
 
+
+    /**
+     * preleva i liri dell'utente corrente dal database*/
     public void getBooksFromDB() {
         db.collection("users").document(Utils.USER_ID)
                 .get().addOnSuccessListener(documentSnapshot -> {
@@ -39,6 +42,8 @@ public class LibraryFragment extends Fragment {
                 });
     }
 
+    /**
+     * carica la libreria dell'utente*/
     private void loadLibrary(Object books) {
         spinner.setVisibility(View.VISIBLE);
         Utils.CURRENT_USER.getLibrary().clear();

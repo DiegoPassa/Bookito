@@ -125,17 +125,15 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
             }
         });
 
-        holder.request_selected.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-
-                showImagePicDialog(holder, requests.get(holder.getAdapterPosition()));
-                return false;
-            }
+        holder.request_selected.setOnLongClickListener(view -> {
+            showActionsDialog(holder, requests.get(holder.getAdapterPosition()));
+            return false;
         });
     }
 
-    private void showImagePicDialog(ViewHolder holder, RequestModel request) {
+    /**
+     * visualizza il popup con le opzioni disponibili*/
+    private void showActionsDialog(ViewHolder holder, RequestModel request) {
         //String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
 
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
@@ -285,6 +283,10 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         dialog.show();
     }
 
+    /**
+     * segna la richiesta come conclusa (status = concluded) sulla base del tipo
+     * abilita il libro nella richiesta di prestito
+     * elimina i libri nelle richieste di scambio e regalo*/
     private void closeRequest(ViewHolder holder) {
         if (!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
             //la richiesta è segnata con status CONCLUDED
@@ -328,10 +330,16 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         // dialog.dismiss();
     }
 
+    /**
+     * incrementa il punteggio di red flag dell'utente*/
     private void sendFeedbackToUser(String id, float feedback) {
         db.collection("users").document(id).update("karma.points", FieldValue.increment(feedback), "karma.numbers", FieldValue.increment(1));
     }
 
+    /**
+     * modifica lo stato di un libro (tramite isbn)
+     * la modifica viene fatta rimuovendo il libro e inserendolo nuovamente con il nuovo stato
+     * perché firebase non permette di modificare un valore all'interno della strutura dati in cui essi sono contenuti*/
     private void changeBookStatus(String userID, String isbn) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -352,6 +360,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         });
     }
 
+    /**
+     * elimina un libro dalla libreria dell'utente, sulla base dell'isbn*/
     void deleteUserBook(String userID, String bookRequested) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

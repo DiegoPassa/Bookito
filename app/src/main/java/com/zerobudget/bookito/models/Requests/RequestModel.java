@@ -13,7 +13,7 @@ public class RequestModel {
     protected String requestedBook; //isbn libro richiesto
     protected String sender; //id utente che fa la richiesta
     protected String receiver; //id utente che RICEVE la richiesta (id utente attuale basically)
-    protected String status; //stato della richiesta, può assumere 3 valori: undefined, refused and accepted
+    protected String status; //valori: undefined, refused, concluded, closed, accepted
     protected String thumbnail;
     protected String type; //Scambio, Prestito o Regalo
     protected String title;
