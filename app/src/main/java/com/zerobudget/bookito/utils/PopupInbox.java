@@ -79,4 +79,11 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
         returnDate.setVisibility(View.VISIBLE);
     }
 
+    public void setUpInformation(RequestModel r, TextView titlePopup, TextView ownerLocation, TextView noteText) {
+        String requestTypeStr = "Richiesta " + r.getType();
+        titlePopup.setText(requestTypeStr);
+        ownerLocation.setText(r.getOtherUser().getNeighborhood());
+        noteText.setText(r.getNote());
+    }
+
 }
