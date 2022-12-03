@@ -233,6 +233,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                     });
 
                     confirmFeedback.setOnClickListener(click -> {
+
+                        if (mRatingBar.getRating() <= 0) return;
+
                         String otherUserID = "";
                         if (request.getSender().equals(Utils.USER_ID)) {
                             otherUserID = request.getReceiver();
