@@ -234,10 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 .whereEqualTo("status", "undefined")
                 .whereEqualTo("receiver", Utils.USER_ID)
                 .get().addOnCompleteListener(task -> {
-                    int numReq = 0;
-                    for(QueryDocumentSnapshot q : task.getResult())
-                        numReq++;
-
+                    int numReq = task.getResult().size();
                     badge.setNumber(numReq);
                 });
     }
@@ -250,4 +247,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
+
+
 }
