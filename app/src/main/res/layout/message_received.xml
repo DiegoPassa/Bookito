@@ -5,23 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/message_book_thumbnail"
-        android:layout_width="130dp"
-        android:layout_height="0dp"
-        android:padding="8dp"
-        android:scaleType="fitXY"
-        android:visibility="visible"
-        app:layout_constraintDimensionRatio="h,1:1.4375"
-        app:layout_constraintStart_toStartOf="@+id/cardView3"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/chat_profile_card_view"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginStart="16dp"
         app:cardCornerRadius="35dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardView3">
@@ -50,17 +38,11 @@
 
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/messages_date"
+    <include
+        android:id="@+id/include"
+        layout="@layout/message_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:maxWidth="200dp"
-        android:text="15/01/2023"
-        android:textColor="?colorOnBackground"
-        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/cardView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,15 +53,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="?colorTertiary"
+        android:backgroundTint="?colorTertiaryContainer"
         app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/guideline20"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/chat_profile_card_view"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/include">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -91,8 +74,8 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
-                android:textColor="?colorOnTertiary"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="?colorOnTertiaryContainer"
+                app:layout_constraintBottom_toTopOf="@+id/message_book_thumbnail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -108,6 +91,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/message_body"
                 app:srcCompat="@drawable/ic_baseline_done_all_16" />
+
+            <ImageView
+                android:id="@+id/message_book_thumbnail"
+                android:layout_width="130dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="16dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="h,1:1.4375"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/message_body"
+                tools:srcCompat="@tools:sample/avatars" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

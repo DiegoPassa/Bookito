@@ -5,18 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/message_book_thumbnail"
-        android:layout_width="130dp"
-        android:layout_height="0dp"
-        android:padding="8dp"
-        android:scaleType="fitXY"
-        android:visibility="visible"
-        app:layout_constraintDimensionRatio="h,1:1.4375"
-        app:layout_constraintEnd_toEndOf="@+id/cardView3"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/chat_profile_card_view"
         android:layout_width="35dp"
@@ -51,19 +39,30 @@
 
     </androidx.cardview.widget.CardView>
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/message_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/cardView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="?colorPrimary"
+        android:backgroundTint="?colorSecondaryContainer"
         app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/chat_profile_card_view"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline20"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/include">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -75,8 +74,7 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp"
                 android:paddingTop="8dp"
-                android:textColor="?colorOnPrimary"
-                app:layout_constraintBottom_toTopOf="@+id/message_read"
+                android:textColor="?colorOnSecondaryContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -92,10 +90,22 @@
                 android:src="@drawable/ic_baseline_done_16"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintTop_toBottomOf="@+id/message_body"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/ic_baseline_done_all_16" />
+
+            <ImageView
+                android:id="@+id/message_book_thumbnail"
+                android:layout_width="130dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toTopOf="@+id/message_read"
+                app:layout_constraintDimensionRatio="h,1:1.4375"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/message_body"
-                app:srcCompat="@drawable/ic_baseline_done_all_16" />
+                tools:srcCompat="@tools:sample/avatars" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,20 +117,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent=".25" />
-
-    <TextView
-        android:id="@+id/messages_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:text="15/01/2023"
-        android:textColor="?colorOnBackground"
-        android:textSize="14sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/cardView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/message_time"

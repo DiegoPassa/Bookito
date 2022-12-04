@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -92,10 +93,12 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
         if (messages.get(position).getSender().equals(Utils.USER_ID)) {
             loadUserProfilePicture(Utils.CURRENT_USER, holder);
-            if (messages.get(position).getStatus().equals("read"))
-                holder.messageStatus.setImageResource(R.drawable.ic_baseline_done_all_16);
-            else
-                holder.messageStatus.setImageResource(R.drawable.ic_baseline_done_16);
+            if (messages.get(position).getStatus() != null) {
+                if (messages.get(position).getStatus().equals("read"))
+                    holder.messageStatus.setImageResource(R.drawable.ic_baseline_done_all_16);
+                else
+                    holder.messageStatus.setImageResource(R.drawable.ic_baseline_done_16);
+            }
         } else {
             loadUserProfilePicture(otherUser, holder);
         }
@@ -122,14 +125,14 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
             assert currentMsgDate != null;
             if (currentMsgDate.after(previousMsgDate)) {
-                holder.messagesDate.setVisibility(View.VISIBLE);
+                holder.messagesDateCard.setVisibility(View.VISIBLE);
                 return true;
             } else {
-                holder.messagesDate.setVisibility(View.GONE);
+                holder.messagesDateCard.setVisibility(View.GONE);
                 return false;
             }
         } else {
-            holder.messagesDate.setVisibility(View.VISIBLE);
+            holder.messagesDateCard.setVisibility(View.VISIBLE);
             return true;
         }
     }
@@ -165,7 +168,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
         private final ImageView book_thumbnail;
         private final TextView messagesDate;
         private final ImageView messageStatus;
-
+        private final CardView messagesDateCard;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -176,6 +179,7 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             book_thumbnail = itemView.findViewById(R.id.message_book_thumbnail);
             messagesDate = itemView.findViewById(R.id.messages_date);
             messageStatus = itemView.findViewById(R.id.message_read);
+            messagesDateCard = itemView.findViewById(R.id.messages_date_card);
         }
     }
 
