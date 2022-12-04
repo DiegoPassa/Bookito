@@ -151,6 +151,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                 .get().addOnCompleteListener(task -> {
                     int numReq = task.getResult().size();
                     badge.setNumber(numReq);
+                    badge.setVisible(numReq > 0);
                 });
     }
 

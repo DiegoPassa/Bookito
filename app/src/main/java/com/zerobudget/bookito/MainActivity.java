@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
                 .get().addOnCompleteListener(task -> {
                     int numReq = task.getResult().size();
                     badge.setNumber(numReq);
+                    badge.setVisible(numReq > 0);
                 });
     }
 
