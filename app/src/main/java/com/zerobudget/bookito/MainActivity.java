@@ -21,6 +21,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,9 +36,13 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.login.LoginActivity;
+import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,12 +104,16 @@ public class MainActivity extends AppCompatActivity {
                 if (Utils.CURRENT_USER.isHasPicture()) {
                     getUriPic();
                 }
-                mainActivitySetup();
+                try {
+                    mainActivitySetup();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    private void mainActivitySetup() {
+    private void mainActivitySetup() throws IOException {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -134,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
                 navView.setVisibility(View.VISIBLE);
             }
         });
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Utils.setNeighborhoods(objectMapper.readValue(getAssets().open("neighborhoodJSON.json"), new TypeReference<List<NeighborhoodModel>>() {
+        }));
+        Log.d("NeighborhoodJSON", Utils.getNeighborhoods().toString());
     }
 
     @Override

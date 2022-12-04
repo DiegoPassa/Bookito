@@ -1,0 +1,424 @@
+[
+  {
+    "comune": "Annone Veneto",
+    "quartieri": [
+      "Giai",
+      "Spadacenta",
+      "Loncon"
+    ]
+  },
+  {
+    "comune": "Campagna Lupia",
+    "quartieri": [
+      "Lova",
+      "Lughetto"
+    ]
+  },
+  {
+    "comune": "Campolongo Maggiore",
+    "quartieri": [
+      "Liettoli",
+      "Bojon",
+      "Santa Maria Assunta"
+    ]
+  },
+  {
+    "comune": "Camponogara",
+    "quartieri": [
+      "Calcroci",
+      "Campoverardo",
+      "Premaore",
+      "Prozzolo"
+    ]
+  },
+  {
+    "comune": "Caorle",
+    "quartieri": [
+      "Santa Margherita",
+      "Falconera",
+      "Sansonessa",
+      "Porto Santa Margherita",
+      "Duna Verde",
+      "San Giorgio di Livenza",
+      "Ca' Corniani",
+      "Ca' Cottoni",
+      "Ottava Presa",
+      "San Gaetano",
+      "Brian",
+      "Brussa",
+      "Castello di Brussa",
+      "Villaviera"
+    ]
+  },
+  {
+    "comune": "Cavallino-Treporti",
+    "quartieri": [
+      "Lio Grando",
+      "Ca' Ballarin",
+      "Ca' Pasquali",
+      "Ca' Savio",
+      "Ca' di Valle",
+      "Ca' Vio",
+      "Cavallino",
+      "Lio Piccolo",
+      "Mesole",
+      "Punta Sabbioni",
+      "Saccagnana",
+      "Treporti"
+    ]
+  },
+  {
+    "comune": "Cavarzere",
+    "quartieri": [
+      "Boscochiaro",
+      "Grignella",
+      "Rottanova",
+      "San Pietro",
+      "Valcerere-Dolfina",
+      "Villaggio Busonera"
+    ]
+  },
+  {
+    "comune": "Ceggia",
+    "quartieri": [
+      "Gainiga",
+      "Pra' di Levada",
+      "Rivazancana"
+    ]
+  },
+  {
+    "comune": "Chioggia",
+    "quartieri": [
+      "Ca' Bianca",
+      "Ca' Lino",
+      "Ca' Pasqua",
+      "Cavana",
+      "Cavanella d'Adige",
+      "Isolaverde",
+      "Sottomarina",
+      "Sant'Anna",
+      "Valli",
+      "Brondolo"
+    ]
+  },
+  {
+    "comune": "Cinto Caomaggiore",
+    "quartieri": [
+      "Annese",
+      "Bando",
+      "Bernardotto",
+      "Persiana",
+      "San Biagio",
+      "san Gaetano",
+      "Settimo",
+      "Stefanutto",
+      "Stradatta",
+      "Toffolon"
+    ]
+  },
+  {
+    "comune": "Cona",
+    "quartieri": [
+      "Conetta",
+      "Cantarana",
+      "Monsole",
+      "Pegolotte",
+      "Foresto"
+    ]
+  },
+  {
+    "comune": "Concorda Sagittaria",
+    "quartieri": [
+      "Cavanella",
+      "Paludetto",
+      "Sindacale",
+      "Teson"
+    ]
+  },
+  {
+    "comune": "Dolo",
+    "quartieri": [
+      "Arino",
+      "Sambruson"
+    ]
+  },
+  {
+    "comune": "Eraclea",
+    "quartieri": [
+      "Brian",
+      "Ca' Turcata",
+      "Eraclea Mare",
+      "Ponte Crepaldo",
+      "Stretti",
+      "Torre di Fine",
+      "Valcasoni",
+      "Busatonda",
+      "Cittanova",
+      "Coda di Gatto",
+      "Murazzetta",
+      "Paluda",
+      "Pradivisi",
+      "Revedoli",
+      "Tombolino",
+      "Tortoletto"
+    ]
+  },
+  {
+    "comune": "Fiesso d'Artico",
+    "quartieri": []
+  },
+  {
+    "comune": "Fossalta di Piave",
+    "quartieri": []
+  },
+  {
+    "comune": "Fossalta di Portogruaro",
+    "quartieri": [
+      "Gorgo",
+      "Fratta",
+      "Alvisopoli",
+      "Vado",
+      "Villanova Sant'Antonio",
+      "Sacilato",
+      "Stiago",
+      "Torressella"
+    ]
+  },
+  {
+    "comune": "Fosso'",
+    "quartieri": []
+  },
+  {
+    "comune": "Gruaro",
+    "quartieri": [
+      "Mondina",
+      "Bagnara",
+      "Gruaro",
+      "Boldara",
+      "Roncis",
+      "Giai",
+      "La Sega",
+      "Malcanton"
+    ]
+  },
+  {
+    "comune": "Jesolo",
+    "quartieri": [
+      "Lido di Jesolo",
+      "Cortellazzo",
+      "Passarella di Sotto ",
+      "Valle di Lio Maggiore"
+    ]
+  },
+  {
+    "comune": "Marcon",
+    "quartieri": [
+      "Gaggio",
+      "San Liberale"
+    ]
+  },
+  {
+    "comune": "Martellago",
+    "quartieri": [
+      "Maerne",
+      "Olmo"
+    ]
+  },
+  {
+    "comune": "Meolo",
+    "quartieri": [
+      "Losson della Battaglia",
+      "Marteggia"
+    ]
+  },
+  {
+    "comune": "Mira",
+    "quartieri": [
+      "Mira Taglio",
+      "Mira Porte",
+      "Marano",
+      "Borbiago",
+      "Oriago",
+      "Gambarare",
+      "Malcontenta"
+    ]
+  },
+  {
+    "comune": "Mirano",
+    "quartieri": [
+      "Ballo'",
+      "Campocroce",
+      "Scaltenigo",
+      "Vetrego",
+      "Zianigo"
+    ]
+  },
+  {
+    "comune": "Musile di Piave",
+    "quartieri": [
+      "Capo d'Argine",
+      "Caposile",
+      "Croce",
+      "Lazzaretto",
+      "Millepertiche",
+      "Trezze"
+    ]
+  },
+  {
+    "comune": "Noale",
+    "quartieri": [
+      "Briana",
+      "Cappelletta",
+      "Moniego"
+    ]
+  },
+  {
+    "comune": "Noventa di Piave",
+    "quartieri": [
+      "Romanziol",
+      "Santa Teresina",
+      "Ca' Memo"
+    ]
+  },
+  {
+    "comune": "Pianiga",
+    "quartieri": []
+  },
+  {
+    "comune": "Portogruaro",
+    "quartieri": [
+      "Portovecchio",
+      "Giussago",
+      "Lugugnana",
+      "Pradipozzo",
+      "Summaga",
+      "Lison",
+      "Mazzolada"
+    ]
+  },
+  {
+    "comune": "Pramaggiore",
+    "quartieri": []
+  },
+  {
+    "comune": "Quarto d'Altino",
+    "quartieri": [
+      "Portegrandi"
+    ]
+  },
+  {
+    "comune": "Salzano",
+    "quartieri": [
+      "Robegano"
+    ]
+  },
+  {
+    "comune": "San Dona' di Piave",
+    "quartieri": [
+      "Calvecchia",
+      "Chiesanuova",
+      "Cittanova",
+      "Fiorentina",
+      "Fosso'",
+      "Grassaga",
+      "Isiata",
+      "Mussetta di Sopra",
+      "Palazzetto",
+      "Passarella",
+      "Santa Maria di Piave"
+    ]
+  },
+  {
+    "comune": "San michele al Tagliamento",
+    "quartieri": [
+      "Villanova - Malafesta",
+      "San Giorgio al Tagliamento - Pozzi",
+      "Cesarolo",
+      "III Bacino",
+      "Bevazzana",
+      "Bibione"
+    ]
+  },
+  {
+    "comune": "San Stino di Livenza",
+    "quartieri": [
+      "Corbolone",
+      "Biverone",
+      "La Salute di Livenza"
+    ]
+  },
+  {
+    "comune": "Santa Maria di Sala",
+    "quartieri": [
+      "Caltana",
+      "Caselle de' Ruffi",
+      "Sant'Angelo di Sala",
+      "Stigliano",
+      "Veternigo"
+    ]
+  },
+  {
+    "comune": "Scorze'",
+    "quartieri": [
+      "Rio San Martino",
+      "Cappella",
+      "Peseggia",
+      "Gardigiano"
+    ]
+  },
+  {
+    "comune": "Spinea",
+    "quartieri": [
+      "Crea",
+      "Orgnano",
+      "Rossignago"
+    ]
+  },
+  {
+    "comune": "Stra",
+    "quartieri": [
+      "San Pietro di Stra",
+      "Paluello"
+    ]
+  },
+  {
+    "comune": "Teglio Veneto",
+    "quartieri": []
+  },
+  {
+    "comune": "Torre di Mosto",
+    "quartieri": [
+      "Staffolo",
+      "Boccafossa",
+      "Sant'Elena",
+      "Tezze",
+      "Senzielli",
+      "Rotta"
+    ]
+  },
+  {
+    "comune": "Venezia",
+    "quartieri": [
+      "San Marco-Castello-Sant'Elena-Cannaregio",
+      "Dorsoduro-San Polo-Santa Croce-Giudecca",
+      "Lido-Malamocco-Alberoni",
+      "Pellestrina-San Pietro in Volta",
+      "Murano-Sant'Erasmo",
+      "Burano-Mazzorbo-Torcello",
+      "Favaro-Campalto",
+      "Carpenedo-Bissuola",
+      "Mestre Centro",
+      "Cipressina-Zelarino-Trivignano",
+      "Chirignago-Gazzera",
+      "Marghera-Catene-Malcontenta"
+    ]
+  },
+  {
+    "comune": "Vigonovo",
+    "quartieri": [
+      "Galta",
+      "Tombelle",
+      "Celeseo"
+    ]
+  }
+]

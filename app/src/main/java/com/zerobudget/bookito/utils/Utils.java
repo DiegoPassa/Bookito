@@ -5,7 +5,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
     //contiene metodi statici per funzionalità
@@ -18,6 +22,8 @@ public class Utils {
 
     public static String EMPTY_INBOX = "Nessuna richiesta ricevuta";
     public static String EMPTY_SEND = "Nessuna richiesta inviata!";
+
+    public static List<NeighborhoodModel> neighborhoods = new ArrayList<>();
 
     public static void setUserId(String userId) {
         USER_ID = userId;
@@ -71,6 +77,14 @@ public class Utils {
         } else {
             empty.setVisibility(View.GONE);
         }
+    }
+
+    public static List<NeighborhoodModel> getNeighborhoods() {
+        return neighborhoods;
+    }
+
+    public static void setNeighborhoods(List<NeighborhoodModel> neighborhoods) {
+        Utils.neighborhoods = neighborhoods;
     }
 
     public static boolean isAValidISBN(long isbn) {
