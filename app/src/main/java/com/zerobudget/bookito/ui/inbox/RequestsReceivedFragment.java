@@ -12,9 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
@@ -26,7 +29,7 @@ public class RequestsReceivedFragment extends InboxFragment {
 
     private FirebaseFirestore db;
     private ProgressBar spinner;
-
+    private BadgeDrawable badge;
     private TextView empty;
 
     private RequestsReceived_RecycleViewAdapter adapter;
@@ -41,11 +44,18 @@ public class RequestsReceivedFragment extends InboxFragment {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
+
         spinner = binding.progressBar;
         empty = binding.empty;
         recyclerView = binding.recycleViewInbox;
 
         db = FirebaseFirestore.getInstance();
+
+        BottomNavigationView navView = requireActivity().findViewById(R.id.nav_view);
+        int menuItemId = navView.getMenu().getItem(0).getItemId();
+        badge = navView.getOrCreateBadge(menuItemId);
+
 
         binding.textView.setVisibility(View.VISIBLE);
         binding.filterBar.setVisibility(View.INVISIBLE);
@@ -97,6 +107,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                         }
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             Log.d("OOI", "getRequestsRealTime: " + dc.getDocument().toObject(RequestModel.class));
+                            setRequestBadgeNumber(); //aggiorna anche il badge delle notifiche in real time
                             spinner.setVisibility(View.VISIBLE);
                             switch (dc.getType()) {
                                 case ADDED:
@@ -114,6 +125,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                         Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
                     }
                 });
+
     }
 
     protected void getUserByRequest(RequestModel r, int position) {
@@ -127,6 +139,19 @@ public class RequestsReceivedFragment extends InboxFragment {
                         recyclerView.scrollToPosition(position);
                         spinner.setVisibility(View.GONE);
                     }
+                });
+    }
+
+    /**
+     * preleva le richieste ricevute dal database e inserisce il numero nel badge della bottom bar*/
+    private void setRequestBadgeNumber(){
+        db.collection("requests")
+                .whereEqualTo("status", "undefined")
+                .whereEqualTo("receiver", Utils.USER_ID)
+                .get().addOnCompleteListener(task -> {
+                    int numReq = task.getResult().size();
+                    badge.setNumber(numReq);
+                    badge.setVisible(numReq > 0);
                 });
     }
 

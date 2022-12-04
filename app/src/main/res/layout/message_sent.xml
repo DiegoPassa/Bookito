@@ -72,8 +72,9 @@
                 android:id="@+id/message_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="14dp"
                 android:paddingTop="8dp"
+                android:textSize="14sp"
                 android:textColor="?colorOnSecondaryContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +85,6 @@
                 android:id="@+id/message_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
                 android:src="@drawable/ic_baseline_done_16"
@@ -107,9 +107,38 @@
                 app:layout_constraintTop_toBottomOf="@+id/message_body"
                 tools:srcCompat="@tools:sample/avatars" />
 
+
+            <!--TextView
+                android:id="@+id/message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="0dp"
+                android:maxWidth="200dp"
+                android:text="11:11"
+                android:textColor="?colorPrimary"
+                android:textSize="11sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/message_read" /-->
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
+
+    <TextView
+    android:id="@+id/message_time"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:maxWidth="200dp"
+    android:text="11:11"
+    android:textColor="?colorPrimary"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="@id/cardView3"
+    app:layout_constraintTop_toBottomOf="@id/cardView3" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline20"
@@ -118,16 +147,5 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent=".25" />
 
-    <TextView
-        android:id="@+id/message_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:maxWidth="200dp"
-        android:text="11:11"
-        android:textColor="?colorPrimary"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView3"
-        app:layout_constraintEnd_toStartOf="@+id/cardView3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

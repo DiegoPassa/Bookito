@@ -21,12 +21,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference storageRef;
 
     private AppBarConfiguration appBarConfiguration;
+    private BadgeDrawable badge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * preleva i dati dell'utente corrente dal database*/
     private void getCurrentUserFromDB() {
         // get user
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
@@ -119,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        int menuItemId = navView.getMenu().getItem(0).getItemId();
+        badge = navView.getOrCreateBadge(menuItemId);
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
             if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
@@ -201,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * carica l'immagine di profilo dell'utente*/
     private void getUriPic() {
         StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
         load.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -213,10 +226,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * preleva le richieste ricevute dal database e inserisce il numero nel badge della bottom bar*/
+    private void setRequestBadgeNumber(){
+        Log.d("BADGEE", "aaaaaaaaaaaaaaaaaaaaaaaaa");
+        db.collection("requests")
+                .whereEqualTo("status", "undefined")
+                .whereEqualTo("receiver", Utils.USER_ID)
+                .get().addOnCompleteListener(task -> {
+                    int numReq = task.getResult().size();
+                    badge.setNumber(numReq);
+                    badge.setVisible(numReq > 0);
+                });
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        setRequestBadgeNumber();
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
+
+
 }
