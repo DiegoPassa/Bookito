@@ -100,7 +100,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
     private void createNewSearchPopup(ViewHolder holder) {
         dialogBuilder = new MaterialAlertDialogBuilder(context);
-        View view = View.inflate(context, R.layout.fragment_request_book, null);
+        View view = View.inflate(context, R.layout.popup_request_book, null);
 
         TextView bookTitle = view.findViewById(R.id.book_title);
         TextView bookAuthor = view.findViewById(R.id.book_author);

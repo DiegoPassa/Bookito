@@ -141,20 +141,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         holder.author.setText(bookModels.get(position).getAuthor());
 
-
-        switch (bookModels.get(holder.getAdapterPosition()).getType()) {
-            case "Scambio":
-                Picasso.get().load(R.drawable.swap).into(holder.book_type);
-                break;
-            case "Prestito":
-                Picasso.get().load(R.drawable.calendar).into(holder.book_type);
-                break;
-            case "Regalo":
-                Picasso.get().load(R.drawable.gift).into(holder.book_type);
-                break;
-            default:
-                break;
-        }
+        loadIconBookType(holder, holder.book_type);
 
         holder.book_selected.setOnClickListener(view -> {
             createNewDeletePopup(holder);
@@ -167,26 +154,34 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
      * permette di eliminare il libro se esso è abilitato (status = true)*/
     private void createNewDeletePopup(ViewHolder holder) {
         dialogBuilder = new MaterialAlertDialogBuilder(context);
-        View view = View.inflate(context, R.layout.fragment_delete_book, null);
+        View view = View.inflate(context, R.layout.popup_delete_book, null);
 
         TextView bookTitle = view.findViewById(R.id.book_title);
         TextView bookAuthor = view.findViewById(R.id.book_author);
         TextView bookDescription = view.findViewById(R.id.book_description);
         Button btnDelete = view.findViewById(R.id.btn_delete);
         ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
+        ImageView bookType = view.findViewById(R.id.icon_type);
 
         bookTitle.setText(bookModels.get(holder.getAdapterPosition()).getTitle());
         bookAuthor.setText(bookModels.get(holder.getAdapterPosition()).getAuthor());
         bookDescription.setText(bookModels.get(holder.getAdapterPosition()).getDescription());
         bookDescription.setMovementMethod(new ScrollingMovementMethod());
         Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(bookThumbnail);
+        loadIconBookType(holder, bookType);
 
-        if (!bookModels.get(holder.getAdapterPosition()).getStatus())
+
+        //se il libro è in una richiesta accettata non può essere eliminato
+        if (!bookModels.get(holder.getAdapterPosition()).getStatus()) {
             btnDelete.setEnabled(false);
+        }else{
+            bookType.setOnClickListener(view12 -> {
+                Toast.makeText(context, "TODO: implementare il cambio di tipo", Toast.LENGTH_LONG).show();
+            });
+        }
 
         btnDelete.setOnClickListener(view1 -> {
             //conferma dell'eliminazione
-
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma eliminazione");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler eliminare il libro: <br><b>" + bookModels.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
@@ -219,6 +214,22 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    private void loadIconBookType(ViewHolder holder, ImageView icon){
+        switch (bookModels.get(holder.getAdapterPosition()).getType()) {
+            case "Scambio":
+                Picasso.get().load(R.drawable.swap).into(icon);
+                break;
+            case "Prestito":
+                Picasso.get().load(R.drawable.calendar).into(icon);
+                break;
+            case "Regalo":
+                Picasso.get().load(R.drawable.gift).into(icon);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

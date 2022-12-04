@@ -105,7 +105,7 @@ public class RegisterFragment extends Fragment {
         binding.registerConfirm.setOnClickListener(view1 -> {
 
             AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getContext());
-            View viewPopup = View.inflate(getContext(), R.layout.fragment_gdpr, null);
+            View viewPopup = View.inflate(getContext(), R.layout.popup_gdpr, null);
 
             dialogBuilder.setView(viewPopup);
             AlertDialog dialog = dialogBuilder.create();
