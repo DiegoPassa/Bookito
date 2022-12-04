@@ -5,13 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentChatBinding;
 import com.zerobudget.bookito.models.Chat.MessageModel;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
@@ -52,13 +56,14 @@ public class ChatFragment extends Fragment {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         progressBar = binding.progressBar;
 
         progressBar.setVisibility(View.VISIBLE);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         Bundle args = getArguments();
 
@@ -99,8 +104,21 @@ public class ChatFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        MaterialToolbar toolbar = (MaterialToolbar) getActivity().findViewById(R.id.topAppBar);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
+
     /**
-     * in realtime prende i messaggi dal database e ne permette la visualizzazione sulla chat*/
+     * in realtime prende i messaggi dal database e ne permette la visualizzazione sulla chat
+     */
     protected void setUpChatRoom() {
         realTimedb.addValueEventListener(new ValueEventListener() {
             @Override

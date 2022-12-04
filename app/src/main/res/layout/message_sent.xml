@@ -30,7 +30,7 @@
             android:id="@+id/small_profile_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:visibility="gone"
             tools:layout_editor_absoluteX="252dp"
             tools:layout_editor_absoluteY="8dp"

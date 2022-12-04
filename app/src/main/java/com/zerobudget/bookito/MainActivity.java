@@ -113,13 +113,13 @@ public class MainActivity extends AppCompatActivity {
             onBackPressed();
         });
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        BottomNavigationView navView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
                 .build();
-        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        MaterialToolbar toolbar = binding.topAppBar;
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);

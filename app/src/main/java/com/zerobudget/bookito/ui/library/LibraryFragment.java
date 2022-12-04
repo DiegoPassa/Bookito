@@ -1,5 +1,6 @@
 package com.zerobudget.bookito.ui.library;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,34 +30,9 @@ public class LibraryFragment extends Fragment {
     private FirebaseFirestore db;
     private RecyclerView recyclerView;
     private Book_RecycleViewAdapter adapter;
+    Rect scrollBounds = new Rect();
 
     private ProgressBar spinner;
-
-
-    /**
-     * preleva i liri dell'utente corrente dal database*/
-    public void getBooksFromDB() {
-        db.collection("users").document(Utils.USER_ID)
-                .get().addOnSuccessListener(documentSnapshot -> {
-                    loadLibrary(documentSnapshot.get("books"));
-                });
-    }
-
-    /**
-     * carica la libreria dell'utente*/
-    private void loadLibrary(Object books) {
-        spinner.setVisibility(View.VISIBLE);
-        Utils.CURRENT_USER.getLibrary().clear();
-        for (Object o : (ArrayList<Object>) books) {
-            HashMap<String, Object> map = (HashMap<String, Object>) o;
-            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-            Utils.CURRENT_USER.getLibrary().add(tmp);//aggiunge il bookmodel tmp all'array list
-        }
-        Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
-        spinner.setVisibility(View.GONE);
-        adapter.notifyDataSetChanged();
-        Utils.toggleEmptyWarning(binding.emptyLibrary, Utils.CURRENT_USER.getLibrary().size());
-    }
 
 
     @Override
@@ -69,6 +45,10 @@ public class LibraryFragment extends Fragment {
         recyclerView = binding.recycleViewMyLibrary;
 
         spinner = binding.progressBar;
+
+        binding.floatingActionButton.setVisibility(View.INVISIBLE);
+
+        binding.nestedScrollView2.getHitRect(scrollBounds);
 
         db = FirebaseFirestore.getInstance();
 
@@ -83,6 +63,8 @@ public class LibraryFragment extends Fragment {
         getBooksFromDB();
 
         binding.floatingActionButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
+        binding.addBookButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
+
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -91,7 +73,16 @@ public class LibraryFragment extends Fragment {
             getBooksFromDB();
         });
 
-        binding.recycleViewMyLibrary.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.nestedScrollView2.setOnScrollChangeListener((View.OnScrollChangeListener) (view, i, i1, i2, i3) -> {
+            if (i1 > i3) {
+                binding.floatingActionButton.hide();
+            } else {
+                if (!binding.addBookButton.getLocalVisibleRect(scrollBounds))
+                    binding.floatingActionButton.show();
+            }
+        });
+
+/*        binding.recycleViewMyLibrary.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -107,9 +98,39 @@ public class LibraryFragment extends Fragment {
                     binding.floatingActionButton.show();
                 }
             }
-        });
+        });*/
 
         return root;
+    }
+
+    /**
+     * preleva i liri dell'utente corrente dal database
+     */
+    public void getBooksFromDB() {
+        db.collection("users").document(Utils.USER_ID)
+                .get().addOnSuccessListener(documentSnapshot -> {
+                    loadLibrary(documentSnapshot.get("books"));
+                });
+    }
+
+    /**
+     * carica la libreria dell'utente
+     */
+    private void loadLibrary(Object books) {
+        spinner.setVisibility(View.VISIBLE);
+        Utils.CURRENT_USER.getLibrary().clear();
+        for (Object o : (ArrayList<Object>) books) {
+            HashMap<String, Object> map = (HashMap<String, Object>) o;
+            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+            Utils.CURRENT_USER.getLibrary().add(tmp);//aggiunge il bookmodel tmp all'array list
+        }
+        Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
+        spinner.setVisibility(View.GONE);
+        adapter.notifyDataSetChanged();
+        Utils.toggleEmptyWarning(binding.emptyLibrary, Utils.CURRENT_USER.getLibrary().size());
+        if (!binding.addBookButton.getLocalVisibleRect(scrollBounds)) {
+            binding.floatingActionButton.show();
+        }
     }
 
     @Override
