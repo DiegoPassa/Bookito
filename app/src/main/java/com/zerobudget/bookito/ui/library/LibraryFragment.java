@@ -82,30 +82,11 @@ public class LibraryFragment extends Fragment {
             }
         });
 
-/*        binding.recycleViewMyLibrary.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 10 && binding.floatingActionButton.isShown()) {
-                    binding.floatingActionButton.hide();
-                }
-
-                if (dy < -10 && !binding.floatingActionButton.isShown()) {
-                    binding.floatingActionButton.show();
-                }
-
-                if (!binding.recycleViewMyLibrary.canScrollVertically(-1)) {
-                    binding.floatingActionButton.show();
-                }
-            }
-        });*/
-
         return root;
     }
 
     /**
-     * preleva i liri dell'utente corrente dal database
-     */
+     * preleva i liri dell'utente corrente dal database*/
     public void getBooksFromDB() {
         db.collection("users").document(Utils.USER_ID)
                 .get().addOnSuccessListener(documentSnapshot -> {
@@ -114,8 +95,7 @@ public class LibraryFragment extends Fragment {
     }
 
     /**
-     * carica la libreria dell'utente
-     */
+     * carica la libreria dell'utente*/
     private void loadLibrary(Object books) {
         spinner.setVisibility(View.VISIBLE);
         Utils.CURRENT_USER.getLibrary().clear();
