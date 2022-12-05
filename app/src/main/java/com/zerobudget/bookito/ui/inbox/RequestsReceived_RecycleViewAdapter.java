@@ -208,24 +208,17 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         checkIfStillExists(requests.get(holder.getAdapterPosition()));
 
         View view = View.inflate(context, R.layout.popup, null);
-
-        PopupInbox dialogBuilder = new PopupInbox(context);
-        dialogBuilder.setView(view);
-
-        AlertDialog dialog = dialogBuilder.create();
-
         loadPopupViewMembers(view);
 
-//        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
-//        titlePopup.setText(requestTypeStr);
-//        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
-//        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
-        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
+        //utilizza la classe popupInbox per generare dinamicamente i vari elementi del popup
+        PopupInbox dialogBuilder = new PopupInbox(context);
+        dialogBuilder.setView(view);
+        AlertDialog dialog = dialogBuilder.create();
 
+        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
         dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
         dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
-
-        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
+        dialogBuilder.setUpBookThumbnail(requests.get(holder.getAdapterPosition()), thumbnail);
 
         //se è un  prestito visualizza la data di restituzione
         if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {

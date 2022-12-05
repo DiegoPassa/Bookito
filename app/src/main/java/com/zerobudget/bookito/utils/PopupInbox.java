@@ -2,12 +2,14 @@ package com.zerobudget.bookito.utils;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
@@ -58,14 +60,18 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
         } else {
             String txtReputation = "UTENTE NUOVO";
             reputation.setText(txtReputation);
-            reputation.setTextColor(ContextCompat.getColor(this.getContext(), R.color.black));
+            reputation.setTextAppearance(R.style.selected_filter_text);
         }
     }
 
     /**prepara il testo da visalizzare nella textview owner*/
     public void setUpUserFullName(TextView owner, RequestModel request) {
-        String firstAndLastNameStr = request.getOtherUser().getFirstName() + " " + request.getOtherUser().getLastName();
-        owner.setText(firstAndLastNameStr);
+        String strFirstAndLastNameStr = "Da ";
+        if(request.getSender().equals(Utils.USER_ID))
+            strFirstAndLastNameStr += Utils.CURRENT_USER.getFirstName() + " " + Utils.CURRENT_USER.getLastName()+"\na ";
+
+        strFirstAndLastNameStr += request.getOtherUser().getFirstName() + " " + request.getOtherUser().getLastName();
+        owner.setText(strFirstAndLastNameStr);
     }
 
     /**prepara il testo da visualizzare nella textview della data di fine prestito*/
@@ -84,6 +90,10 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
         titlePopup.setText(requestTypeStr);
         ownerLocation.setText(r.getOtherUser().getNeighborhood());
         noteText.setText(r.getNote());
+    }
+
+    public void setUpBookThumbnail(RequestModel r, ImageView thumbnail){
+        Picasso.get().load(r.getThumbnail()).into(thumbnail);
     }
 
 }

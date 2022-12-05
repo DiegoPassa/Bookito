@@ -53,9 +53,10 @@ public class RequestsReceivedFragment extends InboxFragment {
         db = FirebaseFirestore.getInstance();
 
         BottomNavigationView navView = requireActivity().findViewById(R.id.nav_view);
-        int menuItemId = navView.getMenu().getItem(0).getItemId();
-        badge = navView.getOrCreateBadge(menuItemId);
-
+        if(navView != null) {
+            int menuItemId = navView.getMenu().getItem(0).getItemId();
+            badge = navView.getOrCreateBadge(menuItemId);
+        }
 
         binding.textView.setVisibility(View.VISIBLE);
         binding.filterBar.setVisibility(View.INVISIBLE);

@@ -105,26 +105,18 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
         checkIfStillUndefined(requests.get(holder.getAdapterPosition()));
 
-        PopupInbox dialogBuilder = new PopupInbox(context);
         View view = View.inflate(context, R.layout.popup, null);
+        loadPopupViewMembers(view);
 
+        PopupInbox dialogBuilder = new PopupInbox(context);
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
-
-        loadPopupViewMembers(view);
 
         dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
         dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
         dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
-//        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
-//
-//        String requestTypeStr = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
-//        titlePopup.setText(requestTypeStr);
-//        String firstAndLastNameStr = requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
-//        owner.setText(firstAndLastNameStr);
-//        ownerLocation.setText(requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood());
+        dialogBuilder.setUpBookThumbnail(requests.get(holder.getAdapterPosition()), thumbnail);
 
-        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
         refuseButton.setText("Annulla richiesta");
         confirmButton.setVisibility(View.GONE);
 

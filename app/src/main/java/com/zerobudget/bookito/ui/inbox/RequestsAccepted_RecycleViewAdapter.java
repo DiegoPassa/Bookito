@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,12 +22,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.PopupInbox;
+import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -191,7 +195,16 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         });
 
         infoRequest.setOnClickListener(view1 -> {
-            createNewContactDialog(holder);
+            UserModel senderModel = requests.get(holder.getAdapterPosition()).getOtherUser();
+            if (senderModel != null && holder.getAdapterPosition() != -1) {
+                HashMap<String, Object> karma = senderModel.getKarma(); //HashMap<String, Long>
+                Number points = (Number) karma.get("points");
+                Number feedback_numbers = (Number) karma.get("numbers");
+                Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
+                createNewContactDialog(holder, flag);
+
+            }
+           // createNewContactDialog(holder);
         });
 
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
@@ -390,74 +403,45 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         });
     }
 
+    protected void loadPopupViewMembers(View view) {
+        confirmButton = view.findViewById(R.id.acceptButton);
+        refuseButton = view.findViewById(R.id.refuseButton);
+        titlePopup = view.findViewById(R.id.title_popup);
+        owner = view.findViewById(R.id.user);
+        ownerLocation = view.findViewById(R.id.user_location);
+        returnDate = view.findViewById(R.id.return_date);
+        thumbnail = view.findViewById(R.id.imageView);
+        reputation = view.findViewById(R.id.flag);
+        noteText = view.findViewById(R.id.note_text);
+
+        noteText.setMovementMethod(new ScrollingMovementMethod());
+    }
+
     /**
      * visualizza le informazioni relative alla richiesta selezionata*/
-    public void createNewContactDialog(ViewHolder holder) {
-        AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(context);
-
+    public void createNewContactDialog(ViewHolder holder, Flag flag) {
         View view = View.inflate(context, R.layout.popup, null);
-
+        //carica i membri della view (textfield, imageview, ecc)
+        loadPopupViewMembers(view);
+        //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
+        PopupInbox dialogBuilder = new PopupInbox(context);
         dialogBuilder.setView(view);
-
         AlertDialog dialog = dialogBuilder.create();
 
-        loadPopupViewMembers(view);
-        String strRequestType = "Richiesta " + requests.get(holder.getAdapterPosition()).getType();
+        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
+        dialogBuilder.setUpBookThumbnail(requests.get(holder.getAdapterPosition()), thumbnail);
+        dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
+        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
 
-        titlePopup.setText(strRequestType);
-        noteText.setText(requests.get(holder.getAdapterPosition()).getNote());
-
-        String strFirstAndLastName = "Da ";
-        String strOwnerLocation;
-
-        Number points;
-        Number feedbacks;
-
-        if(requests.get(holder.getAdapterPosition()).getSender().equals(Utils.USER_ID))
-            strFirstAndLastName += Utils.CURRENT_USER.getFirstName() + " " + Utils.CURRENT_USER.getLastName()+"\na ";
-
-        strFirstAndLastName += requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
-        strOwnerLocation = requests.get(holder.getAdapterPosition()).getOtherUser().getNeighborhood();
-
-        points =  (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("points");
-        feedbacks = (Number) requests.get(holder.getAdapterPosition()).getOtherUser().getKarma().get("numbers");
-
-        owner.setText(strFirstAndLastName);
-        ownerLocation.setText(strOwnerLocation);
-
-        assert feedbacks != null;
-        if (feedbacks.longValue() >= 8L) {
-            assert points != null;
-            double karma = Utils.truncateDoubleValue(points.doubleValue()/feedbacks.doubleValue(), 2);
-            String txtReputation = "Reputazione: " + karma + "/5.0\nFeedback:  " + feedbacks;
-            reputation.setText(txtReputation);
-        } else {
-            String txtReputation = "UTENTE NUOVO";
-            reputation.setText(txtReputation);
-        }
-
-        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(thumbnail);
-
-        if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
-            Date date = ((RequestShareModel) requests.get(holder.getAdapterPosition())).getDate();
-
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            String dateString = "Data di restituzione:\n" + sdf.format(date);
-
-            returnDate.setText(dateString);
-            returnDate.setVisibility(View.VISIBLE);
-        }
-
+        if(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
+            dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()), returnDate);
 
         refuseButton.setText("OK, torna indietro");
-        refuseButton.setOnClickListener(view1 -> {
-            dialog.dismiss();
-        });
+        refuseButton.setOnClickListener(view1 -> dialog.dismiss());
 
         confirmButton.setVisibility(View.GONE);
 
         dialog.show();
-
     }
 //    @Override
 //    public void createNewContactDialog(int position, ViewHolder holder, Flag user) {
