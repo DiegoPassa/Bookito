@@ -25,8 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
-import com.zerobudget.bookito.utils.PopupBook;
-import com.zerobudget.bookito.utils.PopupEditBook;
+import com.zerobudget.bookito.utils.popups.PopupBook;
+import com.zerobudget.bookito.utils.popups.PopupEditBook;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;

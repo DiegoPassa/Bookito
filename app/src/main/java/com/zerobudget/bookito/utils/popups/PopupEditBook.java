@@ -1,10 +1,9 @@
-package com.zerobudget.bookito.utils;
+package com.zerobudget.bookito.utils.popups;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;

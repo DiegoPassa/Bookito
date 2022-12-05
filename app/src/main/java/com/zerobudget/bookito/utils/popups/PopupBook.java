@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.utils;
+package com.zerobudget.bookito.utils.popups;
 
 import android.content.Context;
 import android.text.method.ScrollingMovementMethod;
@@ -13,8 +13,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
-
-import kotlin.OverloadResolutionByLambdaReturnType;
 
 public class PopupBook extends MaterialAlertDialogBuilder {
     private TextView txtBookTitle;

@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.utils;
+package com.zerobudget.bookito.utils.popups;
 
 import android.content.Context;
 import android.text.method.ScrollingMovementMethod;
@@ -16,6 +16,8 @@ import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
+import com.zerobudget.bookito.utils.UserFlag;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
