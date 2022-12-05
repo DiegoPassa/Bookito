@@ -14,7 +14,6 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
 
 public class PopupEditBook extends PopupBook {
-    private Button btnOther;
     private AutoCompleteTextView choosenType;
     private TextInputLayout inputText;
     private String items[];
@@ -25,7 +24,6 @@ public class PopupEditBook extends PopupBook {
     public PopupEditBook(@NonNull Context context, View view) {
         super(context, view);
         this.context = context;
-        this.btnOther = view.findViewById(R.id.btn_other);
         this.choosenType = view.findViewById(R.id.autoCompleteTextView);
         ConstraintLayout c = view.findViewById(R.id.constr);
         c.setVisibility(View.VISIBLE);
@@ -39,16 +37,12 @@ public class PopupEditBook extends PopupBook {
     @Override
     public void setUpInformation(BookModel b) {
         super.setUpInformation(b);
+        super.getBtnOther().setVisibility(View.VISIBLE);
+        super.getBtnOther().setText("Annulla");
         this.choosenType.setVisibility(View.VISIBLE);
-        this.btnOther.setVisibility(View.VISIBLE);
         loadItems(b);
     }
 
-    @Override
-    public void setUpButtons(BookModel b, boolean isDeleteBook) {
-        super.setUpButtons(b, isDeleteBook);
-        this.btnOther.setText("Annulla");
-    }
 
     /**
      * carica i valori dei tipi con cui rempiere il menu a tendina nella modifica del libro
@@ -72,10 +66,6 @@ public class PopupEditBook extends PopupBook {
 
         adapterItems = new ArrayAdapter<>(context, R.layout.dropdown_item, items);
         this.choosenType.setAdapter(adapterItems);
-    }
-
-    public Button getBtnOther() {
-        return btnOther;
     }
 
     public AutoCompleteTextView getChoosenType() {
