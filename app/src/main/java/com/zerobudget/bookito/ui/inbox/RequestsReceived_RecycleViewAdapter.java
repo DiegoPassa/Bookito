@@ -53,18 +53,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     protected final Context context;
     protected ArrayList<RequestModel> requests;
     private String isbn_trade;
-    protected Button confirmButton;
-    protected Button refuseButton;
-    protected TextView titlePopup;
-    protected TextView owner;
-    protected TextView ownerLocation;
-    protected TextView returnDate;
-    protected ImageView thumbnail;
-    protected TextView reputation;
-    protected TextView noteText;
-
-    // private AlertDialog.Builder dialogBuilder;
-    // private AlertDialog dialog;
 
     protected FirebaseFirestore db;
     protected FirebaseAuth auth;
@@ -184,21 +172,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         }
     }
 
-    /***/
-    protected void loadPopupViewMembers(View view) {
-        confirmButton = view.findViewById(R.id.acceptButton);
-        refuseButton = view.findViewById(R.id.refuseButton);
-        titlePopup = view.findViewById(R.id.title_popup);
-        owner = view.findViewById(R.id.user);
-        ownerLocation = view.findViewById(R.id.user_location);
-        returnDate = view.findViewById(R.id.return_date);
-        thumbnail = view.findViewById(R.id.imageView);
-        reputation = view.findViewById(R.id.flag);
-        noteText = view.findViewById(R.id.note_text);
-
-        noteText.setMovementMethod(new ScrollingMovementMethod());
-    }
-
     /**
      * crea il popup con le inforazioni relative alla richiesta
      * l'utente potrà accettare o rifiutare
@@ -208,29 +181,27 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         checkIfStillExists(requests.get(holder.getAdapterPosition()));
 
         View view = View.inflate(context, R.layout.popup, null);
-        loadPopupViewMembers(view);
+        //loadPopupViewMembers(view);
 
         //utilizza la classe popupInbox per generare dinamicamente i vari elementi del popup
-        PopupInbox dialogBuilder = new PopupInbox(context);
+        PopupInbox dialogBuilder = new PopupInbox(context, view);
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
-        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
-        dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
-        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
-        dialogBuilder.setUpBookThumbnail(requests.get(holder.getAdapterPosition()), thumbnail);
+        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()));
+        dialogBuilder.setReputationMessage(requests.get(holder.getAdapterPosition()), flag);
 
         //se è un  prestito visualizza la data di restituzione
         if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
-            dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()), returnDate);
+            dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()));
         }
 
         //pulsante per visualizzare la libreria dell'altro utente, in caso di scambio
         if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
-            confirmButton.setText("Libreria Utente");
+            dialogBuilder.setTextConfirmButton("Libreria Utente");
         }
 
-        confirmButton.setOnClickListener(view1 -> {
+        dialogBuilder.getConfirmButton().setOnClickListener(view1 -> {
             Log.d("Pos", "" + holder.getAdapterPosition());
             if (holder.getAdapterPosition() != -1) {
                 if (exists) { //controlla che la richiesta esista ancora
@@ -255,7 +226,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
             dialog.dismiss();
         });
 
-        refuseButton.setOnClickListener(view1 -> {
+        dialogBuilder.getRefuseButton().setOnClickListener(view1 -> {
             if (holder.getAdapterPosition() != -1) {
                 deleteRequest(requests.get(holder.getAdapterPosition()));
                 // requests.remove(holder.getAdapterPosition());

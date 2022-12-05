@@ -106,21 +106,18 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
         checkIfStillUndefined(requests.get(holder.getAdapterPosition()));
 
         View view = View.inflate(context, R.layout.popup, null);
-        loadPopupViewMembers(view);
 
-        PopupInbox dialogBuilder = new PopupInbox(context);
+        PopupInbox dialogBuilder = new PopupInbox(context, view);
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
-        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
-        dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
-        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
-        dialogBuilder.setUpBookThumbnail(requests.get(holder.getAdapterPosition()), thumbnail);
+        dialogBuilder.setReputationMessage(requests.get(holder.getAdapterPosition()), flag);
+        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()));
 
-        refuseButton.setText("Annulla richiesta");
-        confirmButton.setVisibility(View.GONE);
+        dialogBuilder.setTextRefuseButton("Annulla richiesta");
+        dialogBuilder.getConfirmButton().setVisibility(View.GONE);
 
-        refuseButton.setOnClickListener(view1 -> {
+        dialogBuilder.getRefuseButton().setOnClickListener(view1 -> {
             if (isUndefined) {
                 Log.d("UNDF", "true");
                 if (holder.getAdapterPosition() != -1) {

@@ -38,17 +38,11 @@ public class PopupBook extends MaterialAlertDialogBuilder {
 
     public void setUpInformation(BookModel b) {
         this.txtBookTitle.setText(b.getTitle());
-        this.txtBookAuthor.setText(b.getTitle());
+        this.txtBookAuthor.setText(b.getAuthor());
         this.txtBookDescription.setText(b.getDescription());
         this.txtBookDescription.setMovementMethod(new ScrollingMovementMethod());
         Picasso.get().load(b.getThumbnail()).into(this.imgBookThumbnail);
         loadIconBookType(b.getType());
-    }
-
-    public void setUpOwner(boolean isSearchPage, String owner, TextView ownerBook) {
-        if (isSearchPage) {
-            ownerBook.setText(owner);
-        }
     }
 
     public void setUpButtons(BookModel b, boolean isDeleteBook) {

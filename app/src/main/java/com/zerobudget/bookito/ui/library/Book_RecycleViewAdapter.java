@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,12 +40,9 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     private final Context context;
     private final ArrayList<BookModel> bookModels;
 
-    private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
     private final TextView emptyWarning;
-    private String items[];
-    ArrayAdapter<String> adapterItems;
 
     FirebaseFirestore db;
     FirebaseAuth auth;

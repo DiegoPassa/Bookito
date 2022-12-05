@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +34,6 @@ import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -402,44 +400,25 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
             }
         });
     }
-
-    protected void loadPopupViewMembers(View view) {
-        confirmButton = view.findViewById(R.id.acceptButton);
-        refuseButton = view.findViewById(R.id.refuseButton);
-        titlePopup = view.findViewById(R.id.title_popup);
-        owner = view.findViewById(R.id.user);
-        ownerLocation = view.findViewById(R.id.user_location);
-        returnDate = view.findViewById(R.id.return_date);
-        thumbnail = view.findViewById(R.id.imageView);
-        reputation = view.findViewById(R.id.flag);
-        noteText = view.findViewById(R.id.note_text);
-
-        noteText.setMovementMethod(new ScrollingMovementMethod());
-    }
-
     /**
      * visualizza le informazioni relative alla richiesta selezionata*/
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
         View view = View.inflate(context, R.layout.popup, null);
-        //carica i membri della view (textfield, imageview, ecc)
-        loadPopupViewMembers(view);
         //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
-        PopupInbox dialogBuilder = new PopupInbox(context);
+        PopupInbox dialogBuilder = new PopupInbox(context, view);
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
-        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()), titlePopup, ownerLocation, noteText);
-        dialogBuilder.setUpBookThumbnail(requests.get(holder.getAdapterPosition()), thumbnail);
-        dialogBuilder.setUpUserFullName(owner, requests.get(holder.getAdapterPosition()));
-        dialogBuilder.setReputationMessage(reputation, requests.get(holder.getAdapterPosition()), flag);
+        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()));
+        dialogBuilder.setReputationMessage(requests.get(holder.getAdapterPosition()), flag);
 
         if(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
-            dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()), returnDate);
+            dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()));
 
-        refuseButton.setText("OK, torna indietro");
-        refuseButton.setOnClickListener(view1 -> dialog.dismiss());
+        dialogBuilder.setTextRefuseButton("OK, torna indietro");
+        dialogBuilder.getRefuseButton().setOnClickListener(view1 -> dialog.dismiss());
 
-        confirmButton.setVisibility(View.GONE);
+        dialogBuilder.getConfirmButton().setVisibility(View.GONE);
 
         dialog.show();
     }
