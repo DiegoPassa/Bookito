@@ -3,14 +3,11 @@ package com.zerobudget.bookito.ui.library;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,6 +26,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.utils.PopupBook;
+import com.zerobudget.bookito.utils.PopupEditBook;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -120,30 +118,13 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
      * permette di eliminare il libro se esso è abilitato (status = true)
      */
     private void createNewDeletePopup(ViewHolder holder) {
-        dialogBuilder = new MaterialAlertDialogBuilder(context);
-        View view = View.inflate(context, R.layout.popup_delete_book, null);
+        View view = View.inflate(context, R.layout.popup_book, null);
 
-        TextView bookTitle = view.findViewById(R.id.book_title);
-        TextView bookAuthor = view.findViewById(R.id.book_author);
-        TextView bookDescription = view.findViewById(R.id.book_description);
-        Button btnDelete = view.findViewById(R.id.btn_delete);
-        ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
-        ImageView bookType = view.findViewById(R.id.icon_type);
+        PopupBook dialogBuilder = new PopupBook(context, view);
+        dialogBuilder.setUpInformation(bookModels.get(holder.getAdapterPosition()));
+        dialogBuilder.setUpButtons(bookModels.get(holder.getAdapterPosition()), true);
 
-        bookTitle.setText(bookModels.get(holder.getAdapterPosition()).getTitle());
-        bookAuthor.setText(bookModels.get(holder.getAdapterPosition()).getAuthor());
-        bookDescription.setText(bookModels.get(holder.getAdapterPosition()).getDescription());
-        bookDescription.setMovementMethod(new ScrollingMovementMethod());
-        Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(bookThumbnail);
-
-        loadIconBookType(holder, bookType);
-
-        //se il libro è in una richiesta accettata non può essere eliminato
-        if (!bookModels.get(holder.getAdapterPosition()).getStatus()) {
-            btnDelete.setEnabled(false);
-        }
-
-        btnDelete.setOnClickListener(view1 -> {
+        dialogBuilder.getBtnDefault().setOnClickListener(view1 -> {
             //conferma dell'eliminazione
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma eliminazione");
@@ -180,37 +161,21 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     }
 
     /**
-     * crea il popup per la modifica delle informazioni del libro*/
+     * crea il popup per la modifica delle informazioni del libro
+     */
     private void createNewEditTypePopup(ViewHolder holder) {
-        dialogBuilder = new MaterialAlertDialogBuilder(context);
-        View view = View.inflate(context, R.layout.popup_edit_book, null);
+        // dialogBuilder = new MaterialAlertDialogBuilder(context);
+        View view = View.inflate(context, R.layout.popup_book, null);
 
-        TextView bookTitle = view.findViewById(R.id.book_title);
-        TextView bookAuthor = view.findViewById(R.id.book_author);
-        TextView bookDescription = view.findViewById(R.id.book_description);
-        Button btnRefuse = view.findViewById(R.id.btn_refuse);
-        Button btnConfirm = view.findViewById(R.id.btn_confirm);
-        ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
-        ImageView bookType = view.findViewById(R.id.icon_type);
+        PopupEditBook dialogBuilder = new PopupEditBook(context, view);
+        dialogBuilder.setUpInformation(bookModels.get(holder.getAdapterPosition()));
+        dialogBuilder.setUpButtons(bookModels.get(holder.getAdapterPosition()), false);
 
-        AutoCompleteTextView choosenType = view.findViewById(R.id.autoCompleteTextView);
-        TextInputLayout inputText = view.findViewById(R.id.InputText);
-
-        bookTitle.setText(bookModels.get(holder.getAdapterPosition()).getTitle());
-        bookAuthor.setText(bookModels.get(holder.getAdapterPosition()).getAuthor());
-        bookDescription.setText(bookModels.get(holder.getAdapterPosition()).getDescription());
-        bookDescription.setMovementMethod(new ScrollingMovementMethod());
-        Picasso.get().load(bookModels.get(holder.getAdapterPosition()).getThumbnail()).into(bookThumbnail);
-
-        loadIconBookType(holder, bookType);
-        loadItems(holder, choosenType);
-
-        btnConfirm.setOnClickListener(view1 -> {
-            String action = choosenType.getText().toString();
-
+        dialogBuilder.getBtnDefault().setOnClickListener(view1 -> {
+            String action = dialogBuilder.getChoosenType().getText().toString();
             if (!action.equals("Regalo") && !action.equals("Scambio") && !action.equals("Prestito")) {
-                inputText.setError("Devi selezionare un'azione!");
-                inputText.setDefaultHintTextColor(ColorStateList.valueOf(context.getResources().getColor(R.color.md_theme_light_error)));
+                dialogBuilder.getInputText().setError("Devi selezionare un'azione!");
+                dialogBuilder.getInputText().setDefaultHintTextColor(ColorStateList.valueOf(context.getResources().getColor(R.color.md_theme_light_error)));
             } else {
                 changeBookType(holder, action);
                 dialog.dismiss();
@@ -218,7 +183,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             }
         });
 
-        btnRefuse.setOnClickListener(view1 -> {
+        dialogBuilder.getBtnOther().setOnClickListener(view1 -> {
             dialog.dismiss();
             Toast.makeText(context, "Modifica annullata!", Toast.LENGTH_LONG).show();
         });
@@ -244,29 +209,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             default:
                 break;
         }
-    }
-
-    /**
-     * carica i valori dei tipi con cui rempiere il menu a tendina nella modifica del libro*/
-    private void loadItems(ViewHolder holder, AutoCompleteTextView txt) {
-        String type = bookModels.get(holder.getAdapterPosition()).getType();
-
-        switch (type) {
-            case "Scambio":
-                items = new String[]{"Prestito", "Regalo"};
-                break;
-            case "Prestito":
-                items = new String[]{"Scambio", "Regalo"};
-                break;
-            case "Regalo":
-                items = new String[]{"Prestito", "Scambio"};
-                break;
-            default:
-                items = context.getResources().getStringArray(R.array.azioni_libro);
-        }
-
-        adapterItems = new ArrayAdapter<>(context, R.layout.dropdown_item, items);
-        txt.setAdapter(adapterItems);
     }
 
     /**
