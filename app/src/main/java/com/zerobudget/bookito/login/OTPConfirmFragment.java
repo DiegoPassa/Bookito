@@ -38,13 +38,11 @@ public class OTPConfirmFragment extends Fragment {
     private Bundle bundle;
     private boolean isRegister;
     FirebaseFirestore db;
-    private boolean back;
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
-            binding.btnGoback.setEnabled(true);
             binding.otpConfirmButton.setEnabled(true);
             binding.codeSentProgressBar.setVisibility(View.GONE);
             binding.doneCheck.setVisibility(View.VISIBLE);

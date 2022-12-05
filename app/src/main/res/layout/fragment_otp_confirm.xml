@@ -32,25 +32,13 @@
 
     <Button
         android:id="@+id/otpConfirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:enabled="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="5dp"
         android:text="Conferma"
-        app:layout_constraintEnd_toStartOf="@id/guideline18"
-        app:layout_constraintStart_toEndOf="@id/btn_goback"
-        app:layout_constraintTop_toBottomOf="@+id/otpUser" />
-
-    <Button
-        android:id="@+id/btn_goback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Torna indietro"
-        android:layout_marginRight="5dp"
-        app:layout_constraintStart_toEndOf="@id/guideline17"
-        app:layout_constraintEnd_toStartOf="@id/otpConfirmButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/otpUser" />
 
     <ProgressBar

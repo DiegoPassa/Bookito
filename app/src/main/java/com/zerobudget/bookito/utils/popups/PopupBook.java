@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.utils;
+package com.zerobudget.bookito.utils.popups;
 
 import android.content.Context;
 import android.text.method.ScrollingMovementMethod;
@@ -21,6 +21,7 @@ public class PopupBook extends MaterialAlertDialogBuilder {
     private ImageView imgBookThumbnail;
     private ImageView imgBookIconType;
     private Button btnDefault;
+    private Button btnOther;
 
     public PopupBook(@NonNull Context context, View view) {
         super(context);
@@ -30,6 +31,7 @@ public class PopupBook extends MaterialAlertDialogBuilder {
         this.imgBookThumbnail = view.findViewById(R.id.book_thumbnail);
         this.imgBookIconType = view.findViewById(R.id.icon_type);
         this.btnDefault = view.findViewById(R.id.btn_default);
+        this.btnOther = view.findViewById(R.id.btn_other);
     }
 
     public PopupBook(@NonNull Context context, int overrideThemeResId) {
@@ -44,18 +46,6 @@ public class PopupBook extends MaterialAlertDialogBuilder {
         Picasso.get().load(b.getThumbnail()).into(this.imgBookThumbnail);
         loadIconBookType(b.getType());
     }
-
-    public void setUpButtons(BookModel b, boolean isDeleteBook) {
-        if (isDeleteBook) {
-            this.btnDefault.setText("Elimina");
-            //se il libro è in una richiesta accettata non può essere eliminato
-            if (!b.getStatus())
-                this.btnDefault.setEnabled(false);
-        } else
-            this.btnDefault.setText("Conferma");
-
-    }
-
 
     /**
      * carica l'icona sulla base del tipo del libro
@@ -78,5 +68,17 @@ public class PopupBook extends MaterialAlertDialogBuilder {
 
     public Button getBtnDefault() {
         return btnDefault;
+    }
+
+    public Button getBtnOther() {
+        return btnOther;
+    }
+
+    public void setTextBtnDefault(String txt){
+        this.btnDefault.setText(txt);
+    }
+
+    public void setTextOtherBtn(String txt){
+        this.btnOther.setText(txt);
     }
 }

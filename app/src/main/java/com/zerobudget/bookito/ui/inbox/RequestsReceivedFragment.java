@@ -108,7 +108,9 @@ public class RequestsReceivedFragment extends InboxFragment {
                         }
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             Log.d("OOI", "getRequestsRealTime: " + dc.getDocument().toObject(RequestModel.class));
-                            setRequestBadgeNumber(); //aggiorna anche il badge delle notifiche in real time
+                            if(badge != null)
+
+                                setRequestBadgeNumber(); //aggiorna anche il badge delle notifiche in real time
                             spinner.setVisibility(View.VISIBLE);
                             switch (dc.getType()) {
                                 case ADDED:

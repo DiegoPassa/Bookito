@@ -28,7 +28,7 @@ import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.utils.PopupInbox;
+import com.zerobudget.bookito.utils.popups.PopupInbox;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 

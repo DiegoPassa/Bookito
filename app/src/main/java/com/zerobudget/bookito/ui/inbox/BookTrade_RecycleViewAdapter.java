@@ -1,12 +1,10 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +30,7 @@ import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.ui.search.SearchResultsModel;
+import com.zerobudget.bookito.utils.popups.PopupBook;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -78,49 +76,11 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
     @Override
     public void onBindViewHolder(@NonNull BookTrade_RecycleViewAdapter.ViewHolder holder, int position) {
-        //holder.card_type.setVisibility(View.GONE);
         Picasso.get().load(results.get(position).getBook().getThumbnail()).into(holder.thumbnail);
         holder.title.setText(results.get(position).getBook().getTitle());
         holder.author.setText(results.get(position).getBook().getAuthor());
-        //holder.bookmark_outline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
-        //holder.bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
 
-        //int book_number = holder.getAdapterPosition() + 1;
-        //holder.book_id.setText(book_number + "");
-
-        /*Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                assert holder.thumbnail != null;
-                holder.thumbnail.setImageBitmap(bitmap);
-                Palette.from(bitmap)
-                        .generate(palette -> {
-                            assert palette != null;
-                            Palette.Swatch textSwatch = palette.getMutedSwatch();
-                            Palette.Swatch textSwatch2 = palette.getDarkMutedSwatch();
-
-                            if (textSwatch == null)
-                                return;
-                            if (textSwatch2 == null)
-                                return;
-
-                            holder.bookmark_outline.setColorFilter(textSwatch2.getRgb(), PorterDuff.Mode.SRC_ATOP);
-                            holder.bookmark.setColorFilter(textSwatch.getRgb(), PorterDuff.Mode.SRC_ATOP);
-                            holder.book_id.setTextColor(textSwatch.getBodyTextColor());
-                        });
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });*/
-
+        holder.card_type.setVisibility(View.GONE);
 
         holder.book_selected.setOnClickListener(view -> {
             createNewSelectPopup(position, holder);
@@ -138,54 +98,15 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
     private void createNewSelectPopup(int position, BookTrade_RecycleViewAdapter.ViewHolder holder) {
         checkIfStillExists(requestTradeModel);
 
-        dialogBuilder = new MaterialAlertDialogBuilder(context);
+        View view = View.inflate(context, R.layout.popup_book, null);
+        PopupBook dialogBuilder = new PopupBook(context, view);
 
-        View view = View.inflate(context, R.layout.popup_trade_book, null);
+        dialogBuilder.setUpInformation(results.get(holder.getAdapterPosition()).getBook());
+        dialogBuilder.getBtnOther().setVisibility(View.VISIBLE);
+        dialogBuilder.setTextBtnDefault("Scambia");
+        dialogBuilder.setTextOtherBtn("Annulla");
 
-        TextView bookTitle = view.findViewById(R.id.book_title);
-        TextView bookAuthor = view.findViewById(R.id.book_author);
-        TextView bookDescription = view.findViewById(R.id.book_description);
-        TextView bookOwner = view.findViewById(R.id.book_owner);
-
-        Button tradeBtn = view.findViewById(R.id.btn_trade);
-        Button annullaBtn = view.findViewById(R.id.btn_annulla);
-
-
-        ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
-        /*ImageView bookmark = view.findViewById(R.id.bookmark);
-        ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
-        TextView book_id = view.findViewById(R.id.book_id);*/
-
-        bookTitle.setText(results.get(holder.getAdapterPosition()).getBook().getTitle());
-        bookAuthor.setText(results.get(holder.getAdapterPosition()).getBook().getAuthor());
-        bookDescription.setText(results.get(holder.getAdapterPosition()).getBook().getDescription());
-        bookDescription.setMovementMethod(new ScrollingMovementMethod());
-
-        String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
-        bookOwner.setText(owner);
-        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
-
-        /*
-        switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
-            case "Scambio":
-                bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outline_scambio), PorterDuff.Mode.SRC_ATOP);
-                bookmark.setColorFilter(context.getColor(R.color.bookmark_scambio), PorterDuff.Mode.SRC_ATOP);
-                break;
-            case "Prestito":
-                bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outline_prestito), PorterDuff.Mode.SRC_ATOP);
-                bookmark.setColorFilter(context.getColor(R.color.bookmark_prestito), PorterDuff.Mode.SRC_ATOP);
-                break;
-            case "Regalo":
-                bookmarkOutline.setColorFilter(context.getColor(R.color.bookmark_outine_regalo), PorterDuff.Mode.SRC_ATOP);
-                bookmark.setColorFilter(context.getColor(R.color.bookmark_regalo), PorterDuff.Mode.SRC_ATOP);
-                break;
-            default:
-                Picasso.get().load(R.drawable.bookmark_template).into(bookmark);
-                break;
-        }
-*/
-
-        tradeBtn.setOnClickListener(view1 -> {
+        dialogBuilder.getBtnDefault().setOnClickListener(view1 -> {
             if (exists) { //controlla che la richiesta esista ancora
                 acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook());
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
@@ -196,7 +117,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
             dialog.dismiss();
         });
 
-        annullaBtn.setOnClickListener(view2 -> {
+        dialogBuilder.getBtnOther().setOnClickListener(view2 -> {
             Toast.makeText(context, "Devi scegliere un libro!", Toast.LENGTH_LONG).show();
             dialog.dismiss();
         });
@@ -232,7 +153,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
                 //messaggio di default da receiver a sender inviato con il libro scelto per lo scambio dalla libreria del sender
                 String messageTxt = "Ciao, ho scelto il libro '" + bookTrade.getTitle() + "' da scambiare!";
-                MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), "sent", messageTxt, currentTime, currentDate);
+                MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, "sent", currentTime, currentDate);
                 ref.push().setValue(defaultMsgReceiver);
 
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
@@ -286,9 +207,6 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         private final ImageView thumbnail;
         private final TextView title;
         private final TextView author;
-        /*private final ImageView bookmark;
-        private final ImageView bookmark_outline;
-        private final TextView book_id;*/
         private final CardView card_type;
 
 
@@ -299,9 +217,6 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
             thumbnail = itemView.findViewById(R.id.book_thumbnail);
             title = itemView.findViewById(R.id.book_title);
             author = itemView.findViewById(R.id.book_author);
-            /*bookmark = itemView.findViewById(R.id.bookmark);
-            bookmark_outline = itemView.findViewById(R.id.bookmark_outline);
-            book_id = itemView.findViewById(R.id.book_id);*/
             card_type = itemView.findViewById(R.id.card_type);
         }
     }

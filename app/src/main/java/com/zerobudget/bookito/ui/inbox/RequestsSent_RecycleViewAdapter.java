@@ -20,7 +20,7 @@ import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.utils.PopupInbox;
+import com.zerobudget.bookito.utils.popups.PopupInbox;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 

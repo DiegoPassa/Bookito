@@ -25,8 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
-import com.zerobudget.bookito.utils.PopupBook;
-import com.zerobudget.bookito.utils.PopupEditBook;
+import com.zerobudget.bookito.utils.popups.PopupBook;
+import com.zerobudget.bookito.utils.popups.PopupEditBook;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -118,9 +118,11 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         PopupBook dialogBuilder = new PopupBook(context, view);
         dialogBuilder.setUpInformation(bookModels.get(holder.getAdapterPosition()));
-        dialogBuilder.setUpButtons(bookModels.get(holder.getAdapterPosition()), true);
+        dialogBuilder.setTextOtherBtn("Elimina");
+        dialogBuilder.getBtnDefault().setVisibility(View.GONE);
 
-        dialogBuilder.getBtnDefault().setOnClickListener(view1 -> {
+
+        dialogBuilder.getBtnOther().setOnClickListener(view1 -> {
             //conferma dell'eliminazione
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma eliminazione");
@@ -165,7 +167,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
         PopupEditBook dialogBuilder = new PopupEditBook(context, view);
         dialogBuilder.setUpInformation(bookModels.get(holder.getAdapterPosition()));
-        dialogBuilder.setUpButtons(bookModels.get(holder.getAdapterPosition()), false);
+        dialogBuilder.setTextBtnDefault("Conferma");
 
         dialogBuilder.getBtnDefault().setOnClickListener(view1 -> {
             String action = dialogBuilder.getChoosenType().getText().toString();
