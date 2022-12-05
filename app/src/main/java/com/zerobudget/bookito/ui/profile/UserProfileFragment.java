@@ -1,8 +1,9 @@
 package com.zerobudget.bookito.ui.profile;
 
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +30,11 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentUserProfileBinding;
+import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class UserProfileFragment extends Fragment {
 
@@ -42,8 +43,7 @@ public class UserProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private StorageReference storageRef;
 
-    private ArrayList<String> items;
-    ArrayAdapter<String> adapterItems;
+    private final ArrayList<String> townshipsArray = new ArrayList<>();
 
     private UserModel user;
 
@@ -83,7 +83,10 @@ public class UserProfileFragment extends Fragment {
         binding.usrFirstName.setText(user.getFirstName());
         binding.usrLastName.setText(user.getLastName());
         binding.usrTelephone.setText(user.getTelephone());
-        binding.usrNeighborhood.setText(user.getNeighborhood());
+
+        binding.usrTownship.setText(user.getTownship());
+        binding.usrCity.setText(user.getCity());
+        // binding.usrNeighborhood.setText(user.getNeighborhood());
 
         showPic();
 
@@ -93,20 +96,37 @@ public class UserProfileFragment extends Fragment {
             showImagePicDialog();
         });
 
+        binding.newTownship.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, Utils.neighborhoodsMap.get(binding.newTownship.getText().toString())));
+            }
+        });
+
         binding.floatingActionButton.setOnClickListener(view -> {
-            binding.autoCompleteTextView.setHint(binding.usrNeighborhood.getText());
+            binding.newTownship.setHint(binding.usrTownship.getText());
             changeVisibility();
         });
 
         binding.btnConfirmEdit.setOnClickListener(view -> {
-            String new_neighborhood = binding.autoCompleteTextView.getText().toString();
-
-            if (!items.contains(new_neighborhood)) {
-                binding.editNeighborhood.setError("Seleziona un nuovo quartiere!");
-                binding.editNeighborhood.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
+            String new_township = binding.newTownship.getText().toString();
+            String new_city = binding.newCity.getText().toString();
+            if (!townshipsArray.contains(new_township)) {
+                binding.newTownship.setError("Seleziona un nuovo quartiere!");
+                // binding.newTownship.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
             } else {
-                db.collection("users").document(Utils.USER_ID).update("neighborhood", new_neighborhood).addOnSuccessListener(unused -> {
-                    user.setNeighborhood(new_neighborhood);
+                db.collection("users").document(Utils.USER_ID).update("township", new_township, "city", new_city).addOnSuccessListener(unused -> {
+                    // user.setNeighborhood(new_neighborhood);
                     //aggiorna la pagina
                     Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
@@ -239,15 +259,19 @@ public class UserProfileFragment extends Fragment {
      * (in seguito alla pressione del float button sul fondo dello schermo)*/
     private void changeVisibility() {
         if (binding.floatingActionButton.isShown()) {
-            binding.usrNeighborhood.setVisibility(View.GONE);
-            binding.editNeighborhood.setVisibility(View.VISIBLE);
+            binding.usrTownship.setVisibility(View.GONE);
+            binding.usrCity.setVisibility(View.GONE);
+            binding.newTownship.setVisibility(View.VISIBLE);
+            binding.newCity.setVisibility(View.VISIBLE);
             binding.btnConfirmEdit.setVisibility(View.VISIBLE);
             binding.btnAnnulla.setVisibility(View.VISIBLE);
             binding.floatingActionButton.setVisibility(View.GONE);
         } else {
             binding.floatingActionButton.setVisibility(View.VISIBLE);
-            binding.usrNeighborhood.setVisibility(View.VISIBLE);
-            binding.editNeighborhood.setVisibility(View.GONE);
+            binding.usrTownship.setVisibility(View.VISIBLE);
+            binding.usrCity.setVisibility(View.VISIBLE);
+            binding.newTownship.setVisibility(View.GONE);
+            binding.newCity.setVisibility(View.GONE);
             binding.btnConfirmEdit.setVisibility(View.GONE);
             binding.btnAnnulla.setVisibility(View.GONE);
         }
@@ -256,9 +280,11 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        items = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.quartieri)));
-        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
-        binding.autoCompleteTextView.setAdapter(adapterItems);
+        townshipsArray.clear();
+        for (NeighborhoodModel s : Utils.getNeighborhoods()) {
+            townshipsArray.add(s.getComune());
+        }
+        binding.newTownship.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, townshipsArray));
     }
 
     @Override

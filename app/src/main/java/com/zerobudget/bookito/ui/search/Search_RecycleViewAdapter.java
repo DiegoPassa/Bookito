@@ -69,7 +69,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         holder.author.setText(results.get(position).getBook().getAuthor());
         String owner = results.get(position).getUser().getFirstName() + " " + results.get(position).getUser().getLastName();
         holder.book_owner.setText(owner);
-        holder.neighborhood_owner.setText(results.get(position).getUser().getNeighborhood());
+        holder.neighborhood_owner.setText(results.get(position).getUser().getTownship());
         //holder.type.setText(results.get(position).getBook().getType());
 
 

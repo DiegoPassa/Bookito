@@ -12,17 +12,33 @@ import java.util.List;
         "quartieri"
 })
 public class NeighborhoodModel {
-   @JsonProperty("comune")
-   private String comune;
+    @JsonProperty("comune")
+    private String comune;
 
-   @JsonProperty("quartieri")
-   private List<String> quartieri;
+    @JsonProperty("quartieri")
+    private List<String> quartieri;
 
-   @Override
-   public String toString() {
-      return "NeighborhoodModel{" +
-              "comune='" + comune + '\'' +
-              ", quartieri=" + quartieri +
-              '}';
-   }
+    public String getComune() {
+        return comune;
+    }
+
+    public void setComune(String comune) {
+        this.comune = comune;
+    }
+
+    public List<String> getQuartieri() {
+        return quartieri;
+    }
+
+    public void setQuartieri(List<String> quartieri) {
+        this.quartieri = quartieri;
+    }
+
+    @Override
+    public String toString() {
+        return "NeighborhoodModel{" +
+                "comune='" + comune + '\'' +
+                ", quartieri=" + quartieri +
+                '}';
+    }
 }

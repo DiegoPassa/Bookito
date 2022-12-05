@@ -7,7 +7,8 @@ public class UserModel {
     protected String firstName;
     protected String lastName;
     protected String telephone;
-    protected String neighborhood;
+    protected String township = "";
+    protected String city = "";
     //private String id; id utente facilmente ottenibile con FirebaseAuth.getInstance().getCurrentUser().getId()
     protected String notificationToken;
     protected boolean hasPicture = false;
@@ -16,11 +17,12 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(String firstName, String lastName, String telephone, String neighborhood, HashMap<String, Object> karma, Boolean hasPicture, String notificationToken) {
+    public UserModel(String firstName, String lastName, String telephone, String township, String city, HashMap<String, Object> karma, Boolean hasPicture, String notificationToken) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.telephone = telephone;
-        this.neighborhood = neighborhood;
+        this.township = township;
+        this.city = city;
         this.karma = karma;
         this.hasPicture = hasPicture;
         this.notificationToken = notificationToken;
@@ -56,10 +58,9 @@ public class UserModel {
         user.put("first_name", this.firstName);
         user.put("last_name", this.lastName);
         user.put("telephone", this.telephone);
-        user.put("neighborhood", this.neighborhood);
+        user.put("township", this.township);
+        user.put("city", this.city);
         user.put("karma", this.karma);
-
-
         return user;
     }
 
@@ -87,14 +88,6 @@ public class UserModel {
         this.telephone = telephone;
     }
 
-    public String getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(String neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
     public String getNotificationToken() {
         return notificationToken;
     }
@@ -119,13 +112,30 @@ public class UserModel {
         this.karma = karma;
     }
 
+    public String getTownship() {
+        return township;
+    }
+
+    public void setTownship(String township) {
+        this.township = township;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     @Override
     public String toString() {
         return "UserModel{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", telephone='" + telephone + '\'' +
-                ", neighborhood='" + neighborhood + '\'' +
+                ", township='" + township + '\'' +
+                ", city='" + city + '\'' +
                 ", notificationToken='" + notificationToken + '\'' +
                 ", hasPicture=" + hasPicture +
                 ", karma=" + karma +

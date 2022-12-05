@@ -136,8 +136,9 @@
                     android:id="@+id/constr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:visibility="gone"
-                    android:orientation="horizontal">
+                    tools:visibility="visible">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/InputText"
@@ -185,15 +186,16 @@
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                        <Button
-                            android:visibility="gone"
-                            android:id="@+id/btn_other"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:layout_weight="1"
-                            android:text="Annulla"
-                            android:textAllCaps="false" />
+                    <Button
+                        android:id="@+id/btn_other"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:text="Annulla"
+                        android:textAllCaps="false"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
 
                     <Button

@@ -38,4 +38,9 @@
     <string name="bookito_logo">bookito_logo</string>
     <string name="emptyLibrary">La tua libreria è vuota…\nPremi il pulsante qui sotto per cominciare ad aggiungere libri!</string>
     <string name="nome_utente">Nome Utente</string>
+    <string name="user_name">Mario</string>
+    <string name="user_lastName">Rossi</string>
+    <string name="user_telephone">333 123 4567</string>
+    <string name="user_township">Venezia</string>
+    <string name="user_city">Mestre</string>
 </resources>

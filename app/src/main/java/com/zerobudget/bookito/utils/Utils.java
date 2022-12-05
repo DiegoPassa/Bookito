@@ -9,7 +9,9 @@ import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Utils {
     //contiene metodi statici per funzionalità
@@ -25,12 +27,20 @@ public class Utils {
 
     public static List<NeighborhoodModel> neighborhoods = new ArrayList<>();
 
+    public static Map<String, ArrayList<String>> neighborhoodsMap = new HashMap<>();
+
     public static void setUserId(String userId) {
         USER_ID = userId;
     }
 
     public static void setUriPic(String uri) {
         URI_PIC = uri;
+    }
+
+    public static void neighborhoodsToMap() {
+        for (NeighborhoodModel n : neighborhoods) {
+            neighborhoodsMap.put(n.getComune(), (ArrayList<String>) n.getQuartieri());
+        }
     }
 
     //serve a creare una stringa json da un oggetto e viceversa

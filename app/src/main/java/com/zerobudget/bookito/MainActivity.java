@@ -148,7 +148,9 @@ public class MainActivity extends AppCompatActivity {
         ObjectMapper objectMapper = new ObjectMapper();
         Utils.setNeighborhoods(objectMapper.readValue(getAssets().open("neighborhoodJSON.json"), new TypeReference<List<NeighborhoodModel>>() {
         }));
-        Log.d("NeighborhoodJSON", Utils.getNeighborhoods().toString());
+        Utils.neighborhoodsToMap();
+        Log.d("NeighborhoodMAP", Utils.neighborhoodsMap.toString());
+        Log.d("NeighborhoodJSON", Utils.neighborhoods.toString());
     }
 
     @Override

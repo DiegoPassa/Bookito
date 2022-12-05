@@ -11,17 +11,17 @@ import java.util.Map;
 public class UserLibrary extends UserModel {
     protected List<BookModel> library;
 
-    public UserLibrary(String first_name, String last_name, String telephone, String neighborhood, HashMap<String, Object> karma, Boolean hasPicture, String notificationToken) {
-        super(first_name, last_name, telephone, neighborhood, karma, hasPicture, notificationToken);
+    public UserLibrary(String first_name, String last_name, String telephone, String township, String city, HashMap<String, Object> karma, Boolean hasPicture, String notificationToken) {
+        super(first_name, last_name, telephone, township, city, karma, hasPicture, notificationToken);
     }
 
     public UserLibrary(UserModel u, List<BookModel> bookModels) {
-        super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getNeighborhood(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
+        super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getTownship(), u.getCity(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
         library = bookModels;
     }
 
     public UserLibrary(UserModel u) {
-        super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getNeighborhood(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
+        super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getTownship(), u.getCity(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
         library = new ArrayList<>();
     }
 
@@ -81,7 +81,8 @@ public class UserLibrary extends UserModel {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", telephone='" + telephone + '\'' +
-                ", neighborhood='" + neighborhood + '\'' +
+                ", township='" + township + '\'' +
+                ", city='" + city + '\'' +
                 ", notificationToken='" + notificationToken + '\'' +
                 ", hasPicture=" + hasPicture +
                 ", karma=" + karma +
