@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,6 +31,7 @@ public class SearchFragment extends Fragment {
     private FirebaseFirestore db;
 
     private boolean showedAll = false;
+    private ProgressBar progressBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class SearchFragment extends Fragment {
 
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        progressBar = binding.progressBar;
 
         //to fix error E/Recyclerview: No Adapter Attached; Skipping Layout
         RecyclerView recyclerView = binding.recycleViewSearch;
@@ -52,6 +55,7 @@ public class SearchFragment extends Fragment {
         });
 
         binding.btnSeeAllBooks.setOnClickListener(view -> {
+            progressBar.setVisibility(View.VISIBLE);
             showedAll = true;
             searchAllBooks_UsrNeighborhood();
         });
@@ -110,6 +114,7 @@ public class SearchFragment extends Fragment {
     /**
      * ricerca dei libri degli altri utenti negli altri quartieri*/
     private void searchAllBooks_OthersNeighborhood(ArrayList<SearchResultsModel> arrResults) {
+        progressBar.setVisibility(View.GONE);
         db.collection("users").whereNotEqualTo("neighborhood", Utils.CURRENT_USER.getNeighborhood()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
