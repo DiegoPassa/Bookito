@@ -97,7 +97,7 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
     public void setUpInformation(RequestModel r) {
         String requestTypeStr = "Richiesta " + r.getType();
         this.titlePopup.setText(requestTypeStr);
-        this.ownerLocation.setText(r.getOtherUser().getTownship());
+        this.ownerLocation.setText(getContext().getString(R.string.user_location, r.getOtherUser().getTownship(), r.getOtherUser().getCity()));
         this.noteText.setText(r.getNote());
         Picasso.get().load(r.getThumbnail()).into(this.thumbnail);
         setUpUserFullName(r);

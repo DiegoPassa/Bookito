@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -69,7 +69,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         holder.author.setText(results.get(position).getBook().getAuthor());
         String owner = results.get(position).getUser().getFirstName() + " " + results.get(position).getUser().getLastName();
         holder.book_owner.setText(owner);
-        holder.neighborhood_owner.setText(results.get(position).getUser().getTownship());
+        holder.neighborhood_owner.setText(context.getString(R.string.user_location, results.get(position).getUser().getTownship(), results.get(position).getUser().getCity()));
         //holder.type.setText(results.get(position).getBook().getType());
 
 
@@ -272,7 +272,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         // Layout
-        private final RelativeLayout book_selected;
+        private final ConstraintLayout book_selected;
         private final ImageView thumbnail;
         private final ImageView book_type;
         private final TextView title;

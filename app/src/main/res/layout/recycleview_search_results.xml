@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
     style="@style/color_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="4dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp">
 
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -19,9 +18,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/book_thumbnail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -93,9 +96,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+            android:id="@+id/constraintLayout2"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/book_thumbnail">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/book_thumbnail"
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <TextView
@@ -104,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="center_vertical"
                 android:lines="3"
                 android:padding="3dp"
@@ -116,40 +124,41 @@
 
             <TextView
                 android:id="@+id/book_author"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/book_title"
                 android:layout_marginTop="4dp"
                 android:lines="1"
                 android:padding="3dp"
                 android:text="Author"
                 android:textSize="12sp"
                 android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/book_title"
                 app:layout_constraintStart_toStartOf="@+id/book_title"
                 app:layout_constraintTop_toBottomOf="@id/book_title" />
 
             <TextView
                 android:id="@+id/book_owner"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/book_author"
                 android:layout_marginTop="4dp"
                 android:padding="3dp"
                 android:text="Owner"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/book_title"
                 app:layout_constraintStart_toStartOf="@+id/book_author"
                 app:layout_constraintTop_toBottomOf="@id/book_author" />
 
             <TextView
                 android:id="@+id/neighborhood_owner"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/book_owner"
                 android:padding="3dp"
                 android:text="neighborhood"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/book_title"
                 app:layout_constraintStart_toStartOf="@+id/book_owner"
                 app:layout_constraintTop_toBottomOf="@id/book_owner" />
 
@@ -170,6 +179,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

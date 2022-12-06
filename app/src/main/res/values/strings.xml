@@ -14,6 +14,7 @@
     <string name="profile">Profile</string>
     <string name="vedi_profilo">Vedi profilo</string>
     <string name="disconnetti">Disconnetti</string>
+    <string name="user_location">%1$s (%2$s)</string>
 
     <string-array name="quartieri">
         <item>Venezia</item>

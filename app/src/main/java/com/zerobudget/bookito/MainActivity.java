@@ -66,6 +66,15 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Utils.setNeighborhoods(objectMapper.readValue(getAssets().open("neighborhoodJSON.json"), new TypeReference<List<NeighborhoodModel>>() {
+            }));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Utils.neighborhoodsToMap();
+
         if (currentUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             this.finish();
@@ -104,16 +113,12 @@ public class MainActivity extends AppCompatActivity {
                 if (Utils.CURRENT_USER.isHasPicture()) {
                     getUriPic();
                 }
-                try {
-                    mainActivitySetup();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                mainActivitySetup();
             }
         });
     }
 
-    private void mainActivitySetup() throws IOException {
+    private void mainActivitySetup() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -144,13 +149,6 @@ public class MainActivity extends AppCompatActivity {
                 navView.setVisibility(View.VISIBLE);
             }
         });
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Utils.setNeighborhoods(objectMapper.readValue(getAssets().open("neighborhoodJSON.json"), new TypeReference<List<NeighborhoodModel>>() {
-        }));
-        Utils.neighborhoodsToMap();
-        Log.d("NeighborhoodMAP", Utils.neighborhoodsMap.toString());
-        Log.d("NeighborhoodJSON", Utils.neighborhoods.toString());
     }
 
     @Override
