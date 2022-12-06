@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment {
     /**
      * ricerca dei libri degli altri utenti nel quartiere dell'utente*/
     private void searchAllBooks_UsrNeighborhood() {
-        db.collection("users").whereEqualTo("neighborhood", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
+        db.collection("users").whereEqualTo("township", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
@@ -115,7 +115,7 @@ public class SearchFragment extends Fragment {
      * ricerca dei libri degli altri utenti negli altri quartieri*/
     private void searchAllBooks_OthersNeighborhood(ArrayList<SearchResultsModel> arrResults) {
         progressBar.setVisibility(View.GONE);
-        db.collection("users").whereNotEqualTo("neighborhood", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
+        db.collection("users").whereNotEqualTo("township", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
                 for (DocumentSnapshot document : task.getResult()) {

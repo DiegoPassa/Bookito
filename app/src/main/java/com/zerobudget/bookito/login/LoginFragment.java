@@ -51,7 +51,6 @@ public class LoginFragment extends Fragment {
 
         binding.phoneNumber.addTextChangedListener(new TextWatcher() {
             private int previousLength;
-            private boolean backSpace;
 
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -66,7 +65,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 int editLen = editable.length();
-                backSpace = previousLength > editLen;
+                boolean backSpace = previousLength > editLen;
 
                 if (editable.toString().isEmpty()) {
                     binding.login.setEnabled(false);
@@ -112,7 +111,7 @@ public class LoginFragment extends Fragment {
                             bundle.putBoolean("register", false);
                             NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_OTPConfirmFragment, bundle);
                         } else {
-                            binding.phoneNumber.setError("Il numero inserito non e registrato");
+                            binding.phoneNumber.setError("Il numero inserito non è registrato");
                             binding.phoneNumber.requestFocus();
                         }
 

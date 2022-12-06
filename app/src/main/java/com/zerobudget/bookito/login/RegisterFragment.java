@@ -29,7 +29,6 @@ import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -94,7 +93,6 @@ public class RegisterFragment extends Fragment {
 
         binding.phoneNumberRegister.addTextChangedListener(new TextWatcher() {
             private int previousLength;
-            private boolean backSpace;
 
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -109,7 +107,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 int editLen = editable.length();
-                backSpace = previousLength > editLen;
+                boolean backSpace = previousLength > editLen;
 
                 if (editable.toString().isEmpty()) {
                     binding.registerConfirm.setEnabled(false);

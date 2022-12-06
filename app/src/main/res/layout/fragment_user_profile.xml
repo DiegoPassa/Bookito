@@ -122,32 +122,6 @@
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toBottomOf="@+id/usr_last_name" />
 
-    <Button
-        android:id="@+id/btn_annulla"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Annulla"
-        android:visibility="gone"
-        style="@style/buttonRefuse"
-        app:layout_constraintEnd_toStartOf="@+id/btn_confirm_edit"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@id/constr"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/btn_confirm_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Conferma"
-        android:visibility="gone"
-        style="@style/buttonAccept"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toEndOf="@+id/btn_annulla"
-        app:layout_constraintTop_toTopOf="@+id/btn_annulla"
-        tools:visibility="visible" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
@@ -207,8 +181,7 @@
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <AutoCompleteTextView
             android:id="@+id/newCity"
@@ -218,8 +191,30 @@
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_township"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@+id/new_township" />
+
+        <Button
+            android:id="@+id/btn_annulla"
+            style="@style/buttonRefuse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Annulla"
+            app:layout_constraintEnd_toStartOf="@+id/btn_confirm_edit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newCity" />
+
+        <Button
+            android:id="@+id/btn_confirm_edit"
+            style="@style/buttonAccept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Conferma"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_annulla"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_annulla"
+            app:layout_constraintTop_toTopOf="@+id/btn_annulla" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
