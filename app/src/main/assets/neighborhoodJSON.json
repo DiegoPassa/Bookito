@@ -165,11 +165,20 @@
   },
   {
     "comune": "Fiesso d'Artico",
-    "quartieri": []
+    "quartieri": [
+      "Fiesso d'Artico"
+    ]
   },
   {
     "comune": "Fossalta di Piave",
-    "quartieri": []
+    "quartieri": [
+      "Campolongo",
+      "Capodargine",
+      "Contee",
+      "Gonfo",
+      "Lampol",
+      "Ronche"
+    ]
   },
   {
     "comune": "Fossalta di Portogruaro",
@@ -186,7 +195,9 @@
   },
   {
     "comune": "Fosso'",
-    "quartieri": []
+    "quartieri": [
+      "Sandon"
+    ]
   },
   {
     "comune": "Gruaro",
@@ -282,7 +293,12 @@
   },
   {
     "comune": "Pianiga",
-    "quartieri": []
+    "quartieri": [
+      "Cazzago",
+      "Mellaredo",
+      "Rivale",
+      "Albarea"
+    ]
   },
   {
     "comune": "Portogruaro",
@@ -298,7 +314,11 @@
   },
   {
     "comune": "Pramaggiore",
-    "quartieri": []
+    "quartieri": [
+      "Belfiore",
+      "Blessaglia",
+      "Salvarolo"
+    ]
   },
   {
     "comune": "Quarto d'Altino",
@@ -331,8 +351,10 @@
   {
     "comune": "San michele al Tagliamento",
     "quartieri": [
-      "Villanova - Malafesta",
-      "San Giorgio al Tagliamento - Pozzi",
+      "Villanova",
+      "Malafesta",
+      "San Giorgio al Tagliamento",
+      "Pozzi",
       "Cesarolo",
       "III Bacino",
       "Bevazzana",
@@ -383,7 +405,9 @@
   },
   {
     "comune": "Teglio Veneto",
-    "quartieri": []
+    "quartieri": [
+      "Cintello"
+    ]
   },
   {
     "comune": "Torre di Mosto",
@@ -399,18 +423,37 @@
   {
     "comune": "Venezia",
     "quartieri": [
-      "San Marco-Castello-Sant'Elena-Cannaregio",
-      "Dorsoduro-San Polo-Santa Croce-Giudecca",
-      "Lido-Malamocco-Alberoni",
-      "Pellestrina-San Pietro in Volta",
-      "Murano-Sant'Erasmo",
-      "Burano-Mazzorbo-Torcello",
-      "Favaro-Campalto",
-      "Carpenedo-Bissuola",
+      "San Marco",
+      "Castello",
+      "Sant'Elena",
+      "Cannaregio",
+      "Dorsoduro",
+      "San Polo",
+      "Santa Croce",
+      "Giudecca",
+      "Lido",
+      "Malamocco",
+      "Alberoni",
+      "Pellestrina",
+      "San Pietro in Volta",
+      "Murano",
+      "Sant'Erasmo",
+      "Burano",
+      "Mazzorbo",
+      "Torcello",
+      "Favaro",
+      "Campalto",
+      "Carpenedo",
+      "Bissuola",
       "Mestre Centro",
-      "Cipressina-Zelarino-Trivignano",
-      "Chirignago-Gazzera",
-      "Marghera-Catene-Malcontenta"
+      "Cipressina",
+      "Zelarino",
+      "Trivignano",
+      "Chirignago",
+      "Gazzera",
+      "Marghera",
+      "Catene",
+      "Malcontenta"
     ]
   },
   {
