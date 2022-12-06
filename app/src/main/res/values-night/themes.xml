@@ -97,8 +97,13 @@
     </style>
 
     <style name="buttonAccept">
-        <item name="android:backgroundTint">#81C784</item>
-        <item name="android:textColor">#132A13</item>
+        <item name="android:backgroundTint">@color/md_theme_dark_primaryContainer</item>
+        <item name="android:textColor">#CEF3CE</item>
+    </style>
+
+    <style name="buttonRefuse">
+        <item name="android:backgroundTint">#A4413A</item>
+        <item name="android:textColor">@color/md_theme_light_errorContainer</item>
     </style>
 
 </resources>

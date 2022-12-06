@@ -415,10 +415,10 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
         if(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
             dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()));
 
-        dialogBuilder.setTextRefuseButton("OK, torna indietro");
-        dialogBuilder.getRefuseButton().setOnClickListener(view1 -> dialog.dismiss());
+        dialogBuilder.setTextConfirmButton("OK, torna indietro");
+        dialogBuilder.getConfirmButton().setOnClickListener(view1 -> dialog.dismiss());
 
-        dialogBuilder.getConfirmButton().setVisibility(View.GONE);
+        dialogBuilder.getRefuseButton().setVisibility(View.GONE);
 
         dialog.show();
     }

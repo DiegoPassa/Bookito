@@ -121,6 +121,10 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         dialogBuilder.setTextOtherBtn("Elimina");
         dialogBuilder.getBtnDefault().setVisibility(View.GONE);
 
+        if(!bookModels.get(holder.getAdapterPosition()).getStatus()) {
+            dialogBuilder.getBtnOther().setBackgroundColor(R.style.ButtonDisabled);
+            dialogBuilder.getBtnOther().setEnabled(false);
+        }
 
         dialogBuilder.getBtnOther().setOnClickListener(view1 -> {
             //conferma dell'eliminazione

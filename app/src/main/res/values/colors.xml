@@ -59,7 +59,7 @@
 
     <!--dark theme colors-->
     <color name="md_theme_dark_primary">#5F8774</color>
-    <color name="md_theme_dark_onPrimary">#15574E</color>
+    <color name="md_theme_dark_onPrimary">#0D5248</color>
     <color name="md_theme_dark_primaryContainer">#3C6C4C</color>
     <color name="md_theme_dark_onPrimaryContainer">#77AE93</color>
     <color name="md_theme_dark_secondary">#bbcbb2</color>

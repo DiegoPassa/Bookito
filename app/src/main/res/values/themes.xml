@@ -91,7 +91,17 @@
     </style>
 
     <style name="buttonAccept">
-        <item name="android:backgroundTint">@color/green</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">#778a35</item>
+        <item name="android:textColor">#d1dda6</item>
+    </style>
+
+    <style name="buttonRefuse">
+        <item name="android:backgroundTint">#A4413A</item>
+        <item name="android:textColor">@color/md_theme_light_errorContainer</item>
+    </style>
+
+    <style name="ButtonDisabled" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:background">@style/buttonRefuse</item>
+        <item name="android:alpha">0.05</item>
     </style>
 </resources>
