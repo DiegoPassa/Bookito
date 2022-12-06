@@ -115,6 +115,7 @@ public class UserProfileFragment extends Fragment {
 
         binding.floatingActionButton.setOnClickListener(view -> {
             binding.newTownship.setHint(binding.usrTownship.getText());
+            binding.newCity.setHint(binding.usrCity.getText());
             changeVisibility();
         });
 
@@ -123,6 +124,7 @@ public class UserProfileFragment extends Fragment {
             String new_city = binding.newCity.getText().toString();
             if (!townshipsArray.contains(new_township)) {
                 binding.newTownship.setError("Seleziona un nuovo quartiere!");
+                binding.newTownship.requestFocus();
                 // binding.newTownship.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
             } else {
                 db.collection("users").document(Utils.USER_ID).update("township", new_township, "city", new_city).addOnSuccessListener(unused -> {
@@ -259,19 +261,21 @@ public class UserProfileFragment extends Fragment {
      * (in seguito alla pressione del float button sul fondo dello schermo)*/
     private void changeVisibility() {
         if (binding.floatingActionButton.isShown()) {
+            binding.constr.setVisibility(View.VISIBLE);
             binding.usrTownship.setVisibility(View.GONE);
             binding.usrCity.setVisibility(View.GONE);
-            binding.newTownship.setVisibility(View.VISIBLE);
-            binding.newCity.setVisibility(View.VISIBLE);
+            /*binding.newTownship.setVisibility(View.VISIBLE);
+            binding.newCity.setVisibility(View.VISIBLE);*/
             binding.btnConfirmEdit.setVisibility(View.VISIBLE);
             binding.btnAnnulla.setVisibility(View.VISIBLE);
             binding.floatingActionButton.setVisibility(View.GONE);
         } else {
+            binding.constr.setVisibility(View.GONE);
             binding.floatingActionButton.setVisibility(View.VISIBLE);
             binding.usrTownship.setVisibility(View.VISIBLE);
             binding.usrCity.setVisibility(View.VISIBLE);
-            binding.newTownship.setVisibility(View.GONE);
-            binding.newCity.setVisibility(View.GONE);
+            /*binding.newTownship.setVisibility(View.GONE);
+            binding.newCity.setVisibility(View.GONE);*/
             binding.btnConfirmEdit.setVisibility(View.GONE);
             binding.btnAnnulla.setVisibility(View.GONE);
         }

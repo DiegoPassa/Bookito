@@ -23,7 +23,8 @@
         android:id="@+id/img_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
         app:cardCornerRadius="100dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
@@ -127,10 +128,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Annulla"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/btn_confirm_edit"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@id/newCity"
+        app:layout_constraintTop_toBottomOf="@id/constr"
         tools:visibility="visible" />
 
     <Button
@@ -138,7 +139,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Conferma"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toEndOf="@+id/btn_annulla"
@@ -186,29 +187,38 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <AutoCompleteTextView
-        android:id="@+id/new_township"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constr"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Comune"
-        android:minHeight="48dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@+id/usr_telephone"
-        tools:visibility="visible" />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/guideline6"
+        app:layout_constraintStart_toStartOf="@id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/usr_telephone">
 
-    <AutoCompleteTextView
-        android:id="@+id/newCity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Città"
-        android:minHeight="48dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@+id/new_township"
-        tools:visibility="visible" />
+        <AutoCompleteTextView
+            android:id="@+id/new_township"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Comune"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <AutoCompleteTextView
+            android:id="@+id/newCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Città"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/new_township"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
