@@ -25,6 +25,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentRegisterBinding;
+import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
+import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,10 +36,12 @@ import java.util.List;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
-    private String phoneNumber, name, zone, surname;
+    private String phoneNumber, name, zone, surname, township, city;
     private Boolean age;
-    private ArrayList<String> items;
-    ArrayAdapter<String> adapterItems;
+    //private ArrayList<String> items;
+    //ArrayAdapter<String> adapterItems;
+    private final ArrayList<String> townshipsArray = new ArrayList<>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,10 +59,14 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        items = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.quartieri)));
-        adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
-        binding.autoCompleteTextView.setAdapter(adapterItems);
-
+        //items = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.quartieri)));
+        //adapterItems = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, items);
+        //binding.autoCompleteTextView.setAdapter(adapterItems);
+        townshipsArray.clear();
+        for (NeighborhoodModel s : Utils.getNeighborhoods()) {
+            townshipsArray.add(s.getComune());
+        }
+        binding.newTownship.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, townshipsArray));
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -66,6 +74,23 @@ public class RegisterFragment extends Fragment {
 
         binding.cancel.setOnClickListener(view12 -> NavHostFragment.findNavController(RegisterFragment.this)
                 .navigate(R.id.action_registerFragment_to_loginFragment));
+
+        binding.newTownship.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, Utils.neighborhoodsMap.get(binding.newTownship.getText().toString())));
+            }
+        });
 
         binding.phoneNumberRegister.addTextChangedListener(new TextWatcher() {
             private int previousLength;
@@ -126,6 +151,7 @@ public class RegisterFragment extends Fragment {
                 }
             });
 
+
             CheckBox checkBoxGdpr = viewPopup.findViewById(R.id.checkBox_gdpr);
             Button btnAccept = viewPopup.findViewById(R.id.btn_accept);
             btnAccept.setEnabled(false);
@@ -167,10 +193,10 @@ public class RegisterFragment extends Fragment {
      * controlla che gli input siano corretti*/
     private boolean validateInput() {
         boolean flag = true;
-
         phoneNumber = binding.phoneNumberRegister.getText().toString().replaceAll("\\s", "");
         name = binding.name.getText().toString().trim();
-        zone = binding.autoCompleteTextView.getText().toString();
+        township = binding.newTownship.getText().toString();
+        city = binding.newCity.getText().toString();
         surname = binding.surname.getText().toString().trim();
         age = binding.checkBoxAge.isChecked();
 
@@ -202,9 +228,8 @@ public class RegisterFragment extends Fragment {
             flag = false;
         }
 
-        if (!items.contains(zone)) {
-            binding.neighborhood.setError("Devi specificare il quartiere dove abiti");
-            // binding.neighborhood.requestFocus();
+        if (!townshipsArray.contains(township)) {
+            binding.newTownship.setError("Seleziona un quartiere!");
             flag = false;
         }
         return flag;
@@ -216,7 +241,8 @@ public class RegisterFragment extends Fragment {
         bundle.putBoolean("register", true);
         bundle.putString("name", name);
         bundle.putString("surname", surname);
-        bundle.putString("zone", zone);
+        bundle.putString("township", township);
+        bundle.getString("city", city);
         NavHostFragment.findNavController(RegisterFragment.this).navigate(R.id.action_registerFragment_to_OTPConfirmFragment, bundle);
     }
 

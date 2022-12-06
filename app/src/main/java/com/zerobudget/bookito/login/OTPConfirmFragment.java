@@ -135,7 +135,10 @@ public class OTPConfirmFragment extends Fragment {
         String firstName = bundle.getString("name");
         String lastName = bundle.getString("surname");
         String phone = bundle.getString("phone_number");
-        String neighborhood = bundle.getString("zone");
+        //String neighborhood = bundle.getString("zone");
+        String township = bundle.getString("township");
+        String city = bundle.getString("city");
+
         HashMap<String, Object> user = new HashMap<>();
         HashMap<String, Object> karma = new HashMap<>();
         karma.put("points", 0L);
@@ -144,7 +147,9 @@ public class OTPConfirmFragment extends Fragment {
         user.put("lastName", lastName);
         user.put("telephone", phone);
         user.put("karma", karma);
-        user.put("neighborhood", neighborhood);
+        user.put("township", township);
+        user.put("city", city);
+
         ArrayList<HashMap<String, Object>> books = new ArrayList<>();
         user.put("books", books);
         user.put("hasPicture", false);
