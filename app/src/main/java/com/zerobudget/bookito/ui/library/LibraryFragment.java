@@ -30,7 +30,7 @@ public class LibraryFragment extends Fragment {
     private FirebaseFirestore db;
     private RecyclerView recyclerView;
     private Book_RecycleViewAdapter adapter;
-    Rect scrollBounds = new Rect();
+    private Rect scrollBounds = new Rect();
 
     private ProgressBar spinner;
 

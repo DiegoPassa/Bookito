@@ -133,6 +133,10 @@ public class UserProfileFragment extends Fragment {
                     Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
                 });
+                Utils.CURRENT_USER.setTownship(new_township);
+                Utils.CURRENT_USER.setCity(new_city);
+                binding.usrTownship.setText(new_township);
+                binding.usrCity.setText(new_city);
                 changeVisibility();
             }
         });
