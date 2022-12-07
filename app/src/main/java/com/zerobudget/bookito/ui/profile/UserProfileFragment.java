@@ -44,6 +44,7 @@ public class UserProfileFragment extends Fragment {
     private StorageReference storageRef;
 
     private final ArrayList<String> townshipsArray = new ArrayList<>();
+    private ArrayList<String> citiesArray = new ArrayList<>();
 
     private UserModel user;
 
@@ -109,7 +110,8 @@ public class UserProfileFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, Utils.neighborhoodsMap.get(binding.newTownship.getText().toString())));
+                citiesArray = Utils.neighborhoodsMap.get(binding.newTownship.getText().toString());
+                binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, citiesArray));
             }
         });
 
@@ -123,15 +125,18 @@ public class UserProfileFragment extends Fragment {
             String new_township = binding.newTownship.getText().toString();
             String new_city = binding.newCity.getText().toString();
             if (!townshipsArray.contains(new_township)) {
-                binding.newTownship.setError("Seleziona un nuovo quartiere!");
+                binding.newTownship.setError("Seleziona un comune valido!");
                 binding.newTownship.requestFocus();
                 // binding.newTownship.setDefaultHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_error)));
+            } else if (!citiesArray.contains(new_city)) {
+                binding.newCity.setError("Seleziona una frazione valida!");
+                binding.newCity.requestFocus();
             } else {
                 db.collection("users").document(Utils.USER_ID).update("township", new_township, "city", new_city).addOnSuccessListener(unused -> {
                     // user.setNeighborhood(new_neighborhood);
                     //aggiorna la pagina
                     Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
-                    Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
+                    // Navigation.findNavController(view).navigate(R.id.action_userProfileFragment_self);
                 });
                 Utils.CURRENT_USER.setTownship(new_township);
                 Utils.CURRENT_USER.setCity(new_city);

@@ -16,13 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentChatBinding;
 import com.zerobudget.bookito.models.Chat.MessageModel;
@@ -37,8 +35,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ChatFragment extends Fragment {
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
     private FragmentChatBinding binding;
     private UserModel otherUser;
     private DatabaseReference realTimedb;
@@ -55,9 +51,6 @@ public class ChatFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
         progressBar = binding.progressBar;
 

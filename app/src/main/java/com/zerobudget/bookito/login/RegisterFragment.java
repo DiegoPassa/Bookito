@@ -35,11 +35,12 @@ import java.util.List;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
-    private String phoneNumber, name, zone, surname, township, city;
+    private String phoneNumber, name, surname, township, city;
     private Boolean age;
     //private ArrayList<String> items;
     //ArrayAdapter<String> adapterItems;
     private final ArrayList<String> townshipsArray = new ArrayList<>();
+    private ArrayList<String> citiesArray = new ArrayList<>();
 
 
     @Override
@@ -87,7 +88,8 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, Utils.neighborhoodsMap.get(binding.newTownship.getText().toString())));
+                citiesArray = Utils.neighborhoodsMap.get(binding.newTownship.getText().toString());
+                binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, citiesArray));
             }
         });
 
@@ -227,7 +229,11 @@ public class RegisterFragment extends Fragment {
         }
 
         if (!townshipsArray.contains(township)) {
-            binding.newTownship.setError("Seleziona un quartiere!");
+            binding.newTownship.setError("Seleziona un comune di residenza!");
+            flag = false;
+        }
+        if (!citiesArray.contains(city)) {
+            binding.newTownship.setError("Seleziona la frazione in cui abiti!");
             flag = false;
         }
         return flag;
