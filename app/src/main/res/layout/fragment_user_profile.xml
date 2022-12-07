@@ -187,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Città:"
+                    android:text="Frazione:"
                     app:layout_constraintBottom_toTopOf="@+id/usr_city"
                     app:layout_constraintStart_toStartOf="@+id/usr_city"
                     app:layout_constraintTop_toBottomOf="@+id/usr_township" />
@@ -197,31 +197,48 @@
                 android:id="@+id/edit_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/usr_telephone"
                 app:layout_constraintStart_toStartOf="@+id/usr_telephone"
                 app:layout_constraintTop_toBottomOf="@+id/usr_telephone">
 
+                <TextView
+                    android:id="@+id/textComune2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comune:"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <AutoCompleteTextView
                     android:id="@+id/new_township"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:hint="Comune"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/textComune2" />
+
+                <TextView
+                    android:id="@+id/textComune3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Frazione:"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_township" />
 
                 <AutoCompleteTextView
                     android:id="@+id/newCity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Città"
+                    android:hint="Frazione"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_township" />
+                    app:layout_constraintTop_toBottomOf="@+id/textComune3" />
 
                 <Button
                     android:id="@+id/btn_annulla"
