@@ -1,30 +1,27 @@
 package com.zerobudget.bookito.models.Notification;
 
+import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
 
 import java.util.HashMap;
 
 public class NotificationModel {
-    private String actioner;
+    private String actionerId;
     private String type;
     private String notificationId;
     private String body;
     private String title;
-    private String requestId;
     private String book_thumb;
-    private UserModel userModel;
-    //private RequestModel request;
+    private UserModel actioner;
+    private RequestModel request;
 
-    public NotificationModel(String actioner, String type, String notificationId, String body, String title, String requestID/*RequestModel request */, String book_thumb) {
-        this.actioner = actioner;
+    public NotificationModel(String actionerId, String type, String notificationId, String body, String title, String book_thumb) {
         this.type = type;
         this.notificationId = notificationId;
         this.body = body;
         this.title = title;
-        this.requestId = requestID;
         this.book_thumb = book_thumb;
-        //this.request = request;
-        //TODO invece di salvarci solo ID richiesta, ci possiamo salvare tutti i dati relativi a quella richiesta (così ci evitiamo di fare una query ogni volta per ottenere le info di quella richiesta)
+        this.actionerId = actionerId;
     }
 
     public NotificationModel() {}
@@ -43,14 +40,6 @@ public class NotificationModel {
 
     public String toString() {
         return serialize().toString();
-    }
-
-    public String getActioner() {
-        return actioner;
-    }
-
-    public void setActioner(String actioner) {
-        this.actioner = actioner;
     }
 
     public String getType() {
@@ -85,13 +74,6 @@ public class NotificationModel {
         this.title = title;
     }
 
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
 
     public String getBook_thumb() {
         return book_thumb;
@@ -102,10 +84,34 @@ public class NotificationModel {
     }
 
     public UserModel getUserModel() {
-        return userModel;
+        return actioner;
     }
 
     public void setUserModel(UserModel userModel) {
-        this.userModel = userModel;
+        this.actioner = userModel;
+    }
+
+    public UserModel getActioner() {
+        return actioner;
+    }
+
+    public void setActioner(UserModel actioner) {
+        this.actioner = actioner;
+    }
+
+    public RequestModel getRequest() {
+        return request;
+    }
+
+    public void setRequest(RequestModel request) {
+        this.request = request;
+    }
+
+    public String getActionerId() {
+        return actionerId;
+    }
+
+    public void setActionerId(String actionerId) {
+        this.actionerId = actionerId;
     }
 }

@@ -49,7 +49,7 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
 
         FirebaseStorage.getInstance().getReference().child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
             for (StorageReference item : listResult.getItems()) {
-                //if (item.getName().equals(notification.get(position).getActioner()))
+                if (item.getName().equals(notification.get(position).getActionerId()))
                     item.getDownloadUrl().addOnSuccessListener(uri -> {
                         Picasso.get().load(uri).into(holder.actioner_image);
                     });

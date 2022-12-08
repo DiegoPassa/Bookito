@@ -19,6 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentNotificationsBinding;
 import com.zerobudget.bookito.models.Notification.NotificationModel;
+import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import org.checkerframework.checker.units.qual.A;
@@ -65,12 +67,16 @@ public class NotificationsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 notifications.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    NotificationModel not = dataSnapshot.getValue(NotificationModel.class);
+                    NotificationModel not = dataSnapshot.child("data_notify").getValue(NotificationModel.class);
                     not.setNotificationId(dataSnapshot.getKey());
+                    not.setUserModel(dataSnapshot.child("actioner").getValue(UserModel.class));
+                    not.setRequest(dataSnapshot.child("request").getValue(RequestModel.class));
                     notifications.add(not);
+
+                    Log.d("ID", ""+not.getActionerId());
                 }
-                if (adapter == null) setUpRecycleView();
-                else adapter.notifyDataSetChanged();
+                if (adapter != null) adapter.notifyDataSetChanged();
+                else setUpRecycleView();
             }
 
             @Override
