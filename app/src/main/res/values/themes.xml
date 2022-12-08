@@ -59,7 +59,7 @@
     </style>
 
     <style name="img_logo">
-        <item name="android:src">@drawable/bookito_logo</item>
+        <item name="android:src">@drawable/img_light_logo</item>
     </style>
 
     <style name="img_background">
