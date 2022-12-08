@@ -65,72 +65,75 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
             } else {
                 holder.user_name.setText(Html.fromHtml("<b> ( TU ) -> </b>" + nameOtherUser + surnameOtherUser, Html.FROM_HTML_MODE_LEGACY));
             }
-        }
 
-        holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
-        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
 
-        if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
-            //holder.usr_pic.setVisibility(View.VISIBLE);
-            holder.user_gravatar.setVisibility(View.GONE);
-            storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
-                for (StorageReference item : listResult.getItems()) {
-                    // All the items under listRef.
-                    if (!item.getName().equals(Utils.USER_ID) && (item.getName().equals(idReceiver)
-                            || item.getName().equals(idSender))) {
-                        //Log.d("item", item.getName());
-                        item.getDownloadUrl().addOnSuccessListener(uri -> {
-                            // Utils.setUriPic(uri.toString());
-                            //Log.d("PIC", Utils.URI_PIC);
-                            otherUserPic[0] = uri;
-                            Log.d("carico immaginme", "" + uri.getClass());
-                            Picasso.get().load(uri).into(holder.usr_pic);
-                            holder.usr_pic.setVisibility(View.VISIBLE);
-                            //holder.user_gravatar.setVisibility(View.GONE);
+            holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
+            Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
 
-                        }).addOnFailureListener(exception -> {
-                            int code = ((StorageException) exception).getErrorCode();
-                            if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                                holder.user_gravatar.setVisibility(View.VISIBLE);
-                                holder.usr_pic.setVisibility(View.GONE);
-                            }
-                        });
+            if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+                //holder.usr_pic.setVisibility(View.VISIBLE);
+                holder.user_gravatar.setVisibility(View.GONE);
+                storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
+                    for (StorageReference item : listResult.getItems()) {
+                        // All the items under listRef.
+                        if (!item.getName().equals(Utils.USER_ID) && (item.getName().equals(idReceiver)
+                                || item.getName().equals(idSender))) {
+                            //Log.d("item", item.getName());
+                            item.getDownloadUrl().addOnSuccessListener(uri -> {
+                                // Utils.setUriPic(uri.toString());
+                                //Log.d("PIC", Utils.URI_PIC);
+                                otherUserPic[0] = uri;
+                                Log.d("carico immaginme", "" + uri.getClass());
+                                Picasso.get().load(uri).into(holder.usr_pic);
+                                holder.usr_pic.setVisibility(View.VISIBLE);
+                                //holder.user_gravatar.setVisibility(View.GONE);
+
+                            }).addOnFailureListener(exception -> {
+                                int code = ((StorageException) exception).getErrorCode();
+                                if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                    holder.user_gravatar.setVisibility(View.VISIBLE);
+                                    holder.usr_pic.setVisibility(View.GONE);
+                                }
+                            });
+                        }
                     }
+                });
+            } else {
+                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                holder.user_gravatar.setVisibility(View.VISIBLE);
+                holder.usr_pic.setVisibility(View.GONE);
+            }
+
+            setupIconType(holder, requests.get(position).getType());
+
+            holder.request_selected.setOnClickListener(view1 -> {
+                if (otherUser != null && holder.getAdapterPosition() != -1) {
+                    Bundle args = new Bundle();
+                    String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
+                    args.putString("otherChatUser", toJson);
+
+                    if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
+                        args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getSender());
+
+                    else
+                        args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
+
+                    args.putString("requestID", requests.get(holder.getAdapterPosition()).getRequestId());
+                    args.putParcelable("otherUserPic", otherUserPic[0]);
+                    args.putString("receiverID", requests.get(holder.getAdapterPosition()).getReceiver());
+                    Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
+
                 }
             });
-        } else {
-            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-            holder.user_gravatar.setVisibility(View.VISIBLE);
-            holder.usr_pic.setVisibility(View.GONE);
+
+
+            holder.request_selected.setOnLongClickListener(view -> {
+                showActionsDialog(holder, requests.get(holder.getAdapterPosition()));
+                return false;
+            });
+
         }
-
-        setupIconType(holder, requests.get(position).getType());
-
-        holder.request_selected.setOnClickListener(view1 -> {
-            if (otherUser != null && holder.getAdapterPosition() != -1) {
-                Bundle args = new Bundle();
-                String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
-                args.putString("otherChatUser", toJson);
-
-                if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
-                    args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getSender());
-
-                else
-                    args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
-
-                args.putString("requestID", requests.get(holder.getAdapterPosition()).getRequestId());
-                args.putParcelable("otherUserPic", otherUserPic[0]);
-                args.putString("receiverID", requests.get(holder.getAdapterPosition()).getReceiver());
-                Navigation.findNavController(holder.itemView).navigate(R.id.to_chat_fragment, args);
-
-            }
-        });
-
-        holder.request_selected.setOnLongClickListener(view -> {
-            showActionsDialog(holder, requests.get(holder.getAdapterPosition()));
-            return false;
-        });
     }
 
     /**
