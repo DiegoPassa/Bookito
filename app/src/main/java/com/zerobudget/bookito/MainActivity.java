@@ -145,8 +145,10 @@ public class MainActivity extends AppCompatActivity {
         badge = navView.getOrCreateBadge(menuItemId);
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
+            Log.d("NAVIGATION", navDestination.getDisplayName());
             if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
                 navView.setVisibility(View.GONE);
+                toolbar.getMenu().clear();
             } else {
                 navView.setVisibility(View.VISIBLE);
             }

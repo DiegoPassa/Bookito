@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -203,6 +202,7 @@ public class UserProfileFragment extends Fragment {
 
         chooseFromGallery.setOnClickListener(view1 -> {
             openImagePicker();//prende l'immagine dalla gallera
+            dialog.dismiss();
         });
 
         removePhoto.setOnClickListener(view1 -> {
@@ -210,10 +210,9 @@ public class UserProfileFragment extends Fragment {
                 deletePicOnFirebase();
                 Utils.setUriPic("");
                 Toast.makeText(getContext().getApplicationContext(), "Immagine eliminata correttamente!", Toast.LENGTH_LONG).show();
-                Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
+                dialog.dismiss();
             }
         });
-
 
         dialogBuilder.setView(view);
         dialog.show();
@@ -241,7 +240,6 @@ public class UserProfileFragment extends Fragment {
                     showPic();
                 });
                 Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
-                // Navigation.findNavController(getView()).navigate(R.id.action_userProfileFragment_self);
             }
         });
     }

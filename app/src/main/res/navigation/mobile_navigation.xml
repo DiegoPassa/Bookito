@@ -5,28 +5,6 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/to_navigation_library">
 
-    <fragment
-        android:id="@+id/chat_fragment"
-        android:name="com.zerobudget.bookito.ui.Chat.ChatFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_chat" />
-
-    <fragment
-        android:id="@+id/request_page_nav"
-        android:name="com.zerobudget.bookito.ui.inbox.RequestFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_request_page">
-
-        <action
-            android:id="@+id/to_chat_fragment"
-            app:destination="@id/chat_fragment"
-            app:popExitAnim="@android:anim/fade_out"/>
-        <action
-            android:id="@+id/action_request_page_nav_to_bookTradeFragment"
-            app:destination="@id/bookTradeFragment" />
-
-    </fragment>
-
     <navigation
         android:id="@+id/to_navigation_library"
         app:startDestination="@id/navigation_library">
@@ -69,13 +47,7 @@
         android:id="@+id/userProfileFragment"
         android:name="com.zerobudget.bookito.ui.profile.UserProfileFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_user_profile" >
-        <action
-            android:id="@+id/action_userProfileFragment_self"
-            app:destination="@id/userProfileFragment"
-            app:popUpTo="@id/userProfileFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_user_profile" />
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.zerobudget.bookito.ui.notifications.NotificationsFragment"
@@ -103,15 +75,39 @@
                 app:destination="@id/searchByNameFragment" />
         </fragment>
     </navigation>
-    <fragment
-        android:id="@+id/bookTradeFragment"
-        android:name="com.zerobudget.bookito.ui.inbox.BookTradeFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_trade_book" >
-        <action
-            android:id="@+id/action_bookTradeFragment_to_request_page_nav"
-            app:destination="@id/request_page_nav" />
-    </fragment>
+    <navigation
+        android:id="@+id/to_navigation_requests"
+        app:startDestination="@id/request_page_nav">
+        <fragment
+            android:id="@+id/request_page_nav"
+            android:name="com.zerobudget.bookito.ui.inbox.RequestFragment"
+            android:label="@string/app_name"
+            tools:layout="@layout/fragment_request_page">
+
+            <action
+                android:id="@+id/to_chat_fragment"
+                app:destination="@id/chat_fragment"
+                app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_request_page_nav_to_bookTradeFragment"
+                app:destination="@id/bookTradeFragment" />
+
+        </fragment>
+        <fragment
+            android:id="@+id/chat_fragment"
+            android:name="com.zerobudget.bookito.ui.Chat.ChatFragment"
+            android:label="@string/app_name"
+            tools:layout="@layout/fragment_chat" />
+        <fragment
+            android:id="@+id/bookTradeFragment"
+            android:name="com.zerobudget.bookito.ui.inbox.BookTradeFragment"
+            android:label="@string/app_name"
+            tools:layout="@layout/fragment_trade_book">
+            <action
+                android:id="@+id/action_bookTradeFragment_to_request_page_nav"
+                app:destination="@id/request_page_nav" />
+        </fragment>
+    </navigation>
 
 
 </navigation>
