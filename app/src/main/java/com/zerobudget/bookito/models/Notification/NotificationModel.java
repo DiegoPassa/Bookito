@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.models.Notification;
 
+import com.zerobudget.bookito.models.users.UserModel;
+
 import java.util.HashMap;
 
 public class NotificationModel {
@@ -10,6 +12,7 @@ public class NotificationModel {
     private String title;
     private String requestId;
     private String book_thumb;
+    private UserModel userModel;
     //private RequestModel request;
 
     public NotificationModel(String actioner, String type, String notificationId, String body, String title, String requestID/*RequestModel request */, String book_thumb) {
@@ -96,5 +99,13 @@ public class NotificationModel {
 
     public void setBook_thumb(String book_thumb) {
         this.book_thumb = book_thumb;
+    }
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
     }
 }
