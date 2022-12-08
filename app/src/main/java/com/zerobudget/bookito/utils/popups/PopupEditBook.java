@@ -22,10 +22,10 @@ public class PopupEditBook extends PopupBook {
 
     public PopupEditBook(@NonNull Context context, View view) {
         super(context, view);
+        ConstraintLayout c = view.findViewById(R.id.constr_edit);
+        c.setVisibility(View.VISIBLE);
         this.context = context;
         this.choosenType = view.findViewById(R.id.autoCompleteTextView);
-        ConstraintLayout c = view.findViewById(R.id.constr);
-        c.setVisibility(View.VISIBLE);
         this.inputText = view.findViewById(R.id.InputText);
     }
 
