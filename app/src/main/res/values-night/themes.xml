@@ -64,7 +64,7 @@
     </style>
 
     <style name="img_logo">
-        <item name="android:src">@drawable/bookito_logo_darktheme</item>
+        <item name="android:src">@drawable/img_dark_logo</item>
     </style>
 
     <style name="img_background">
