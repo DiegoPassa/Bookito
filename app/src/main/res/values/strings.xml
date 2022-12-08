@@ -44,4 +44,7 @@
     <string name="user_telephone">333 123 4567</string>
     <string name="user_township">Venezia</string>
     <string name="user_city">Mestre</string>
+    <string name="ricevute">Ricevute</string>
+    <string name="inviate">Inviate</string>
+    <string name="accettate">Accettate</string>
 </resources>

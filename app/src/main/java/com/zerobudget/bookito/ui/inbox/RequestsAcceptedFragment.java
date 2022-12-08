@@ -45,7 +45,7 @@ public class RequestsAcceptedFragment extends InboxFragment {
         int textSize = 14;
         int clicked_textSize = 17;
 
-        binding.textView.setVisibility(View.INVISIBLE);
+        binding.textView.setVisibility(View.GONE);
         binding.filterBar.setVisibility(View.VISIBLE);
 
         binding.seeAllReq.setTextSize(clicked_textSize);

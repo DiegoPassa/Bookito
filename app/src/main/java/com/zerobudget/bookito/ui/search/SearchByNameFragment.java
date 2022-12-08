@@ -60,7 +60,7 @@ public class SearchByNameFragment extends Fragment {
                     searchBookByTitle_UsrNeighborhood(editable.toString());
                 } else {
                     //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
-                    binding.recycleViewSearch.setVisibility(View.INVISIBLE);
+                    binding.recycleViewSearch.setVisibility(View.GONE);
                     viewBooks(new ArrayList<>());
                 }
             }
