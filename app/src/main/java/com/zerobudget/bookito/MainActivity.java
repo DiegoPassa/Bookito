@@ -1,11 +1,13 @@
 package com.zerobudget.bookito;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -161,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.info:
+                String urlPagePolicy = "https://sites.google.com/view/bookito/home-page";
                 AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this);
                 View viewPopup = View.inflate(MainActivity.this, R.layout.popup_gdpr, null);
 
@@ -174,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 //WebView
                 WebView web = viewPopup.findViewById(R.id.web);
                 //sito web contenente l'informativa sulla privacy
-                web.loadUrl("https://sites.google.com/view/bookito/home-page");
+                web.loadUrl(urlPagePolicy);
                 web.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -197,8 +200,69 @@ public class MainActivity extends AppCompatActivity {
 
                 dialog.show();
                 break;
+
+            case R.id.about_us:
+                String urlPageAboutUs = "https://sites.google.com/view/bookito-about-us/home-page";
+                AlertDialog.Builder dialogBuilderAboutUs = new MaterialAlertDialogBuilder(MainActivity.this);
+                View viewPopupAbUs = View.inflate(MainActivity.this, R.layout.popup_about_us, null);
+
+                dialogBuilderAboutUs.setView(viewPopupAbUs);
+                AlertDialog dialogAbUs = dialogBuilderAboutUs.create();
+
+                ProgressBar progressBarAbUs = viewPopupAbUs.findViewById(R.id.progressBar);
+                Button btnOk = viewPopupAbUs.findViewById(R.id.btn_ok);
+
+                ConstraintLayout constr1 = viewPopupAbUs.findViewById(R.id.constr);
+                constr1.setVisibility(View.GONE);
+                //WebView
+                WebView webAbUs = viewPopupAbUs.findViewById(R.id.web);
+                //sito web contenente l'informativa sulla privacy
+                webAbUs.loadUrl(urlPageAboutUs);
+                webAbUs.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
+                        progressBarAbUs.setVisibility(View.GONE);
+                        constr1.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                        super.onPageStarted(view, url, favicon);
+                        if(url.equals(urlPageAboutUs)) {
+                            btnOk.setText("Ho capito, torna indietro!");
+                            btnOk.setOnClickListener(view1 -> {
+                                Toast.makeText(MainActivity.this, "Grazie per aver letto chi siamo!", Toast.LENGTH_LONG).show();
+                                dialogAbUs.dismiss();
+                            });
+                        }
+                    }
+
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                        String temp  = request.getUrl().toString();
+                        if(temp.isEmpty()){
+                            Log.d("Error", "No url returned!");
+                        }else{
+                            if(!temp.equals(urlPageAboutUs)) {
+                                btnOk.setText("Torna alla home page");
+                                btnOk.setOnClickListener(view1 -> {
+                                    webAbUs.loadUrl(urlPageAboutUs);
+                                });
+                            }
+                        }
+                        return  false;
+                    }
+                });
+
+                btnOk.setOnClickListener(view -> {
+                    Toast.makeText(MainActivity.this, "Grazie per aver letto chi siamo!", Toast.LENGTH_LONG).show();
+                    dialogAbUs.dismiss();
+                });
+
+                dialogAbUs.show();
+                break;
             case R.id.logout:
-                // TODO: Logout utente
                 removeTokenAndLogout();
                 break;
             default:
@@ -208,8 +272,6 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
-
-
     }
 
     protected void removeTokenAndLogout() {
