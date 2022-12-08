@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +32,9 @@ public class NotificationsFragment extends Fragment {
     private DatabaseReference ref;
     private ArrayList<NotificationModel> notifications = new ArrayList<>();
 
+    private Notification_RecycleViewAdapter adapter;
+    private RecyclerView recyclerView;
+
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -42,6 +47,10 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
 
         View root = binding.getRoot();
+
+        recyclerView = binding.notificationRecycleView;
+
+        setUpRecycleView();
 
         setUpFragmentData();
 
@@ -60,7 +69,8 @@ public class NotificationsFragment extends Fragment {
                     not.setNotificationId(dataSnapshot.getKey());
                     notifications.add(not);
                 }
-                Log.d("ARRAY", ""+notifications);
+                if (adapter == null) setUpRecycleView();
+                else adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -68,5 +78,14 @@ public class NotificationsFragment extends Fragment {
 
             }
         });
+    }
+
+    private void setUpRecycleView() {
+        if (getView() != null) {
+            adapter = new Notification_RecycleViewAdapter(getContext(), notifications);
+
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
     }
 }
