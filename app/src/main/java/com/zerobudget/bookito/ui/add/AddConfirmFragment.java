@@ -73,8 +73,6 @@ public class AddConfirmFragment extends Fragment {
             } else {
                 newBook.setType(action);
                 addBook(getContext());//inserimento libro nel database
-
-                Navigation.findNavController(view).navigate(R.id.action_addConfirmFragment_to_navigation_library);
             }
         });
 
@@ -112,11 +110,13 @@ public class AddConfirmFragment extends Fragment {
                             .update("books", FieldValue.arrayUnion(newBook.serialize()));
 
                     Toast.makeText(context, "Libro " + newBook.getTitle() + " inserito correttamente!", Toast.LENGTH_LONG).show();
+                    Utils.CURRENT_USER.getLibrary().add(newBook);
 
                 } else {
                     Toast.makeText(context, "Il libro è già presente nella libreria", Toast.LENGTH_LONG).show();
 
                 }
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_addConfirmFragment_to_navigation_library);
             }
         });
     }

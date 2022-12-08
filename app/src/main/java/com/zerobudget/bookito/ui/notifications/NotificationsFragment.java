@@ -75,8 +75,7 @@ public class NotificationsFragment extends Fragment {
 
                     Log.d("ID", ""+not.getActionerId());
                 }
-                if (adapter != null) adapter.notifyDataSetChanged();
-                else setUpRecycleView();
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -87,11 +86,11 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void setUpRecycleView() {
-        if (getView() != null) {
-            adapter = new Notification_RecycleViewAdapter(getContext(), notifications);
 
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        }
+        adapter = new Notification_RecycleViewAdapter(getContext(), notifications);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 }
