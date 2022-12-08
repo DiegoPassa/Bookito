@@ -8,13 +8,20 @@ public class NotificationModel {
     private String notificationId;
     private String body;
     private String title;
+    private String requestId;
+    private String book_thumb;
+    //private RequestModel request;
 
-    public NotificationModel(String actioner, String type, String notificationId, String body, String title) {
+    public NotificationModel(String actioner, String type, String notificationId, String body, String title, String requestID/*RequestModel request */, String book_thumb) {
         this.actioner = actioner;
         this.type = type;
         this.notificationId = notificationId;
         this.body = body;
         this.title = title;
+        this.requestId = requestID;
+        this.book_thumb = book_thumb;
+        //this.request = request;
+        //TODO invece di salvarci solo ID richiesta, ci possiamo salvare tutti i dati relativi a quella richiesta (così ci evitiamo di fare una query ogni volta per ottenere le info di quella richiesta)
     }
 
     public NotificationModel() {}
@@ -73,5 +80,21 @@ public class NotificationModel {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getBook_thumb() {
+        return book_thumb;
+    }
+
+    public void setBook_thumb(String book_thumb) {
+        this.book_thumb = book_thumb;
     }
 }

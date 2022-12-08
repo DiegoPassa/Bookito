@@ -40,7 +40,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/image_actioner"
+                android:id="@+id/book_victim"
                 android:layout_width="80dp"
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
@@ -58,9 +58,15 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="100dp"
                 android:text="Friendzone"
-                app:layout_constraintEnd_toEndOf="@+id/image_actioner"
+                app:layout_constraintEnd_toEndOf="@+id/book_victim"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/actioner_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

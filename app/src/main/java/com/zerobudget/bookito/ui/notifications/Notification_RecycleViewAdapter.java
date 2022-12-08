@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Notification.NotificationModel;
 
@@ -21,6 +24,8 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
 
     private ArrayList<NotificationModel> notification;
     private Context context;
+
+
 
     public Notification_RecycleViewAdapter(@NonNull Context context, ArrayList<NotificationModel> notification) {
         this.context = context;
@@ -41,7 +46,18 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.title.setText(notification.get(position).getTitle());
         holder.body.setText(notification.get(position).getBody());
+
+        FirebaseStorage.getInstance().getReference().child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
+            for (StorageReference item : listResult.getItems()) {
+                //if (item.getName().equals(notification.get(position).getActioner()))
+                    item.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Picasso.get().load(uri).into(holder.actioner_image);
+                    });
+            }
+        });
+        Picasso.get().load(notification.get(position).getBook_thumb()).into(holder.book_victim);
     }
+
 
     @Override
     public int getItemCount() {
@@ -52,16 +68,18 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
 
         private final TextView title;
         private final TextView body;
-        private final ImageView imageActioner;
+        private final ImageView book_victim;
         private final ConstraintLayout item_selected;
+        private final ImageView actioner_image;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.not_title);
             body = itemView.findViewById(R.id.not_body);
-            imageActioner = itemView.findViewById(R.id.image_actioner);
+            book_victim = itemView.findViewById(R.id.book_victim);
             item_selected = itemView.findViewById(R.id.item_selected);
+            actioner_image = itemView.findViewById(R.id.actioner_image);
         }
     }
 
