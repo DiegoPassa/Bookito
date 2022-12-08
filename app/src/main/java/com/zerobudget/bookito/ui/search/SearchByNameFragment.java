@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -37,6 +38,8 @@ public class SearchByNameFragment extends Fragment {
 
         binding = FragmentSearchByNameBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         viewBooks(new ArrayList<>());
 
@@ -79,6 +82,7 @@ public class SearchByNameFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.search;
 
 import android.content.Context;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.utils.Utils;
+import com.zerobudget.bookito.utils.popups.PopupSearchBook;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +41,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     private final FirebaseFirestore db;
     FirebaseAuth auth;
 
-    private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
     public Search_RecycleViewAdapter(Context context, ArrayList<SearchResultsModel> bookModels) {
@@ -98,47 +97,18 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         });
     }
 
+    /**
+     * crea il popup per la richiesta del libro, utilizzando la classe PopupSearchBook che
+     * eredita alcuni metodi dal PopupBook ed evita la ripetizione di righe di codice*/
     private void createNewSearchPopup(ViewHolder holder) {
-        dialogBuilder = new MaterialAlertDialogBuilder(context);
-        View view = View.inflate(context, R.layout.popup_request_book, null);
+        View view = View.inflate(context, R.layout.popup_book, null);
+        PopupSearchBook dialogBuilder = new PopupSearchBook(context, view);
 
-        TextView bookTitle = view.findViewById(R.id.book_title);
-        TextView bookAuthor = view.findViewById(R.id.book_author);
-        TextView bookDescription = view.findViewById(R.id.book_description);
-        TextView bookOwner = view.findViewById(R.id.book_owner);
-        TextView requestNote = view.findViewById(R.id.request_note);
+        dialogBuilder.setUpInformation(results.get(holder.getAdapterPosition()));
+        dialogBuilder.getBtnOther().setVisibility(View.GONE);
+        dialogBuilder.setTextBtnDefault("Richiedi");
 
-        Button btnRequest = view.findViewById(R.id.btn_request);
-
-        ImageView bookThumbnail = view.findViewById(R.id.book_thumbnail);
-        //ImageView bookmark = view.findViewById(R.id.bookmark);
-        //ImageView bookmarkOutline = view.findViewById(R.id.bookmark_outline);
-        ImageView book_type = view.findViewById(R.id.icon_type);
-
-        bookTitle.setText(results.get(holder.getAdapterPosition()).getBook().getTitle());
-        bookAuthor.setText(results.get(holder.getAdapterPosition()).getBook().getAuthor());
-        bookDescription.setText(results.get(holder.getAdapterPosition()).getBook().getDescription());
-        bookDescription.setMovementMethod(new ScrollingMovementMethod());
-
-        String owner = results.get(holder.getAdapterPosition()).getUser().getFirstName() + " " + results.get(holder.getAdapterPosition()).getUser().getLastName();
-        bookOwner.setText(owner);
-        Picasso.get().load(results.get(holder.getAdapterPosition()).getBook().getThumbnail()).into(bookThumbnail);
-
-        switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
-            case "Scambio":
-                Picasso.get().load(R.drawable.swap).into(book_type);
-                break;
-            case "Prestito":
-                Picasso.get().load(R.drawable.calendar).into(book_type);
-                break;
-            case "Regalo":
-                Picasso.get().load(R.drawable.gift).into(book_type);
-                break;
-            default:
-                break;
-        }
-
-        btnRequest.setOnClickListener(view1 -> {
+        dialogBuilder.getBtnDefault().setOnClickListener(view1 -> {
             String type = results.get(holder.getAdapterPosition()).getBook().getType();
             //preleva l'id dell'utente dal database
             db.collection("users").get().addOnCompleteListener(task -> {
@@ -153,7 +123,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                 rm.setStatus("undefined");
                 rm.setType(results.get(holder.getAdapterPosition()).getBook().getType());
                 rm.setSender(Utils.USER_ID);
-                rm.setNote(requestNote.getText().toString());
+                rm.setNote(dialogBuilder.getTxtRequestNote().getText().toString());
 
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {

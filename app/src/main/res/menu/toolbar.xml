@@ -22,6 +22,12 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/about_us"
+        android:title="About us"
+        android:contentDescription="About us"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="@string/logout"
