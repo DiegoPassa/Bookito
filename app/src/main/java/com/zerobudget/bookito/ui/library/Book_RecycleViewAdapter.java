@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -223,6 +224,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 .get()
                 .addOnSuccessListener(task -> {
                     Object books = task.get("books");
+                    int positionOldBook = -1;
                     for (Object o : (ArrayList<Object>) books) {
                         HashMap<String, Object> map = (HashMap<String, Object>) o;
                         if (map.get("isbn").equals(bookModels.get(holder.getAdapterPosition()).getIsbn())) {
@@ -233,7 +235,16 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                             db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(oldBook));
                             db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayUnion(newBook));
 
+                            //aggiunge il nuovo libro
+                            Utils.CURRENT_USER.getLibrary().add(newBook);
+                            positionOldBook= holder.getAdapterPosition();
                         }
+                    }
+
+                    //elimina il vecchio libro se trovato
+                    if(positionOldBook != -1){
+                        bookModels.remove(positionOldBook);
+                        notifyItemRemoved(positionOldBook);
                     }
                 });
     }
