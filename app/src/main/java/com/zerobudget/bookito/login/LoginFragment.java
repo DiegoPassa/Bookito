@@ -94,8 +94,8 @@ public class LoginFragment extends Fragment {
                 binding.phoneNumber.requestFocus();
                 return;
             }
-            if (phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3') {
-                binding.phoneNumber.setError("Il numero inserito non e valido");
+            if (phoneNumber.length() != 10) {
+                binding.phoneNumber.setError("Il numero inserito non è valido");
                 binding.phoneNumber.requestFocus();
                 return;
             }

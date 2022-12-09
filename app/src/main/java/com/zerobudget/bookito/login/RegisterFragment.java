@@ -67,6 +67,7 @@ public class RegisterFragment extends Fragment {
             townshipsArray.add(s.getComune());
         }
         binding.newTownship.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, townshipsArray));
+        citiesArray.clear();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -195,8 +196,8 @@ public class RegisterFragment extends Fragment {
         boolean flag = true;
         phoneNumber = binding.phoneNumberRegister.getText().toString().replaceAll("\\s", "");
         name = binding.name.getText().toString().trim();
-        township = binding.newTownship.getText().toString();
-        city = binding.newCity.getText().toString();
+        township = binding.newTownship.getText().toString().trim();
+        city = binding.newCity.getText().toString().trim();
         surname = binding.surname.getText().toString().trim();
         age = binding.checkBoxAge.isChecked();
 
@@ -216,7 +217,7 @@ public class RegisterFragment extends Fragment {
             flag = false;
         }
 
-        if (phoneNumber.length() != 10 || phoneNumber.charAt(0) != '3') {
+        if (phoneNumber.length() != 10) {
             binding.phoneNumberRegister.setError("Il numero inserito non è valido");
             // binding.phoneNumberRegister.requestFocus();
             flag = false;
