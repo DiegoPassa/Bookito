@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d("STO_CREANDO", "AHHAHAHAHAHAHAHAH STO CREANDOOOOO");
 
+        if(!Utils.isOnline())
+            Toast.makeText(MainActivity.this, "Sembra che tu non sia connesso ad internet, connettiti e riprova!", Toast.LENGTH_SHORT).show();
+
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mainActivitySetup() {
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -314,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
                     badge.setVisible(numReq > 0);
                 });
     }
+
 
 
     @Override
