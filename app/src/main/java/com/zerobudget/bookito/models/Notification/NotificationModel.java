@@ -15,13 +15,14 @@ public class NotificationModel {
     private UserModel actioner;
     private RequestModel request;
 
-    public NotificationModel(String actionerId, String type, String notificationId, String body, String title, String book_thumb) {
+    public NotificationModel(String actionerId, String type, String body, String title, String book_thumb, RequestModel request, UserModel actioner) {
         this.type = type;
-        this.notificationId = notificationId;
         this.body = body;
         this.title = title;
         this.book_thumb = book_thumb;
         this.actionerId = actionerId;
+        this.request = request;
+        this.actioner = actioner;
     }
 
     public NotificationModel() {}
@@ -29,11 +30,14 @@ public class NotificationModel {
     public HashMap<String, Object> serialize() {
         HashMap<String, Object> map = new HashMap<>();
 
-        map.put("actioner", this.actioner);
+        map.put("actionerId", this.actioner);
         map.put("type", this.type);
         map.put("notificationId", this.notificationId);
         map.put("body", this.body);
         map.put("title", this.title);
+        map.put("book_thumb", this.book_thumb);
+        map.put("request", request.serialize());
+        map.put("actioner", actioner.serialize());
 
         return map;
     }

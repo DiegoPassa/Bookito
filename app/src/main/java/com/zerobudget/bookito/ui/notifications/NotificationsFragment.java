@@ -5,12 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,11 +55,42 @@ public class NotificationsFragment extends Fragment {
 
         recyclerView = binding.notificationRecycleView;
 
+        setUpScrollDelete();
+
         setUpRecycleView();
 
         setUpFragmentData();
 
+
+
         return root;
+    }
+
+    protected void setUpScrollDelete() {
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//                int position = viewHolder.getAdapterPosition();
+//                notifications.remove(position);
+//                adapter.notifyDataSetChanged();
+
+                deleteNotificationFromDatabase(viewHolder.getAdapterPosition());
+            }
+
+            private void deleteNotificationFromDatabase(int position) {
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/notification/"+Utils.USER_ID+'/'+notifications.get(position).getNotificationId());
+                databaseReference.removeValue();
+            }
+
+        };
+
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
     }
 
     protected void setUpFragmentData() {

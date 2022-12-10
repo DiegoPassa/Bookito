@@ -181,13 +181,27 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     /**
      * controlla se non esista già una richiesta in corso per lo stesso libro*/
     private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
-        return (doc.get("status").equals("accepted") || doc.get("status").equals("ongoing"))
-                /*&&doc.get("receiver").equals(rm.getReceiver())*/
-                && doc.get("requestedBook").equals(rm.getRequestedBook())
-                /*&& doc.get("sender").equals(rm.getSender())*/
-                && doc.get("thumbnail").equals(rm.getThumbnail())
-                && doc.get("title").equals(rm.getTitle())
-                && doc.get("type").equals(rm.getType());
+        Log.d("CONFRONTO", doc.get("requestdBook") + " " + rm.getRequestedBook());
+//        return (doc.get("status").equals("accepted") || doc.get("status").equals("ongoing"))
+//                &&doc.get("receiver").equals(rm.getReceiver())
+//                && doc.get("requestedBook").equals(rm.getRequestedBook())
+//                && doc.get("sender").equals(rm.getSender())
+//                && doc.get("thumbnail").equals(rm.getThumbnail())
+//                && doc.get("title").equals(rm.getTitle())
+//                && doc.get("type").equals(rm.getType());
+
+        boolean exists = false;
+
+        if (doc.get("status").equals("accepted") || doc.get("status").equals("ongoing")) {
+            if (doc.get("receiver").equals(rm.getReceiver()) && doc.get("requestedBook").equals(rm.getRequestedBook())) {
+                exists = true;
+            }
+        } else {
+            if (doc.get("sender").equals(rm.getSender()) && doc.get("requestedBook").equals(rm.getRequestedBook())) {
+                exists = true;
+            }
+        }
+        return exists;
     }
 
 

@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
@@ -31,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
+import com.zerobudget.bookito.models.Notification.NotificationModel;
 import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestShareModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
@@ -243,6 +245,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     protected void deleteRequest(RequestModel r) {
         // Log.d("REQUEST_DELETED", r.getrequestId());
         db.collection("requests").document(r.getRequestId()).delete();
+        sendNotification(r, "Reject");
     }
 
     /**
@@ -260,6 +263,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     boolean existsOther = task.getResult().size() > 0;
 
                     if (!existsOther) {
+                        sendNotification(r, "Accept");
                         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
                         db.collection("requests").document(r.getRequestId()).update("status", "accepted").addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
@@ -292,6 +296,23 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                         Toast.makeText(context, "Esiste già una richiesta accettata per il libro!\nAttendere o eliminare la richiesta.", Toast.LENGTH_LONG).show();
                 });
 
+    }
+
+    private void sendNotification(RequestModel r, String status) {
+        String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
+        String body = status.equals("Accept") ? r.getOtherUser().getFirstName() + " ha accettato la tua richiesta!" : r.getOtherUser().getFirstName() + " ha rifiutato la tua richiesta!";
+        String title = status.equals("Accept") ? "Richiesta accettata!" : "Richiesta rifiutata!";
+
+        /*
+        PROBLEMA, NON POSSIAMO RICHIAMARE LA SERIALIZE DEL CURRENT USER PERCHÉ SI TRATTA DI UN USERLIBRARY, QUINDI MI GENERA ANCHE TUTTI I SUOI LIBRI E QUINDI DA ERRORE
+         */
+
+        UserModel currentUser = new UserModel(Utils.CURRENT_USER.getFirstName(), Utils.CURRENT_USER.getLastName(),
+                Utils.CURRENT_USER.getTelephone(), Utils.CURRENT_USER.getTownship(), Utils.CURRENT_USER.getCity(),
+                Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
+        NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser);
+        ref.push().setValue(notificationModel.serialize());
     }
 
     /**
