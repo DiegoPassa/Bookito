@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.requests.RequestModel;
+import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -100,7 +101,8 @@ public class RequestsSentFragment extends InboxFragment {
             RequestsReceived_RecycleViewAdapter adapter = new RequestsSent_RecycleViewAdapter(this.getContext(), req, emptyWarning);
 
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));
             Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_SEND, requests.size());
         }
     }

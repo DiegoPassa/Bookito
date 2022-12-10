@@ -21,6 +21,7 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
 
 public class RequestsReceivedFragment extends InboxFragment {
@@ -75,7 +76,8 @@ public class RequestsReceivedFragment extends InboxFragment {
             requests.clear();
             adapter = new RequestsReceived_RecycleViewAdapter(this.getContext(), requests, empty);
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));
         }
     }
 
@@ -100,27 +102,28 @@ public class RequestsReceivedFragment extends InboxFragment {
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
+                        Log.d("error", error+"");
                         return;
                     }
                     if (value != null) {
                         if (value.isEmpty()) {
                             spinner.setVisibility(View.GONE);
                         }
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            Log.d("OOI", "getRequestsRealTime: " + dc.getDocument().toObject(RequestModel.class));
+                        for (DocumentChange doc : value.getDocumentChanges()) {
+                            Log.d("OOI", "getRequestsRealTime: " + doc.getDocument().toObject(RequestModel.class));
                             if(badge != null)
-
                                 setRequestBadgeNumber(); //aggiorna anche il badge delle notifiche in real time
+
                             spinner.setVisibility(View.VISIBLE);
-                            switch (dc.getType()) {
+                            switch (doc.getType()) {
                                 case ADDED:
-                                    RequestModel addedRequestModel = RequestModel.getRequestModel(dc.getDocument().toObject(RequestModel.class).getType(), dc.getDocument());
-                                    requests.add(dc.getNewIndex(), addedRequestModel);
-                                    getUserByRequest(addedRequestModel, dc.getNewIndex());
+                                    RequestModel addedRequestModel = RequestModel.getRequestModel(doc.getDocument().toObject(RequestModel.class).getType(), doc.getDocument());
+                                    requests.add(doc.getNewIndex(), addedRequestModel);
+                                    getUserByRequest(addedRequestModel, doc.getNewIndex());
                                     break;
                                 case REMOVED:
-                                    requests.remove(dc.getOldIndex());
-                                    adapter.notifyItemRemoved(dc.getOldIndex());
+                                    requests.remove(doc.getOldIndex());
+                                    adapter.notifyItemRemoved(doc.getOldIndex());
                                     spinner.setVisibility(View.GONE);
                                     break;
                             }
