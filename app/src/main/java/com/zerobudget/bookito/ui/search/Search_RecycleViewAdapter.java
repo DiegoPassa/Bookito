@@ -197,7 +197,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                 exists = true;
             }
         } else {
-            if (doc.get("sender").equals(rm.getSender()) && doc.get("requestedBook").equals(rm.getRequestedBook())) {
+            if (doc.get("sender").equals(rm.getSender()) && doc.get("requestedBook").equals(rm.getRequestedBook()) && doc.get("status").equals("undefined")) {
                 exists = true;
             }
         }
