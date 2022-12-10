@@ -47,6 +47,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/user1_card"
+                app:layout_constraintEnd_toEndOf="@+id/user1_card"
                 app:layout_constraintStart_toStartOf="@+id/user1_card"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
@@ -55,12 +56,12 @@
                 android:id="@+id/user1_card"
                 android:layout_width="40dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 app:cardCornerRadius="100dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@+id/imageView2"
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/user1_name">
 
@@ -114,12 +115,12 @@
                 android:id="@+id/user2_card"
                 android:layout_width="40dp"
                 android:layout_height="0dp"
-                android:layout_marginEnd="16dp"
                 app:cardCornerRadius="100dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_card"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@+id/book2_thumbnail"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toTopOf="@+id/user1_card">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -167,6 +168,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_name"
                 app:layout_constraintEnd_toEndOf="@+id/user2_card"
+                app:layout_constraintStart_toStartOf="@+id/user2_card"
                 app:layout_constraintTop_toTopOf="@+id/user1_name" />
 
             <ImageView
@@ -174,9 +176,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_card"
-                app:layout_constraintEnd_toStartOf="@+id/user2_card"
+                app:layout_constraintEnd_toStartOf="@+id/book2_thumbnail"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@+id/user1_card"
+                app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
                 app:layout_constraintVertical_bias=".25"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
@@ -187,9 +189,9 @@
                 android:layout_height="wrap_content"
                 android:rotationY="-180"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_card"
-                app:layout_constraintEnd_toStartOf="@+id/user2_card"
+                app:layout_constraintEnd_toStartOf="@+id/book2_thumbnail"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@+id/user1_card"
+                app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
                 app:layout_constraintVertical_bias=".75"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />

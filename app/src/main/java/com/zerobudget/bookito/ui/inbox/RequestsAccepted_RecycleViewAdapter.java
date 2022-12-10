@@ -25,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
@@ -105,6 +104,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             case 0:
                 // La richiesta è uno scambio
                 SwapViewHolder swapHolder = (SwapViewHolder) holder;
+                // TODO: get other book thumbnail
                 Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(swapHolder.book2_thumbnail);
                 break;
             case 1:
@@ -116,10 +116,13 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     otherHolder.expire_date.setVisibility(View.GONE);
                 } else {
                     Picasso.get().load(R.drawable.calendar).into(otherHolder.type);
+                    // TODO: get request expire date
                     // otherHolder.expire_date.setText();
                 }
                 break;
         }
+
+        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book1_thumbnail);
 
         // Elementi in comune tra le due viste
         if (otherUser != null) {
@@ -127,14 +130,16 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             String surnameOtherUser = otherUser.getLastName();
 
             if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition()))) {
-                holder.user1_name.setText(nameOtherUser + " " + surnameOtherUser);
+                holder.user1_name.setText("TU");
+                holder.user2_name.setText(nameOtherUser + " " + surnameOtherUser);
             } else {
-                holder.user1_name.setText(Html.fromHtml("<b> ( TU ) -> </b>" + nameOtherUser + surnameOtherUser, Html.FROM_HTML_MODE_LEGACY));
+                holder.user1_name.setText(nameOtherUser + " " + surnameOtherUser);
+                holder.user2_name.setText("TU");
             }
 
-            Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book1_thumbnail);
+            // TODO: get users profile pictures
 
-            if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+/*            if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
                 //holder.usr_pic.setVisibility(View.VISIBLE);
                 holder.user1_gravatar.setVisibility(View.GONE);
                 storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
@@ -167,7 +172,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 holder.user1_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
                 holder.user1_gravatar.setVisibility(View.VISIBLE);
                 holder.user1_propic.setVisibility(View.GONE);
-            }
+            }*/
 
             // Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
 
