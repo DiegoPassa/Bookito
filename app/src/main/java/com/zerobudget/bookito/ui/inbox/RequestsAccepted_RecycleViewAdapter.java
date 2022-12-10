@@ -111,6 +111,13 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 // La richiesta è un prestito oppure un regalo
                 BorrowOrGiftViewHolder otherHolder = (BorrowOrGiftViewHolder) holder;
                 otherHolder.book_title.setText(requests.get(holder.getAdapterPosition()).getTitle());
+                if (requests.get(holder.getAdapterPosition()).getType().equals("Regalo")) {
+                    Picasso.get().load(R.drawable.gift).into(otherHolder.type);
+                    otherHolder.expire_date.setVisibility(View.GONE);
+                } else {
+                    Picasso.get().load(R.drawable.calendar).into(otherHolder.type);
+                    // otherHolder.expire_date.setText();
+                }
                 break;
         }
 
@@ -542,10 +549,14 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     public static class BorrowOrGiftViewHolder extends RequestsAccepted_RecycleViewAdapter.ViewHolder {
 
         protected final TextView book_title;
+        protected final ImageView type;
+        protected final TextView expire_date;
 
         public BorrowOrGiftViewHolder(@androidx.annotation.NonNull View itemView) {
             super(itemView);
             book_title = itemView.findViewById(R.id.book_title);
+            type = itemView.findViewById(R.id.type);
+            expire_date = itemView.findViewById(R.id.expire_date);
         }
     }
 }

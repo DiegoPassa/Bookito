@@ -43,13 +43,13 @@
                 android:id="@+id/user1_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nome Cognome"
+                android:text="Mittente"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/user1_card"
                 app:layout_constraintStart_toStartOf="@+id/user1_card"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias=".25" />
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/user1_card"
@@ -59,6 +59,7 @@
                 android:layout_marginTop="8dp"
                 app:cardCornerRadius="100dp"
                 app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/user1_name">
@@ -161,12 +162,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Tu"
+                android:text="Destinatario"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_name"
                 app:layout_constraintEnd_toEndOf="@+id/user2_card"
-                app:layout_constraintStart_toStartOf="@+id/user2_card"
                 app:layout_constraintTop_toTopOf="@+id/user1_name" />
 
             <ImageView

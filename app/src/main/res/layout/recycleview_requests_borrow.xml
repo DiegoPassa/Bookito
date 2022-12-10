@@ -44,7 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Nome Cognome"
+                android:text="Mittente"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/user1_card"
@@ -104,7 +104,7 @@
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_card"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toTopOf="@+id/user1_card">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,11 +145,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Tu"
+                android:text="Destinatario"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/user2_card"
-                app:layout_constraintStart_toStartOf="@+id/user2_card"
                 app:layout_constraintTop_toTopOf="@+id/user1_name" />
 
             <TextView
@@ -179,16 +178,32 @@
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/expire_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="15/12/2022"
+                android:layout_marginTop="4dp"
+                android:text="dd/hh/yyyy"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                app:layout_constraintEnd_toStartOf="@+id/user2_card"
-                app:layout_constraintHorizontal_bias=".9"
-                app:layout_constraintStart_toEndOf="@+id/user1_card"
-                app:layout_constraintTop_toTopOf="@+id/imageView2" />
+                app:layout_constraintEnd_toEndOf="@+id/type"
+                app:layout_constraintStart_toStartOf="@+id/type"
+                app:layout_constraintTop_toBottomOf="@+id/type" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="80dp" />
+
+            <ImageView
+                android:id="@+id/type"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/user2_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toTopOf="@+id/user2_card"
+                tools:srcCompat="@drawable/calendar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
