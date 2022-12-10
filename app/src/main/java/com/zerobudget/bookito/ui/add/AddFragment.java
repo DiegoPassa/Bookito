@@ -294,18 +294,28 @@ public class AddFragment extends Fragment {
                         }
 
                         if (!foundNotByIsbn) {
-                            Toast.makeText(getContext().getApplicationContext(), "Oh no, libro non trovato", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext().getApplicationContext(), "Oh no, il libro non è stato trovato", Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException ex) {
                         ex.printStackTrace();
                     }
 
-                }, error -> Toast.makeText(getContext().getApplicationContext(), "Errore nella richiesta", Toast.LENGTH_LONG).show());
+                }, error -> {
+                    if(!Utils.isOnline())
+                        Toast.makeText(getContext().getApplicationContext(), "Sembra che tu non sia connesso ad internet, connettiti e riprova!", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext().getApplicationContext(), "Qualcosa è andato storto", Toast.LENGTH_LONG).show();
+                });
 
                 queue.add(booksObjrequestNotByIsbn);
             }
 
-        }, error -> Toast.makeText(getContext().getApplicationContext(), "Errore nella richiesta", Toast.LENGTH_LONG).show());
+        }, error ->{
+            if(!Utils.isOnline())
+                Toast.makeText(getContext().getApplicationContext(), "Sembra che tu non sia connesso ad internet, connettiti e riprova!", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext().getApplicationContext(), "Qualcosa è andato storto", Toast.LENGTH_LONG).show();
+        });
 
         queue.add(booksObjrequest);
     }

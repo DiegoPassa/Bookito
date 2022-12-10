@@ -157,7 +157,7 @@ public class OTPConfirmFragment extends Fragment {
         db.collection("users").document(Objects.requireNonNull(mAuth.getCurrentUser()).getUid())
                 .set(user)
                 .addOnCompleteListener(task -> {
-                    Toast.makeText(requireActivity(), "Il suo account è stato corretamente registrato.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireActivity(), "Account registrato con successo!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(requireActivity(), MainActivity.class);
                     startActivity(intent);
                     Utils.setUserId(mAuth.getCurrentUser().getUid());
