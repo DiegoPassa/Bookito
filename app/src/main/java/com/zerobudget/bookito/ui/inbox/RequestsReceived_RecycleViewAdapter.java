@@ -277,7 +277,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     private void sendNotification(RequestModel r, String status) {
         String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
-        String body = status.equals("Accept") ? Utils.CURRENT_USER.getFirstName() + " ha accettato la tua richiesta!" : r.getOtherUser().getFirstName() + " ha rifiutato la tua richiesta!";
+        String body = status.equals("Accept") ? Utils.CURRENT_USER.getFirstName() + " ha accettato la tua richiesta!" : Utils.CURRENT_USER.getFirstName() + " ha rifiutato la tua richiesta!";
         String title = status.equals("Accept") ? "Richiesta accettata!" : "Richiesta rifiutata!";
 
         /*
