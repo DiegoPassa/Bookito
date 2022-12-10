@@ -180,24 +180,21 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
     /**
      * controlla se non esista già una richiesta in corso per lo stesso libro*/
-    private boolean checkRequests(QueryDocumentSnapshot doc, RequestModel rm) {
-        Log.d("CONFRONTO", doc.get("requestdBook") + " " + rm.getRequestedBook());
-//        return (doc.get("status").equals("accepted") || doc.get("status").equals("ongoing"))
-//                &&doc.get("receiver").equals(rm.getReceiver())
-//                && doc.get("requestedBook").equals(rm.getRequestedBook())
-//                && doc.get("sender").equals(rm.getSender())
-//                && doc.get("thumbnail").equals(rm.getThumbnail())
-//                && doc.get("title").equals(rm.getTitle())
-//                && doc.get("type").equals(rm.getType());
+    private boolean checkRequests(RequestModel rDoc, RequestModel rm) {
+        Log.d("CONFRONTO", rDoc.getStatus() + " " + rm.getSender());
 
         boolean exists = false;
 
-        if (doc.get("status").equals("accepted") || doc.get("status").equals("ongoing")) {
-            if (doc.get("receiver").equals(rm.getReceiver()) && doc.get("requestedBook").equals(rm.getRequestedBook())) {
+        //controlla se esiste già una richiesta fatta dal current user per quel libro in stato undefined
+        if(rDoc.getRequestedBook().equals(rm.getRequestedBook()) && rDoc.getStatus().equals("undefined") && rDoc.getSender().equals(Utils.USER_ID))
+            exists = true;
+
+        if (rDoc.getStatus().equals("accepted") || rDoc.getStatus().equals("ongoing")) {
+            if (rDoc.getReceiver().equals(rm.getReceiver()) && rDoc.getRequestedBook().equals(rm.getRequestedBook())) {
                 exists = true;
             }
         } else {
-            if (doc.get("sender").equals(rm.getSender()) && doc.get("requestedBook").equals(rm.getRequestedBook())) {
+            if (rDoc.getStatus().equals(rm.getSender()) && rDoc.getRequestedBook().equals(rm.getRequestedBook())) {
                 exists = true;
             }
         }
@@ -215,7 +212,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
                 for (QueryDocumentSnapshot doc : task.getResult()) {
                     //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
-                    if (checkRequests(doc, rm)) {
+                    RequestModel rDoc = doc.toObject(RequestModel.class);
+                    if (checkRequests(rDoc, rm)) {
                         err = true;
                     }
                 }
@@ -228,6 +226,10 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
                     Log.d("Sent to: ", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
+                    //results.remove(holder.getAdapterPosition());
+                    //rimuove il libro dai visualizzati
+                    notifyItemRemoved(holder.getAdapterPosition());
+
                     try {
                         Notifications.sendPushNotification(Utils.CURRENT_USER
                                         .getFirstName() + " ti ha richiesto il libro: " + rm.getTitle(),
