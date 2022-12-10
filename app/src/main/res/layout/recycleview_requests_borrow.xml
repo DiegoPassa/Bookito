@@ -166,7 +166,7 @@
                 android:text="@string/lorem_ipsum_long"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/book1_thumbnail"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/user1_card" />
 
@@ -188,6 +188,7 @@
                 android:layout_marginTop="4dp"
                 android:text="dd/hh/yyyy"
                 android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/user2_card"
                 app:layout_constraintEnd_toEndOf="@+id/type"
                 app:layout_constraintStart_toStartOf="@+id/type"
                 app:layout_constraintTop_toBottomOf="@+id/type" />
@@ -203,7 +204,7 @@
                 android:id="@+id/type"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                app:layout_constraintBottom_toBottomOf="@+id/user2_card"
+                app:layout_constraintBottom_toTopOf="@+id/expire_date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toTopOf="@+id/user2_card"

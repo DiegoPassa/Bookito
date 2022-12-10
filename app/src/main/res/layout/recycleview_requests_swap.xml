@@ -100,17 +100,6 @@
 
             </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/book2_thumbnail"
-                android:layout_width="80dp"
-                android:layout_height="0dp"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="h,1:1.4375"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/user2_card"
                 android:layout_width="40dp"
@@ -170,6 +159,17 @@
                 app:layout_constraintEnd_toEndOf="@+id/user2_card"
                 app:layout_constraintStart_toStartOf="@+id/user2_card"
                 app:layout_constraintTop_toTopOf="@+id/user1_name" />
+
+            <ImageView
+                android:id="@+id/book2_thumbnail"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="h,1:1.4375"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
             <ImageView
                 android:id="@+id/imageView2"
