@@ -5,32 +5,40 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
+import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestShareModel;
 import com.zerobudget.bookito.models.requests.RequestTradeModel;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.utils.popups.PopupInbox;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
+import com.zerobudget.bookito.utils.popups.PopupInbox;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -38,14 +46,51 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_RecycleViewAdapter {
+public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<RequestsAccepted_RecycleViewAdapter.ViewHolder> {
     private final StorageReference storageRef;
 
+    protected final Context context;
+    protected ArrayList<RequestModel> requests;
+
+    protected FirebaseFirestore db;
+    protected FirebaseAuth auth;
+
+    protected TextView emptyWarning;
+
+    private boolean exists;
+
     public RequestsAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
-        super(ctx, requests, empty);
+        this.context = ctx;
+        this.requests = requests;
+        this.exists = false;
+        emptyWarning = empty;
+
+        this.db = FirebaseFirestore.getInstance();
+        this.auth = FirebaseAuth.getInstance();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (requests.get(position).getType().equals("Scambio")) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    @Override
+    public RequestsAccepted_RecycleViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case 0:
+                return new RequestsAccepted_RecycleViewAdapter.SwapViewHolder(LayoutInflater.from(context).inflate(R.layout.recycleview_requests_swap, parent, false));
+            case 1:
+                return new RequestsAccepted_RecycleViewAdapter.BorrowOrGiftViewHolder(LayoutInflater.from(context).inflate(R.layout.recycleview_requests_borrow, parent, false));
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -56,23 +101,42 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
 
         Uri[] otherUserPic = new Uri[1];
 
+        switch (holder.getItemViewType()) {
+            case 0:
+                // La richiesta è uno scambio
+                SwapViewHolder swapHolder = (SwapViewHolder) holder;
+                Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(swapHolder.book2_thumbnail);
+                break;
+            case 1:
+                // La richiesta è un prestito oppure un regalo
+                BorrowOrGiftViewHolder otherHolder = (BorrowOrGiftViewHolder) holder;
+                otherHolder.book_title.setText(requests.get(holder.getAdapterPosition()).getTitle());
+                if (requests.get(holder.getAdapterPosition()).getType().equals("Regalo")) {
+                    Picasso.get().load(R.drawable.gift).into(otherHolder.type);
+                    otherHolder.expire_date.setVisibility(View.GONE);
+                } else {
+                    Picasso.get().load(R.drawable.calendar).into(otherHolder.type);
+                    // otherHolder.expire_date.setText();
+                }
+                break;
+        }
+
+        // Elementi in comune tra le due viste
         if (otherUser != null) {
             String nameOtherUser = otherUser.getFirstName();
             String surnameOtherUser = otherUser.getLastName();
 
             if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition()))) {
-                holder.user_name.setText(nameOtherUser + " " + surnameOtherUser);
+                holder.user1_name.setText(nameOtherUser + " " + surnameOtherUser);
             } else {
-                holder.user_name.setText(Html.fromHtml("<b> ( TU ) -> </b>" + nameOtherUser + surnameOtherUser, Html.FROM_HTML_MODE_LEGACY));
+                holder.user1_name.setText(Html.fromHtml("<b> ( TU ) -> </b>" + nameOtherUser + surnameOtherUser, Html.FROM_HTML_MODE_LEGACY));
             }
 
-
-            holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
-            Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
+            Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book1_thumbnail);
 
             if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
                 //holder.usr_pic.setVisibility(View.VISIBLE);
-                holder.user_gravatar.setVisibility(View.GONE);
+                holder.user1_gravatar.setVisibility(View.GONE);
                 storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
                     for (StorageReference item : listResult.getItems()) {
                         // All the items under listRef.
@@ -84,30 +148,30 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                                 //Log.d("PIC", Utils.URI_PIC);
                                 otherUserPic[0] = uri;
                                 Log.d("carico immaginme", "" + uri.getClass());
-                                Picasso.get().load(uri).into(holder.usr_pic);
-                                holder.usr_pic.setVisibility(View.VISIBLE);
+                                Picasso.get().load(uri).into(holder.user1_propic);
+                                holder.user1_propic.setVisibility(View.VISIBLE);
                                 //holder.user_gravatar.setVisibility(View.GONE);
 
                             }).addOnFailureListener(exception -> {
                                 int code = ((StorageException) exception).getErrorCode();
                                 if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                                    holder.user_gravatar.setVisibility(View.VISIBLE);
-                                    holder.usr_pic.setVisibility(View.GONE);
+                                    holder.user1_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                    holder.user1_gravatar.setVisibility(View.VISIBLE);
+                                    holder.user1_propic.setVisibility(View.GONE);
                                 }
                             });
                         }
                     }
                 });
             } else {
-                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                holder.user_gravatar.setVisibility(View.VISIBLE);
-                holder.usr_pic.setVisibility(View.GONE);
+                holder.user1_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                holder.user1_gravatar.setVisibility(View.VISIBLE);
+                holder.user1_propic.setVisibility(View.GONE);
             }
 
-            Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
+            // Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
 
-            holder.request_selected.setOnClickListener(view1 -> {
+            holder.card.setOnClickListener(view1 -> {
                 if (otherUser != null && holder.getAdapterPosition() != -1) {
                     Bundle args = new Bundle();
                     String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
@@ -128,7 +192,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
             });
 
 
-            holder.request_selected.setOnLongClickListener(view -> {
+            holder.card.setOnLongClickListener(view -> {
                 showActionsDialog(holder, requests.get(holder.getAdapterPosition()));
                 return false;
             });
@@ -440,5 +504,59 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
     @Override
     public int getItemCount() {
         return requests.size();
+    }
+
+    // Vista con gli elementi in comune
+    public static abstract class ViewHolder extends RecyclerView.ViewHolder {
+
+        protected final ImageView book1_thumbnail;
+        protected final TextView user1_name;
+        protected final TextView user2_name;
+        protected final ImageView user1_propic;
+        protected final ImageView user2_propic;
+        protected final ClassicIdenticonView user1_gravatar;
+        protected final ClassicIdenticonView user2_gravatar;
+
+        protected final CardView card;
+
+
+        public ViewHolder(@androidx.annotation.NonNull View itemView) {
+            super(itemView);
+
+            book1_thumbnail = itemView.findViewById(R.id.book1_thumbnail);
+            user1_name = itemView.findViewById(R.id.user1_name);
+            user2_name = itemView.findViewById(R.id.user2_name);
+            user1_propic = itemView.findViewById(R.id.user1_propic);
+            user2_propic = itemView.findViewById(R.id.user2_propic);
+            user1_gravatar = itemView.findViewById(R.id.user1_gravatar);
+            user2_gravatar = itemView.findViewById(R.id.user2_gravatar);
+            card = itemView.findViewById(R.id.card);
+        }
+    }
+
+    // Vista per lo scambio
+    public static class SwapViewHolder extends RequestsAccepted_RecycleViewAdapter.ViewHolder {
+
+        protected final ImageView book2_thumbnail;
+
+        public SwapViewHolder(@androidx.annotation.NonNull View itemView) {
+            super(itemView);
+            book2_thumbnail = itemView.findViewById(R.id.book2_thumbnail);
+        }
+    }
+
+    // Vista per il prestito oppure regalo
+    public static class BorrowOrGiftViewHolder extends RequestsAccepted_RecycleViewAdapter.ViewHolder {
+
+        protected final TextView book_title;
+        protected final ImageView type;
+        protected final TextView expire_date;
+
+        public BorrowOrGiftViewHolder(@androidx.annotation.NonNull View itemView) {
+            super(itemView);
+            book_title = itemView.findViewById(R.id.book_title);
+            type = itemView.findViewById(R.id.type);
+            expire_date = itemView.findViewById(R.id.expire_date);
+        }
     }
 }

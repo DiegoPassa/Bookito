@@ -22,7 +22,6 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestTradeModel;
-import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
         //to fix error E/Recyclerview: No Adapter Attached; Skipping Layout
         RecyclerView recyclerView = binding.recycleViewInbox;
-        RequestsReceived_RecycleViewAdapter adapter = new RequestsAccepted_RecycleViewAdapter(this.getContext(), new ArrayList<>(), emptyWarning);
+        RequestsAccepted_RecycleViewAdapter adapter = new RequestsAccepted_RecycleViewAdapter(this.getContext(), new ArrayList<>(), emptyWarning);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         //end of fixing it
@@ -208,11 +207,11 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
         RecyclerView recyclerView = binding.recycleViewInbox;
 
-        RequestsReceived_RecycleViewAdapter adapter = new RequestsAccepted_RecycleViewAdapter(this.getContext(), req, emptyWarning);
+        RequestsAccepted_RecycleViewAdapter adapter = new RequestsAccepted_RecycleViewAdapter(this.getContext(), req, emptyWarning);
 
         recyclerView.setAdapter(adapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
     }
 }
