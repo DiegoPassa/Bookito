@@ -27,8 +27,11 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.Chat.MessageModelTrade;
 import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
+import com.zerobudget.bookito.models.Notification.NotificationModel;
+import com.zerobudget.bookito.models.Requests.RequestModel;
 import com.zerobudget.bookito.models.Requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.ui.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.popups.PopupBook;
 import com.zerobudget.bookito.utils.Utils;
@@ -127,10 +130,30 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         dialog.show();
     }
 
+    private void sendNotification(RequestModel r, String status) {
+        String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
+        String body = status.equals("Accept") ? Utils.CURRENT_USER.getFirstName() + " ha accettato la tua richiesta!" : r.getOtherUser().getFirstName() + " ha rifiutato la tua richiesta!";
+        String title = status.equals("Accept") ? "Richiesta accettata!" : "Richiesta rifiutata!";
+
+        /*
+        PROBLEMA, NON POSSIAMO RICHIAMARE LA SERIALIZE DEL CURRENT USER PERCHÉ SI TRATTA DI UN USERLIBRARY, QUINDI MI GENERA ANCHE TUTTI I SUOI LIBRI E QUINDI DA ERRORE
+         */
+
+        UserModel currentUser = new UserModel(Utils.CURRENT_USER.getFirstName(), Utils.CURRENT_USER.getLastName(),
+                Utils.CURRENT_USER.getTelephone(), Utils.CURRENT_USER.getTownship(), Utils.CURRENT_USER.getCity(),
+                Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
+        NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser);
+        Log.d("NOTIFIC", ""+notificationModel.serialize());
+        ref.push().setValue(notificationModel.serialize());
+    }
+
     protected void acceptRequest(RequestTradeModel r, BookModel bookTrade) {
         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
         db.collection("requests").document(r.getRequestId()).update("status", "accepted").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+
+                sendNotification(r, "Accept");
 
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/chatapp/" + r.getRequestId());
 
