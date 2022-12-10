@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class SearchByNameFragment extends Fragment implements SearchFragment {
+public class SearchByNameFragment extends SearchFragment {
 
     private FragmentSearchByNameBinding binding;
     private FirebaseFirestore db;
@@ -40,7 +40,7 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        viewBooks(new ArrayList<>());
+        viewBooks(new ArrayList<>(), binding.recycleViewSearch);
 
         binding.bookTextfield.addTextChangedListener(new TextWatcher() {
 
@@ -61,7 +61,7 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
                 } else {
                     //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
                     binding.recycleViewSearch.setVisibility(View.GONE);
-                    viewBooks(new ArrayList<>());
+                    viewBooks(new ArrayList<>(), binding.recycleViewSearch);
                 }
             }
         });
@@ -72,7 +72,8 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
 /*            binding.search.setQuery("", false); //clear the text
             binding.search.setIconified(true); //rimette la search view ad icona*/
             binding.bookTextfield.setText("");
-            viewBooks(new ArrayList<>()); //svuota la recycle view
+            viewBooks(new ArrayList<>(), binding.recycleViewSearch);
+            //svuota la recycle view
         });
 
         return root;
@@ -87,20 +88,7 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
 
 
     @Override
-    public void viewBooks(ArrayList<SearchResultsModel> arr) {
-        if (getView() != null) { //evita il crash dell'applicazione
-            RecyclerView recyclerView = binding.recycleViewSearch;
-
-            Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
-
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        }
-    }
-
-
-    @Override
-    public void searchAllBooks_UsrCity(String param) {
+    protected void searchAllBooks_UsrCity(String param) {
         db.collection("users")
                 .whereEqualTo("city", Utils.CURRENT_USER.getCity())
                 .get().addOnCompleteListener(task -> {
@@ -137,7 +125,7 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
     }
 
     @Override
-    public void searchAllBooks_OthersCities(ArrayList<SearchResultsModel> arrResults, String param) {
+    protected void searchAllBooks_OthersCities(ArrayList<SearchResultsModel> arrResults, String param) {
         db.collection("users")
                 .whereNotEqualTo("city", Utils.CURRENT_USER.getCity())
                 .orderBy("city")
@@ -168,7 +156,7 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
                         }
                         //Collections.sort(arrResultsTmp);
                         arrResults.addAll(arrResultsTmp);
-                        viewBooks(arrResults);
+                        viewBooks(arrResults, binding.recycleViewSearch);
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
                     }

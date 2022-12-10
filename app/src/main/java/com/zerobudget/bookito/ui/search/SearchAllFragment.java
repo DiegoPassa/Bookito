@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class SearchAllFragment extends Fragment implements SearchFragment {
+public class SearchAllFragment extends SearchFragment {
 
     private FragmentSearchAllBinding binding;
     private FirebaseFirestore db;
@@ -49,7 +49,7 @@ public class SearchAllFragment extends Fragment implements SearchFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         //end of fixing it
 
-        viewBooks(new ArrayList<>());
+        viewBooks(new ArrayList<>(), binding.recycleViewSearch);
 
         binding.btnSearch.setOnClickListener(view -> {
             Navigation.findNavController(view).navigate(R.id.action_navigation_search_to_searchByNameFragment);
@@ -67,7 +67,7 @@ public class SearchAllFragment extends Fragment implements SearchFragment {
             if (showedAll) {
                 searchAllBooks_UsrCity("");
             } else {
-                viewBooks(new ArrayList<>());
+                viewBooks(new ArrayList<>(), binding.recycleViewSearch);
             }
         });
 
@@ -80,21 +80,8 @@ public class SearchAllFragment extends Fragment implements SearchFragment {
         binding = null;
     }
 
-
     @Override
-    public void viewBooks(ArrayList<SearchResultsModel> arr) {
-        if (getView() != null) { //evita il crash dell'applicazione
-            RecyclerView recyclerView = binding.recycleViewSearch;
-
-            Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
-
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        }
-    }
-
-    @Override
-    public void searchAllBooks_UsrCity(String param) {
+    protected void searchAllBooks_UsrCity(String param) {
         db.collection("users")
                 .whereEqualTo("city", Utils.CURRENT_USER.getCity())
                 .get().addOnCompleteListener(task -> {
@@ -118,7 +105,6 @@ public class SearchAllFragment extends Fragment implements SearchFragment {
                         }
                         Collections.sort(arrResults);
                         searchAllBooks_OthersCities(arrResults, "");
-                        //viewBooks(arrResults);
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
                     }
@@ -127,7 +113,7 @@ public class SearchAllFragment extends Fragment implements SearchFragment {
     }
 
     @Override
-    public void searchAllBooks_OthersCities(ArrayList<SearchResultsModel> arrResults, String param) {
+    protected void searchAllBooks_OthersCities(ArrayList<SearchResultsModel> arrResults, String param) {
         progressBar.setVisibility(View.GONE);
         db.collection("users")
                 .whereNotEqualTo("city", Utils.CURRENT_USER.getCity())
@@ -154,7 +140,7 @@ public class SearchAllFragment extends Fragment implements SearchFragment {
                         }
                         // Collections.sort(arrResultsTmp);
                         arrResults.addAll(arrResultsTmp);
-                        viewBooks(arrResults);
+                        viewBooks(arrResults, binding.recycleViewSearch);
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
                     }
