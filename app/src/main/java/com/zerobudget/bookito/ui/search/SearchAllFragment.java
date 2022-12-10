@@ -1,78 +1,74 @@
 package com.zerobudget.bookito.ui.search;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
+import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.databinding.FragmentSearchAllBinding;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 
-public class SearchByNameFragment extends Fragment implements SearchFragment {
+public class SearchAllFragment extends Fragment implements SearchFragment {
 
-    private FragmentSearchByNameBinding binding;
+    private FragmentSearchAllBinding binding;
     private FirebaseFirestore db;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    private boolean showedAll = false;
+    private ProgressBar progressBar;
 
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
 
-        binding = FragmentSearchByNameBinding.inflate(inflater, container, false);
+        binding = FragmentSearchAllBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        progressBar = binding.progressBar;
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        //to fix error E/Recyclerview: No Adapter Attached; Skipping Layout
+        RecyclerView recyclerView = binding.recycleViewSearch;
+        Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        //end of fixing it
 
         viewBooks(new ArrayList<>());
 
-        binding.bookTextfield.addTextChangedListener(new TextWatcher() {
+        binding.btnSearch.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_navigation_search_to_searchByNameFragment);
+        });
 
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!editable.toString().trim().isEmpty()) {
-                    binding.recycleViewSearch.setVisibility(View.VISIBLE);
-                    Log.d("EDITABLE", editable.toString());
-                    searchAllBooks_UsrCity(editable.toString());
-                } else {
-                    //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
-                    binding.recycleViewSearch.setVisibility(View.GONE);
-                    viewBooks(new ArrayList<>());
-                }
-            }
+        binding.btnSeeAllBooks.setOnClickListener(view -> {
+            progressBar.setVisibility(View.VISIBLE);
+            showedAll = true;
+            searchAllBooks_UsrCity("");
         });
 
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.swipeRefreshLayout.setRefreshing(false);
-/*            binding.search.setQuery("", false); //clear the text
-            binding.search.setIconified(true); //rimette la search view ad icona*/
-            binding.bookTextfield.setText("");
-            viewBooks(new ArrayList<>()); //svuota la recycle view
+            binding.swipeRefreshLayout.setRefreshing(false);//svuota la recycle view
+            if (showedAll) {
+                searchAllBooks_UsrCity("");
+            } else {
+                viewBooks(new ArrayList<>());
+            }
         });
 
         return root;
@@ -82,7 +78,6 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
 
@@ -98,7 +93,6 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
         }
     }
 
-
     @Override
     public void searchAllBooks_UsrCity(String param) {
         db.collection("users")
@@ -111,13 +105,9 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
                             if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                                 Object arr = document.get("books"); //array dei books
                                 if (arr != null) { //si assicura di cercare solo se esiste quache libro
-
                                     for (Object o : (ArrayList<Object>) arr) {
                                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        //converte in lower case per non avere problemi di non corrispondenza tra maiuscole e minuscole
-                                        if ((map.get("title").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))
-                                                || (map.get("author").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))) {
-                                            //Log.d("Title", "" + map.get("title"));
+                                        if ((boolean) map.get("status")) {
                                             BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
                                             SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
                                             arrResults.add(searchResultsModel);
@@ -126,8 +116,8 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
                                 }
                             }
                         }
-                        //Collections.sort(arrResults);
-                        searchAllBooks_OthersCities(arrResults, param);
+                        Collections.sort(arrResults);
+                        searchAllBooks_OthersCities(arrResults, "");
                         //viewBooks(arrResults);
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
@@ -138,6 +128,7 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
 
     @Override
     public void searchAllBooks_OthersCities(ArrayList<SearchResultsModel> arrResults, String param) {
+        progressBar.setVisibility(View.GONE);
         db.collection("users")
                 .whereNotEqualTo("city", Utils.CURRENT_USER.getCity())
                 .orderBy("city")
@@ -145,7 +136,6 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
-
                         for (DocumentSnapshot document : task.getResult()) {
                             if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                                 Object arr = document.get("books"); //array dei books
@@ -153,26 +143,22 @@ public class SearchByNameFragment extends Fragment implements SearchFragment {
 
                                     for (Object o : (ArrayList<Object>) arr) {
                                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        //converte in lower case per non avere problemi di non corrispondenza tra maiuscole e minuscole
-                                        if ((boolean) map.get("status"))
-                                            if ((map.get("title").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))
-                                                    || (map.get("author").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))) {
-                                                //Log.d("Title", "" + map.get("title"));
-                                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                                SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                                arrResultsTmp.add(searchResultsModel);
-                                            }
+                                        if ((boolean) map.get("status")) {
+                                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                                            SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
+                                            arrResultsTmp.add(searchResultsModel);
+                                        }
                                     }
                                 }
                             }
                         }
-                        //Collections.sort(arrResultsTmp);
+                        // Collections.sort(arrResultsTmp);
                         arrResults.addAll(arrResultsTmp);
                         viewBooks(arrResults);
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
                     }
-
                 });
     }
 }
+

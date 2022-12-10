@@ -67,9 +67,9 @@
         </fragment>
         <fragment
             android:id="@+id/navigation_search"
-            android:name="com.zerobudget.bookito.ui.search.SearchFragment"
+            android:name="com.zerobudget.bookito.ui.search.SearchAllFragment"
             android:label="@string/app_name"
-            tools:layout="@layout/fragment_search">
+            tools:layout="@layout/fragment_search_all">
             <action
                 android:id="@+id/action_navigation_search_to_searchByNameFragment"
                 app:destination="@id/searchByNameFragment" />
