@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.models.Chat;
+package com.zerobudget.bookito.models.chat;
 
 import java.util.Map;
 

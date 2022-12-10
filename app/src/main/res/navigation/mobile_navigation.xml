@@ -95,7 +95,7 @@
         </fragment>
         <fragment
             android:id="@+id/chat_fragment"
-            android:name="com.zerobudget.bookito.ui.Chat.ChatFragment"
+            android:name="com.zerobudget.bookito.ui.chat.ChatFragment"
             android:label="@string/app_name"
             tools:layout="@layout/fragment_chat" />
         <fragment

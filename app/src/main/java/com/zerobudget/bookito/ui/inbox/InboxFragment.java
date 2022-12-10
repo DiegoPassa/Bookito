@@ -3,7 +3,7 @@ package com.zerobudget.bookito.ui.inbox;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
-package com.zerobudget.bookito.models.Notification;
+package com.zerobudget.bookito.models.notification;
 
-import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
 
 import java.util.HashMap;

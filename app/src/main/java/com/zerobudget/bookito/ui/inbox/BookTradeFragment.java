@@ -14,10 +14,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.zerobudget.bookito.databinding.FragmentTradeBookBinding;
-import com.zerobudget.bookito.models.Requests.RequestTradeModel;
+import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.ui.search.SearchResultsModel;
+import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;

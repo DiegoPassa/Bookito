@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui.Chat;
+package com.zerobudget.bookito.ui.chat;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentChatBinding;
-import com.zerobudget.bookito.models.Chat.MessageModel;
-import com.zerobudget.bookito.models.Chat.MessageModelTrade;
-import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
+import com.zerobudget.bookito.models.chat.MessageModel;
+import com.zerobudget.bookito.models.chat.MessageModelTrade;
+import com.zerobudget.bookito.models.chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 

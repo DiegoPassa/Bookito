@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.models.Requests;
+package com.zerobudget.bookito.models.requests;
 
 import com.google.firebase.Timestamp;
 

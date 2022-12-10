@@ -17,12 +17,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentSearchBinding;
+import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class SearchFragment extends Fragment {
@@ -57,14 +57,14 @@ public class SearchFragment extends Fragment {
         binding.btnSeeAllBooks.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
             showedAll = true;
-            searchAllBooks_UsrNeighborhood();
+            searchAllBooks_UsrTownship();
         });
 
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);//svuota la recycle view
             if (showedAll) {
-                searchAllBooks_UsrNeighborhood();
+                searchAllBooks_UsrTownship();
             } else {
                 viewBooks(new ArrayList<>());
             }
@@ -81,8 +81,11 @@ public class SearchFragment extends Fragment {
 
     /**
      * ricerca dei libri degli altri utenti nel quartiere dell'utente*/
-    private void searchAllBooks_UsrNeighborhood() {
-        db.collection("users").whereEqualTo("township", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
+    private void searchAllBooks_UsrTownship() {
+        db.collection("users")
+                .whereEqualTo("township", Utils.CURRENT_USER.getTownship())
+                .orderBy("city")
+                .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
@@ -101,8 +104,8 @@ public class SearchFragment extends Fragment {
                         }
                     }
                 }
-                Collections.sort(arrResults);
-                searchAllBooks_OthersNeighborhood(arrResults);
+                //Collections.sort(arrResults);
+                searchAllBooks_OthersTownship(arrResults);
                 //viewBooks(arrResults);
             } else {
                 Log.d("TAG", "Error getting documents: ", task.getException());
@@ -112,10 +115,13 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * ricerca dei libri degli altri utenti negli altri quartieri*/
-    private void searchAllBooks_OthersNeighborhood(ArrayList<SearchResultsModel> arrResults) {
+     * ricerca dei libri degli altri utenti negli altri quartieri ordinati per città*/
+    private void searchAllBooks_OthersTownship(ArrayList<SearchResultsModel> arrResults) {
         progressBar.setVisibility(View.GONE);
-        db.collection("users").whereNotEqualTo("township", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
+        db.collection("users")
+                .whereNotEqualTo("township", Utils.CURRENT_USER.getTownship())
+                .orderBy("township")
+                .orderBy("city").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
                 for (DocumentSnapshot document : task.getResult()) {
@@ -134,7 +140,7 @@ public class SearchFragment extends Fragment {
                         }
                     }
                 }
-                Collections.sort(arrResultsTmp);
+               // Collections.sort(arrResultsTmp);
                 arrResults.addAll(arrResultsTmp);
                 viewBooks(arrResults);
             } else {

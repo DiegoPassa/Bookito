@@ -15,10 +15,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.Notification.NotificationModel;
+import com.zerobudget.bookito.models.notification.NotificationModel;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notification_RecycleViewAdapter.ViewHolder> {
 

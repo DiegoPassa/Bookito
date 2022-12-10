@@ -18,7 +18,7 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.popups.PopupInbox;
 import com.zerobudget.bookito.utils.UserFlag;

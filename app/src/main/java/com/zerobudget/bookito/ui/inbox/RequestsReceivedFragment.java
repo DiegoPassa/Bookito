@@ -19,7 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
-import com.zerobudget.bookito.models.Requests.RequestModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 

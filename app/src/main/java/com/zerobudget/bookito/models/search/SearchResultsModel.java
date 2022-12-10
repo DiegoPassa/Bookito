@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui.search;
+package com.zerobudget.bookito.models.search;
 
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;

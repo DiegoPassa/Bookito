@@ -20,8 +20,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
-import com.zerobudget.bookito.models.Requests.RequestModel;
-import com.zerobudget.bookito.models.Requests.RequestTradeModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
+import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;

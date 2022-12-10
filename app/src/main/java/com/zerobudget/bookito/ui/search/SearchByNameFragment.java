@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
+import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -89,7 +89,10 @@ public class SearchByNameFragment extends Fragment {
      * ricerca libro per titolo nel quartiere dell'utente
      */
     private void searchBookByTitle_UsrNeighborhood(String searched_book) {
-        db.collection("users").whereEqualTo("township", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
+        db.collection("users")
+                .whereEqualTo("township", Utils.CURRENT_USER.getTownship())
+                .orderBy("city")
+                .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
@@ -112,7 +115,7 @@ public class SearchByNameFragment extends Fragment {
                         }
                     }
                 }
-                Collections.sort(arrResults);
+                //Collections.sort(arrResults);
                 searchBookByTitle_OthersNeighborhood(searched_book, arrResults);
                 //viewBooks(arrResults);
             } else {
@@ -125,7 +128,11 @@ public class SearchByNameFragment extends Fragment {
     /**
      * ricerca del libro per titolo anche negli altri quartieri*/
     private void searchBookByTitle_OthersNeighborhood(String searched_book, ArrayList<SearchResultsModel> arrResults) {
-        db.collection("users").whereNotEqualTo("township", Utils.CURRENT_USER.getTownship()).get().addOnCompleteListener(task -> {
+        db.collection("users")
+                .whereNotEqualTo("township", Utils.CURRENT_USER.getTownship())
+                .orderBy("township")
+                .orderBy("city")
+                .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
 
@@ -149,7 +156,7 @@ public class SearchByNameFragment extends Fragment {
                         }
                     }
                 }
-                Collections.sort(arrResultsTmp);
+                //Collections.sort(arrResultsTmp);
                 arrResults.addAll(arrResultsTmp);
                 viewBooks(arrResults);
             } else {

@@ -1,4 +1,4 @@
-package com.zerobudget.bookito.ui.Chat;
+package com.zerobudget.bookito.ui.chat;
 
 import android.content.Context;
 import android.net.Uri;
@@ -17,9 +17,9 @@ import com.google.firebase.storage.StorageReference;
 import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.Chat.MessageModel;
-import com.zerobudget.bookito.models.Chat.MessageModelTrade;
-import com.zerobudget.bookito.models.Chat.MessageModelWithImage;
+import com.zerobudget.bookito.models.chat.MessageModel;
+import com.zerobudget.bookito.models.chat.MessageModelTrade;
+import com.zerobudget.bookito.models.chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 

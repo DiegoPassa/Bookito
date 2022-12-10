@@ -24,8 +24,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.Requests.RequestModel;
-import com.zerobudget.bookito.models.Requests.RequestShareModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
+import com.zerobudget.bookito.models.requests.RequestShareModel;
+import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupSearchBook;
 

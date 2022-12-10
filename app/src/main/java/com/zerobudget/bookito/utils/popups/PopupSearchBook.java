@@ -2,14 +2,13 @@ package com.zerobudget.bookito.utils.popups;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.ui.search.SearchResultsModel;
+import com.zerobudget.bookito.models.search.SearchResultsModel;
 
 public class PopupSearchBook extends PopupBook{
     private TextView txtBookOwner;
