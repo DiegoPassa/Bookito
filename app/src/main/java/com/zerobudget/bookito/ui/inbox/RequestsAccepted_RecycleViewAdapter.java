@@ -105,7 +105,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RequestsReceived_Recycl
                 holder.usr_pic.setVisibility(View.GONE);
             }
 
-            setupIconType(holder, requests.get(position).getType());
+            Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
 
             holder.request_selected.setOnClickListener(view1 -> {
                 if (otherUser != null && holder.getAdapterPosition() != -1) {

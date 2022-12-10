@@ -1,12 +1,16 @@
 package com.zerobudget.bookito.utils;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
+import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -114,5 +118,23 @@ public class Utils {
         catch (IOException | InterruptedException e){ e.printStackTrace(); }
 
         return false;
+    }
+
+    /**
+     * metodo per caricare l'icona sulla base del tipo del libro*/
+    public static void setUpIconBookType(String type, ImageView icon_type){
+        switch (type) {
+            case "Scambio":
+                Picasso.get().load(R.drawable.swap).into(icon_type);
+                break;
+            case "Prestito":
+                Picasso.get().load(R.drawable.calendar).into(icon_type);
+                break;
+            case "Regalo":
+                Picasso.get().load(R.drawable.gift).into(icon_type);
+                break;
+            default:
+                break;
+        }
     }
 }

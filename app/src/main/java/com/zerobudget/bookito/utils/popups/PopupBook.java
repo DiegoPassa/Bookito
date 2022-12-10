@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.utils.Utils;
 
 public class PopupBook extends MaterialAlertDialogBuilder {
     private TextView txtBookTitle;
@@ -51,19 +52,7 @@ public class PopupBook extends MaterialAlertDialogBuilder {
      * carica l'icona sulla base del tipo del libro
      */
     private void loadIconBookType(String type) {
-        switch (type) {
-            case "Scambio":
-                Picasso.get().load(R.drawable.swap).into(imgBookIconType);
-                break;
-            case "Prestito":
-                Picasso.get().load(R.drawable.calendar).into(imgBookIconType);
-                break;
-            case "Regalo":
-                Picasso.get().load(R.drawable.gift).into(imgBookIconType);
-                break;
-            default:
-                break;
-        }
+        Utils.setUpIconBookType(type,imgBookIconType);
     }
 
     public Button getBtnDefault() {

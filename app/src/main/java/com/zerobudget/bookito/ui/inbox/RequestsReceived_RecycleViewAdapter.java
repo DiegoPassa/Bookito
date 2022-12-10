@@ -100,9 +100,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         if (requests.get(holder.getAdapterPosition()).getOtherUser() != null) {
             Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
-            String type = requests.get(holder.getAdapterPosition()).getType();
-
-            setupIconType(holder, type);
+            Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
 
             if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
                 holder.user_gravatar.setVisibility(View.GONE);
@@ -148,27 +146,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
             }
         });
-    }
-
-    /**
-     * mostra le immagini delle icone in base al tipo di richiesta*/
-    protected void setupIconType(ViewHolder holder, String type) {
-        switch (type) {
-            case "Regalo":
-                Picasso.get().load(R.drawable.gift).into(holder.type);
-                break;
-
-            case "Prestito":
-                Picasso.get().load(R.drawable.calendar).into(holder.type);
-                break;
-
-            case "Scambio":
-                Picasso.get().load(R.drawable.swap).into(holder.type);
-                break;
-
-            default:
-                break;
-        }
     }
 
     /**
@@ -388,7 +365,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         protected final ImageView book_image;
         protected final ClassicIdenticonView user_gravatar;
         protected final ImageView usr_pic;
-        protected final ImageView type;
+        protected final ImageView book_type;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -399,7 +376,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
             request_selected = itemView.findViewById(R.id.request);
             user_gravatar = itemView.findViewById(R.id.user_gravatar);
             usr_pic = itemView.findViewById(R.id.profile_pic);
-            type = itemView.findViewById(R.id.icon_type2);
+            book_type = itemView.findViewById(R.id.icon_type2);
         }
     }
 

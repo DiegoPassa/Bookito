@@ -81,10 +81,9 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             Picasso.get().load(bookModels.get(position).getThumbnail()).transform(new BlurTransformation(context, 3, 2)).into(holder.thumbnail);
             holder.wait_icon.setVisibility(View.VISIBLE);
         }
-
         holder.author.setText(bookModels.get(position).getAuthor());
 
-        loadIconBookType(holder, holder.book_type);
+        Utils.setUpIconBookType(bookModels.get(position).getType(), holder.book_type);
 
         holder.book_selected.setOnClickListener(view -> {
             createNewDeletePopup(holder);
@@ -193,25 +192,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();
         dialog.show();
-    }
-
-    /**
-     * carica l'icona sulla base del tipo del libro
-     */
-    private void loadIconBookType(ViewHolder holder, ImageView icon) {
-        switch (bookModels.get(holder.getAdapterPosition()).getType()) {
-            case "Scambio":
-                Picasso.get().load(R.drawable.swap).into(icon);
-                break;
-            case "Prestito":
-                Picasso.get().load(R.drawable.calendar).into(icon);
-                break;
-            case "Regalo":
-                Picasso.get().load(R.drawable.gift).into(icon);
-                break;
-            default:
-                break;
-        }
     }
 
     /**

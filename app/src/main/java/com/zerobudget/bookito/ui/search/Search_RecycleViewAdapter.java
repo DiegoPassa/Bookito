@@ -72,20 +72,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         holder.neighborhood_owner.setText(context.getString(R.string.user_location, results.get(position).getUser().getTownship(), results.get(position).getUser().getCity()));
         //holder.type.setText(results.get(position).getBook().getType());
 
+        Utils.setUpIconBookType(results.get(holder.getAdapterPosition()).getBook().getType(), holder.book_type);
 
-        switch (results.get(holder.getAdapterPosition()).getBook().getType()) {
-            case "Scambio":
-                Picasso.get().load(R.drawable.swap).into(holder.book_type);
-                break;
-            case "Prestito":
-                Picasso.get().load(R.drawable.calendar).into(holder.book_type);
-                break;
-            case "Regalo":
-                Picasso.get().load(R.drawable.gift).into(holder.book_type);
-                break;
-            default:
-                break;
-        }
         holder.book_selected.setOnClickListener(view -> {
             createNewSearchPopup(holder);
 
@@ -228,9 +216,11 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
 
                     Log.d("Sent to: ", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
-                    //results.remove(holder.getAdapterPosition());
+
+                    int position = holder.getAdapterPosition();
+                    results.remove(position);
                     //rimuove il libro dai visualizzati
-                    notifyItemRemoved(holder.getAdapterPosition());
+                    notifyItemRemoved(position);
 
                     try {
                         Notifications.sendPushNotification(Utils.CURRENT_USER

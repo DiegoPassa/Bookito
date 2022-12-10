@@ -88,7 +88,8 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
             holder.usr_pic.setVisibility(View.GONE);
         }
 
-        setupIconType(holder, requests.get(position).getType());
+        //inserisce l'immagine del tipo del libro
+        Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
 
         holder.request_selected.setOnClickListener(view -> {
             if (otherModel != null && holder.getAdapterPosition() != -1) {
