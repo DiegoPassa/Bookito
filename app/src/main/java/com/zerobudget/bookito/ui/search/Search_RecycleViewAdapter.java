@@ -189,6 +189,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         if(rDoc.getRequestedBook().equals(rm.getRequestedBook()) && rDoc.getStatus().equals("undefined") && rDoc.getSender().equals(Utils.USER_ID))
             exists = true;
 
+
         if (rDoc.getStatus().equals("accepted") || rDoc.getStatus().equals("ongoing")) {
             if (rDoc.getReceiver().equals(rm.getReceiver()) && rDoc.getRequestedBook().equals(rm.getRequestedBook())) {
                 exists = true;
