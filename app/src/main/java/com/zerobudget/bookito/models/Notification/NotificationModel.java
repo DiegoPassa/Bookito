@@ -28,16 +28,22 @@ public class NotificationModel {
     public NotificationModel() {}
 
     public HashMap<String, Object> serialize() {
-        HashMap<String, Object> map = new HashMap<>();
 
-        map.put("actionerId", this.actioner);
-        map.put("type", this.type);
-        map.put("notificationId", this.notificationId);
-        map.put("body", this.body);
-        map.put("title", this.title);
-        map.put("book_thumb", this.book_thumb);
-        map.put("request", request.serialize());
+        HashMap<String,  Object> requestSerialized = (HashMap<String, Object>) request.serialize();
+        requestSerialized.remove("date");
+        requestSerialized.remove("requestTradeBook");
+
+        HashMap<String, Object> map = new HashMap<>();
+        HashMap<String, Object> data_notify = new HashMap<>();
+        data_notify.put("actionerId", this.actionerId);
+        data_notify.put("type", this.type);
+        data_notify.put("notificationId", this.notificationId);
+        data_notify.put("body", this.body);
+        data_notify.put("title", this.title);
+        data_notify.put("book_thumb", this.book_thumb);
+        map.put("request", requestSerialized);
         map.put("actioner", actioner.serialize());
+        map.put("data_notify", data_notify);
 
         return map;
     }
