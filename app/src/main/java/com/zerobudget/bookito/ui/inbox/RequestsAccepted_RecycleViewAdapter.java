@@ -108,12 +108,13 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 // La richiesta è uno scambio
                 SwapViewHolder swapHolder = (SwapViewHolder) holder;
                 RequestTradeModel trade = (RequestTradeModel) requests.get(holder.getAdapterPosition());
-                for (BookModel b : Utils.CURRENT_USER.getBooks()) {
+                /*for (BookModel b : Utils.CURRENT_USER.getBooks()) {
                     if (b.getIsbn().equals(trade.getRequestTradeBook())) {
                         Picasso.get().load(b.getThumbnail()).into(swapHolder.book2_thumbnail);
                         break;
                     }
-                }
+                }*/
+                Picasso.get().load(trade.getThumbnailBookTrade()).into(swapHolder.book2_thumbnail);
                 break;
             case 1:
                 // La richiesta è un prestito oppure un regalo

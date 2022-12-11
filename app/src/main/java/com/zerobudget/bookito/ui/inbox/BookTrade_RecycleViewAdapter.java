@@ -150,7 +150,10 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
     protected void acceptRequest(RequestTradeModel r, BookModel bookTrade) {
         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
-        db.collection("requests").document(r.getRequestId()).update("status", "accepted").addOnCompleteListener(task -> {
+        db.collection("requests")
+                .document(r.getRequestId())
+                .update("status", "accepted")
+                .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
 
                 sendNotification(r, "Accept");
@@ -186,6 +189,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
         });
         db.collection("requests").document(r.getRequestId()).update("requestTradeBook", bookTrade.getIsbn());
+        db.collection("requests").document(r.getRequestId()).update("thumbnailBookTrade", bookTrade.getThumbnail());
+
     }
 
     private void checkIfStillExists(RequestTradeModel r) {
