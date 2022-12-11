@@ -20,9 +20,9 @@ import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.utils.popups.PopupInbox;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
+import com.zerobudget.bookito.utils.popups.PopupInbox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +53,7 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
                     .getLastName();
 
             holder.user_name.setText(other_user);
+            holder.user_location.setText(context.getString(R.string.user_location, requests.get(position).getOtherUser().getTownship(), requests.get(position).getOtherUser().getCity()));
         } else holder.user_name.setText("undefined");
 
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());

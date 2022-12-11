@@ -30,16 +30,16 @@ import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.notification.NotificationModel;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestShareModel;
 import com.zerobudget.bookito.models.requests.RequestTradeModel;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.utils.popups.PopupInbox;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
+import com.zerobudget.bookito.utils.popups.PopupInbox;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,6 +93,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         if (senderModel != null) {
             String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
             holder.user_name.setText(other_usr);
+            holder.user_location.setText(context.getString(R.string.user_location, requests.get(position).getOtherUser().getTownship(), requests.get(position).getOtherUser().getCity()));
         } else
             holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
@@ -362,6 +363,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         protected final TextView title;
         protected final ConstraintLayout request_selected;
         protected final TextView user_name;
+        protected final TextView user_location;
         protected final ImageView book_image;
         protected final ClassicIdenticonView user_gravatar;
         protected final ImageView usr_pic;
@@ -377,6 +379,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
             user_gravatar = itemView.findViewById(R.id.user_gravatar);
             usr_pic = itemView.findViewById(R.id.profile_pic);
             book_type = itemView.findViewById(R.id.icon_type2);
+            user_location = itemView.findViewById(R.id.user_location);
         }
     }
 
