@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
@@ -172,15 +173,16 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     private void setUserPictures(UserModel user, ImageView image, ClassicIdenticonView gravatar, String userRole) {
         if (user.isHasPicture()) {
-            storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
-                for (StorageReference item : listResult.getItems()) {
-                    if (item.getName().equals(userRole)) {
-                        item.getDownloadUrl().addOnSuccessListener(uri -> {
-                            otherUserPic[0] = uri;
-                            Picasso.get().load(uri).into(image);
-                            image.setVisibility(View.VISIBLE);
-                        });
-                    }
+            storageRef.child("profile_pics/").child(userRole).getDownloadUrl().addOnSuccessListener(uri -> {
+                otherUserPic[0] = uri;
+                Picasso.get().load(uri).into(image);
+                image.setVisibility(View.VISIBLE);
+            }).addOnFailureListener(exception -> {
+                int code = ((StorageException) exception).getErrorCode();
+                if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                    gravatar.setHash(user.getTelephone().hashCode());
+                    gravatar.setVisibility(View.VISIBLE);
+                    gravatar.setVisibility(View.GONE);
                 }
             });
         } else {
@@ -225,7 +227,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
         confirmBookGiven.setOnClickListener(view1 -> {
-            if (!Utils.USER_ID.equals(request.getReceiver())) return; //solo chi riceve il libro può confermare di averlo ricevuto
+            if (!Utils.USER_ID.equals(request.getReceiver()))
+                return; //solo chi riceve il libro può confermare di averlo ricevuto
             /*
             da rivedere in ogni caso questo sistema, si potrebbe fare che serva una doppia conferma da parte di entrambi gli utenti
              */
@@ -259,13 +262,14 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 createNewContactDialog(holder, flag);
 
             }
-           // createNewContactDialog(holder);
+            // createNewContactDialog(holder);
         });
 
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
             if (request instanceof RequestShareModel)
-                if (!Utils.USER_ID.equals(request.getSender())) return;  //è solo il sender che può confermare che la richiesta è satta effettivamente conclusa
+                if (!Utils.USER_ID.equals(request.getSender()))
+                    return;  //è solo il sender che può confermare che la richiesta è satta effettivamente conclusa
                     /*
                     anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
                     Possiamo aggiungere una sorta di flag per far concludere la richiesta in caso l'utente non dovesse restituire il libro al suo proprietario
@@ -367,7 +371,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * segna la richiesta come conclusa (status = concluded) sulla base del tipo
      * abilita il libro nella richiesta di prestito
-     * elimina i libri nelle richieste di scambio e regalo*/
+     * elimina i libri nelle richieste di scambio e regalo
+     */
     private void closeRequest(ViewHolder holder) {
         if (!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
             //la richiesta è segnata con status CONCLUDED
@@ -412,7 +417,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * incrementa il punteggio di red flag dell'utente*/
+     * incrementa il punteggio di red flag dell'utente
+     */
     private void sendFeedbackToUser(String id, float feedback) {
         db.collection("users").document(id).update("karma.points", FieldValue.increment(feedback), "karma.numbers", FieldValue.increment(1));
     }
@@ -420,7 +426,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * modifica lo stato di un libro (tramite isbn)
      * la modifica viene fatta rimuovendo il libro e inserendolo nuovamente con il nuovo stato
-     * perché firebase non permette di modificare un valore all'interno della strutura dati in cui essi sono contenuti*/
+     * perché firebase non permette di modificare un valore all'interno della strutura dati in cui essi sono contenuti
+     */
     private void changeBookStatus(String userID, String isbn) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -442,7 +449,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * elimina un libro dalla libreria dell'utente, sulla base dell'isbn*/
+     * elimina un libro dalla libreria dell'utente, sulla base dell'isbn
+     */
     void deleteUserBook(String userID, String bookRequested) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -457,8 +465,10 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             }
         });
     }
+
     /**
-     * visualizza le informazioni relative alla richiesta selezionata*/
+     * visualizza le informazioni relative alla richiesta selezionata
+     */
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
         View view = View.inflate(context, R.layout.popup, null);
         //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
@@ -469,7 +479,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()));
         dialogBuilder.setReputationMessage(requests.get(holder.getAdapterPosition()), flag);
 
-        if(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
+        if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)
             dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()));
 
         dialogBuilder.setTextConfirmButton("OK, torna indietro");
