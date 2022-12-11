@@ -181,6 +181,7 @@
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
                 app:layout_constraintVertical_bias=".25"
+                style="@style/arrow_request_accepted_color"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
 
             <ImageView
@@ -194,6 +195,7 @@
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
                 app:layout_constraintVertical_bias=".75"
+                style="@style/arrow_request_accepted_color"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,10 @@ abstract class SearchFragment extends Fragment {
     abstract void searchAllBooks_UsrCity(String param);
 
     /**
+     * ricerca dei libri nel comune dell'utente, usata nel caso non ce ne fossero nel quartiere*/
+    abstract void searchAllBooks_UsrTownship(String param);
+
+    /**
      * ricerca dei libri degli altri utenti negli altri quartieri ordinati per città*/
     abstract void searchAllBooks_OthersCities(ArrayList<SearchResultsModel> arrResults, String param);
 
