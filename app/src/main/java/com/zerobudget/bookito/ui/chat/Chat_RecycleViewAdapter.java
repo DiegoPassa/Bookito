@@ -145,8 +145,14 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             holder.profileImg.setVisibility(View.VISIBLE);
             if (user == Utils.CURRENT_USER)
                 Picasso.get().load(Utils.URI_PIC).into(holder.profileImg);
-            else Picasso.get().load(otherUserPic).into(holder.profileImg);
+           // else Picasso.get().load(otherUserPic).into(holder.profileImg);
+            else{
+                    storageRef.child("profile_pics/").child(otherUserId).getDownloadUrl().addOnSuccessListener(uri -> {
+                        Picasso.get().load(uri).into(holder.profileImg);
+                    }).addOnFailureListener(e -> {
 
+                    });
+            }
         } else {
             holder.gravatarImg.setVisibility(View.VISIBLE);
             holder.gravatarImg.setHash(user.getTelephone().hashCode());
