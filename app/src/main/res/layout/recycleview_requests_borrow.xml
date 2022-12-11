@@ -179,6 +179,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
+                style="@style/arrow_request_accepted_color"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
 
             <TextView

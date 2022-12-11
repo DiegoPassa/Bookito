@@ -104,7 +104,45 @@ public class SearchAllFragment extends SearchFragment {
                             }
                         }
                         Collections.sort(arrResults);
+
+                        if(arrResults.isEmpty())
+                            searchAllBooks_UsrTownship("");
+                        else
+                            searchAllBooks_OthersCities(arrResults, "");
+
+                    } else {
+                        Log.d("TAG", "Error getting documents: ", task.getException());
+                    }
+
+                });
+    }
+
+    @Override
+    protected void searchAllBooks_UsrTownship(String param) {
+        db.collection("users")
+                .whereEqualTo("township", Utils.CURRENT_USER.getTownship())
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+
+                        for (DocumentSnapshot document : task.getResult()) {
+                            if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                                Object arr = document.get("books"); //array dei books
+                                if (arr != null) { //si assicura di cercare solo se esiste quache libro
+                                    for (Object o : (ArrayList<Object>) arr) {
+                                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                                        if ((boolean) map.get("status")) {
+                                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                                            SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
+                                            arrResults.add(searchResultsModel);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Collections.sort(arrResults);
                         searchAllBooks_OthersCities(arrResults, "");
+
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
                     }
