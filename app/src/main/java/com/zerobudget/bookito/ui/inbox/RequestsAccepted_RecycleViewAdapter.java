@@ -58,6 +58,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     private boolean exists;
 
+    private Uri[] otherUserPic = new Uri[1];
+
     public RequestsAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
         this.context = ctx;
         this.requests = requests;
@@ -98,8 +100,6 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         String idSender = requests.get(holder.getAdapterPosition()).getSender();
         String idReceiver = requests.get(holder.getAdapterPosition()).getReceiver();
 
-        Uri[] otherUserPic = new Uri[1];
-
         switch (holder.getItemViewType()) {
             case 0:
                 // La richiesta è uno scambio
@@ -130,54 +130,19 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             String surnameOtherUser = otherUser.getLastName();
 
             if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition()))) {
-                holder.user1_name.setText("TU");
-                holder.user2_name.setText(nameOtherUser + " " + surnameOtherUser);
+                holder.user1_name.setText(R.string.you);
+                holder.user2_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
+                setUserPictures(Utils.CURRENT_USER, holder.user1_propic, holder.user1_gravatar, idReceiver);
+                setUserPictures(requests.get(position).getOtherUser(), holder.user2_propic, holder.user2_gravatar, idSender);
             } else {
-                holder.user1_name.setText(nameOtherUser + " " + surnameOtherUser);
-                holder.user2_name.setText("TU");
+                holder.user1_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
+                holder.user2_name.setText(R.string.you);
+                setUserPictures(requests.get(position).getOtherUser(), holder.user1_propic, holder.user1_gravatar, idReceiver);
+                setUserPictures(Utils.CURRENT_USER, holder.user2_propic, holder.user2_gravatar, idSender);
             }
 
-            // TODO: get users profile pictures
-
-/*            if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
-                //holder.usr_pic.setVisibility(View.VISIBLE);
-                holder.user1_gravatar.setVisibility(View.GONE);
-                storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
-                    for (StorageReference item : listResult.getItems()) {
-                        // All the items under listRef.
-                        if (!item.getName().equals(Utils.USER_ID) && (item.getName().equals(idReceiver)
-                                || item.getName().equals(idSender))) {
-                            //Log.d("item", item.getName());
-                            item.getDownloadUrl().addOnSuccessListener(uri -> {
-                                // Utils.setUriPic(uri.toString());
-                                //Log.d("PIC", Utils.URI_PIC);
-                                otherUserPic[0] = uri;
-                                Log.d("carico immaginme", "" + uri.getClass());
-                                Picasso.get().load(uri).into(holder.user1_propic);
-                                holder.user1_propic.setVisibility(View.VISIBLE);
-                                //holder.user_gravatar.setVisibility(View.GONE);
-
-                            }).addOnFailureListener(exception -> {
-                                int code = ((StorageException) exception).getErrorCode();
-                                if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                    holder.user1_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                                    holder.user1_gravatar.setVisibility(View.VISIBLE);
-                                    holder.user1_propic.setVisibility(View.GONE);
-                                }
-                            });
-                        }
-                    }
-                });
-            } else {
-                holder.user1_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
-                holder.user1_gravatar.setVisibility(View.VISIBLE);
-                holder.user1_propic.setVisibility(View.GONE);
-            }*/
-
-            // Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
-
             holder.card.setOnClickListener(view1 -> {
-                if (otherUser != null && holder.getAdapterPosition() != -1) {
+                if (holder.getAdapterPosition() != -1) {
                     Bundle args = new Bundle();
                     String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
                     args.putString("otherChatUser", toJson);
@@ -205,8 +170,28 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         }
     }
 
+    private void setUserPictures(UserModel user, ImageView image, ClassicIdenticonView gravatar, String userRole) {
+        if (user.isHasPicture()) {
+            storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
+                for (StorageReference item : listResult.getItems()) {
+                    if (item.getName().equals(userRole)) {
+                        item.getDownloadUrl().addOnSuccessListener(uri -> {
+                            otherUserPic[0] = uri;
+                            Picasso.get().load(uri).into(image);
+                            image.setVisibility(View.VISIBLE);
+                        });
+                    }
+                }
+            });
+        } else {
+            gravatar.setHash(user.getTelephone().hashCode());
+            gravatar.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
-     * visualizza il popup con le opzioni disponibili*/
+     * visualizza il popup con le opzioni disponibili
+     */
     private void showActionsDialog(ViewHolder holder, RequestModel request) {
         //String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
 
