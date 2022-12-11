@@ -42,9 +42,11 @@ import com.zerobudget.bookito.utils.popups.PopupInbox;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<RequestsAccepted_RecycleViewAdapter.ViewHolder> {
     private final StorageReference storageRef;
@@ -105,9 +107,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             case 0:
                 // La richiesta è uno scambio
                 SwapViewHolder swapHolder = (SwapViewHolder) holder;
-                RequestTradeModel request = (RequestTradeModel) requests.get(holder.getAdapterPosition());
+                RequestTradeModel trade = (RequestTradeModel) requests.get(holder.getAdapterPosition());
                 for (BookModel b : Utils.CURRENT_USER.getBooks()) {
-                    if (b.getIsbn().equals(request.getRequestTradeBook())) {
+                    if (b.getIsbn().equals(trade.getRequestTradeBook())) {
                         Picasso.get().load(b.getThumbnail()).into(swapHolder.book2_thumbnail);
                         break;
                     }
@@ -122,8 +124,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     otherHolder.expire_date.setVisibility(View.GONE);
                 } else {
                     Picasso.get().load(R.drawable.calendar).into(otherHolder.type);
-                    // TODO: get request expire date
-                    // otherHolder.expire_date.setText();
+                    RequestShareModel share = (RequestShareModel) requests.get(holder.getAdapterPosition());
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
+                    otherHolder.expire_date.setText(sdf.format(share.getDate()));
                 }
                 break;
         }
@@ -187,7 +190,6 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
                     gravatar.setHash(user.getTelephone().hashCode());
                     gravatar.setVisibility(View.VISIBLE);
-                    gravatar.setVisibility(View.GONE);
                 }
             });
         } else {
