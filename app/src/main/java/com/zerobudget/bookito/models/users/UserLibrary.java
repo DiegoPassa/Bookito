@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UserLibrary extends UserModel {
-    protected List<BookModel> library;
+    protected List<BookModel> books;
 
     public UserLibrary(String first_name, String last_name, String telephone, String township, String city, HashMap<String, Object> karma, Boolean hasPicture, String notificationToken) {
         super(first_name, last_name, telephone, township, city, karma, hasPicture, notificationToken);
@@ -17,12 +17,12 @@ public class UserLibrary extends UserModel {
 
     public UserLibrary(UserModel u, List<BookModel> bookModels) {
         super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getTownship(), u.getCity(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
-        library = bookModels;
+        books = bookModels;
     }
 
     public UserLibrary(UserModel u) {
         super(u.getFirstName(), u.getLastName(), u.getTelephone(), u.getTownship(), u.getCity(), u.getKarma(), u.isHasPicture(), u.getNotificationToken());
-        library = new ArrayList<>();
+        books = new ArrayList<>();
     }
 
     public UserLibrary() {
@@ -44,20 +44,16 @@ public class UserLibrary extends UserModel {
         return library;
     }
 
-    public void setLibrary(ArrayList<BookModel> library) {
-        this.library = library;
+    public List<BookModel> getBooks() {
+        return books;
     }
 
-    public List<BookModel> getLibrary() {
-        return library;
-    }
-
-    public void setLibrary(List<BookModel> library) {
-        this.library = library;
+    public void setBooks(List<BookModel> books) {
+        this.books = books;
     }
 
     public void appendBook(BookModel book) {
-        this.library.add(book);
+        this.books.add(book);
     }
 
     public Map<String, Object> serialize() {
@@ -65,7 +61,7 @@ public class UserLibrary extends UserModel {
 
         ArrayList<Map<String, Object>> libraryBooks = new ArrayList<>();
 
-        for (BookModel book : library) {
+        for (BookModel book : books) {
             libraryBooks.add(book.serialize());
         }
 
@@ -77,7 +73,7 @@ public class UserLibrary extends UserModel {
     @Override
     public String toString() {
         return "UserLibrary{" +
-                "library=" + library +
+                "library=" + books +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", telephone='" + telephone + '\'' +

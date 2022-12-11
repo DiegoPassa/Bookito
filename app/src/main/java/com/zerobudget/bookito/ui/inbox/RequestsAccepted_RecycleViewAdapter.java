@@ -104,8 +104,13 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             case 0:
                 // La richiesta è uno scambio
                 SwapViewHolder swapHolder = (SwapViewHolder) holder;
-                // TODO: get other book thumbnail
-                Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(swapHolder.book2_thumbnail);
+                RequestTradeModel request = (RequestTradeModel) requests.get(holder.getAdapterPosition());
+                for (BookModel b : Utils.CURRENT_USER.getBooks()) {
+                    if (b.getIsbn().equals(request.getRequestTradeBook())) {
+                        Picasso.get().load(b.getThumbnail()).into(swapHolder.book2_thumbnail);
+                        break;
+                    }
+                }
                 break;
             case 1:
                 // La richiesta è un prestito oppure un regalo
@@ -133,11 +138,11 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 holder.user1_name.setText(R.string.you);
                 holder.user2_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
                 setUserPictures(Utils.CURRENT_USER, holder.user1_propic, holder.user1_gravatar, idReceiver);
-                setUserPictures(requests.get(position).getOtherUser(), holder.user2_propic, holder.user2_gravatar, idSender);
+                setUserPictures(otherUser, holder.user2_propic, holder.user2_gravatar, idSender);
             } else {
                 holder.user1_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
                 holder.user2_name.setText(R.string.you);
-                setUserPictures(requests.get(position).getOtherUser(), holder.user1_propic, holder.user1_gravatar, idReceiver);
+                setUserPictures(otherUser, holder.user1_propic, holder.user1_gravatar, idReceiver);
                 setUserPictures(Utils.CURRENT_USER, holder.user2_propic, holder.user2_gravatar, idSender);
             }
 

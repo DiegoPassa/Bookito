@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -26,9 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupBook;
 import com.zerobudget.bookito.utils.popups.PopupEditBook;
-import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,7 +147,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 Toast.makeText(context, bookModels.get(holder.getAdapterPosition()).getTitle() + " eliminato!", Toast.LENGTH_LONG).show();
                 bookModels.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
-                Utils.toggleEmptyWarning(emptyWarning, Utils.CURRENT_USER.getLibrary().size());
+                Utils.toggleEmptyWarning(emptyWarning, Utils.CURRENT_USER.getBooks().size());
                 dialogInterface.dismiss();
             }).setNegativeButton("NO", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
@@ -216,8 +215,8 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                             db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayUnion(newBook));
 
                             //aggiunge il nuovo libro
-                            Utils.CURRENT_USER.getLibrary().add(newBook);
-                            positionOldBook= holder.getAdapterPosition();
+                            Utils.CURRENT_USER.getBooks().add(newBook);
+                            positionOldBook = holder.getAdapterPosition();
                         }
                     }
 

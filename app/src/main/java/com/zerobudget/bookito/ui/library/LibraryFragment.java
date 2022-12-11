@@ -53,7 +53,7 @@ public class LibraryFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         // setUpBookModel();
-        adapter = new Book_RecycleViewAdapter(this.getContext(), (ArrayList<BookModel>) Utils.CURRENT_USER.getLibrary(), binding.emptyLibrary);
+        adapter = new Book_RecycleViewAdapter(this.getContext(), (ArrayList<BookModel>) Utils.CURRENT_USER.getBooks(), binding.emptyLibrary);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
@@ -98,16 +98,16 @@ public class LibraryFragment extends Fragment {
      * carica la libreria dell'utente*/
     private void loadLibrary(Object books) {
         spinner.setVisibility(View.VISIBLE);
-        Utils.CURRENT_USER.getLibrary().clear();
+        Utils.CURRENT_USER.getBooks().clear();
         for (Object o : (ArrayList<Object>) books) {
             HashMap<String, Object> map = (HashMap<String, Object>) o;
             BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-            Utils.CURRENT_USER.getLibrary().add(tmp);//aggiunge il bookmodel tmp all'array list
+            Utils.CURRENT_USER.getBooks().add(tmp);//aggiunge il bookmodel tmp all'array list
         }
         Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
         spinner.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
-        Utils.toggleEmptyWarning(binding.emptyLibrary, Utils.CURRENT_USER.getLibrary().size());
+        Utils.toggleEmptyWarning(binding.emptyLibrary, Utils.CURRENT_USER.getBooks().size());
         if (!binding.addBookButton.getLocalVisibleRect(scrollBounds)) {
             binding.floatingActionButton.show();
         }

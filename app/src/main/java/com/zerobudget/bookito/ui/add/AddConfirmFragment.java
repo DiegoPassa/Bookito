@@ -108,7 +108,7 @@ public class AddConfirmFragment extends Fragment {
                             .update("books", FieldValue.arrayUnion(newBook.serialize()));
 
                     Toast.makeText(context, "Libro " + newBook.getTitle() + " inserito correttamente!", Toast.LENGTH_LONG).show();
-                    Utils.CURRENT_USER.getLibrary().add(newBook);
+                    Utils.CURRENT_USER.getBooks().add(newBook);
 
                 } else {
                     Toast.makeText(context, "Il libro è già presente nella libreria", Toast.LENGTH_LONG).show();
