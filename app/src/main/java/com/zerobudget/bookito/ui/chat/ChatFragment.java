@@ -3,13 +3,19 @@ package com.zerobudget.bookito.ui.chat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,17 +27,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentChatBinding;
 import com.zerobudget.bookito.models.chat.MessageModel;
 import com.zerobudget.bookito.models.chat.MessageModelTrade;
 import com.zerobudget.bookito.models.chat.MessageModelWithImage;
+import com.zerobudget.bookito.models.requests.RequestModel;
+import com.zerobudget.bookito.models.requests.RequestShareModel;
+import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
+import com.zerobudget.bookito.utils.popups.PopupInbox;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class ChatFragment extends Fragment {
@@ -39,11 +53,16 @@ public class ChatFragment extends Fragment {
     private UserModel otherUser;
     private DatabaseReference realTimedb;
     private String requestID;
+    private RequestModel request;
 
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    private Toolbar toolbar;
 
     private Chat_RecycleViewAdapter adapter;
+
+    protected FirebaseFirestore db;
+
 
     private final ArrayList<MessageModel> messages = new ArrayList<>();
 
@@ -51,6 +70,9 @@ public class ChatFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+
+        this.db = FirebaseFirestore.getInstance();
 
         progressBar = binding.progressBar;
 
@@ -62,8 +84,26 @@ public class ChatFragment extends Fragment {
 
         String otherId = args.getString("otherChatUser");
         otherUser = Utils.getGsonParser().fromJson(otherId, UserModel.class);
+
+        String requestModelStr = args.getString("requestModel");
+        String requestClassName = args.getString("requestClassName");
+        switch (requestClassName) {
+            case "RequestShareModel":
+                request = new RequestShareModel();
+                request = Utils.getGsonParser().fromJson(requestModelStr, RequestShareModel.class);
+                break;
+            case "RequestTradeModel":
+                request = new RequestTradeModel();
+                request = Utils.getGsonParser().fromJson(requestModelStr, RequestTradeModel.class);
+                break;
+            default:
+                request = Utils.getGsonParser().fromJson(requestModelStr, RequestModel.class);
+                break;
+        }
+
         requestID = args.getString("requestID");
         realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + requestID);
+
         String otherUserId = args.getString("otherUserId");
 
         recyclerView = binding.ChatRecycleView;
@@ -97,11 +137,94 @@ public class ChatFragment extends Fragment {
         return root;
     }
 
+
+    /**
+     * LO SO CHE SONO DEPRECATI MA FUNZIONANO
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MaterialToolbar toolbar = (MaterialToolbar) getActivity().findViewById(R.id.topAppBar);
         toolbar.setTitle(otherUser.getFirstName() + " " + otherUser.getLastName());
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.setGroupVisible(R.id.default_group, false);
+        menu.setGroupVisible(R.id.chat_group, true);
+
+        int id_cancel_request_item = menu.findItem(R.id.cancel_request_item).getItemId();
+        int id_confirmGiven_request_item = menu.findItem(R.id.confirm_book_given_item).getItemId();
+
+        int id_close_request = menu.findItem(R.id.close_request_item).getItemId();
+
+        if (request instanceof RequestShareModel) {
+            if (request.getStatus().equals("ongoing")) {
+                menu.removeItem(id_cancel_request_item);
+                menu.removeItem(id_confirmGiven_request_item);
+            } else
+                menu.removeItem(id_close_request);
+        } else
+            menu.removeItem(id_confirmGiven_request_item);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.info_chat:
+                UserModel senderModel = request.getOtherUser();
+                if (senderModel != null) {
+                    HashMap<String, Object> karma = senderModel.getKarma(); //HashMap<String, Long>
+                    Number points = (Number) karma.get("points");
+                    Number feedback_numbers = (Number) karma.get("numbers");
+                    Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
+                    createNewContactDialog(flag);
+
+                }
+                return true;
+
+            case R.id.confirm_book_given_item:
+                Toast.makeText(getContext(), "TODO", Toast.LENGTH_LONG).show();
+
+            case R.id.close_request_item:
+                Toast.makeText(getContext(), "TODO", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.cancel_request_item:
+                //annullata mentre è ancora in corso
+                Toast.makeText(getContext(), "TODO", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return false;
+
+        }
+    }
+
+
+    /**
+     * visualizza le informazioni relative alla richiesta selezionata
+     */
+    public void createNewContactDialog(Flag flag) {
+        View view = View.inflate(getContext(), R.layout.popup, null);
+        //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
+        PopupInbox dialogBuilder = new PopupInbox(getContext(), view);
+        dialogBuilder.setView(view);
+        AlertDialog dialog = dialogBuilder.create();
+
+        dialogBuilder.setUpInformation(request);
+        dialogBuilder.setReputationMessage(request, flag);
+
+        if (request instanceof RequestShareModel)
+            dialogBuilder.setUpDate((RequestShareModel) request);
+
+        dialogBuilder.setTextConfirmButton("OK, torna indietro");
+        dialogBuilder.getConfirmButton().setOnClickListener(view1 -> dialog.dismiss());
+
+        dialogBuilder.getRefuseButton().setVisibility(View.GONE);
+
+        dialog.show();
     }
 
     @Override
