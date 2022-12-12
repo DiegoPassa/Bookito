@@ -4,9 +4,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
+import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
 abstract class SearchFragment extends Fragment {
 
@@ -32,6 +38,27 @@ abstract class SearchFragment extends Fragment {
     abstract void searchAllBooks_OthersCityorTownship(ArrayList<SearchResultsModel> arrResults, String param, boolean isTownship);
 
     /**
+     * aggiunge i libri trovati all'array
+     *
+     * @param doc: documento corrente di firebase sul quale si stanno cercando i libri
+     * @param arrBooks: i libri prelevati dal documento
+     * @param param: stringa contenente il testo cercato
+     * @param arrResults: array nel quale inserire i libri trovati*/
+    protected void addBooksToArray(DocumentSnapshot doc, Object arrBooks , ArrayList<SearchResultsModel> arrResults, String param){
+        for (Object o : (ArrayList<Object>) arrBooks) {
+            HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+
+            if ((boolean) map.get("status")) {
+                if ((map.get("title").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))
+                        || (map.get("author").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))) {
+                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, doc.toObject(UserModel.class));
+                    arrResults.add(searchResultsModel);
+                }
+            }
+        }
+    }
+    /**
      * permette la visualizzazione dei libri
      *
      * @param arr: arraylist di SearchResultsModel, contiene i risultati della ricerca
@@ -43,7 +70,7 @@ abstract class SearchFragment extends Fragment {
             Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), arr);
 
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));
         }
-    };
+    }
 }

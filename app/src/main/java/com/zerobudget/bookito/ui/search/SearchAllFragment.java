@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
@@ -18,14 +17,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentSearchAllBinding;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
-import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class SearchAllFragment extends SearchFragment {
 
@@ -47,7 +44,7 @@ public class SearchAllFragment extends SearchFragment {
         RecyclerView recyclerView = binding.recycleViewSearch;
         Search_RecycleViewAdapter adapter = new Search_RecycleViewAdapter(this.getContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));
         //end of fixing it
 
         viewBooks(new ArrayList<>(), binding.recycleViewSearch);
@@ -83,72 +80,60 @@ public class SearchAllFragment extends SearchFragment {
 
     @Override
     protected void searchAllBooks_UsrCity(String param) {
-        db.collection("users")
+        Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("city", Utils.CURRENT_USER.getCity())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+                .get();
 
-                        for (DocumentSnapshot document : task.getResult()) {
-                            if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
-                                Object arr = document.get("books"); //array dei books
-                                if (arr != null) { //si assicura di cercare solo se esiste quache libro
-                                    for (Object o : (ArrayList<Object>) arr) {
-                                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        if ((boolean) map.get("status")) {
-                                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                            SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                            arrResults.add(searchResultsModel);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Collections.sort(arrResults);
+        res.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
-                        if(arrResults.isEmpty())
-                            searchAllBooks_UsrTownship("");
-                        else
-                            searchAllBooks_OthersCityorTownship(arrResults, "", false);
-
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arrBooks = document.get("books"); //array dei books
+                        if (arrBooks != null) //si assicura di cercare solo se esiste quache libro
+                            addBooksToArray(document, arrBooks, arrResults, "");
                     }
+                }
+                Collections.sort(arrResults);
 
-                });
+                if (arrResults.isEmpty())
+                    searchAllBooks_UsrTownship("");
+                else
+                    searchAllBooks_OthersCityorTownship(arrResults, "", false);
+
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
+            }
+
+        });
     }
 
     @Override
     protected void searchAllBooks_UsrTownship(String param) {
-        db.collection("users")
+        Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("township", Utils.CURRENT_USER.getTownship())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+                .get();
 
-                        for (DocumentSnapshot document : task.getResult()) {
-                            if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
-                                Object arr = document.get("books"); //array dei books
-                                if (arr != null) { //si assicura di cercare solo se esiste quache libro
-                                    for (Object o : (ArrayList<Object>) arr) {
-                                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        if ((boolean) map.get("status")) {
-                                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                            SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                            arrResults.add(searchResultsModel);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Collections.sort(arrResults);
-                        searchAllBooks_OthersCityorTownship(arrResults, "", true);
+        res.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arrBooks = document.get("books"); //array dei books
+                        if (arrBooks != null) //si assicura di cercare solo se esiste quache libro
+                            addBooksToArray(document, arrBooks, arrResults, "");
                     }
+                }
+                Collections.sort(arrResults);
+                searchAllBooks_OthersCityorTownship(arrResults, "", true);
 
-                });
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
+            }
+
+        });
     }
 
     @Override
@@ -159,13 +144,13 @@ public class SearchAllFragment extends SearchFragment {
 
         /**se non ha trovato libri nella city del current user, prova a cercare i libri nella sua township
          * quindi dovrà cercare i libri restanti nelle township che non sono uguali alla sua*/
-        if(isTownship) {
-          res = db.collection("users")
+        if (isTownship) {
+            res = db.collection("users")
                     .whereNotEqualTo("township", Utils.CURRENT_USER.getTownship())
                     .orderBy("township")
                     .orderBy("city")
                     .get();
-        }else
+        } else
             res = db.collection("users")
                     .whereNotEqualTo("city", Utils.CURRENT_USER.getCity())
                     .orderBy("city")
@@ -173,31 +158,24 @@ public class SearchAllFragment extends SearchFragment {
                     .get();
 
         res.addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
-                        for (DocumentSnapshot document : task.getResult()) {
-                            if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
-                                Object arr = document.get("books"); //array dei books
-                                if (arr != null) { //si assicura di cercare solo se esiste quache libro
-
-                                    for (Object o : (ArrayList<Object>) arr) {
-                                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        if ((boolean) map.get("status")) {
-                                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                            SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                            arrResultsTmp.add(searchResultsModel);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        // Collections.sort(arrResultsTmp);
-                        arrResults.addAll(arrResultsTmp);
-                        viewBooks(arrResults, binding.recycleViewSearch);
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arrBooks = document.get("books"); //array dei books
+                        if (arrBooks != null) //si assicura di cercare solo se esiste quache libro
+                            addBooksToArray(document, arrBooks, arrResults, "");
                     }
-                });
+                }
+                // Collections.sort(arrResultsTmp);
+                arrResults.addAll(arrResultsTmp);
+                RecyclerView recyclerView = binding.recycleViewSearch;
+                if (recyclerView.getAdapter() != null)
+                    viewBooks(arrResults, recyclerView);
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
+            }
+        });
     }
 }
 

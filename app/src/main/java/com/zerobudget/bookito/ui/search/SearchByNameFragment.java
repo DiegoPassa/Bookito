@@ -16,15 +16,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
-import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
 
 public class SearchByNameFragment extends SearchFragment {
 
@@ -89,93 +85,76 @@ public class SearchByNameFragment extends SearchFragment {
 
     @Override
     protected void searchAllBooks_UsrCity(String param) {
-        db.collection("users")
+        Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("city", Utils.CURRENT_USER.getCity())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+                .get();
+        res.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
-                        for (DocumentSnapshot document : task.getResult()) {
-                            if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
-                                Object arr = document.get("books"); //array dei books
-                                if (arr != null) { //si assicura di cercare solo se esiste quache libro
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arrBooks = document.get("books"); //array dei books
+                        if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
+                            addBooksToArray(document, arrBooks, arrResults, param);
 
-                                    for (Object o : (ArrayList<Object>) arr) {
-                                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        //converte in lower case per non avere problemi di non corrispondenza tra maiuscole e minuscole
-                                        if ((map.get("title").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))
-                                                || (map.get("author").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))) {
-                                            //Log.d("Title", "" + map.get("title"));
-                                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                            SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                            arrResults.add(searchResultsModel);
-                                        }
-                                    }
-                                }
-                            }
                         }
-                        Collections.sort(arrResults);
-
-                        if(arrResults.isEmpty())
-                            searchAllBooks_UsrTownship(param);
-                        else
-                            searchAllBooks_OthersCityorTownship(arrResults, param, false);
-                        //viewBooks(arrResults);
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
                     }
+                }
+                Collections.sort(arrResults);
 
-                });
+                if (arrResults.isEmpty())
+                    searchAllBooks_UsrTownship(param);
+                else
+                    searchAllBooks_OthersCityorTownship(arrResults, param, false);
+                //viewBooks(arrResults);
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
+            }
+
+        });
     }
 
 
     @Override
     protected void searchAllBooks_UsrTownship(String param) {
-        db.collection("users")
+        Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("township", Utils.CURRENT_USER.getTownship())
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+                .get();
+        res.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
-                        for (DocumentSnapshot document : task.getResult()) {
-                            if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
-                                Object arr = document.get("books"); //array dei books
-                                if (arr != null) { //si assicura di cercare solo se esiste quache libro
-                                    for (Object o : (ArrayList<Object>) arr) {
-                                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-
-                                            if ((boolean) map.get("status")) {
-                                                if ((map.get("title").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))
-                                                        || (map.get("author").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))) {
-                                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                                    arrResults.add(searchResultsModel);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arrBooks = document.get("books"); //array dei books
+                        if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
+                            addBooksToArray(document, arrBooks, arrResults, param);
                         }
-                        Collections.sort(arrResults);
-
-                        searchAllBooks_OthersCityorTownship(arrResults, param, true);
-
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
                     }
+                }
+                Collections.sort(arrResults);
 
-                });
+                searchAllBooks_OthersCityorTownship(arrResults, param, true);
+
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
+            }
+
+        });
     }
+
+
     @Override
     protected void searchAllBooks_OthersCityorTownship(ArrayList<SearchResultsModel> arrResults, String param, boolean isTownship) {
         Task<QuerySnapshot> res;
-        if(isTownship) {
+        if (isTownship) {
             res = db.collection("users")
                     .whereNotEqualTo("township", Utils.CURRENT_USER.getTownship())
                     .orderBy("township")
                     .orderBy("city")
                     .get();
-        }else
+        } else
             res = db.collection("users")
                     .whereNotEqualTo("city", Utils.CURRENT_USER.getCity())
                     .orderBy("city")
@@ -183,36 +162,25 @@ public class SearchByNameFragment extends SearchFragment {
                     .get();
 
         res.addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
+            if (task.isSuccessful()) {
+                ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
 
-                        for (DocumentSnapshot document : task.getResult()) {
-                            if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
-                                Object arr = document.get("books"); //array dei books
-                                if (arr != null) { //si assicura di cercare solo se esiste quache libro
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
+                        Object arrBooks = document.get("books"); //array dei books
+                        if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
 
-                                    for (Object o : (ArrayList<Object>) arr) {
-                                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        //converte in lower case per non avere problemi di non corrispondenza tra maiuscole e minuscole
-                                        if ((boolean) map.get("status"))
-                                            if ((map.get("title").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))
-                                                    || (map.get("author").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))) {
-                                                //Log.d("Title", "" + map.get("title"));
-                                                BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                                SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                                arrResultsTmp.add(searchResultsModel);
-                                            }
-                                    }
-                                }
-                            }
+                            addBooksToArray(document, arrBooks, arrResultsTmp, param);
                         }
-                        //Collections.sort(arrResultsTmp);
-                        arrResults.addAll(arrResultsTmp);
-                        viewBooks(arrResults, binding.recycleViewSearch);
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
                     }
+                }
+                //Collections.sort(arrResultsTmp);
+                arrResults.addAll(arrResultsTmp);
+                viewBooks(arrResults, binding.recycleViewSearch);
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.getException());
+            }
 
-                });
+        });
     }
 }

@@ -121,8 +121,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         if (doc.get("telephone").equals(results.get(holder.getAdapterPosition()).getUser().getTelephone())) {
                             rm.setReceiver(doc.getId());
-                            Log.d("REC", rm.getReceiver());
-
                             if (rm instanceof RequestShareModel)
                                 openCalendarPopup((RequestShareModel) rm, holder, dialog);
                             else
@@ -142,9 +140,10 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     /**
      * apre il popup con il calendario per selezionare la data di restituzione del libro preso in prestito
      *
-     * @param rm: richiesta di prestito, definta dalla classe RequestShareModel
+     * @param rm:     richiesta di prestito, definta dalla classe RequestShareModel
      * @param holder: oggetto contente i binding del layout xml
-     * @param dialog: finestra di alert dialog*/
+     * @param dialog: finestra di alert dialog
+     */
     private void openCalendarPopup(RequestShareModel rm, ViewHolder holder, AlertDialog dialog) {
         MaterialAlertDialogBuilder calendarPopup = new MaterialAlertDialogBuilder(context);
         View popup_view = View.inflate(context, R.layout.popup_datepicker, null);
@@ -181,25 +180,31 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
      *
      * @param rDoc: la richiesta prelevata dal database, definita dalla classe RequestModel
      * @param rm:la richiesta che l'utente corrente sta effettuando, definita dalla classe RequestModel
-     *
-     * @return boolean: false se le due richieste non coincidono per i controlli fatti all'interno, true altrimenti*/
+     * @return boolean: false se le due richieste non coincidono per i controlli fatti all'interno, true altrimenti
+     */
     private boolean checkRequests(RequestModel rDoc, RequestModel rm) {
-        Log.d("CONFRONTO", rDoc.getStatus() + " " + rm.getSender());
+        Log.d("CONFRONTO", rDoc.getStatus() + rDoc.getTitle() + " " + rm.getSender() + " " + rm.getTitle());
 
         boolean exists = false;
 
         //controlla se esiste già una richiesta fatta dal current user per quel libro in stato undefined
-        if(rDoc.getRequestedBook().equals(rm.getRequestedBook()) && rDoc.getStatus().equals("undefined") && rDoc.getSender().equals(Utils.USER_ID))
+        if (rDoc.getRequestedBook().equals(rm.getRequestedBook())
+                && rDoc.getStatus().equals("undefined")
+                && rDoc.getSender().equals(Utils.USER_ID)
+                && rDoc.getReceiver().equals(rm.getReceiver())) {
             exists = true;
-
+            Toast.makeText(context, "Attenzione! Hai già effettuato la richiesta per " + rm.getTitle() + "!", Toast.LENGTH_LONG).show();
+        }
 
         if (rDoc.getStatus().equals("accepted") || rDoc.getStatus().equals("ongoing")) {
             if (rDoc.getReceiver().equals(rm.getReceiver()) && rDoc.getRequestedBook().equals(rm.getRequestedBook())) {
                 exists = true;
+                Toast.makeText(context, "Attenzione! Esista già una richiesta in corso per '" + rm.getTitle() + "'!", Toast.LENGTH_LONG).show();
             }
         } else {
             if (rDoc.getStatus().equals(rm.getSender()) && rDoc.getRequestedBook().equals(rm.getRequestedBook()) && rDoc.getStatus().equals("undefined")) {
                 exists = true;
+                Toast.makeText(context, "Attenzione! Esista già una richiesta in corso per '" + rm.getTitle() + "'!", Toast.LENGTH_LONG).show();
             }
         }
         return exists;
@@ -209,9 +214,10 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     /**
      * effettua la richiesta del libro
      *
-     * @param rm: richiesta effettuata dall'utente corrente
+     * @param rm:     richiesta effettuata dall'utente corrente
      * @param holder: oggetto contente i binding del layout xml
-     * @param dialog: finestra di alert dialog*/
+     * @param dialog: finestra di alert dialog
+     */
     private void requestBook(RequestModel rm, ViewHolder holder, AlertDialog dialog) {
         dialog.dismiss();
         db.collection("requests").get().addOnCompleteListener(task -> {
@@ -223,12 +229,11 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     RequestModel rDoc = doc.toObject(RequestModel.class);
                     if (checkRequests(rDoc, rm)) {
                         err = true;
+                        break;
                     }
                 }
-                //se esiste già una richiesta da errore
-                if (err) {
-                    Toast.makeText(context, "Attenzione! La richiesta per " + results.get(holder.getAdapterPosition()).getBook().getTitle() + " esiste già!", Toast.LENGTH_LONG).show();
-                } else {
+                //se esiste già una richiesta da errore nella checkRequests
+                if (!err) {
                     db.collection("requests").add(rm.serialize()).addOnSuccessListener(documentReference -> {
                         Log.d("OKK", documentReference.getId());
                     }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
@@ -248,6 +253,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                                         .getUser()
                                         .getNotificationToken());
                     } catch (Exception e) {
+                        Log.e("Errore", e.getMessage());
                     }
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
                 }
@@ -256,8 +262,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                 Log.d("ERR", "Error getting documents: ", task.getException());
             }
         });
-        //}
-
     }
 
     @Override
