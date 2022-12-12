@@ -267,7 +267,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                                 ref.push().setValue(defaultMsg);
                                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
 
-                                Notifications.sendPushNotification(Utils.CURRENT_USER.getFirstName() + "ha accettato la tua richiesta per " + r.getTitle(), "Richiesta accettata", r.getOtherUser().getNotificationToken());
+                                Notifications.sendPushNotification(Utils.CURRENT_USER.getFirstName() + " ha accettato la tua richiesta per \"" + r.getTitle() + "\"", "Richiesta accettata!", r.getOtherUser().getNotificationToken());
                             } else
                                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
                         });
