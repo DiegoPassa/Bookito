@@ -191,7 +191,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                         checkIfTheBookIsAlreadyAcceptedSomewhere(requests.get(holder.getAdapterPosition()), holder, args);
                         //Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
                     } else {
-                        acceptRequest(requests.get(holder.getAdapterPosition()), holder);
+                        acceptRequest(requests.get(holder.getAdapterPosition()));
                     }
                 } else {
                     Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
@@ -218,7 +218,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * elimina la richiesta in caso di rifiuto*/
+     * elimina la richiesta in caso di rifiuto
+     *
+     * @param r: richiesta da eliminare*/
     protected void deleteRequest(RequestModel r) {
         // Log.d("REQUEST_DELETED", r.getrequestId());
         db.collection("requests").document(r.getRequestId()).delete();
@@ -226,8 +228,10 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * accetta la richiesta cambiando lo status del libro e della richiesta*/
-    protected void acceptRequest(RequestModel r, ViewHolder holder) {
+     * accetta la richiesta cambiando lo status del libro e della richiesta
+     *
+     * @param r: richiesta da accettare*/
+    protected void acceptRequest(RequestModel r) {
         changeBookStatus(r.getRequestedBook());
 
         //controlla prima che non esista già una richiesta accettata per il libro
@@ -275,6 +279,11 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     }
 
+    /**
+     * crea la notifica da visulizzare nell'area notifiche dell'applicazione
+     *
+     * @param r: richiesta di riferimento
+     * @param status: stato della richiesta, se Accept è accettata, altrimenti è rifiutata*/
     private void sendNotification(RequestModel r, String status) {
         String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
@@ -294,7 +303,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * controlla se la richiesta esiste ancora (quindi se il sender non l'ha annullata)*/
+     * controlla se la richiesta esiste ancora (quindi se il sender non l'ha annullata)
+     *
+     * @param r: richiesta di riferimento*/
     private void checkIfStillExists(RequestModel r) {
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -306,7 +317,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * cambia lo stato del libro*/
+     * cambia lo stato del libro
+     *
+     * @param bookRequested: libro di rifermento dal quale modificare lo stato*/
     private void changeBookStatus(String bookRequested) {
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

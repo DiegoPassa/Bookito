@@ -94,6 +94,8 @@ public class RequestsReceivedFragment extends InboxFragment {
         binding = null;
     }
 
+    /**
+     * preleva in realtime le richieste ricevute dall'utente corrente*/
     protected void getRequestsRealTime() {
         spinner.setVisibility(View.VISIBLE);
         db.collection("requests")
@@ -134,6 +136,8 @@ public class RequestsReceivedFragment extends InboxFragment {
 
     }
 
+    /**
+     * */
     protected void getUserByRequest(RequestModel r, int position) {
         db.collection("users").document(r.getSender())
                 .get()

@@ -220,7 +220,9 @@ public class UserProfileFragment extends Fragment {
 
 
     /**
-     * aggiunde l'immagine nel database*/
+     * aggiunde l'immagine nel database
+     *
+     * @param uri: link da inserire all'interno di firebase storage*/
     private void addPicOnFirebase(Uri uri) {
         //salvata in profile_pics/<id dell'utente>
         StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);

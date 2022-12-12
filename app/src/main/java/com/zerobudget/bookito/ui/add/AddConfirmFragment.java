@@ -86,6 +86,8 @@ public class AddConfirmFragment extends Fragment {
     /**
      * inserisce il nuovo libro nel database, nel documento dell'utente corrente
      * controlla che non esista già un libro con lo stesso isbn
+     *
+     * @param context: contesto nel quale si stanno svolgendo le operazioni
      */
     private void addBook(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

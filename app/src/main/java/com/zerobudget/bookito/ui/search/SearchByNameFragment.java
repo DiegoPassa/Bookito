@@ -10,12 +10,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
@@ -120,7 +119,7 @@ public class SearchByNameFragment extends SearchFragment {
                         if(arrResults.isEmpty())
                             searchAllBooks_UsrTownship("");
                         else
-                            searchAllBooks_OthersCities(arrResults, param);
+                            searchAllBooks_OthersCityorTownship(arrResults, param, false);
                         //viewBooks(arrResults);
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
@@ -154,7 +153,7 @@ public class SearchByNameFragment extends SearchFragment {
                             }
                         }
                         Collections.sort(arrResults);
-                        searchAllBooks_OthersCities(arrResults, param);
+                        searchAllBooks_OthersCityorTownship(arrResults, param, true);
 
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.getException());
@@ -163,12 +162,22 @@ public class SearchByNameFragment extends SearchFragment {
                 });
     }
     @Override
-    protected void searchAllBooks_OthersCities(ArrayList<SearchResultsModel> arrResults, String param) {
-        db.collection("users")
-                .whereNotEqualTo("city", Utils.CURRENT_USER.getCity())
-                .orderBy("city")
-                .orderBy("township")
-                .get().addOnCompleteListener(task -> {
+    protected void searchAllBooks_OthersCityorTownship(ArrayList<SearchResultsModel> arrResults, String param, boolean isTownship) {
+        Task<QuerySnapshot> res;
+        if(isTownship) {
+            res = db.collection("users")
+                    .whereNotEqualTo("township", Utils.CURRENT_USER.getTownship())
+                    .orderBy("township")
+                    .orderBy("city")
+                    .get();
+        }else
+            res = db.collection("users")
+                    .whereNotEqualTo("city", Utils.CURRENT_USER.getCity())
+                    .orderBy("city")
+                    .orderBy("township")
+                    .get();
+
+        res.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         ArrayList<SearchResultsModel> arrResultsTmp = new ArrayList<>(); //libri trovati
 

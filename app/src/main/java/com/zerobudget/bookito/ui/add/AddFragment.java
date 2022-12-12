@@ -136,7 +136,9 @@ public class AddFragment extends Fragment {
     }
 
     /**
-     * metodo per nascondere la tastiera*/
+     * metodo per nascondere la tastiera
+     *
+     * @param activity: activty di riferimento*/
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
 
@@ -152,7 +154,9 @@ public class AddFragment extends Fragment {
     }
 
     /**
-     * preleva i dati dall'api di google maps, convertendo l'oggetto json ottenuto in base al formato deciso da goolge*/
+     * preleva i dati dall'api di google maps, convertendo l'oggetto json ottenuto in base al formato deciso da goolge
+     *
+     * @param isbn: isbn del libro cercato*/
     private void searchBookAPI(String isbn) {
         mRequestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         mRequestQueue.getCache().clear();

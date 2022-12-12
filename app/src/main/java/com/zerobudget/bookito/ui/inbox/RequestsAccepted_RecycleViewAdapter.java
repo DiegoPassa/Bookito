@@ -201,6 +201,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     /**
      * visualizza il popup con le opzioni disponibili
+     *
+     * @param holder: oggetto che contiene i binding dell'xml
+     * @param request: richiesta selezionata
      */
     private void showActionsDialog(ViewHolder holder, RequestModel request) {
         //String[] options = {"Scatta foto", "Seleziona da galleria", "Elimina foto"};
@@ -380,6 +383,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
      * segna la richiesta come conclusa (status = concluded) sulla base del tipo
      * abilita il libro nella richiesta di prestito
      * elimina i libri nelle richieste di scambio e regalo
+     *
+     * @param holder: oggetto che contiene i binding all'xml
      */
     private void closeRequest(ViewHolder holder) {
         if (!(requests.get(holder.getAdapterPosition()) instanceof RequestShareModel)) {
@@ -426,6 +431,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     /**
      * incrementa il punteggio di red flag dell'utente
+     *
+     * @param id: id dell'utente di riferimento
+     * @param feedback: valore di incremento del feedback dell'utente
      */
     private void sendFeedbackToUser(String id, float feedback) {
         db.collection("users").document(id).update("karma.points", FieldValue.increment(feedback), "karma.numbers", FieldValue.increment(1));
@@ -435,6 +443,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
      * modifica lo stato di un libro (tramite isbn)
      * la modifica viene fatta rimuovendo il libro e inserendolo nuovamente con il nuovo stato
      * perché firebase non permette di modificare un valore all'interno della strutura dati in cui essi sono contenuti
+     *
+     * @param userID: id dell'utente di riferimento
+     * @param isbn: isbn del libro che necessita del cambiamento di stato
      */
     private void changeBookStatus(String userID, String isbn) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {

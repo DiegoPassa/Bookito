@@ -88,7 +88,10 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
     /**
      * crea il popup per la richiesta del libro, utilizzando la classe PopupSearchBook che
-     * eredita alcuni metodi dal PopupBook ed evita la ripetizione di righe di codice*/
+     * eredita alcuni metodi dal PopupBook ed evita la ripetizione di righe di codice
+     *
+     * @param holder: oggetto contente i binding del layout xml
+     */
     private void createNewSearchPopup(ViewHolder holder) {
         View view = View.inflate(context, R.layout.popup_book, null);
         PopupSearchBook dialogBuilder = new PopupSearchBook(context, view);
@@ -136,6 +139,12 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         dialog.show();
     }
 
+    /**
+     * apre il popup con il calendario per selezionare la data di restituzione del libro preso in prestito
+     *
+     * @param rm: richiesta di prestito, definta dalla classe RequestShareModel
+     * @param holder: oggetto contente i binding del layout xml
+     * @param dialog: finestra di alert dialog*/
     private void openCalendarPopup(RequestShareModel rm, ViewHolder holder, AlertDialog dialog) {
         MaterialAlertDialogBuilder calendarPopup = new MaterialAlertDialogBuilder(context);
         View popup_view = View.inflate(context, R.layout.popup_datepicker, null);
@@ -168,7 +177,12 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
     }
 
     /**
-     * controlla se non esista già una richiesta in corso per lo stesso libro*/
+     * controlla se non esista già una richiesta in corso per lo stesso libro
+     *
+     * @param rDoc: la richiesta prelevata dal database, definita dalla classe RequestModel
+     * @param rm:la richiesta che l'utente corrente sta effettuando, definita dalla classe RequestModel
+     *
+     * @return boolean: false se le due richieste non coincidono per i controlli fatti all'interno, true altrimenti*/
     private boolean checkRequests(RequestModel rDoc, RequestModel rm) {
         Log.d("CONFRONTO", rDoc.getStatus() + " " + rm.getSender());
 
@@ -193,7 +207,11 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
 
     /**
-     * effettua la richiesta del libro*/
+     * effettua la richiesta del libro
+     *
+     * @param rm: richiesta effettuata dall'utente corrente
+     * @param holder: oggetto contente i binding del layout xml
+     * @param dialog: finestra di alert dialog*/
     private void requestBook(RequestModel rm, ViewHolder holder, AlertDialog dialog) {
         dialog.dismiss();
         db.collection("requests").get().addOnCompleteListener(task -> {

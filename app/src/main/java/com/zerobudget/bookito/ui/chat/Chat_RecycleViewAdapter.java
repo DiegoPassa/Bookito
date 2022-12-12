@@ -110,7 +110,13 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     /**
      * controlla se la data del messaggio deve essere visualizzata oppure no
-     * restituisce il risultato di tale controllo (boolean)*/
+     * restituisce il risultato di tale controllo
+     *
+     * @param holder: oggetto contenente i binding dell'xml
+     * @param position: posizione del messaggio all'interno della recycleview
+     *
+     * @return boolean: true se deve mostrare la data, false altrimenti
+     */
     private boolean haveToShowDate(ViewHolder holder, int position) {
         if (position > 0) {
             Date previousMsgDate = new Date();
@@ -139,6 +145,9 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
 
     /**
      * carica le immagini di profilo dei due utenti
+     *
+     * @param user: modello dell'altro utente (non il current User)
+     * @param holder: oggetto contenente i binding dell'xml
      */
     private void loadUserProfilePicture(UserModel user, ViewHolder holder) {
         if (user.isHasPicture()) {

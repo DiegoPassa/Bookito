@@ -54,6 +54,8 @@ public class BookTradeFragment extends Fragment {
     }
 
 
+    /**
+     * visualizza i libri per concludere lo scambio*/
     private void setUpBookModel() {
         getAllSenderTradedBooks();
         db.collection("users").get().addOnCompleteListener(task -> {
@@ -92,6 +94,9 @@ public class BookTradeFragment extends Fragment {
         });
     }
 
+    /**
+     * inserisce in senderTradeBooks i libri dell'utente che ha mandato l richiesta al currenti user
+     * seolo se essi sono già in un'altra richiesta di scambio accettata*/
     private void getAllSenderTradedBooks() {
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

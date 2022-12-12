@@ -45,6 +45,8 @@ public class PopupEditBook extends PopupBook {
 
     /**
      * carica i valori dei tipi con cui rempiere il menu a tendina nella modifica del libro
+     *
+     * @param b: bookModel da cui prelevare le informazioni
      */
     private void loadItems(BookModel b) {
         String type = b.getType();

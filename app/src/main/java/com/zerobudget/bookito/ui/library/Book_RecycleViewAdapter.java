@@ -111,6 +111,8 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
      * popup creato qunado l'utente seleziona un libro
      * permette di visualizzare le informazioni relative ad esso
      * permette di eliminare il libro se esso è abilitato (status = true)
+     *
+     * @param holder: oggetto contente i binding dei dati xml
      */
     private void createNewDeletePopup(ViewHolder holder) {
         View view = View.inflate(context, R.layout.popup_book, null);

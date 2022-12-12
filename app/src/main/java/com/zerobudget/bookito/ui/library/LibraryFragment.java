@@ -95,7 +95,9 @@ public class LibraryFragment extends Fragment {
     }
 
     /**
-     * carica la libreria dell'utente*/
+     * carica la libreria dell'utente
+     *
+     * @param books: i libri prelevati dal database*/
     private void loadLibrary(Object books) {
         spinner.setVisibility(View.VISIBLE);
         Utils.CURRENT_USER.getBooks().clear();

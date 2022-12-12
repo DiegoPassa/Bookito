@@ -156,6 +156,10 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
         dialog.show();
     }
 
+    /**
+     * controlla che la richiesta sia ancora undefined
+     *
+     * @param r: richiesta di riferimento*/
     private void checkIfStillUndefined(RequestModel r) {
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
