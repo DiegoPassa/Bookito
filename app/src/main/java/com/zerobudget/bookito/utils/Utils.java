@@ -1,13 +1,17 @@
 package com.zerobudget.bookito.utils;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
 import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
@@ -136,5 +140,35 @@ public class Utils {
             default:
                 break;
         }
+    }
+
+    /**
+     * modifica lo stato di un libro (tramite isbn)
+     * la modifica viene fatta rimuovendo il libro e inserendolo nuovamente con il nuovo stato
+     * perché firebase non permette di modificare un valore all'interno della strutura dati in cui essi sono contenuti
+     *
+     * @param db: database di riferimento su Firebase
+     * @param userID: id dell'utente di riferimento
+     * @param isbn: isbn del libro che necessita del cambiamento di stato
+     */
+    public static void changeBookStatus(FirebaseFirestore db, String userID, String isbn) {
+        Log.d("USER", userID);
+        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Object arr = task.getResult().get("books"); //array dei books
+                if (arr != null) //si assicura di cercare solo se esiste quache libro
+                    for (Object o : (ArrayList<Object>) arr) {
+                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                        if (map.get("isbn").equals(isbn)) {
+                            BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
+
+                            //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
+                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(oldBook));
+                            db.collection("users").document(userID).update("books", FieldValue.arrayUnion(newBook));
+                        }
+                    }
+            }
+        });
     }
 }

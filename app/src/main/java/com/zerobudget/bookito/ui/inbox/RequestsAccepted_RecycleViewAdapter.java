@@ -350,15 +350,15 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 //se è uno scambio  devono tornare disponibili entrambi i libri
                 if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
                     if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
-                        changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
-                        changeBookStatus(requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                        Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
                     } else {
-                        changeBookStatus(Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
-                        changeBookStatus(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        Utils.changeBookStatus(db, Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
                     }
 
                 } else {
-                    changeBookStatus(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                    Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
                 }
 
                 db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "cancelled");
@@ -418,7 +418,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
             else {*/
             //cambia lo stato del libro
-            changeBookStatus(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+            Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
             //segna la richiesta come conlusa
             db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
             requests.remove(holder.getAdapterPosition());
@@ -437,34 +437,6 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
      */
     private void sendFeedbackToUser(String id, float feedback) {
         db.collection("users").document(id).update("karma.points", FieldValue.increment(feedback), "karma.numbers", FieldValue.increment(1));
-    }
-
-    /**
-     * modifica lo stato di un libro (tramite isbn)
-     * la modifica viene fatta rimuovendo il libro e inserendolo nuovamente con il nuovo stato
-     * perché firebase non permette di modificare un valore all'interno della strutura dati in cui essi sono contenuti
-     *
-     * @param userID: id dell'utente di riferimento
-     * @param isbn: isbn del libro che necessita del cambiamento di stato
-     */
-    private void changeBookStatus(String userID, String isbn) {
-        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Object arr = task.getResult().get("books"); //array dei books
-                if (arr != null) //si assicura di cercare solo se esiste quache libro
-                    for (Object o : (ArrayList<Object>) arr) {
-                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if (map.get("isbn").equals(isbn)) {
-                            BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), true);
-
-                            //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
-                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(oldBook));
-                            db.collection("users").document(userID).update("books", FieldValue.arrayUnion(newBook));
-                        }
-                    }
-            }
-        });
     }
 
     /**

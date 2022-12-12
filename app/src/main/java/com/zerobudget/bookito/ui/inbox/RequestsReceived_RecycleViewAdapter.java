@@ -232,9 +232,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
      *
      * @param r: richiesta da accettare*/
     protected void acceptRequest(RequestModel r) {
-        changeBookStatus(r.getRequestedBook());
+        Utils.changeBookStatus(db, Utils.USER_ID, r.getRequestedBook());
 
-        //controlla prima che non esista già una richiesta accettata per il libro
+                //controlla prima che non esista già una richiesta accettata per il libro
         db.collection("requests")
                 .whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "accepted")
@@ -312,30 +312,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 for (QueryDocumentSnapshot doc : task.getResult())
                     if (doc.getId().equals(r.getRequestId()))
                         exists = true;
-            }
-        });
-    }
-
-    /**
-     * cambia lo stato del libro
-     *
-     * @param bookRequested: libro di rifermento dal quale modificare lo stato*/
-    private void changeBookStatus(String bookRequested) {
-        db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Object arr = task.getResult().get("books"); //array dei books
-                if (arr != null) //si assicura di cercare solo se esiste quache libro
-                    for (Object o : (ArrayList<Object>) arr) {
-                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if (map.get("isbn").equals(bookRequested)) {
-                            BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
-
-                            //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
-                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(oldBook));
-                            db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayUnion(newBook));
-                        }
-                    }
             }
         });
     }

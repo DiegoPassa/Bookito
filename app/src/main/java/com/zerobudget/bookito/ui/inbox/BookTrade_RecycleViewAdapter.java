@@ -183,8 +183,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 ref.push().setValue(defaultMsgReceiver);
 
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
-                changeBookStatus(Utils.USER_ID, r.getRequestedBook());
-                changeBookStatus(r.getSender(), bookTrade.getIsbn());
+                Utils.changeBookStatus(db, Utils.USER_ID, r.getRequestedBook());
+                Utils.changeBookStatus(db, r.getSender(), bookTrade.getIsbn());
             } else
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
         });
@@ -203,26 +203,6 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         });
     }
 
-    private void changeBookStatus(String userID, String isbn) {
-        Log.d("USER", userID);
-        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Object arr = task.getResult().get("books"); //array dei books
-                if (arr != null) //si assicura di cercare solo se esiste quache libro
-                    for (Object o : (ArrayList<Object>) arr) {
-                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if (map.get("isbn").equals(isbn)) {
-                            BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
-
-                            //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
-                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(oldBook));
-                            db.collection("users").document(userID).update("books", FieldValue.arrayUnion(newBook));
-                        }
-                    }
-            }
-        });
-    }
 
     @Override
     public int getItemCount() {

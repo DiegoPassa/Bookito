@@ -117,7 +117,7 @@ public class SearchByNameFragment extends SearchFragment {
                         Collections.sort(arrResults);
 
                         if(arrResults.isEmpty())
-                            searchAllBooks_UsrTownship("");
+                            searchAllBooks_UsrTownship(param);
                         else
                             searchAllBooks_OthersCityorTownship(arrResults, param, false);
                         //viewBooks(arrResults);
@@ -143,16 +143,21 @@ public class SearchByNameFragment extends SearchFragment {
                                 if (arr != null) { //si assicura di cercare solo se esiste quache libro
                                     for (Object o : (ArrayList<Object>) arr) {
                                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                        if ((boolean) map.get("status")) {
-                                            BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                                            SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
-                                            arrResults.add(searchResultsModel);
+
+                                            if ((boolean) map.get("status")) {
+                                                if ((map.get("title").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))
+                                                        || (map.get("author").toString().toLowerCase(Locale.ROOT).contains(param.toLowerCase(Locale.ROOT)))) {
+                                                    BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
+                                                    SearchResultsModel searchResultsModel = new SearchResultsModel(tmp, document.toObject(UserModel.class));
+                                                    arrResults.add(searchResultsModel);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                         Collections.sort(arrResults);
+
                         searchAllBooks_OthersCityorTownship(arrResults, param, true);
 
                     } else {
