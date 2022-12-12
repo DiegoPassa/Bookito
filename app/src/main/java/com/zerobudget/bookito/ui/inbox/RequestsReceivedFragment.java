@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -104,7 +103,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.d("error", error+"");
+                        Log.d("error", error.toString());
                         return;
                     }
                     if (value != null) {
@@ -112,10 +111,6 @@ public class RequestsReceivedFragment extends InboxFragment {
                             spinner.setVisibility(View.GONE);
                         }
                         for (DocumentChange doc : value.getDocumentChanges()) {
-                            Log.d("OOI", "getRequestsRealTime: " + doc.getDocument().toObject(RequestModel.class));
-                            if(badge != null)
-                                setRequestBadgeNumber(); //aggiorna anche il badge delle notifiche in real time
-
                             spinner.setVisibility(View.VISIBLE);
                             switch (doc.getType()) {
                                 case ADDED:
@@ -130,6 +125,12 @@ public class RequestsReceivedFragment extends InboxFragment {
                                     break;
                             }
                         }
+                        // set badge number
+                        if (badge != null) {
+                            badge.setNumber(requests.size());
+                            badge.setVisible(badge.getNumber() > 0);
+                        }
+                        // set emptiness
                         Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
                     }
                 });
@@ -149,19 +150,6 @@ public class RequestsReceivedFragment extends InboxFragment {
                         recyclerView.scrollToPosition(position);
                         spinner.setVisibility(View.GONE);
                     }
-                });
-    }
-
-    /**
-     * preleva le richieste ricevute dal database e inserisce il numero nel badge della bottom bar*/
-    private void setRequestBadgeNumber(){
-        db.collection("requests")
-                .whereEqualTo("status", "undefined")
-                .whereEqualTo("receiver", Utils.USER_ID)
-                .get().addOnCompleteListener(task -> {
-                    int numReq = task.getResult().size();
-                    badge.setNumber(numReq);
-                    badge.setVisible(numReq > 0);
                 });
     }
 
