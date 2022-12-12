@@ -157,9 +157,15 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()).getOtherUser());
                     args.putString("otherChatUser", toJson);
 
+                    //passo l'intera richiesta alla chat
+                    String requestString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
+                    args.putString("requestModel", requestString);
+
+                    //nome della classe della richiesta
+                    args.putString("requestClassName", requests.get(holder.getAdapterPosition()).getClass().getSimpleName());
+
                     if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition())))
                         args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getSender());
-
                     else
                         args.putString("otherUserId", requests.get(holder.getAdapterPosition()).getReceiver());
 
