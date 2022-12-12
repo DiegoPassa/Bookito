@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -103,7 +105,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.d("error", error.toString());
+                        Log.e(TAG, "getRequestsRealTime: ", error);
                         return;
                     }
                     if (value != null) {
@@ -116,6 +118,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                                 case ADDED:
                                     RequestModel addedRequestModel = RequestModel.getRequestModel(doc.getDocument().toObject(RequestModel.class).getType(), doc.getDocument());
                                     requests.add(doc.getNewIndex(), addedRequestModel);
+                                    adapter.notifyItemInserted(doc.getNewIndex());
                                     getUserByRequest(addedRequestModel, doc.getNewIndex());
                                     break;
                                 case REMOVED:
@@ -146,7 +149,8 @@ public class RequestsReceivedFragment extends InboxFragment {
                     if (task.isSuccessful()) {
                         UserModel u = task.getResult().toObject(UserModel.class);
                         r.setOtherUser(u);
-                        adapter.notifyItemInserted(position);
+                        // adapter.notifyItemInserted(position);
+                        adapter.notifyItemChanged(position);
                         recyclerView.scrollToPosition(position);
                         spinner.setVisibility(View.GONE);
                     }

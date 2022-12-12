@@ -20,7 +20,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -29,8 +28,8 @@ import com.google.firebase.storage.StorageReference;
 import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
+import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.notification.NotificationModel;
 import com.zerobudget.bookito.models.requests.RequestModel;
@@ -94,12 +93,10 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
             String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
             holder.user_name.setText(other_usr);
             holder.user_location.setText(context.getString(R.string.user_location, requests.get(position).getOtherUser().getTownship(), requests.get(position).getOtherUser().getCity()));
-        } else
-            holder.user_name.setText("undefined");
+        } // else holder.user_name.setText("undefined");
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
         holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
         if (requests.get(holder.getAdapterPosition()).getOtherUser() != null) {
-            Log.d("AOAOOAOAOA", requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone());
 
             Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
 
@@ -268,8 +265,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                                 String messageTxt = "Ciao, ti contatto per il tuo libro in " + r.getType() + " dal titolo '" + r.getTitle() + "'!";
                                 MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, "sent", currentTime, currentDate);
                                 ref.push().setValue(defaultMsg);
-
                                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
+
+                                Notifications.sendPushNotification(Utils.CURRENT_USER.getFirstName() + "ha accettato la tua richiesta per " + r.getTitle(), "Richiesta accettata", r.getOtherUser().getNotificationToken());
                             } else
                                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
                         });
