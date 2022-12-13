@@ -261,15 +261,14 @@ public class ChatFragment extends Fragment {
             //se è uno scambio  devono tornare disponibili entrambi i libri
             if (request instanceof RequestTradeModel) {
                 if (request.getReceiver().equals(Utils.USER_ID)) {
-                    Utils.changeBookStatus(db, Utils.USER_ID, request.getRequestedBook());
-                    Utils.changeBookStatus(db, request.getSender(), ((RequestTradeModel) request).getRequestTradeBook());
+                    Utils.changeBookStatus(db, Utils.USER_ID, request.getRequestedBook(), true);
+                    Utils.changeBookStatus(db, request.getSender(), ((RequestTradeModel) request).getRequestTradeBook(), true);
                 } else {
-                    Utils.changeBookStatus(db, Utils.USER_ID, ((RequestTradeModel) request).getRequestTradeBook());
-                    Utils.changeBookStatus(db, request.getReceiver(), request.getRequestedBook());
+                    Utils.changeBookStatus(db, Utils.USER_ID, (((RequestTradeModel) request).getRequestTradeBook()), true);
+                    Utils.changeBookStatus(db, request.getReceiver(), request.getRequestedBook(), true);
                 }
-
             } else {
-                Utils.changeBookStatus(db, request.getReceiver(), request.getRequestedBook());
+                Utils.changeBookStatus(db, Utils.USER_ID, request.getRequestedBook(), true);
             }
 
             db.collection("requests").document(request.getRequestId()).update("status", "cancelled");
@@ -398,7 +397,7 @@ public class ChatFragment extends Fragment {
         } else {
             //richiesta di prestito
             //cambia lo stato del libro
-            Utils.changeBookStatus(db, Utils.USER_ID, request.getRequestedBook());
+            Utils.changeBookStatus(db, Utils.USER_ID, request.getRequestedBook(), true);
             //segna la richiesta come conlusa
             db.collection("requests").document(request.getRequestId()).update("status", "concluded");
 

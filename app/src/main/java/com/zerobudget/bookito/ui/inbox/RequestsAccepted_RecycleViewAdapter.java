@@ -360,15 +360,16 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 //se è uno scambio  devono tornare disponibili entrambi i libri
                 if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
                     if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
-                        Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
-                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                        Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
+                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook(), true);
                     } else {
-                        Utils.changeBookStatus(db, Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
-                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                        Utils.changeBookStatus(db, Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook(), true);
+                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
                     }
 
                 } else {
-                    Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                    Log.e("RECEIVER",requests.get(holder.getAdapterPosition()).getReceiver());
+                    Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
                 }
 
                 db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "cancelled");
@@ -428,7 +429,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 Toast.makeText(context, "Attenzione, il prestito non ha ancora superato la data prestabilita!", Toast.LENGTH_LONG).show();
             else {*/
             //cambia lo stato del libro
-            Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+            Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
             //segna la richiesta come conlusa
             db.collection("requests").document(requests.get(holder.getAdapterPosition()).getRequestId()).update("status", "concluded");
             requests.remove(holder.getAdapterPosition());

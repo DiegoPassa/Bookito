@@ -229,7 +229,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
      *
      * @param r: richiesta da accettare*/
     protected void acceptRequest(RequestModel r) {
-        Utils.changeBookStatus(db, Utils.USER_ID, r.getRequestedBook());
+        Utils.changeBookStatus(db, Utils.USER_ID, r.getRequestedBook(), false);
 
                 //controlla prima che non esista già una richiesta accettata per il libro
         db.collection("requests")

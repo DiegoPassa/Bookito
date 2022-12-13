@@ -151,7 +151,7 @@ public class Utils {
      * @param userID: id dell'utente di riferimento
      * @param isbn: isbn del libro che necessita del cambiamento di stato
      */
-    public static void changeBookStatus(FirebaseFirestore db, String userID, String isbn) {
+    public static void changeBookStatus(FirebaseFirestore db, String userID, String isbn, boolean newStatus) {
         Log.d("USER", userID);
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -161,7 +161,7 @@ public class Utils {
                         HashMap<Object, Object> map = (HashMap<Object, Object>) o;
                         if (map.get("isbn").equals(isbn)) {
                             BookModel oldBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
-                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), false);
+                            BookModel newBook = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), newStatus);
 
                             //firebase non permette di modificare il valore, va rimosso l'elemento dell'array e inserito con i valori modificati
                             db.collection("users").document(userID).update("books", FieldValue.arrayRemove(oldBook));

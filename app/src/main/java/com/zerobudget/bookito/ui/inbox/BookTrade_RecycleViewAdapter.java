@@ -183,8 +183,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 ref.push().setValue(defaultMsgReceiver);
 
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
-                Utils.changeBookStatus(db, Utils.USER_ID, r.getRequestedBook());
-                Utils.changeBookStatus(db, r.getSender(), bookTrade.getIsbn());
+                Utils.changeBookStatus(db, Utils.USER_ID, r.getRequestedBook(), false);
+                Utils.changeBookStatus(db, r.getSender(), bookTrade.getIsbn(), false);
             } else
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
         });
