@@ -284,10 +284,14 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
+            Log.d("AAAA", "SONO UQI");
+
             if (request instanceof RequestShareModel)
-                if (!Utils.USER_ID.equals(request.getSender()))
-                    return;  //è solo il sender che può confermare che la richiesta è satta effettivamente conclusa
-                    /*
+                if (!Utils.USER_ID.equals(request.getSender())) {
+                     Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
+                     return;  //è solo il sender che può confermare che la richiesta è satta effettivamente conclusa
+                }
+            /*
                     anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
                     Possiamo aggiungere una sorta di flag per far concludere la richiesta in caso l'utente non dovesse restituire il libro al suo proprietario
                      */
@@ -400,16 +404,16 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
                 //cancella i libri scambiati
                 if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
-                    deleteUserBook(Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
-                    deleteUserBook(requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                    Utils.deleteUserBook(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook());
+                    Utils.deleteUserBook(db, requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
                 } else {
-                    deleteUserBook(Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
-                    deleteUserBook(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                    Utils.deleteUserBook(db, Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook());
+                    Utils.deleteUserBook(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
                 }
                 Toast.makeText(context, "Scambio concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
             } else {
                 //cancella il libro regalato
-                deleteUserBook(requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
+                Utils.deleteUserBook(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook());
                 Toast.makeText(context, "Regalo concluso, libro eliminato dalla libreria!", Toast.LENGTH_LONG).show();
             }
 
@@ -445,9 +449,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         db.collection("users").document(id).update("karma.points", FieldValue.increment(feedback), "karma.numbers", FieldValue.increment(1));
     }
 
-    /**
+    /*
      * elimina un libro dalla libreria dell'utente, sulla base dell'isbn
-     */
+
     void deleteUserBook(String userID, String bookRequested) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -461,7 +465,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     }
             }
         });
-    }
+    }*/
 
     /**
      * visualizza le informazioni relative alla richiesta selezionata

@@ -171,4 +171,27 @@ public class Utils {
             }
         });
     }
+
+
+    /**
+     * elimina un libro dalla libreria dell'utente, sulla base dell'isbn
+     *
+     * @param db: database di riferimento su Firebase
+     * @param userID: id dell'utente di riferimento
+     * @param isbn: isbn del libro che necessita del cambiamento di stato
+     */
+    public static void deleteUserBook(FirebaseFirestore db, String userID, String isbn) {
+        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Object arr = task.getResult().get("books"); //array dei books
+                if (arr != null) //si assicura di cercare solo se esiste quache libro
+                    for (Object o : (ArrayList<Object>) arr) {
+                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
+                        if (map.get("isbn").equals(isbn)) {
+                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(map));
+                        }
+                    }
+            }
+        });
+    }
 }
