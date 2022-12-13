@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.chat;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,10 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,13 +66,15 @@ public class ChatFragment extends Fragment {
 
     protected FirebaseFirestore db;
 
+    private View root;
+    int position;
 
     private final ArrayList<MessageModel> messages = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
 
 
         this.db = FirebaseFirestore.getInstance();
@@ -100,6 +105,8 @@ public class ChatFragment extends Fragment {
                 request = Utils.getGsonParser().fromJson(requestModelStr, RequestModel.class);
                 break;
         }
+
+        position = args.getInt("position");
 
         requestID = args.getString("requestID");
         realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + requestID);
@@ -186,7 +193,8 @@ public class ChatFragment extends Fragment {
                 return true;
 
             case R.id.confirm_book_given_item:
-                Toast.makeText(getContext(), "TODO", Toast.LENGTH_LONG).show();
+                confirmBookGivenDialog();
+                return true;
 
             case R.id.close_request_item:
                 Toast.makeText(getContext(), "TODO", Toast.LENGTH_LONG).show();
@@ -194,12 +202,46 @@ public class ChatFragment extends Fragment {
 
             case R.id.cancel_request_item:
                 //annullata mentre è ancora in corso
-                Toast.makeText(getContext(), "TODO", Toast.LENGTH_LONG).show();
+
+
                 return true;
             default:
                 return false;
 
         }
+    }
+
+    private void confirmBookGivenDialog() {
+        Log.d("aaaa", "hei");
+        if (!Utils.USER_ID.equals(request.getReceiver()))
+            return; //solo chi riceve il libro può confermare di averlo ricevuto
+            /*
+            da rivedere in ogni caso questo sistema, si potrebbe fare che serva una doppia conferma da parte di entrambi gli utenti
+             */
+        if (request.getStatus().equals("ongoing")) return;
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+        builder.setTitle("Conferma");
+        builder.setMessage(Html.fromHtml("Sei sicuro di voler confermare l'inizio del prestito di <br><b>" + request.getTitle() + "</b>", Html.FROM_HTML_MODE_LEGACY));
+        builder.setPositiveButton("SI", (dialogInterface, i) -> {
+            db.collection("requests").document(request.getRequestId()).update("status", "ongoing").addOnSuccessListener(task -> {
+                request.setStatus("ongoing");
+            });
+
+            Bundle args = new Bundle();
+            args.putInt("position", position);
+
+            //devo usate la navigation per poter passare l'indice della posizione dell'elemento della recycle view
+            //per poter notificare l'adapter del cambiamento!
+            //TODO rimuovere lo slider fastidioso che fa
+            Navigation.findNavController(getView()).navigate(R.id.action_chat_fragment_to_request_page_nav, args);
+            dialogInterface.dismiss();
+        });
+        builder.setNegativeButton("NO", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+        });
+
+        builder.show();
     }
 
 

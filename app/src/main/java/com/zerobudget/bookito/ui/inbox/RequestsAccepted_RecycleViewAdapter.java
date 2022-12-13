@@ -31,7 +31,6 @@ import com.lelloman.identicon.view.ClassicIdenticonView;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestShareModel;
 import com.zerobudget.bookito.models.requests.RequestTradeModel;
@@ -161,6 +160,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     String requestString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
                     args.putString("requestModel", requestString);
 
+                    args.putInt("position", holder.getAdapterPosition());
                     //nome della classe della richiesta
                     args.putString("requestClassName", requests.get(holder.getAdapterPosition()).getClass().getSimpleName());
 

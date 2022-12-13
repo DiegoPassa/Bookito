@@ -45,6 +45,9 @@ public class RequestsAcceptedFragment extends InboxFragment {
         int textSize = 14;
         int clicked_textSize = 17;
 
+
+
+
         binding.textView.setVisibility(View.GONE);
         binding.filterBar.setVisibility(View.VISIBLE);
 
@@ -77,6 +80,15 @@ public class RequestsAcceptedFragment extends InboxFragment {
             binding.swipeRefreshLayout.setRefreshing(false);
             loadCompletedRequests();
         });
+
+        //notifica l'adapter della recycle view quando avviene una modifica
+        //dall'interno della chat ( menu a tendina )
+        Bundle args = getArguments();
+        if(args !=null){
+            RequestsAccepted_RecycleViewAdapter adapteer = new RequestsAccepted_RecycleViewAdapter(this.getContext(), requests, emptyWarning);
+            adapteer.notifyItemChanged(args.getInt("position"));
+        }
+
 
         if (requests.size() == 0)
             loadCompletedRequests();
@@ -214,4 +226,6 @@ public class RequestsAcceptedFragment extends InboxFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
     }
+
 }
+

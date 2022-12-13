@@ -97,7 +97,11 @@
             android:id="@+id/chat_fragment"
             android:name="com.zerobudget.bookito.ui.chat.ChatFragment"
             android:label="@string/app_name"
-            tools:layout="@layout/fragment_chat" />
+            tools:layout="@layout/fragment_chat" >
+            <action
+                android:id="@+id/action_chat_fragment_to_request_page_nav"
+                app:destination="@id/request_page_nav" />
+        </fragment>
         <fragment
             android:id="@+id/bookTradeFragment"
             android:name="com.zerobudget.bookito.ui.inbox.BookTradeFragment"
