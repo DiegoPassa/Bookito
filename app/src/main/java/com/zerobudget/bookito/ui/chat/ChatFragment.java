@@ -203,6 +203,7 @@ public class ChatFragment extends Fragment {
             case R.id.cancel_request_item:
                 //annullata mentre è ancora in corso
 
+                cancelRequestDialog();
 
                 return true;
             default:
@@ -230,6 +231,7 @@ public class ChatFragment extends Fragment {
 
             Bundle args = new Bundle();
             args.putInt("position", position);
+            args.putString("type", "changed");
 
             //devo usate la navigation per poter passare l'indice della posizione dell'elemento della recycle view
             //per poter notificare l'adapter del cambiamento!
@@ -244,6 +246,41 @@ public class ChatFragment extends Fragment {
         builder.show();
     }
 
+    private void cancelRequestDialog() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+        builder.setTitle("Conferma");
+        builder.setMessage(Html.fromHtml("Sei sicuro di voler annullare la richiesta di <br><b>" + request.getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
+        builder.setPositiveButton("SI", (dialogInterface, i) -> {
+            //TODO sistemare i permessi su firebase
+            //se è uno scambio  devono tornare disponibili entrambi i libri
+            if (request instanceof RequestTradeModel) {
+                if (request.getReceiver().equals(Utils.USER_ID)) {
+                    Utils.changeBookStatus(db, Utils.USER_ID, request.getRequestedBook());
+                    Utils.changeBookStatus(db, request.getSender(), ((RequestTradeModel) request).getRequestTradeBook());
+                } else {
+                    Utils.changeBookStatus(db, Utils.USER_ID, ((RequestTradeModel) request).getRequestTradeBook());
+                    Utils.changeBookStatus(db, request.getReceiver(), request.getRequestedBook());
+                }
+
+            } else {
+                Utils.changeBookStatus(db, request.getReceiver(), request.getRequestedBook());
+            }
+
+            db.collection("requests").document(request.getRequestId()).update("status", "cancelled");
+
+            Toast.makeText(getContext(), "Richiesta annullata!", Toast.LENGTH_LONG).show();
+
+            Bundle args = new Bundle();
+            args.putInt("position", position);
+            args.putString("type", "removed");
+
+            Navigation.findNavController(getView()).navigate(R.id.action_chat_fragment_to_request_page_nav, args);
+
+            dialogInterface.dismiss();
+        }).setNegativeButton("NO", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+        }).show();
+    }
 
     /**
      * visualizza le informazioni relative alla richiesta selezionata

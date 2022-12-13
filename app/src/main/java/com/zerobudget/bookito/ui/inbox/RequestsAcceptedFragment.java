@@ -86,7 +86,17 @@ public class RequestsAcceptedFragment extends InboxFragment {
         Bundle args = getArguments();
         if(args !=null){
             RequestsAccepted_RecycleViewAdapter adapteer = new RequestsAccepted_RecycleViewAdapter(this.getContext(), requests, emptyWarning);
-            adapteer.notifyItemChanged(args.getInt("position"));
+
+            switch (args.getString("type")){
+                case "changed":
+                    adapteer.notifyItemChanged(args.getInt("position"));
+                    break;
+                case "removed":
+                    adapteer.notifyItemRemoved(args.getInt("position"));
+                    break;
+                default:
+                    break;
+            }
         }
 
 
