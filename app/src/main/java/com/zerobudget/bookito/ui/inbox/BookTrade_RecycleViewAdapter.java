@@ -35,10 +35,7 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupBook;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade_RecycleViewAdapter.ViewHolder> {
 
@@ -164,21 +161,14 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                     ref.child("user2").setValue(r.getSender());
                 else ref.child("user2").setValue(Utils.USER_ID);
 
-                Date now = Timestamp.now().toDate();
-
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                String currentTime = sdf.format(now);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                String currentDate = sdf1.format(now);
-
                 //messaggio di default da sender a receiver che viene inviato con il libro della richiesta
                 String messageTxtSender = "Ciao, ti contatto per il tuo libro '" + r.getTitle() + "'!";
-                MessageModelWithImage defaultMsgSender = new MessageModelWithImage(r.getThumbnail(), r.getSender(), Utils.USER_ID, messageTxtSender, "sent", currentTime, currentDate);
+                MessageModelWithImage defaultMsgSender = new MessageModelWithImage(r.getThumbnail(), r.getSender(), Utils.USER_ID, messageTxtSender, "sent", Timestamp.now().getSeconds());
                 ref.push().setValue(defaultMsgSender);
 
                 //messaggio di default da receiver a sender inviato con il libro scelto per lo scambio dalla libreria del sender
                 String messageTxt = "Ciao, ho scelto il libro '" + bookTrade.getTitle() + "' da scambiare!";
-                MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, "sent", currentTime, currentDate);
+                MessageModelTrade defaultMsgReceiver = new MessageModelTrade(bookTrade.getIsbn(), bookTrade.getThumbnail(), Utils.USER_ID, r.getSender(), messageTxt, "sent", Timestamp.now().getSeconds());
                 ref.push().setValue(defaultMsgReceiver);
 
                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();

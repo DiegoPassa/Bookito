@@ -9,14 +9,14 @@ public class MessageModelTrade extends MessageModel {
     public MessageModelTrade() {
     }
 
-    public MessageModelTrade(String isbnBookTrade, String thumbnailBookTrade, String sender, String receiver, String message, String status, String messageTime, String messageDate) {
-        super(sender, receiver, message, status, messageTime, messageDate);
+    public MessageModelTrade(String isbnBookTrade, String thumbnailBookTrade, String sender, String receiver, String message, String status, long messageSentAt/*, String messageTime, String messageDate*/) {
+        super(sender, receiver, message, status, messageSentAt/*, messageTime, messageDate*/);
         this.isbnBookTrade = isbnBookTrade;
         this.thumbnailBookTrade = thumbnailBookTrade;
     }
 
-    public MessageModelTrade(String isbnBookTrade, String thumbnailBookTrade, String sender, String receiver, String message, String status, String messageTime, String messageDate, String id) {
-        super(sender, receiver, message, status, messageTime, messageDate, id);
+    public MessageModelTrade(String isbnBookTrade, String thumbnailBookTrade, String sender, String receiver, String message, String status, long messageSentAt, String id) {
+        super(sender, receiver, message, status, messageSentAt, id);
         this.isbnBookTrade = isbnBookTrade;
         this.thumbnailBookTrade = thumbnailBookTrade;
     }

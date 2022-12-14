@@ -86,7 +86,13 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             holder.book_thumbnail.setVisibility(View.GONE);
         }
 
-        holder.messagesDate.setText(messages.get(position).getMessageDate());
+        Date date = new Date(messages.get(holder.getAdapterPosition()).getMessageSentAt()*1000);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String strMsgTime = sdf.format(date);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String strMsgDate = sdf1.format(date);
+
+        holder.messagesDate.setText(strMsgDate);
 
         //visualizzazione della data solo nel caso essa sia diversa da quella del messaggio precedente
         boolean isShowedDate = haveToShowDate(holder, position);
@@ -103,8 +109,8 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
             loadUserProfilePicture(otherUser, holder);
         }
 
-        if (messages.get(position).getMessageTime() != null)
-            holder.messageSentAt.setText(messages.get(holder.getAdapterPosition()).getMessageTime());
+        if (messages.get(position).getMessageSentAt() != 0)
+            holder.messageSentAt.setText(strMsgTime);
 
     }
 
@@ -118,18 +124,11 @@ public class Chat_RecycleViewAdapter extends RecyclerView.Adapter<Chat_RecycleVi
      * @return boolean: true se deve mostrare la data, false altrimenti
      */
     private boolean haveToShowDate(ViewHolder holder, int position) {
-        if (position > 0) {
-            Date previousMsgDate = new Date();
-            Date currentMsgDate = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            try {
-                previousMsgDate = dateFormat.parse(messages.get(position - 1).getMessageDate());
-                currentMsgDate = dateFormat.parse(messages.get(position).getMessageDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
 
-            assert currentMsgDate != null;
+        if (position > 0) {
+            Date previousMsgDate = new Date(messages.get(position-1).getMessageSentAt()*1000);
+            Date currentMsgDate = new Date(messages.get(position).getMessageSentAt());
+
             if (currentMsgDate.after(previousMsgDate)) {
                 holder.messagesDateCard.setVisibility(View.VISIBLE);
                 return true;

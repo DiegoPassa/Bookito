@@ -254,16 +254,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                                     ref.child("user2").setValue(r.getSender());
                                 else ref.child("user2").setValue(Utils.USER_ID);
 
-                                Date now = Timestamp.now().toDate();
-
-                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                                String currentTime = sdf.format(now);
-                                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                                String currentDate = sdf1.format(now);
-
                                 //messaggio di default per visualizzare il libro richiesto e per iniziare la conversazione
                                 String messageTxt = "Ciao, ti contatto per il tuo libro in " + r.getType() + " dal titolo '" + r.getTitle() + "'!";
-                                MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, "sent", currentTime, currentDate);
+                                MessageModelWithImage defaultMsg = new MessageModelWithImage(r.getThumbnail(), r.getSender(), r.getReceiver(), messageTxt, "sent", Timestamp.now().getSeconds());
                                 ref.push().setValue(defaultMsg);
                                 Toast.makeText(context, "Richiesta accettata!", Toast.LENGTH_LONG).show();
 

@@ -8,13 +8,13 @@ public class MessageModelWithImage extends MessageModel {
     public MessageModelWithImage() {
     }
 
-    public MessageModelWithImage(String thumbnailBookRequested, String sender, String receiver, String message, String status, String messageTime, String messageDate) {
-        super(sender, receiver, message, status, messageTime, messageDate);
+    public MessageModelWithImage(String thumbnailBookRequested, String sender, String receiver, String message, String status, long messageSentAt) {
+        super(sender, receiver, message, status,messageSentAt);
         this.thumbnailBookRequested = thumbnailBookRequested;
     }
 
-    public MessageModelWithImage(String thumbnailBookRequested, String sender, String receiver, String message, String status, String messageTime, String messageDate, String id) {
-        super(sender, receiver, message, status, messageTime, messageDate, id);
+    public MessageModelWithImage(String thumbnailBookRequested, String sender, String receiver, String message, String status, long messageSentAt, String id) {
+        super(sender, receiver, message, status, messageSentAt, id);
         this.thumbnailBookRequested = thumbnailBookRequested;
     }
 

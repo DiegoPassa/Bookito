@@ -10,24 +10,21 @@ public class MessageModel {
     private String message; //contenuto del messaggio
     private String status; //sent, read
     private String messageId;
-    private String messageTime; //orario d'inivio
-    private String messageDate; //data d'invio
-    //private Timestamp messageSentAt;
+    private long messageSentAt;//timestamp in secondi
 
     public MessageModel() {
     }
 
-    public MessageModel(String sender, String receiver, String message, String status, String messageTime, String messageDate) {
+    public MessageModel(String sender, String receiver, String message, String status, long messageSentAt) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
         this.status = status;
-        this.messageTime = messageTime;
-        this.messageDate = messageDate;
+        this.messageSentAt = messageSentAt;
     }
 
-    public MessageModel(String sender, String receiver, String message, String status, String messageTime, String messageDate, String id) {
-        this(sender, receiver, message, status, messageTime, messageDate);
+    public MessageModel(String sender, String receiver, String message, String status, long messageSentAt, String id) {
+        this(sender, receiver, message, status, messageSentAt);
         this.messageId = id;
     }
 
@@ -63,23 +60,6 @@ public class MessageModel {
         this.messageId = messageId;
     }
 
-    public String getMessageTime() {
-        return messageTime;
-    }
-
-    public void setMessageTime(String messageTime) {
-        this.messageTime = messageTime;
-    }
-
-
-    public String getMessageDate() {
-        return messageDate;
-    }
-
-    public void setMessageDate(String messageDate) {
-        this.messageDate = messageDate;
-    }
-
     public static ArrayList<MessageModel> getMessages(String user1, String user2, String requestID) {
         //TODO get un array of message between two users (maybe could be useful?)
         return null;
@@ -93,12 +73,18 @@ public class MessageModel {
         this.status = status;
     }
 
+    public long getMessageSentAt() {
+        return messageSentAt;
+    }
+
+    public void setMessageSentAt(long messageSentAt) {
+        this.messageSentAt = messageSentAt;
+    }
 
     public Map<String, Object> serialize() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("message", this.message);
-        map.put("messageDate", this.messageDate);
-        map.put("messageTime", this.messageTime);
+        map.put("mmessageSentAt", this.messageSentAt);
         map.put("receiver", this.receiver);
         map.put("sender", this.sender);
         map.put("status", this.status);
