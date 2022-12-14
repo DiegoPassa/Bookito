@@ -26,6 +26,7 @@ import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestShareModel;
+import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupSearchBook;
@@ -196,11 +197,21 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             Toast.makeText(context, "Attenzione! Hai già effettuato la richiesta per " + rm.getTitle() + "!", Toast.LENGTH_LONG).show();
         }
 
+
+
         if (rDoc.getStatus().equals("accepted") || rDoc.getStatus().equals("ongoing")) {
             if (rDoc.getReceiver().equals(rm.getReceiver()) && rDoc.getRequestedBook().equals(rm.getRequestedBook())) {
                 exists = true;
                 Toast.makeText(context, "Attenzione! Esista già una richiesta in corso per '" + rm.getTitle() + "'!", Toast.LENGTH_LONG).show();
             }
+
+            if(rDoc instanceof RequestTradeModel){
+                if(((RequestTradeModel) rDoc).getRequestTradeBook().equals(rm.getRequestedBook())){
+                    exists = true;
+                    Toast.makeText(context, "Attenzione! Il libro" + rm.getTitle() + " è già un una richiesta in corso!", Toast.LENGTH_LONG).show();
+                }
+            }
+
         } else {
             if (rDoc.getStatus().equals(rm.getSender()) && rDoc.getRequestedBook().equals(rm.getRequestedBook()) && rDoc.getStatus().equals("undefined")) {
                 exists = true;
@@ -225,8 +236,12 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
             if (task.isSuccessful()) {
 
                 for (QueryDocumentSnapshot doc : task.getResult()) {
+                    RequestModel rDoc;
+                    if(doc.contains("requestTradeBook"))
+                        rDoc = doc.toObject(RequestTradeModel.class);
                     //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
-                    RequestModel rDoc = doc.toObject(RequestModel.class);
+                    else rDoc = doc.toObject(RequestModel.class);
+
                     if (checkRequests(rDoc, rm)) {
                         err = true;
                         break;
