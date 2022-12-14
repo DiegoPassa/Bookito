@@ -103,6 +103,7 @@ public class NotificationsFragment extends Fragment {
                     notifications.add(not);
 
                     Log.d("ID", ""+not.getActionerId());
+
                 }
                 adapter.notifyDataSetChanged();
             }

@@ -12,12 +12,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.notification.NotificationModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notification_RecycleViewAdapter.ViewHolder> {
 
@@ -46,14 +48,25 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
         holder.title.setText(notification.get(position).getTitle());
         holder.body.setText(notification.get(position).getBody());
 
-        FirebaseStorage.getInstance().getReference().child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
-            for (StorageReference item : listResult.getItems()) {
-                if (item.getName().equals(notification.get(position).getActionerId()))
-                    item.getDownloadUrl().addOnSuccessListener(uri -> {
-                        Picasso.get().load(uri).into(holder.actioner_image);
-                    });
-            }
-        });
+        if(notification.get(position).getTimestamp() != 0) {
+            holder.date.setVisibility(View.VISIBLE);
+            Date date = new Date(notification.get(position).getTimestamp()*1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            String currentTime = sdf.format(date);
+            SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            String currentDate = sdf1.format(date);
+
+            String txtDate = currentDate + " "+currentTime;
+            holder.date.setText(txtDate);
+        }
+        FirebaseStorage.getInstance().getReference()
+                .child("profile_pics/")
+                .child(notification.get(position).getActionerId())
+                .getDownloadUrl()
+                .addOnSuccessListener(uri ->
+                    Picasso.get().load(uri).into(holder.actioner_image)
+                );
+
         Picasso.get().load(notification.get(position).getBook_thumb()).into(holder.book_victim);
     }
 
@@ -70,6 +83,7 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
         private final ImageView book_victim;
         private final ConstraintLayout item_selected;
         private final ImageView actioner_image;
+        private final TextView date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +93,7 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
             book_victim = itemView.findViewById(R.id.book_victim);
             item_selected = itemView.findViewById(R.id.item_selected);
             actioner_image = itemView.findViewById(R.id.actioner_image);
+            date = itemView.findViewById(R.id.date);
         }
     }
 

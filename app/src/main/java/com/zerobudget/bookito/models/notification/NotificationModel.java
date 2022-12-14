@@ -1,5 +1,6 @@
 package com.zerobudget.bookito.models.notification;
 
+import com.google.firebase.Timestamp;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
 
@@ -15,7 +16,9 @@ public class NotificationModel {
     private UserModel actioner;
     private RequestModel request;
 
-    public NotificationModel(String actionerId, String type, String body, String title, String book_thumb, RequestModel request, UserModel actioner) {
+    long timestamp;
+
+    public NotificationModel(String actionerId, String type, String body, String title, String book_thumb, RequestModel request, UserModel actioner, long time) {
         this.type = type;
         this.body = body;
         this.title = title;
@@ -23,6 +26,7 @@ public class NotificationModel {
         this.actionerId = actionerId;
         this.request = request;
         this.actioner = actioner;
+        this.timestamp = time;
     }
 
     public NotificationModel() {}
@@ -38,6 +42,7 @@ public class NotificationModel {
         data_notify.put("actionerId", this.actionerId);
         data_notify.put("type", this.type);
         data_notify.put("notificationId", this.notificationId);
+        data_notify.put("timestamp", this.timestamp);
         data_notify.put("body", this.body);
         data_notify.put("title", this.title);
         data_notify.put("book_thumb", this.book_thumb);
@@ -123,5 +128,13 @@ public class NotificationModel {
 
     public void setActionerId(String actionerId) {
         this.actionerId = actionerId;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

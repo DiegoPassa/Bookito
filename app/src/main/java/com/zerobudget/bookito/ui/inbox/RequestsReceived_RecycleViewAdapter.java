@@ -295,7 +295,8 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         UserModel currentUser = new UserModel(Utils.CURRENT_USER.getFirstName(), Utils.CURRENT_USER.getLastName(),
                 Utils.CURRENT_USER.getTelephone(), Utils.CURRENT_USER.getTownship(), Utils.CURRENT_USER.getCity(),
                 Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
-        NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser);
+
+        NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser,Timestamp.now().getSeconds());
         Log.d("NOTIFIC", ""+notificationModel.serialize());
         ref.push().setValue(notificationModel.serialize());
     }
