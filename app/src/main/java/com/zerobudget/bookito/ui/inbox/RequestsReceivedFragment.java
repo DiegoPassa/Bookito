@@ -46,8 +46,6 @@ public class RequestsReceivedFragment extends InboxFragment {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
-
         spinner = binding.progressBar;
         empty = binding.empty;
         recyclerView = binding.recycleViewInbox;
@@ -74,7 +72,6 @@ public class RequestsReceivedFragment extends InboxFragment {
 
     protected void setUpRecycleView() {
         if (getView() != null) {
-            requests.clear();
             adapter = new RequestsReceived_RecycleViewAdapter(this.getContext(), requests, empty);
             recyclerView.setAdapter(adapter);
             //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -154,7 +151,9 @@ public class RequestsReceivedFragment extends InboxFragment {
                         r.setOtherUser(u);
                         // adapter.notifyItemInserted(position);
                         adapter.notifyItemChanged(position);
-                        recyclerView.scrollToPosition(position);
+                        if (!requests.isEmpty()) {
+                            recyclerView.scrollToPosition(0);
+                        }
                         spinner.setVisibility(View.GONE);
                     }
                 });

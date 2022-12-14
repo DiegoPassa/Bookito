@@ -246,7 +246,8 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     notifyItemRemoved(position);
 
                     try {
-                        Notifications.sendPushNotification(Utils.CURRENT_USER
+                        Notifications.sendPushNotification(
+                                Utils.CURRENT_USER
                                         .getFirstName() + " ti ha richiesto il libro: " + rm.getTitle(),
                                 "Nuova richiesta",
                                 results.get(holder.getAdapterPosition())
