@@ -45,10 +45,10 @@ import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestShareModel;
 import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.ui.inbox.RequestsAccepted_RecycleViewAdapter;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupInbox;
+import com.zerobudget.bookito.utils.popups.PopupInboxTradeAcc;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -419,9 +419,18 @@ public class ChatFragment extends Fragment {
      * visualizza le informazioni relative alla richiesta selezionata
      */
     public void createNewContactDialog(Flag flag) {
-        View view = View.inflate(getContext(), R.layout.popup, null);
-        //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
-        PopupInbox dialogBuilder = new PopupInbox(getContext(), view);
+
+        View view;
+        PopupInbox dialogBuilder;
+        if(request instanceof RequestTradeModel) {
+            view = View.inflate(getContext(), R.layout.popup_inbox_trade_acc, null);
+            dialogBuilder = new PopupInboxTradeAcc(getContext(), view);
+            ((PopupInboxTradeAcc) dialogBuilder).setUpInformationTrade((RequestTradeModel) request);
+        }else {
+            //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
+            view = View.inflate(getContext(), R.layout.popup_inbox, null);
+            dialogBuilder = new PopupInbox(getContext(), view);
+        }
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 

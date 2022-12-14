@@ -190,7 +190,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         });
         db.collection("requests").document(r.getRequestId()).update("requestTradeBook", bookTrade.getIsbn());
         db.collection("requests").document(r.getRequestId()).update("thumbnailBookTrade", bookTrade.getThumbnail());
-
+        db.collection("requests").document(r.getRequestId()).update("titleBookTrade", bookTrade.getTitle());
     }
 
     private void checkIfStillExists(RequestTradeModel r) {

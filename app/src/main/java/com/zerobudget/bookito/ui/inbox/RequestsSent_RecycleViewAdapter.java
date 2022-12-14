@@ -107,7 +107,7 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
         checkIfStillUndefined(requests.get(holder.getAdapterPosition()));
 
-        View view = View.inflate(context, R.layout.popup, null);
+        View view = View.inflate(context, R.layout.popup_inbox, null);
 
         PopupInbox dialogBuilder = new PopupInbox(context, view);
         dialogBuilder.setView(view);

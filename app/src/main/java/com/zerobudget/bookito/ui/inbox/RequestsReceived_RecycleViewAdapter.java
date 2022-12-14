@@ -154,7 +154,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         //controlla se la richiesta esiste ancora
         checkIfStillExists(requests.get(holder.getAdapterPosition()));
 
-        View view = View.inflate(context, R.layout.popup, null);
+        View view = View.inflate(context, R.layout.popup_inbox, null);
         //loadPopupViewMembers(view);
 
         //utilizza la classe popupInbox per generare dinamicamente i vari elementi del popup

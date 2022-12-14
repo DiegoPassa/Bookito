@@ -38,6 +38,7 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupInbox;
+import com.zerobudget.bookito.utils.popups.PopupInboxTradeAcc;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -450,31 +451,21 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         db.collection("users").document(id).update("karma.points", FieldValue.increment(feedback), "karma.numbers", FieldValue.increment(1));
     }
 
-    /*
-     * elimina un libro dalla libreria dell'utente, sulla base dell'isbn
-
-    void deleteUserBook(String userID, String bookRequested) {
-        db.collection("users").document(userID).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Object arr = task.getResult().get("books"); //array dei books
-                if (arr != null) //si assicura di cercare solo se esiste quache libro
-                    for (Object o : (ArrayList<Object>) arr) {
-                        HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                        if (map.get("isbn").equals(bookRequested)) {
-                            db.collection("users").document(userID).update("books", FieldValue.arrayRemove(map));
-                        }
-                    }
-            }
-        });
-    }*/
-
     /**
      * visualizza le informazioni relative alla richiesta selezionata
      */
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
-        View view = View.inflate(context, R.layout.popup, null);
-        //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
-        PopupInbox dialogBuilder = new PopupInbox(context, view);
+        View view;
+        PopupInbox dialogBuilder;
+        if(requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+            view = View.inflate(context, R.layout.popup_inbox_trade_acc, null);
+            dialogBuilder = new PopupInboxTradeAcc(context, view);
+            ((PopupInboxTradeAcc) dialogBuilder).setUpInformationTrade((RequestTradeModel) requests.get(holder.getAdapterPosition()));
+        }else {
+            //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
+            view = View.inflate(context, R.layout.popup_inbox, null);
+            dialogBuilder = new PopupInbox(context, view);
+        }
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
