@@ -258,22 +258,17 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     int position = holder.getAdapterPosition();
                     results.remove(position);
                     //rimuove il libro dai visualizzati
-                    notifyItemRemoved(position);
-
                     try {
                         Notifications.sendPushNotification(
-                                Utils.CURRENT_USER
-                                        .getFirstName() + " ti ha richiesto il libro: " + rm.getTitle(),
+                                Utils.CURRENT_USER.getFirstName() + " ti ha richiesto il libro: \"" + rm.getTitle() + "\"",
                                 "Nuova richiesta",
-                                results.get(holder.getAdapterPosition())
-                                        .getUser()
-                                        .getNotificationToken());
+                                results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
                     } catch (Exception e) {
                         Log.e("Errore", e.getMessage());
                     }
+                    notifyItemRemoved(position);
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
                 }
-
             } else {
                 Log.d("ERR", "Error getting documents: ", task.getException());
             }
