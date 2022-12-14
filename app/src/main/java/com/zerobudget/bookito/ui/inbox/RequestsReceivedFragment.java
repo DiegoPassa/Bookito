@@ -125,9 +125,6 @@ public class RequestsReceivedFragment extends InboxFragment {
                                     }
                                     break;
                                 case REMOVED:
-                                    //TODO: non lo so perché ma succede che mi dia errore la remove\
-                                    // quando ho solo una richiesta e la accetto (index = 0; size = 0) idk
-                                    // a volte anche con l'ultima
                                     requests.remove(doc.getOldIndex());
                                     ids.remove(newId);
                                     adapter.notifyItemRemoved(doc.getOldIndex());

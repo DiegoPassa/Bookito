@@ -24,9 +24,7 @@ import java.util.Locale;
 public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notification_RecycleViewAdapter.ViewHolder> {
 
     private ArrayList<NotificationModel> notification;
-    private Context context;
-
-
+    private final Context context;
 
     public Notification_RecycleViewAdapter(@NonNull Context context, ArrayList<NotificationModel> notification) {
         this.context = context;

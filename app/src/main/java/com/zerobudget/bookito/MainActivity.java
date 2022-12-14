@@ -150,15 +150,15 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
             Log.d("NAVIGATION", navDestination.getDisplayName());
-            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment) {
+            if (navDestination.getId() == R.id.userProfileFragment || navDestination.getId() == R.id.notificationsFragment || navDestination.getId() == R.id.chat_fragment || navDestination.getId() == R.id.bookTradeFragment) {
                 navView.setVisibility(View.GONE);
                 toolbar.getMenu().setGroupVisible(R.id.default_group, false);
 
-                if(navDestination.getId() == R.id.chat_fragment){
-                   toolbar.getMenu().setGroupVisible(R.id.chat_group, true);
+                if (navDestination.getId() == R.id.chat_fragment) {
+                    toolbar.getMenu().setGroupVisible(R.id.chat_group, true);
                 }
 
-                if(navDestination.getId() == R.id.userProfileFragment){
+                if (navDestination.getId() == R.id.userProfileFragment) {
                     toolbar.getMenu().setGroupVisible(R.id.profile_group, true);
                 }
             } else {
