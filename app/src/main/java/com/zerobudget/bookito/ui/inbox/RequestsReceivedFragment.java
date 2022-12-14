@@ -111,18 +111,25 @@ public class RequestsReceivedFragment extends InboxFragment {
                         }
                         for (DocumentChange doc : value.getDocumentChanges()) {
                             spinner.setVisibility(View.VISIBLE);
+                            String newId = doc.getDocument().getId();
                             switch (doc.getType()) {
                                 case ADDED:
-                                    RequestModel addedRequestModel = RequestModel.getRequestModel(doc.getDocument().toObject(RequestModel.class).getType(), doc.getDocument());
-                                    requests.add(doc.getNewIndex(), addedRequestModel);
-                                    adapter.notifyItemInserted(doc.getNewIndex());
-                                    getUserByRequest(addedRequestModel, doc.getNewIndex());
+                                    if (!ids.contains(newId)) {
+                                        RequestModel addedRequestModel = RequestModel.getRequestModel(doc.getDocument().toObject(RequestModel.class).getType(), doc.getDocument());
+                                        requests.add(doc.getNewIndex(), addedRequestModel);
+                                        ids.add(newId);
+                                        adapter.notifyItemInserted(doc.getNewIndex());
+                                        getUserByRequest(addedRequestModel, doc.getNewIndex());
+                                    } else {
+                                        Log.d("NOPE", "getRequestsRealTime: " + newId);
+                                    }
                                     break;
                                 case REMOVED:
                                     //TODO: non lo so perché ma succede che mi dia errore la remove\
                                     // quando ho solo una richiesta e la accetto (index = 0; size = 0) idk
                                     // a volte anche con l'ultima
                                     requests.remove(doc.getOldIndex());
+                                    ids.remove(newId);
                                     adapter.notifyItemRemoved(doc.getOldIndex());
                                     spinner.setVisibility(View.GONE);
                                     break;
