@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.login;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,7 +60,7 @@ public class OTPConfirmFragment extends Fragment {
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-            Log.d("ER_Verification_Failed", e.toString());
+            Log.e(TAG, e.toString());
             if (isRegister) {
                 NavHostFragment.findNavController(OTPConfirmFragment.this).navigate(R.id.action_OTPConfirmFragment_to_registerFragment);
             } else {

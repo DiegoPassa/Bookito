@@ -3,7 +3,6 @@ package com.zerobudget.bookito.ui.library;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,7 +132,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
             builder.setTitle("Conferma eliminazione");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler eliminare il libro: <br><b>" + bookModels.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
             builder.setPositiveButton("SI", (dialogInterface, i) -> {
-                Log.d("ELIMINO:", "" + bookModels.get(holder.getAdapterPosition()));
                 //rimuove il libro selezionato
                 db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
 

@@ -208,7 +208,6 @@ public class ChatFragment extends Fragment {
     }
 
     private void confirmBookGivenDialog() {
-        Log.d("aaaa", "hei");
         if (!Utils.USER_ID.equals(request.getReceiver()))
             return; //solo chi riceve il libro può confermare di averlo ricevuto
 
@@ -278,7 +277,6 @@ public class ChatFragment extends Fragment {
     }
 
     private void closeRequestDialog(){
-        Log.d("AAAA", "SONO UQI");
         if (request instanceof RequestShareModel)
             if (!Utils.USER_ID.equals(request.getSender())) {
                 Toast.makeText(getContext(), "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();

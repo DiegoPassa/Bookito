@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.ui.search;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,7 +54,6 @@ public class SearchByNameFragment extends SearchFragment {
             public void afterTextChanged(Editable editable) {
                 if (!editable.toString().trim().isEmpty()) {
                     binding.recycleViewSearch.setVisibility(View.VISIBLE);
-                    Log.d("EDITABLE", editable.toString());
                     searchAllBooks_UsrCity(editable.toString());
                 } else {
                     //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
@@ -109,7 +110,7 @@ public class SearchByNameFragment extends SearchFragment {
                     searchAllBooks_OthersCityorTownship(arrResults, param, false);
                 //viewBooks(arrResults);
             } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
 
         });
@@ -138,7 +139,7 @@ public class SearchByNameFragment extends SearchFragment {
                 searchAllBooks_OthersCityorTownship(arrResults, param, true);
 
             } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
 
         });
@@ -178,7 +179,7 @@ public class SearchByNameFragment extends SearchFragment {
                 arrResults.addAll(arrResultsTmp);
                 viewBooks(arrResults, binding.recycleViewSearch);
             } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
 
         });

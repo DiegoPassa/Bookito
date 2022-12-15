@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.notifications;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,9 +100,6 @@ public class NotificationsFragment extends Fragment {
                     not.setUserModel(dataSnapshot.child("actioner").getValue(UserModel.class));
                     not.setRequest(dataSnapshot.child("request").getValue(RequestModel.class));
                     notifications.add(not);
-
-                    Log.d("ID", ""+not.getActionerId());
-
                 }
                 adapter.notifyDataSetChanged();
             }

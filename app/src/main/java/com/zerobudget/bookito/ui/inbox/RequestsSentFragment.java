@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,7 +106,6 @@ public class RequestsSentFragment extends InboxFragment {
      * @param req: array list di richieste da visualizzare*/
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
         if (getView() != null) {
-            Log.d("SENDED", "SONO ENTRATO");
             RecyclerView recyclerView = binding.recycleViewInbox;
 
             RequestsReceived_RecycleViewAdapter adapter = new RequestsSent_RecycleViewAdapter(this.getContext(), req, emptyWarning);

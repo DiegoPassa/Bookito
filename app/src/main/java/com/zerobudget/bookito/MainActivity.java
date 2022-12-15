@@ -1,5 +1,7 @@
 package com.zerobudget.bookito;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -34,7 +36,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.login.LoginActivity;
@@ -58,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("STO_CREANDO", "AHHAHAHAHAHAHAHAH STO CREANDOOOOO");
-
+/*
         if(!Utils.isOnline())
             Toast.makeText(MainActivity.this, "Sembra che tu non sia connesso ad internet, connettiti e riprova!", Toast.LENGTH_SHORT).show();
+*/
 
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -255,15 +256,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                         String temp  = request.getUrl().toString();
-                        if(temp.isEmpty()){
-                            Log.d("Error", "No url returned!");
-                        }else{
-                            if(!temp.equals(urlPageAboutUs)) {
-                                btnOk.setText("Torna alla home page");
-                                btnOk.setOnClickListener(view1 -> {
-                                    webAbUs.loadUrl(urlPageAboutUs);
-                                });
-                            }
+                        if(!temp.isEmpty() && !temp.equals(urlPageAboutUs)) {
+                            btnOk.setText("Torna alla home page");
+                            btnOk.setOnClickListener(view1 -> {
+                                webAbUs.loadUrl(urlPageAboutUs);
+                            });
                         }
                         return  false;
                     }
@@ -305,11 +302,8 @@ public class MainActivity extends AppCompatActivity {
         StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
         load.getDownloadUrl().addOnSuccessListener(uri -> {
             Utils.setUriPic(uri.toString());
-            Log.d("PIC", Utils.URI_PIC);
         }).addOnFailureListener(exception -> {
-            int code = ((StorageException) exception).getErrorCode();
-            if (code == StorageException.ERROR_OBJECT_NOT_FOUND)
-                Log.d("ERR", "L'immagine non esiste");
+            Log.e(TAG, "getUriPic: ", exception);
         });
     }
 

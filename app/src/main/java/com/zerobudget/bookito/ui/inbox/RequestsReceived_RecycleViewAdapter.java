@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +39,8 @@ import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupInbox;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<RequestsReceived_RecycleViewAdapter.ViewHolder> {
 
@@ -106,10 +102,8 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     for (StorageReference item : listResult.getItems()) {
                         // All the items under listRef.
                         if (!item.getName().equals(Utils.USER_ID) && item.getName().equals(idSender)) {
-                            //Log.d("item", item.getName());
                             item.getDownloadUrl().addOnSuccessListener(uri -> {
                                 // Utils.setUriPic(uri.toString());
-                                //Log.d("PIC", Utils.URI_PIC);
 
                                 Picasso.get().load(uri).into(holder.usr_pic);
                                 holder.usr_pic.setVisibility(View.VISIBLE);
@@ -176,7 +170,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         }
 
         dialogBuilder.getConfirmButton().setOnClickListener(view1 -> {
-            Log.d("Pos", "" + holder.getAdapterPosition());
             if (holder.getAdapterPosition() != -1) {
                 if (exists) { //controlla che la richiesta esista ancora
                     if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
@@ -219,7 +212,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
      *
      * @param r: richiesta da eliminare*/
     protected void deleteRequest(RequestModel r) {
-        // Log.d("REQUEST_DELETED", r.getrequestId());
         db.collection("requests").document(r.getRequestId()).delete();
         sendNotification(r, "Reject");
     }
@@ -290,7 +282,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
 
         NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser,Timestamp.now().getSeconds());
-        Log.d("NOTIFIC", ""+notificationModel.serialize());
         ref.push().setValue(notificationModel.serialize());
     }
 

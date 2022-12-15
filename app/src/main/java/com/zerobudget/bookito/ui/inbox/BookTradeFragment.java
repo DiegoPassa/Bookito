@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.ui.inbox;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,12 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.zerobudget.bookito.databinding.FragmentTradeBookBinding;
-import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.models.book.BookModel;
-import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
@@ -43,8 +44,6 @@ public class BookTradeFragment extends Fragment {
         assert args != null;
         String str = args.getString("BK");
         requestTradeModel = Utils.getGsonParser().fromJson(str, RequestTradeModel.class);
-
-        Log.d("REQ", requestTradeModel.getSender());
 
         db = FirebaseFirestore.getInstance();
 
@@ -86,9 +85,8 @@ public class BookTradeFragment extends Fragment {
                     binding.noBooksFound.setVisibility(View.VISIBLE);
                 }
             } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
-
         });
     }
 

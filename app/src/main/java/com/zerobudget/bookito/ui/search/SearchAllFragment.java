@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.ui.search;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -103,7 +105,7 @@ public class SearchAllFragment extends SearchFragment {
                     searchAllBooks_OthersCityorTownship(arrResults, "", false);
 
             } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
 
         });
@@ -130,7 +132,7 @@ public class SearchAllFragment extends SearchFragment {
                 searchAllBooks_OthersCityorTownship(arrResults, "", true);
 
             } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
 
         });
@@ -173,7 +175,7 @@ public class SearchAllFragment extends SearchFragment {
                 if (recyclerView.getAdapter() != null)
                     viewBooks(arrResults, recyclerView);
             } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
         });
     }

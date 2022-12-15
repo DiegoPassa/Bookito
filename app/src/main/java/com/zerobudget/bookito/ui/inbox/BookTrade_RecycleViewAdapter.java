@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,7 +139,6 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
 
         NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser, Timestamp.now().getSeconds());
-        Log.d("NOTIFIC", ""+notificationModel.serialize());
         ref.push().setValue(notificationModel.serialize());
     }
 

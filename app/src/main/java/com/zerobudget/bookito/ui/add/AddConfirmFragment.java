@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,9 +57,6 @@ public class AddConfirmFragment extends Fragment {
         binding.bookDescription.setText(newBook.getDescription());
         binding.bookDescription.setMovementMethod(new ScrollingMovementMethod());
         Picasso.get().load(newBook.getThumbnail()).into(binding.bookThumbnail);
-
-        Log.d("BKCONF", newBook.getTitle());
-
 
         binding.btnConfirm.setOnClickListener(view -> {
             String action = binding.autoCompleteTextView.getText().toString();

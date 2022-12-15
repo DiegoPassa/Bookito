@@ -3,7 +3,6 @@ package com.zerobudget.bookito.login;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +87,6 @@ public class LoginFragment extends Fragment {
         binding.login.setOnClickListener(view1 -> {
             String phoneNumber = binding.phoneNumber.getText().toString().replaceAll("\\s", "");
 
-            Log.d("P", phoneNumber);
             if (phoneNumber.isEmpty()) {
                 binding.phoneNumber.setError("Inserisci il tuo numero di telefono");
                 binding.phoneNumber.requestFocus();

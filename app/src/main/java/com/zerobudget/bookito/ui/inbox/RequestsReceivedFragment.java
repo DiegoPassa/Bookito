@@ -120,8 +120,6 @@ public class RequestsReceivedFragment extends InboxFragment {
                                         ids.add(newId);
                                         adapter.notifyItemInserted(doc.getNewIndex());
                                         getUserByRequest(addedRequestModel, doc.getNewIndex());
-                                    } else {
-                                        Log.d("NOPE", "getRequestsRealTime: " + newId);
                                     }
                                     break;
                                 case REMOVED:

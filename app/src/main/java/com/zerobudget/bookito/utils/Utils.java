@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.utils;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +13,6 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
-import com.zerobudget.bookito.ui.library.Book_RecycleViewAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -152,7 +150,6 @@ public class Utils {
      * @param isbn: isbn del libro che necessita del cambiamento di stato
      */
     public static void changeBookStatus(FirebaseFirestore db, String userID, String isbn, boolean newStatus) {
-        Log.d("USER", userID);
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Object arr = task.getResult().get("books"); //array dei books

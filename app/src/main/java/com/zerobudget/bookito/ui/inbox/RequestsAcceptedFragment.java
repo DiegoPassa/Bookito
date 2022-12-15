@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,7 +195,6 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
             for (int i = 0; i < requests.size(); i++)
                 if (requests.get(i) instanceof RequestTradeModel)
-                    Log.d("TRADE", ((RequestTradeModel) requests.get(i)).getRequestTradeBook() + "");
 
             addOtherUsers(requestsSent, false);
             addOtherUsers(requestsReceived, false);

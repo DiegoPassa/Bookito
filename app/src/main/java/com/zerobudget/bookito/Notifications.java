@@ -64,23 +64,9 @@ public class Notifications extends FirebaseMessagingService {
         }.execute();
     }
 
-/*    @Override
-    public void onNewToken(String token) {
-        Log.d("NewToken", "Refreshed token: " + token);
-
-        sendRegistrationToServer(token);
-    }
-
-    private void sendRegistrationToServer(String token) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(Utils.USER_ID).update("notificationToken", token);
-
-    }*/
-
     // Called when a notification has arrived
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d("AA", "From: " + remoteMessage.getFrom());
         sendNotification(remoteMessage.getNotification());
     }
 

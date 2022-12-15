@@ -1,5 +1,7 @@
 package com.zerobudget.bookito.ui.search;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -184,8 +186,6 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
      * @return boolean: false se le due richieste non coincidono per i controlli fatti all'interno, true altrimenti
      */
     private boolean checkRequests(RequestModel rDoc, RequestModel rm) {
-        Log.d("CONFRONTO", rDoc.getStatus() + rDoc.getTitle() + " " + rm.getSender() + " " + rm.getTitle());
-
         boolean exists = false;
 
         //controlla se esiste già una richiesta fatta dal current user per quel libro in stato undefined
@@ -249,11 +249,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                 }
                 //se esiste già una richiesta da errore nella checkRequests
                 if (!err) {
-                    db.collection("requests").add(rm.serialize()).addOnSuccessListener(documentReference -> {
-                        Log.d("OKK", documentReference.getId());
-                    }).addOnFailureListener(e -> Log.w("ERROR", "Error adding document", e));
-
-                    Log.d("Sent to: ", results.get(holder.getAdapterPosition()).getUser().getNotificationToken());
+                    db.collection("requests").add(rm.serialize()).addOnFailureListener(e -> Log.e(TAG, "Error adding document", e));
 
                     int position = holder.getAdapterPosition();
                     results.remove(position);
@@ -270,7 +266,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                     Toast.makeText(context, "La richiesta è andata a buon fine!", Toast.LENGTH_LONG).show();
                 }
             } else {
-                Log.d("ERR", "Error getting documents: ", task.getException());
+                Log.e(TAG, "Error getting documents: ", task.getException());
             }
         });
     }

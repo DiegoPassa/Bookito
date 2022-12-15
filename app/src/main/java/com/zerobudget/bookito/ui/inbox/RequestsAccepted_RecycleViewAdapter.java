@@ -238,9 +238,6 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         TextView cancelRequest = view.findViewById(R.id.cancel_request);
         TextView confirmBookGiven = view.findViewById(R.id.confirm_book_given);
 
-        Log.d("CLASS", "" + requests.get(holder.getAdapterPosition()).getClass());
-
-
         if (request instanceof RequestShareModel) {
             if (request.getStatus().equals("ongoing")) {
                 cancelRequest.setVisibility(View.GONE);
@@ -294,7 +291,6 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
-            Log.d("AAAA", "SONO UQI");
 
             if (request instanceof RequestShareModel)
                 if (!Utils.USER_ID.equals(request.getSender())) {

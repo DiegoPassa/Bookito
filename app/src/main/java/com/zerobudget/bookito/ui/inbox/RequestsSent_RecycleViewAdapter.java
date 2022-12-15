@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -121,7 +120,6 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
 
         dialogBuilder.getRefuseButton().setOnClickListener(view1 -> {
             if (isUndefined) {
-                Log.d("UNDF", "true");
                 if (holder.getAdapterPosition() != -1) {
                     dialog.dismiss();
 
