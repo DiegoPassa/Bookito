@@ -458,6 +458,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     /**
      * visualizza le informazioni relative alla richiesta selezionata
+     *
+     * @param holder: vista contente le informazioni del file xml
+     * @param flag: classe usata per calcolare la reputazione dell'utente
      */
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
         View view;
@@ -495,6 +498,11 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 //        Navigation.findNavController(View.inflate(context, R.id.recycleView_Inbox, null)).navigate(R.layout.chat_fragment);
 //    }
 
+    /**
+     * controlla se il current user è il receiver della richiesta
+     *
+     * @param r: richiesta di riferimento
+     * @return boolean: true se il controllo effettuato è vero*/
     protected boolean isCurrentUserReceiver(RequestModel r) {
         return r.getReceiver().equals(Utils.USER_ID);
     }

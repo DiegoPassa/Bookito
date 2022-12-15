@@ -24,19 +24,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.zerobudget.bookito.Flag;
+import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentUserProfileBinding;
 import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserModel;
+import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UserProfileFragment extends Fragment {
 
@@ -54,6 +60,7 @@ public class UserProfileFragment extends Fragment {
             registerForActivityResult(new ActivityResultContracts.GetContent(),
                     result -> {
                         if (result != null) {
+                            Log.d("URI", result.toString());
                             addPicOnFirebase(result);
                         }
                     });
@@ -78,6 +85,10 @@ public class UserProfileFragment extends Fragment {
 
         user = Utils.CURRENT_USER;
 
+        Log.d("Sent to: ", user.getNotificationToken());
+        Notifications.sendPushNotification("profilo di " + user.getFirstName() + " " + user.getLastName() + "\ntoken: " + user.getNotificationToken(), user.getTelephone(), user.getNotificationToken());
+
+
         binding.usrFirstName.setText(user.getFirstName());
         binding.usrLastName.setText(user.getLastName());
         binding.usrTelephone.setText(user.getTelephone());
@@ -87,6 +98,8 @@ public class UserProfileFragment extends Fragment {
         // binding.usrNeighborhood.setText(user.getNeighborhood());
 
         showPic();
+
+        Log.d("SONO_USER_PROFILE", user.getFirstName());
 
         binding.imgContainer.setOnClickListener(view -> {
             showImagePicDialog();
@@ -190,7 +203,6 @@ public class UserProfileFragment extends Fragment {
                     Picasso.get().load(uri.toString()).into(binding.profilePic);
                 }).addOnFailureListener(exception -> {
                     String errorMessage = exception.getMessage();
-                    Log.e(TAG, errorMessage);
                 });
             } else {
                 Picasso.get().load(Utils.URI_PIC).into(binding.profilePic);
@@ -254,7 +266,7 @@ public class UserProfileFragment extends Fragment {
         user.setHasPicture(true);
 
         uploadTask.addOnFailureListener(exception -> {
-            Log.e(TAG, "addPicOnFirebase: ", exception);
+            Log.e(TAG, exception.getMessage());
         }).addOnSuccessListener(taskSnapshot -> {
             //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
         }).addOnCompleteListener(task -> {
@@ -278,8 +290,7 @@ public class UserProfileFragment extends Fragment {
         desertRef.delete().addOnSuccessListener(aVoid -> {
             db.collection("users").document(Utils.USER_ID).update("hasPicture", false);
         }).addOnFailureListener(exception -> {
-            String errorMessage = exception.getMessage();
-            Log.e(TAG, errorMessage);
+            Log.e(TAG, exception.getMessage());
         });
 
         showPic();

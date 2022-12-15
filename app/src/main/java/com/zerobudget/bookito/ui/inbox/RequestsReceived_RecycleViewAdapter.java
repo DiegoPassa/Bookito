@@ -217,7 +217,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * accetta la richiesta cambiando lo status del libro e della richiesta
+     * accetta la richiesta effettuando le seguenti operazioni:
+     * - cambia lo status in accepted
+     * - inizializza la chat tra i due utenti inviando il messaggio di default
      *
      * @param r: richiesta da accettare*/
     protected void acceptRequest(RequestModel r) {
@@ -353,14 +355,5 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
             book_type = itemView.findViewById(R.id.icon_type2);
             user_location = itemView.findViewById(R.id.user_location);
         }
-    }
-
-
-    public String getIsbn_trade() {
-        return isbn_trade;
-    }
-
-    public void setIsbn_trade(String isbn_trade) {
-        this.isbn_trade = isbn_trade;
     }
 }
