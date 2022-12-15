@@ -19,7 +19,7 @@ Bookito! è un'applicazione pensata per lo scambio, prestito e regalo di libri t
 Un pregio di quest'applicazione è che essa favorisce l’appartenenza al quartiere, incrementando le interazioni sociali e il rispetto tra persone diverse. Inoltre, essendo basata su interazioni tra utenti, essa farà molto affidanto al buonsenso e all'educazione di ognuno. Si prega di essere gentili e rispettosi verso il prossimo
 
 ## Riferimenti
-(Università Ca' Foscari)[https://www.unive.it/]
-(Informatica)[https://www.unive.it/pag/3/]
-(Ingegneria del Software)[https://www.unive.it/data/insegnamento/339920/persone]
-(Agostino Cortesi)[https://www.unive.it/data/persone/5591776]
+- (Università Ca' Foscari)[https://www.unive.it/]
+- (Informatica)[https://www.unive.it/pag/3/]
+- (Ingegneria del Software)[https://www.unive.it/data/insegnamento/339920/persone]
+- (Agostino Cortesi)[https://www.unive.it/data/persone/5591776]
