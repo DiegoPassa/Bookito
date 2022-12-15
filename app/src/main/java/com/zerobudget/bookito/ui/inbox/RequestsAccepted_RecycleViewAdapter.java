@@ -22,6 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,6 +55,7 @@ import java.util.Locale;
 
 public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<RequestsAccepted_RecycleViewAdapter.ViewHolder> {
     private final StorageReference storageRef;
+    private DatabaseReference realTimedb;
 
     protected final Context context;
     protected ArrayList<RequestModel> requests;
@@ -102,6 +108,9 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         UserModel otherUser = requests.get(holder.getAdapterPosition()).getOtherUser();
         String idSender = requests.get(holder.getAdapterPosition()).getSender();
         String idReceiver = requests.get(holder.getAdapterPosition()).getReceiver();
+
+        realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + requests.get(holder.getAdapterPosition()).getRequestId());
+        setUpChatRoom(holder);
 
         switch (holder.getItemViewType()) {
             case 0:
@@ -494,6 +503,42 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         return r.getReceiver().equals(Utils.USER_ID);
     }
 
+
+    /**
+     * in real time vede se esistono nuovi messaggi nelle chat e ne visualizza il numero
+     *
+     * @param holder: serve per poter visualizzare il numero nell'elemento xml*/
+    protected void setUpChatRoom(ViewHolder holder) {
+        realTimedb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                int tot = 0;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")) {
+                        //se lo status del messaggio dell'altro utente è segnato come sent,
+                        //viene contato come nuovo messaggio
+                        if (dataSnapshot.hasChild("status"))
+                            if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
+                                    && dataSnapshot.child("status").getValue(String.class).equals("sent"))
+                                tot++;
+                    }
+                }
+                if(tot > 0)
+                    holder.badge_new_msg.setVisibility(View.VISIBLE);
+                else
+                    holder.badge_new_msg.setVisibility(View.GONE);
+
+                holder.badge_new_msg.setText(tot+"");
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                Log.e("DB ERROR", error.getMessage());
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         return requests.size();
@@ -505,6 +550,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         protected final ImageView book1_thumbnail;
         protected final TextView user1_name;
         protected final TextView user2_name;
+        protected final TextView badge_new_msg;
         protected final ImageView user1_propic;
         protected final ImageView user2_propic;
         protected final ClassicIdenticonView user1_gravatar;
@@ -524,6 +570,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             user1_gravatar = itemView.findViewById(R.id.user1_gravatar);
             user2_gravatar = itemView.findViewById(R.id.user2_gravatar);
             card = itemView.findViewById(R.id.card);
+            badge_new_msg = itemView.findViewById(R.id.badge_new_msg);
         }
     }
 

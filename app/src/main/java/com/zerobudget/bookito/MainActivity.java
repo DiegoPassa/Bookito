@@ -316,7 +316,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * preleva le richieste ricevute dal database e inserisce il numero nel badge della bottom bar*/
     private void setRequestBadgeNumber(){
-        Log.d("BADGEE", "aaaaaaaaaaaaaaaaaaaaaaaaa");
         db.collection("requests")
                 .whereEqualTo("status", "undefined")
                 .whereEqualTo("receiver", Utils.USER_ID)

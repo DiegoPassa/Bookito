@@ -50,11 +50,9 @@ import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupInbox;
 import com.zerobudget.bookito.utils.popups.PopupInboxTradeAcc;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class ChatFragment extends Fragment {
     private FragmentChatBinding binding;
@@ -133,18 +131,7 @@ public class ChatFragment extends Fragment {
             String message = binding.inputMessage.getText().toString().trim();
             if (!message.isEmpty()) {
                 //inserisce il messaggio nel realtime database
-
-                Date now = Timestamp.now().toDate();
-
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                String currentTime = sdf.format(now);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                String currentDate = sdf1.format(now);
-
-
                 realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, "sent", Timestamp.now().getSeconds()));
-
-                //realTimedb.push().setValue(new MessageModel(Utils.USER_ID, args.getString("otherUserId"), message, "sent", currentTime, currentDate));
                 binding.inputMessage.setText("");
             }
         });
@@ -512,7 +499,7 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("ENTRO", "SONO ENTRATO IN CANCELLAZIONE");
+                Log.e("DB ERROR", error.getMessage());
             }
         });
     }
