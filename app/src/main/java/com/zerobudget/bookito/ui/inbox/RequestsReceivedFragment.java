@@ -1,7 +1,5 @@
 package com.zerobudget.bookito.ui.inbox;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -102,7 +100,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.e(TAG, "getRequestsRealTime: ", error);
+                        Log.e("Error:", "error getting requests in real time ", error);
                         return;
                     }
                     if (value != null) {
@@ -120,9 +118,9 @@ public class RequestsReceivedFragment extends InboxFragment {
                                         ids.add(newId);
                                         adapter.notifyItemInserted(doc.getNewIndex());
                                         getUserByRequest(addedRequestModel, doc.getNewIndex());
-                                    } else {
+                                    } /*else {
                                         Log.d("NOPE", "getRequestsRealTime: " + newId);
-                                    }
+                                    }*/
                                     break;
                                 case REMOVED:
                                     requests.remove(doc.getOldIndex());
@@ -145,7 +143,10 @@ public class RequestsReceivedFragment extends InboxFragment {
     }
 
     /**
-     * */
+     * prende i dati del sender della richiesta e li aggiunge alle informazioni della richiesta sul database
+     *
+     * @param r: richiesta di riferimento
+     * @param position: posizione relativa alla richiesta nell'array list che le continee tutte*/
     protected void getUserByRequest(RequestModel r, int position) {
         db.collection("users").document(r.getSender())
                 .get()

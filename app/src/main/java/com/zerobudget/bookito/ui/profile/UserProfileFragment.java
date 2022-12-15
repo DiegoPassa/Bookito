@@ -201,7 +201,7 @@ public class UserProfileFragment extends Fragment {
                     Picasso.get().load(uri.toString()).into(binding.profilePic);
                 }).addOnFailureListener(exception -> {
                     String errorMessage = exception.getMessage();
-                    Log.d("ERR", errorMessage);
+                    Log.e("ERROR STORAGE DB", errorMessage);
                 });
             } else {
                 Picasso.get().load(Utils.URI_PIC).into(binding.profilePic);
@@ -266,7 +266,7 @@ public class UserProfileFragment extends Fragment {
 
         uploadTask.addOnFailureListener(exception -> {
             String errorMessage = exception.getMessage();
-            Log.d("ERR", errorMessage);
+            Log.e("ERROR UPLOADING PIC", errorMessage);
         }).addOnSuccessListener(taskSnapshot -> {
             //Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova", Toast.LENGTH_LONG);
         }).addOnCompleteListener(task -> {
@@ -292,7 +292,7 @@ public class UserProfileFragment extends Fragment {
         }).addOnFailureListener(exception -> {
             int errorCode = ((StorageException) exception).getErrorCode();
             String errorMessage = exception.getMessage();
-            Log.d("ERR_DEL", errorMessage);
+            Log.e("ERROR DELETING PIC", errorMessage);
         });
 
         showPic();

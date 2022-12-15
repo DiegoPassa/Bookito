@@ -44,8 +44,6 @@ public class BookTradeFragment extends Fragment {
         String str = args.getString("BK");
         requestTradeModel = Utils.getGsonParser().fromJson(str, RequestTradeModel.class);
 
-        Log.d("REQ", requestTradeModel.getSender());
-
         db = FirebaseFirestore.getInstance();
 
         setUpBookModel();
@@ -92,6 +90,10 @@ public class BookTradeFragment extends Fragment {
         });
     }
 
+    /**
+     * permette la visualizzazione dei libri sulla pagina
+     *
+     * @param arr: array list con i risultati da visualizzare sulla pagina*/
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
         if (getView() != null) { //evita il crash dell'applicazione
             RecyclerView recyclerView = binding.recycleViewMyLibrary;

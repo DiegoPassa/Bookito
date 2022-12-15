@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,6 +124,11 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         dialog.show();
     }
 
+    /**
+     * inserisce la notifica relativa all'accettazione e al rifiuto dela richiesta (visibile dall'altro utente nella seziona apposita)
+     *
+     * @param r: richiesta di riferimento
+     * @param status: stato della richiesta*/
     private void sendNotification(RequestModel r, String status) {
         String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
@@ -140,10 +144,19 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
 
         NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser, Timestamp.now().getSeconds());
-        Log.d("NOTIFIC", ""+notificationModel.serialize());
+        //Log.d("NOTIFIC", ""+notificationModel.serialize());
         ref.push().setValue(notificationModel.serialize());
     }
 
+    /**
+     * accetta una richiesta facendo le seguenti operazioni:
+     * - cambia il suo stato in accepted
+     * - inizializza la chat tra i due utenti con i messaggi di default
+     * - aggiorna i campi della richiesta aggiungendo le informazioni del secondo libro selezinonato per concludere lo scambio
+     *
+     * @param r: richiesta da accettare
+     * @param bookTrade: modello del libro scelto per concludere lo scambio
+     *  */
     protected void acceptRequest(RequestTradeModel r, BookModel bookTrade) {
         //l'update ha successo solo se trova il documento, avviso all'utente in caso di insuccesso
         db.collection("requests")
@@ -182,6 +195,10 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
         db.collection("requests").document(r.getRequestId()).update("titleBookTrade", bookTrade.getTitle());
     }
 
+    /**
+     * controlla che la richiesta esista ancora
+     *
+     * @param r: richiesta di riferimento*/
     private void checkIfStillExists(RequestTradeModel r) {
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

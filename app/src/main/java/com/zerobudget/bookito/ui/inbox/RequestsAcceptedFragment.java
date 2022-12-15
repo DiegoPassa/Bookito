@@ -45,9 +45,6 @@ public class RequestsAcceptedFragment extends InboxFragment {
         int textSize = 14;
         int clicked_textSize = 17;
 
-
-
-
         binding.textView.setVisibility(View.GONE);
         binding.filterBar.setVisibility(View.VISIBLE);
 
@@ -225,6 +222,10 @@ public class RequestsAcceptedFragment extends InboxFragment {
         });
     }
 
+    /**
+     * permette la viualizzazione delle richieste sulla pagina
+     *
+     * @param req: array di richieste da visualizzare*/
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
 
         RecyclerView recyclerView = binding.recycleViewInbox;

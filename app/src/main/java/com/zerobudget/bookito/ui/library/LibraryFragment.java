@@ -106,7 +106,7 @@ public class LibraryFragment extends Fragment {
             BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
             Utils.CURRENT_USER.getBooks().add(tmp);//aggiunge il bookmodel tmp all'array list
         }
-        Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
+        //Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
         spinner.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
         Utils.toggleEmptyWarning(binding.emptyLibrary, Utils.CURRENT_USER.getBooks().size());
