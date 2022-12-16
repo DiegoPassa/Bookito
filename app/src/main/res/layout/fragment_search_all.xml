@@ -56,30 +56,29 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-
             <LinearLayout
                 android:id="@+id/constraintLayoutButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textView5">
 
-            <Button
-                android:id="@+id/btn_seeAllBooks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="vedi tutti"
-                app:layout_constraintEnd_toStartOf="@+id/btn_search" />
+                <Button
+                    android:id="@+id/btn_seeAllBooks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="vedi tutti"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_search" />
 
-            <Button
-                android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="cerca libro"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_seeAllBooks"/>
+                <Button
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:text="cerca libro"
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_seeAllBooks" />
 
             </LinearLayout>
 
@@ -90,37 +89,54 @@
                 android:layout_marginTop="12dp"
                 android:gravity="center_horizontal"
                 android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/constraintLayoutButtons">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipTrade"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Scambio"
-                    android:theme="@style/Theme.MaterialComponents.Light"
-                    app:chipIcon="@drawable/swap" />
+                    style="@style/Widget.Material3.ChipGroup"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayoutButtons">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipShare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:checkable="true"
-                    android:text="Prestito"
-                    android:theme="@style/Theme.MaterialComponents.Light"
-                    app:chipIcon="@drawable/calendar" />
+                    <!-- Chips can be declared here, or added dynamically. -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTrade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="Scambio"
+                        android:theme="@style/Widget.Material3.Chip.Filter"
+                        app:chipIcon="@drawable/swap"
+                        app:chipStrokeWidth="0dp"
+                        />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipGift"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:checkable="true"
-                    android:text="Regalo"
-                    android:theme="@style/Theme.MaterialComponents.Light"
-                    app:chipIcon="@drawable/gift" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipShare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:checkable="true"
+                        android:text="Prestito"
+                        android:theme="@style/Widget.Material3.Chip.Filter"
+                        app:chipIcon="@drawable/calendar"
+                        app:chipStrokeWidth="0dp"
+                        />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipGift"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:checkable="true"
+                        android:text="Regalo"
+                        android:theme="@style/Widget.Material3.Chip.Filter"
+                        app:chipIcon="@drawable/gift"
+                        app:chipStrokeWidth="0dp" />
+                </com.google.android.material.chip.ChipGroup>
+
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

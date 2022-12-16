@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -82,16 +83,9 @@ public class SearchAllFragment extends SearchFragment {
             }
         });
 
-        binding.chipTrade.setOnClickListener(view -> {
-            checkAllChips();
-        });
-        binding.chipGift.setOnClickListener(view -> {
-            checkAllChips();
-        });
-        binding.chipShare.setOnClickListener(view -> {
-            checkAllChips();
-        });
-
+        binding.chipTrade.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+        binding.chipGift.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+        binding.chipShare.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
 
         return root;
     }
