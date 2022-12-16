@@ -102,6 +102,13 @@ public class NotificationsFragment extends Fragment {
                     notifications.add(not);
                 }
                 adapter.notifyDataSetChanged();
+
+
+                 if(notifications.size() > 0)
+                     binding.emptyNotifications.setVisibility(View.GONE);
+                 else
+                     binding.emptyNotifications.setVisibility(View.VISIBLE);
+
             }
 
             @Override
