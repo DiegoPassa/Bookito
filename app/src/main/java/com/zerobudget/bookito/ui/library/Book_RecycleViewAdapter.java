@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
@@ -137,8 +138,14 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 db.collection("users").document(Utils.USER_ID).update("books", FieldValue.arrayRemove(bookModels.get(holder.getAdapterPosition())));
 
                 //rimuove la richiesta relativa a quel libro se esiste ed è undefined
-                db.collection("requests").whereEqualTo("status", "undefined").whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition())).get().addOnCompleteListener(task -> {
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                db.collection("requests")
+                        .whereEqualTo("status", "undefined")
+                        .whereEqualTo("receiver", Utils.USER_ID)
+                        .whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition()).getIsbn())
+                        .get()
+                        .addOnCompleteListener(task -> {
+
+                            List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     for (DocumentSnapshot document : documents) {
                         DocumentReference documentReference = document.getReference();
                         documentReference.delete();
