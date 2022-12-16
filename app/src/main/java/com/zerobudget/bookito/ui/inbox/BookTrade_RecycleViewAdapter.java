@@ -107,7 +107,7 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
         dialogBuilder.getBtnDefault().setOnClickListener(view1 -> {
             if (exists) { //controlla che la richiesta esista ancora
-                checkIfTheBookStillExists(requestTradeModel, holder);
+                checkIfTheBookTradeStillExists(requestTradeModel, results.get(holder.getAdapterPosition()).getBook(), holder);
             } else {
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
@@ -192,18 +192,19 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
     }
 
     /**
-     * controlla se il libro esiste ancora nella libreria dell'altro utente
+     * controlla se il libro esiste ancora nella libreria dell'altro utente per isbn e tipo
      *
      * @param r: richiesta di riferimento
+     * @param bookTrade: libro scelto per lo scambio
      * @param holder: vista contente i riferimenti all'xml*/
-    private void checkIfTheBookStillExists(RequestTradeModel r, ViewHolder holder){
+    private void checkIfTheBookTradeStillExists(RequestTradeModel r, BookModel bookTrade, ViewHolder holder){
         db.collection("users").document(r.getSender()).get().addOnSuccessListener(documentSnapshot -> {
             Object arrBooks = documentSnapshot.get("books");
             boolean exists = false;
 
             for (Object o : (ArrayList<Object>) arrBooks) {
                 HashMap<String, Object> map = (HashMap<String, Object>) o;
-                if(r.getRequestedBook().equals(map.get("isbn"))) {
+                if(bookTrade.getIsbn().equals(map.get("isbn")) && bookTrade.getType().equals("type")) {
                     exists = true;
                     Log.d("ESISTE", "exists: "+map.get("title"));
                     break;
@@ -215,6 +216,32 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
                 results.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
             }else{
+                checkIfTheBookStillExists(r, holder);
+            }
+        });
+    }
+
+    /**
+     * controlla se il libro dell'utente corrente esiste ancora, per isbn e tipo
+     *
+     * @param r: richiesta di riferimento
+     * @param holder: vista contente i riferimenti all'xml*/
+    private void checkIfTheBookStillExists(RequestModel r, ViewHolder holder){
+        db.collection("users").document(Utils.USER_ID).get().addOnSuccessListener(documentSnapshot -> {
+            Object arrBooks = documentSnapshot.get("books");
+            boolean exists = false;
+            for (Object o : (ArrayList<Object>) arrBooks) {
+                HashMap<String, Object> map = (HashMap<String, Object>) o;
+                if(r.getRequestedBook().equals(map.get("isbn")) && r.getType().equals(map.get("type"))) {
+                    exists = true;
+                    Log.d("ESISTE", "exists: "+map.get("title"));
+                    break;
+                }
+            }
+
+            if(!exists)
+                Toast.makeText(context, "Oh no, il libro è stato eliminato dal proprietario, non è possibile accettare la richiesta!.", Toast.LENGTH_LONG).show();
+            else{
                 acceptRequest(requestTradeModel, results.get(holder.getAdapterPosition()).getBook());
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_bookTradeFragment_to_request_page_nav);
             }

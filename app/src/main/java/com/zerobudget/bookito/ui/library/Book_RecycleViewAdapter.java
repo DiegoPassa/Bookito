@@ -3,7 +3,6 @@ package com.zerobudget.bookito.ui.library;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +16,20 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
+import com.zerobudget.bookito.models.notification.NotificationModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
+import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 import com.zerobudget.bookito.utils.popups.PopupBook;
 import com.zerobudget.bookito.utils.popups.PopupEditBook;
@@ -146,10 +150,12 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                         .addOnCompleteListener(task -> {
 
                             List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                    for (DocumentSnapshot document : documents) {
-                        DocumentReference documentReference = document.getReference();
-                        documentReference.delete();
-                    }
+                            for (DocumentSnapshot document : documents) {
+                                DocumentReference documentReference = document.getReference();
+                                RequestModel r = document.toObject(RequestModel.class);
+                                sendNotification(r);
+                                documentReference.delete();
+                            }
                 });
 
                 Toast.makeText(context, bookModels.get(holder.getAdapterPosition()).getTitle() + " eliminato!", Toast.LENGTH_LONG).show();
@@ -187,6 +193,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 dialogBuilder.getInputText().setDefaultHintTextColor(ColorStateList.valueOf(context.getResources().getColor(R.color.md_theme_light_error)));
             } else {
                 changeBookType(holder, action);
+                deleteAllUndefinedRequests(holder);
                 dialog.dismiss();
                 Toast.makeText(context, "Modifica avvenuta con successo!", Toast.LENGTH_LONG).show();
             }
@@ -236,6 +243,46 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                 });
     }
 
+    public void deleteAllUndefinedRequests(ViewHolder holder){
+        db.collection("requests")
+                .whereEqualTo("status", "undefined")
+                .whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition()).getIsbn())
+                .whereNotEqualTo("status", bookModels.get(holder.getAdapterPosition()).getStatus())
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    for (DocumentSnapshot document : documents) {
+                        DocumentReference documentReference = document.getReference();
+
+                        RequestModel r = document.toObject(RequestModel.class);
+                        sendNotification(r);
+                        documentReference.delete();
+                    }
+                });
+    }
+
+
+    /**
+     * crea la notifica da visulizzare nell'area notifiche dell'applicazione
+     *
+     * @param r: richiesta di riferimento*/
+    private void sendNotification(RequestModel r) {
+        String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
+        String body = Utils.CURRENT_USER.getFirstName() + " ha modificato o eliminato il libro da te richiesto.";
+        String title = "Richiesta eliminata!";
+
+        /*
+        PROBLEMA, NON POSSIAMO RICHIAMARE LA SERIALIZE DEL CURRENT USER PERCHÉ SI TRATTA DI UN USERLIBRARY, QUINDI MI GENERA ANCHE TUTTI I SUOI LIBRI E QUINDI DA ERRORE
+         */
+
+        UserModel currentUser = new UserModel(Utils.CURRENT_USER.getFirstName(), Utils.CURRENT_USER.getLastName(),
+                Utils.CURRENT_USER.getTelephone(), Utils.CURRENT_USER.getTownship(), Utils.CURRENT_USER.getCity(),
+                Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
+
+        NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, "Delete", body, title, r.getThumbnail(), r, currentUser, Timestamp.now().getSeconds());
+        ref.push().setValue(notificationModel.serialize());
+    }
     @Override
     public int getItemCount() {
         return bookModels.size();

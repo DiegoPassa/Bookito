@@ -179,7 +179,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         dialogBuilder.getConfirmButton().setOnClickListener(view1 -> {
             if (holder.getAdapterPosition() != -1) {
                 if (exists) { //controlla che la richiesta esista ancora
-                    checkIfTheBookStillExists(requests.get(holder.getAdapterPosition()).getRequestedBook(), holder);
+                    checkIfTheBookStillExists(requests.get(holder.getAdapterPosition()), holder);
 
                 } else {
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
@@ -301,17 +301,17 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
 
     /**
-     * controlla se il libro esiste ancora nella libreria dell'utente corrente
+     * controlla se il libro esiste ancora nella libreria dell'utente corrente per isbn e tipo
      *
-     * @param requestedBook: isbn del libro richiesto
+     * @param r: richiesta di riferimento
      * @param holder: vista contente i riferimenti all'xml*/
-    private void checkIfTheBookStillExists(String requestedBook, ViewHolder holder){
+    private void checkIfTheBookStillExists(RequestModel r, ViewHolder holder){
         db.collection("users").document(Utils.USER_ID).get().addOnSuccessListener(documentSnapshot -> {
             Object arrBooks = documentSnapshot.get("books");
             boolean exists = false;
             for (Object o : (ArrayList<Object>) arrBooks) {
                 HashMap<String, Object> map = (HashMap<String, Object>) o;
-                if(requestedBook.equals(map.get("isbn"))) {
+                if(r.getRequestedBook().equals(map.get("isbn")) && r.getType().equals(map.get("type"))) {
                     exists = true;
                     Log.d("ESISTE", "exists: "+map.get("title"));
                     break;
