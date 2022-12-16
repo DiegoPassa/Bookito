@@ -47,6 +47,12 @@ public class BookTradeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        //ricarica la pagina con lo swipe verso il basso
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.swipeRefreshLayout.setRefreshing(false);//svuota la recycle view
+            setUpBookModel();
+        });
+
         setUpBookModel();
         return root;
     }

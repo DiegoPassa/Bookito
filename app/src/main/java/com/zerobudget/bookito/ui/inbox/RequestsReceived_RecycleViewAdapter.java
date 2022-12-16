@@ -2,6 +2,7 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.transition.Hold;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -29,6 +35,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
+import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.notification.NotificationModel;
 import com.zerobudget.bookito.models.requests.RequestModel;
@@ -172,21 +179,12 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         dialogBuilder.getConfirmButton().setOnClickListener(view1 -> {
             if (holder.getAdapterPosition() != -1) {
                 if (exists) { //controlla che la richiesta esista ancora
-                    if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+                    checkIfTheBookStillExists(requests.get(holder.getAdapterPosition()).getRequestedBook(), holder);
 
-                        Bundle args = new Bundle();
-                        String bookString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
-                        args.putString("BK", bookString);
-
-                        checkIfTheBookIsAlreadyAcceptedSomewhere(requests.get(holder.getAdapterPosition()), holder, args);
-                        //Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
-                    } else {
-                        acceptRequest(requests.get(holder.getAdapterPosition()));
-                    }
                 } else {
-                    Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
-                    Navigation.findNavController(holder.itemView).navigate(R.id.request_page_nav);
-                }
+                Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
+                Navigation.findNavController(holder.itemView).navigate(R.id.request_page_nav);
+            }
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             }
             Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_INBOX, requests.size());
@@ -299,6 +297,47 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                         exists = true;
             }
         });
+    }
+
+
+    /**
+     * controlla se il libro esiste ancora nella libreria dell'utente corrente
+     *
+     * @param requestedBook: isbn del libro richiesto
+     * @param holder: vista contente i riferimenti all'xml*/
+    private void checkIfTheBookStillExists(String requestedBook, ViewHolder holder){
+        db.collection("users").document(Utils.USER_ID).get().addOnSuccessListener(documentSnapshot -> {
+            Object arrBooks = documentSnapshot.get("books");
+            boolean exists = false;
+            for (Object o : (ArrayList<Object>) arrBooks) {
+                HashMap<String, Object> map = (HashMap<String, Object>) o;
+                if(requestedBook.equals(map.get("isbn"))) {
+                    exists = true;
+                    Log.d("ESISTE", "exists: "+map.get("title"));
+                    break;
+                }
+            }
+
+            if(!exists)
+                Toast.makeText(context, "Oh no, il libro è stato eliminato dal proprietario, non è possibile accettare la richiesta!.", Toast.LENGTH_LONG).show();
+            else{
+                doActions(holder);
+            }
+        });
+    }
+
+    private void doActions(ViewHolder holder){
+        if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+                Bundle args = new Bundle();
+                String bookString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
+                args.putString("BK", bookString);
+
+                checkIfTheBookIsAlreadyAcceptedSomewhere(requests.get(holder.getAdapterPosition()), holder, args);
+                //Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
+            } else {
+                acceptRequest(requests.get(holder.getAdapterPosition()));
+            }
+
     }
 
     /**
