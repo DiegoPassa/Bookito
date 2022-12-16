@@ -22,6 +22,7 @@ import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class SearchByNameFragment extends SearchFragment {
@@ -54,7 +55,7 @@ public class SearchByNameFragment extends SearchFragment {
             public void afterTextChanged(Editable editable) {
                 if (!editable.toString().trim().isEmpty()) {
                     binding.recycleViewSearch.setVisibility(View.VISIBLE);
-                    searchAllBooks_UsrCity(editable.toString());
+                    searchAllBooks_UsrCity(editable.toString(), true, true, true);
                 } else {
                     //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
                     binding.recycleViewSearch.setVisibility(View.GONE);
@@ -85,7 +86,7 @@ public class SearchByNameFragment extends SearchFragment {
 
 
     @Override
-    protected void searchAllBooks_UsrCity(String param) {
+    protected void searchAllBooks_UsrCity(String param, boolean isTrade, boolean isShare, boolean isGift) {
         Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("city", Utils.CURRENT_USER.getCity())
                 .get();
@@ -97,7 +98,7 @@ public class SearchByNameFragment extends SearchFragment {
                     if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
-                            addBooksToArray(document, arrBooks, arrResults, param);
+                            addBooksToArray(document, arrBooks, arrResults, "", isTrade, isShare, isGift);
 
                         }
                     }
@@ -105,9 +106,9 @@ public class SearchByNameFragment extends SearchFragment {
                 Collections.sort(arrResults);
 
                 if (arrResults.isEmpty())
-                    searchAllBooks_UsrTownship(param);
+                    searchAllBooks_UsrTownship("", isTrade, isShare, isGift);
                 else
-                    searchAllBooks_OthersCityorTownship(arrResults, param, false);
+                    searchAllBooks_OthersCityorTownship(arrResults, "", isTrade, isShare, isGift, false);
                 //viewBooks(arrResults);
             } else {
                 Log.e(TAG, "Error getting documents: ", task.getException());
@@ -118,7 +119,7 @@ public class SearchByNameFragment extends SearchFragment {
 
 
     @Override
-    protected void searchAllBooks_UsrTownship(String param) {
+    protected void searchAllBooks_UsrTownship(String param, boolean isTrade, boolean isShare, boolean isGift) {
         Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("township", Utils.CURRENT_USER.getTownship())
                 .get();
@@ -130,13 +131,13 @@ public class SearchByNameFragment extends SearchFragment {
                     if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
-                            addBooksToArray(document, arrBooks, arrResults, param);
+                            addBooksToArray(document, arrBooks, arrResults, "", isTrade, isShare, isGift);
                         }
                     }
                 }
                 Collections.sort(arrResults);
 
-                searchAllBooks_OthersCityorTownship(arrResults, param, true);
+                searchAllBooks_OthersCityorTownship(arrResults, "", isTrade, isShare, isGift, true);
 
             } else {
                 Log.e(TAG, "Error getting documents: ", task.getException());
@@ -147,7 +148,7 @@ public class SearchByNameFragment extends SearchFragment {
 
 
     @Override
-    protected void searchAllBooks_OthersCityorTownship(ArrayList<SearchResultsModel> arrResults, String param, boolean isTownship) {
+    protected void searchAllBooks_OthersCityorTownship(ArrayList<SearchResultsModel> arrResults, String param, boolean isTrade, boolean isShare, boolean isGift, boolean isTownship) {
         Task<QuerySnapshot> res;
         if (isTownship) {
             res = db.collection("users")
@@ -171,7 +172,7 @@ public class SearchByNameFragment extends SearchFragment {
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
 
-                            addBooksToArray(document, arrBooks, arrResultsTmp, param);
+                            addBooksToArray(document, arrBooks, arrResultsTmp, "", isTrade, isShare, isGift);
                         }
                     }
                 }

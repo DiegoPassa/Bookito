@@ -24,12 +24,14 @@ import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class SearchAllFragment extends SearchFragment {
 
     private FragmentSearchAllBinding binding;
     private FirebaseFirestore db;
+    ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
     private boolean showedAll = false;
     private ProgressBar progressBar;
@@ -52,26 +54,70 @@ public class SearchAllFragment extends SearchFragment {
         viewBooks(new ArrayList<>(), binding.recycleViewSearch);
 
         binding.btnSearch.setOnClickListener(view -> {
+            showedAll = false;
             Navigation.findNavController(view).navigate(R.id.action_navigation_search_to_searchByNameFragment);
         });
 
         binding.btnSeeAllBooks.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
+            binding.linearLayoutChips.setVisibility(View.VISIBLE);
             showedAll = true;
-            searchAllBooks_UsrCity("");
+            arrResults.clear();
+
+            binding.chipTrade.setChecked(false);
+            binding.chipShare.setChecked(false);
+            binding.chipGift.setChecked(false);
+
+            searchAllBooks_UsrCity("", true, true, true);
         });
 
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);//svuota la recycle view
             if (showedAll) {
-                searchAllBooks_UsrCity("");
+                checkAllChips();
             } else {
+                arrResults.clear();
                 viewBooks(new ArrayList<>(), binding.recycleViewSearch);
             }
         });
 
+        binding.chipTrade.setOnClickListener(view -> {
+            checkAllChips();
+        });
+        binding.chipGift.setOnClickListener(view -> {
+            checkAllChips();
+        });
+        binding.chipShare.setOnClickListener(view -> {
+            checkAllChips();
+        });
+
+
         return root;
+    }
+
+    /**
+     * controlla quali chips sono selezionati e sulla base di ciò cerca i libri in base al tipo selezionato
+     *
+     * se nessun chip è attivo cerca tutti i libri indiferentemente*/
+    private void checkAllChips(){
+        viewBooks(new ArrayList<>(), binding.recycleViewSearch);
+        arrResults.clear();
+
+        if(binding.chipTrade.isChecked()){
+            searchAllBooks_UsrCity( "", true, false, false);
+        }
+
+        if(binding.chipShare.isChecked()){
+            searchAllBooks_UsrCity( "", false, true, false);
+        }
+
+        if(binding.chipGift.isChecked()){
+            searchAllBooks_UsrCity( "", false, false, true);
+        }
+
+        if(!binding.chipTrade.isChecked() && !binding.chipGift.isChecked() && !binding.chipShare.isChecked())
+            searchAllBooks_UsrCity("", true, true, true);
     }
 
     @Override
@@ -81,28 +127,27 @@ public class SearchAllFragment extends SearchFragment {
     }
 
     @Override
-    protected void searchAllBooks_UsrCity(String param) {
+    protected void searchAllBooks_UsrCity(String param, boolean isTrade, boolean isShare, boolean isGift) {
         Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("city", Utils.CURRENT_USER.getCity())
                 .get();
 
         res.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
                 for (DocumentSnapshot document : task.getResult()) {
                     if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) //si assicura di cercare solo se esiste quache libro
-                            addBooksToArray(document, arrBooks, arrResults, "");
+                            addBooksToArray(document, arrBooks, arrResults, "", isTrade, isShare, isGift);
                     }
                 }
                 Collections.sort(arrResults);
 
                 if (arrResults.isEmpty())
-                    searchAllBooks_UsrTownship("");
+                    searchAllBooks_UsrTownship("", isTrade, isShare, isGift);
                 else
-                    searchAllBooks_OthersCityorTownship(arrResults, "", false);
+                    searchAllBooks_OthersCityorTownship(arrResults, "", isTrade, isShare, isGift, false);
 
             } else {
                 Log.e(TAG, "Error getting documents: ", task.getException());
@@ -112,24 +157,24 @@ public class SearchAllFragment extends SearchFragment {
     }
 
     @Override
-    protected void searchAllBooks_UsrTownship(String param) {
+    protected void searchAllBooks_UsrTownship(String param, boolean isTrade, boolean isShare, boolean isGift) {
         Task<QuerySnapshot> res = db.collection("users")
                 .whereEqualTo("township", Utils.CURRENT_USER.getTownship())
                 .get();
 
         res.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
+                //ArrayList<SearchResultsModel> arrResults = new ArrayList<>(); //libri trovati
 
                 for (DocumentSnapshot document : task.getResult()) {
                     if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) //si assicura di cercare solo se esiste quache libro
-                            addBooksToArray(document, arrBooks, arrResults, "");
+                            addBooksToArray(document, arrBooks, arrResults, "", isTrade, isShare, isGift);
                     }
                 }
                 Collections.sort(arrResults);
-                searchAllBooks_OthersCityorTownship(arrResults, "", true);
+                searchAllBooks_OthersCityorTownship(arrResults, "", isTrade, isShare, isGift, true);
 
             } else {
                 Log.e(TAG, "Error getting documents: ", task.getException());
@@ -139,7 +184,7 @@ public class SearchAllFragment extends SearchFragment {
     }
 
     @Override
-    protected void searchAllBooks_OthersCityorTownship(ArrayList<SearchResultsModel> arrResults, String param, boolean isTownship) {
+    protected void searchAllBooks_OthersCityorTownship(ArrayList<SearchResultsModel> arrResults, String param, boolean isTrade, boolean isShare, boolean isGift, boolean isTownship) {
         progressBar.setVisibility(View.GONE);
 
         Task<QuerySnapshot> res;
@@ -166,7 +211,7 @@ public class SearchAllFragment extends SearchFragment {
                     if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) //si assicura di cercare solo se esiste quache libro
-                            addBooksToArray(document, arrBooks, arrResults, "");
+                            addBooksToArray(document, arrBooks, arrResults, "", isTrade, isShare, isGift);
                     }
                 }
                 // Collections.sort(arrResultsTmp);
