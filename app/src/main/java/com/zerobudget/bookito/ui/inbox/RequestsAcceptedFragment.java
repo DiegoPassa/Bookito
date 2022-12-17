@@ -1,9 +1,11 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,14 +43,15 @@ public class RequestsAcceptedFragment extends InboxFragment {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        int textSize = 14;
-        int clicked_textSize = 17;
+        /*int textSize = 14;
+        int clicked_textSize = 17;*/
 
         binding.textView.setVisibility(View.GONE);
-        binding.filterBar.setVisibility(View.VISIBLE);
+        binding.chipGroup.setVisibility(View.VISIBLE);
+        /*binding.filterBar.setVisibility(View.VISIBLE);
 
         binding.seeAllReq.setTextSize(clicked_textSize);
-        binding.seeAllReq.setTextAppearance(R.style.selected_filter_text);
+        binding.seeAllReq.setTextAppearance(R.style.selected_filter_text);*/
 
         emptyWarning = binding.empty;
 
@@ -62,12 +65,12 @@ public class RequestsAcceptedFragment extends InboxFragment {
         db = FirebaseFirestore.getInstance();
 
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.seeAllReq.setTextSize(clicked_textSize);
+            /*binding.seeAllReq.setTextSize(clicked_textSize);
             binding.currentUsrReq.setTextSize(textSize);
             binding.otherUsrReq.setTextSize(textSize);
             binding.seeAllReq.setTextAppearance(R.style.selected_filter_text);
             binding.currentUsrReq.setTextAppearance(R.style.filter_text);
-            binding.otherUsrReq.setTextAppearance(R.style.filter_text);
+            binding.otherUsrReq.setTextAppearance(R.style.filter_text);*/
 
             addRequestsOnPage(new ArrayList<>());
             requests = new ArrayList<>();
@@ -103,8 +106,11 @@ public class RequestsAcceptedFragment extends InboxFragment {
             addRequestsOnPage(requests);
         }
 
+
         //tutte le richieste, inivate e ricevute
-        binding.seeAllReq.setOnClickListener(view -> {
+        binding.chipSeeAll.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+
+        /*binding.seeAllReq.setOnClickListener(view -> {
             binding.seeAllReq.setTextSize(clicked_textSize);
             binding.currentUsrReq.setTextSize(textSize);
             binding.otherUsrReq.setTextSize(textSize);
@@ -113,10 +119,12 @@ public class RequestsAcceptedFragment extends InboxFragment {
             binding.otherUsrReq.setTextAppearance(R.style.filter_text);
 
             addRequestsOnPage(requests);
-        });
+        });*/
 
-        //richieste inviate
-        binding.currentUsrReq.setOnClickListener(view -> {
+        //richieste inviate, libri da ricevere
+        binding.chipToReceive.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+
+        /*binding.currentUsrReq.setOnClickListener(view -> {
             binding.currentUsrReq.setTextSize(clicked_textSize);
             binding.seeAllReq.setTextSize(textSize);
             binding.otherUsrReq.setTextSize(textSize);
@@ -125,9 +133,12 @@ public class RequestsAcceptedFragment extends InboxFragment {
             binding.otherUsrReq.setTextAppearance(R.style.filter_text);
 
             addRequestsOnPage(requestsSent);
-        });
+        });*/
 
-        //richieste ricevute
+        //richieste ricevute, libri da consegnare
+        binding.chipToGive.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+
+        /*
         binding.otherUsrReq.setOnClickListener(view -> {
             binding.otherUsrReq.setTextSize(clicked_textSize);
             binding.seeAllReq.setTextSize(textSize);
@@ -137,9 +148,25 @@ public class RequestsAcceptedFragment extends InboxFragment {
             binding.currentUsrReq.setTextAppearance(R.style.filter_text);
 
             addRequestsOnPage(requestsReceived);
-        });
+        });*/
 
         return root;
+    }
+
+    /**
+     * visualizza le richieste in base al tipo selezionato*/
+    private void checkAllChips(){
+        if(binding.chipSeeAll.isChecked()){
+            addRequestsOnPage(requests);
+        }
+
+        if(binding.chipToReceive.isChecked()){
+            addRequestsOnPage(requestsSent);
+        }
+
+        if(binding.chipToGive.isChecked()){
+            addRequestsOnPage(requestsReceived);
+        }
     }
 
     /**
@@ -215,8 +242,9 @@ public class RequestsAcceptedFragment extends InboxFragment {
         Tasks.whenAllSuccess(tasks).addOnSuccessListener(task -> {
             binding.progressBar.setVisibility(View.GONE);
 
-            if (all)
-                addRequestsOnPage(req);
+                checkAllChips();
+                //addRequestsOnPage(req);
+
         });
     }
 

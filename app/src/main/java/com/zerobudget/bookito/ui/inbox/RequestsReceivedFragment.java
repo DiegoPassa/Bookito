@@ -59,7 +59,7 @@ public class RequestsReceivedFragment extends InboxFragment {
         }
 
         binding.textView.setVisibility(View.VISIBLE);
-        binding.filterBar.setVisibility(View.GONE);
+        binding.chipGroup.setVisibility(View.GONE);
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {

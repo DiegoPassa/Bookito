@@ -40,7 +40,7 @@ public class RequestsSentFragment extends InboxFragment {
         db = FirebaseFirestore.getInstance();
 
         binding.textView.setVisibility(View.VISIBLE);
-        binding.filterBar.setVisibility(View.GONE);
+        binding.chipGroup.setVisibility(View.GONE);
 
         emptyWarning = binding.empty;
 

@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!--androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/filter_bar"
                 style="@style/filter_bar"
                 android:layout_width="0dp"
@@ -96,7 +96,69 @@
                     app:layout_constraintStart_toStartOf="@id/guideline16"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout-->
+            <LinearLayout
+                android:id="@+id/linearLayoutChips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        style="@style/Widget.Material3.ChipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/constraintLayoutButtons"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <!-- Chips can be declared here, or added dynamically. -->
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSeeAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:checked="true"
+                            android:textSize="13sp"
+                            android:text="Vedi tutte"
+                            android:theme="@style/Widget.Material3.Chip.Filter"
+                            app:chipIcon="@drawable/see_all_book_chat"
+                            app:chipStrokeWidth="0dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipToReceive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:textSize="13sp"
+                            android:text="Da ricevere"
+                            android:theme="@style/Widget.Material3.Chip.Filter"
+                            app:chipIcon="@drawable/to_receive_book_chat"
+                            app:chipStrokeWidth="0dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipToGive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:textSize="13sp"
+                            android:text="Da consegnare"
+                            android:theme="@style/Widget.Material3.Chip.Filter"
+                            app:chipIcon="@drawable/to_give_book_chat"
+                            app:chipStrokeWidth="0dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout3"
@@ -105,7 +167,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filter_bar">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutChips">
 
                 <!--TextView
                     android:id="@+id/textView"
