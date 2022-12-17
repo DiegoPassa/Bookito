@@ -7,16 +7,23 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuItemCompat;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentSearchByNameBinding;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.Utils;
@@ -30,6 +37,8 @@ public class SearchByNameFragment extends SearchFragment {
     private FragmentSearchByNameBinding binding;
     private FirebaseFirestore db;
 
+    private SearchView searchToolBar;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         db = FirebaseFirestore.getInstance();
@@ -41,7 +50,7 @@ public class SearchByNameFragment extends SearchFragment {
 
         viewBooks(new ArrayList<>(), binding.recycleViewSearch);
 
-        binding.bookTextfield.addTextChangedListener(new TextWatcher() {
+        /*binding.bookTextfield.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
@@ -62,14 +71,16 @@ public class SearchByNameFragment extends SearchFragment {
                     viewBooks(new ArrayList<>(), binding.recycleViewSearch);
                 }
             }
-        });
+        });*/
 
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
 /*            binding.search.setQuery("", false); //clear the text
             binding.search.setIconified(true); //rimette la search view ad icona*/
-            binding.bookTextfield.setText("");
+            //binding.bookTextfield.setText("");
+            searchToolBar.clearFocus();
+            searchToolBar.setQuery("", false);
             viewBooks(new ArrayList<>(), binding.recycleViewSearch);
             //svuota la recycle view
         });
@@ -82,6 +93,45 @@ public class SearchByNameFragment extends SearchFragment {
         super.onDestroyView();
         binding = null;
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.setGroupVisible(R.id.default_group, false);
+        menu.setGroupVisible(R.id.search_group, true);
+
+        MenuItem searchViewItem = menu.findItem(R.id.search_item);
+        searchToolBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchToolBar.setQueryHint("cerca per titolo o autore");
+        searchToolBar.setIconified(false);
+
+        searchToolBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchToolBar.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if(!s.isEmpty()){
+                    binding.recycleViewSearch.setVisibility(View.VISIBLE);
+                    searchAllBooks_UsrCity(s, true, true, true);
+                } else {
+                    //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
+                    binding.recycleViewSearch.setVisibility(View.GONE);
+                    viewBooks(new ArrayList<>(), binding.recycleViewSearch);
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -106,9 +156,9 @@ public class SearchByNameFragment extends SearchFragment {
                 Collections.sort(arrResults);
 
                 if (arrResults.isEmpty())
-                    searchAllBooks_UsrTownship("", isTrade, isShare, isGift);
+                    searchAllBooks_UsrTownship(param, isTrade, isShare, isGift);
                 else
-                    searchAllBooks_OthersCityorTownship(arrResults, "", isTrade, isShare, isGift, false);
+                    searchAllBooks_OthersCityorTownship(arrResults, param, isTrade, isShare, isGift, false);
                 //viewBooks(arrResults);
             } else {
                 Log.e(TAG, "Error getting documents: ", task.getException());
@@ -131,13 +181,13 @@ public class SearchByNameFragment extends SearchFragment {
                     if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
-                            addBooksToArray(document, arrBooks, arrResults, "", isTrade, isShare, isGift);
+                            addBooksToArray(document, arrBooks, arrResults, param, isTrade, isShare, isGift);
                         }
                     }
                 }
                 Collections.sort(arrResults);
 
-                searchAllBooks_OthersCityorTownship(arrResults, "", isTrade, isShare, isGift, true);
+                searchAllBooks_OthersCityorTownship(arrResults, param, isTrade, isShare, isGift, true);
 
             } else {
                 Log.e(TAG, "Error getting documents: ", task.getException());
@@ -172,7 +222,7 @@ public class SearchByNameFragment extends SearchFragment {
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
 
-                            addBooksToArray(document, arrBooks, arrResultsTmp, "", isTrade, isShare, isGift);
+                            addBooksToArray(document, arrBooks, arrResultsTmp, param, isTrade, isShare, isGift);
                         }
                     }
                 }

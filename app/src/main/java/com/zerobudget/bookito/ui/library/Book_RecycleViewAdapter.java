@@ -128,8 +128,9 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         dialogBuilder.getBtnDefault().setVisibility(View.GONE);
 
         if(!bookModels.get(holder.getAdapterPosition()).getStatus()) {
-            dialogBuilder.getBtnOther().setBackgroundColor(R.style.ButtonDisabled);
-            dialogBuilder.getBtnOther().setEnabled(false);
+            dialogBuilder.getBtnOther().setVisibility(View.GONE);
+            /*dialogBuilder.getBtnOther().setBackgroundColor(R.style.ButtonDisabled);
+            dialogBuilder.getBtnOther().setEnabled(false);*/
         }
 
         dialogBuilder.getBtnOther().setOnClickListener(view1 -> {

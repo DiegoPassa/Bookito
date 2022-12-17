@@ -20,18 +20,18 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/title_fg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="42dp"
-                android:text="@string/cerca_libri"
+                android:text="Cerca un libro"
                 android:textSize="34sp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayoutButtons"
+                app:layout_constraintBottom_toTopOf="@+id/recycleView_search"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!--androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@id/constraintLayoutButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textView5">
+                app:layout_constraintTop_toBottomOf="@id/title_fg">
 
                 <EditText
                     android:id="@+id/book_textfield"
@@ -64,7 +64,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/book_textfield"
                     app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout-->
             <!--            <SearchView
                 android:id="@+id/search"
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:layout_marginBottom="24dp"
                 app:layout_constraintBottom_toTopOf="@+id/recycleView_search"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5">
+                app:layout_constraintTop_toBottomOf="@+id/title_fg">
 
             </SearchView>-->
 
@@ -126,7 +126,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayoutButtons" />
+                app:layout_constraintTop_toBottomOf="@+id/title_fg" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -73,4 +73,15 @@
             android:contentDescription="Cancella richiesta"
             app:showAsAction="never"/>
     </group>
+
+    <group
+        android:id="@+id/search_group"
+        android:visible="false">
+        <item
+            android:id="@+id/search_item"
+            android:title="Cerca libro"
+            android:icon="@drawable/ic_baseline_search_24"
+            app:showAsAction="ifRoom|withText"
+            app:actionViewClass="android.widget.SearchView"/>
+    </group>
 </menu>

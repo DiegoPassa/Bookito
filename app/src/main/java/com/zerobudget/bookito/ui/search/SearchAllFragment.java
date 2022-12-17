@@ -97,6 +97,7 @@ public class SearchAllFragment extends SearchFragment {
     private void checkAllChips(){
         viewBooks(new ArrayList<>(), binding.recycleViewSearch);
         arrResults.clear();
+        progressBar.setVisibility(View.VISIBLE);
 
         if(binding.chipTrade.isChecked()){
             searchAllBooks_UsrCity( "", true, false, false);
