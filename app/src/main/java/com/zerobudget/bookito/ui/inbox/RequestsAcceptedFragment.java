@@ -1,11 +1,9 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,19 +17,22 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
+import java.lang.ref.ReferenceQueue;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RequestsAcceptedFragment extends InboxFragment {
     private FragmentInboxBinding binding;
-    private ArrayList<RequestModel> requests = new ArrayList<>();
-    private ArrayList<RequestModel> requestsSent = new ArrayList<>();
-    private ArrayList<RequestModel> requestsReceived = new ArrayList<>();
+    private ArrayList<RequestModel> arrRequests = new ArrayList<>();
+    private ArrayList<RequestModel> arrRequestsSent = new ArrayList<>();
+    private ArrayList<RequestModel> arrRequestsReceived = new ArrayList<>();
+    private ArrayList<RequestModel> arrRequestsTrade = new ArrayList<>();
+
 
     private FirebaseFirestore db;
 
@@ -73,9 +74,10 @@ public class RequestsAcceptedFragment extends InboxFragment {
             binding.otherUsrReq.setTextAppearance(R.style.filter_text);*/
 
             addRequestsOnPage(new ArrayList<>());
-            requests = new ArrayList<>();
-            requestsSent = new ArrayList<>();
-            requestsReceived = new ArrayList<>();
+            arrRequests = new ArrayList<>();
+            arrRequestsSent = new ArrayList<>();
+            arrRequestsReceived = new ArrayList<>();
+            arrRequestsTrade = new ArrayList<>();
             binding.swipeRefreshLayout.setRefreshing(false);
             loadCompletedRequests();
         });
@@ -84,7 +86,7 @@ public class RequestsAcceptedFragment extends InboxFragment {
         //dall'interno della chat ( menu a tendina )
         Bundle args = getArguments();
         if(args !=null){
-            RequestsAccepted_RecycleViewAdapter adapteer = new RequestsAccepted_RecycleViewAdapter(this.getContext(), requests, emptyWarning);
+            RequestsAccepted_RecycleViewAdapter adapteer = new RequestsAccepted_RecycleViewAdapter(this.getContext(), arrRequests, emptyWarning);
 
             switch (args.getString("type")){
                 case "changed":
@@ -99,11 +101,11 @@ public class RequestsAcceptedFragment extends InboxFragment {
         }
 
 
-        if (requests.size() == 0)
+        if (arrRequests.size() == 0)
             loadCompletedRequests();
         else {
             binding.progressBar.setVisibility(View.GONE);
-            addRequestsOnPage(requests);
+            addRequestsOnPage(arrRequests);
         }
 
 
@@ -149,6 +151,8 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
             addRequestsOnPage(requestsReceived);
         });*/
+        binding.chipToTrade.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+
 
         return root;
     }
@@ -157,15 +161,19 @@ public class RequestsAcceptedFragment extends InboxFragment {
      * visualizza le richieste in base al tipo selezionato*/
     private void checkAllChips(){
         if(binding.chipSeeAll.isChecked()){
-            addRequestsOnPage(requests);
+            addRequestsOnPage(arrRequests);
         }
 
         if(binding.chipToReceive.isChecked()){
-            addRequestsOnPage(requestsSent);
+            addRequestsOnPage(arrRequestsSent);
         }
 
         if(binding.chipToGive.isChecked()){
-            addRequestsOnPage(requestsReceived);
+            addRequestsOnPage(arrRequestsReceived);
+        }
+
+        if(binding.chipToTrade.isChecked()){
+            addRequestsOnPage(arrRequestsTrade);
         }
     }
 
@@ -174,11 +182,17 @@ public class RequestsAcceptedFragment extends InboxFragment {
     protected void loadCompletedRequests() {
 //        requests = new ArrayList<>();
         binding.progressBar.setVisibility(View.VISIBLE);
+        Task<QuerySnapshot> requestSentTrade = db.collection("requests").whereEqualTo("status", "accepted")
+                .whereEqualTo("sender", Utils.USER_ID).whereEqualTo("type", "Scambio").get();
+
+        Task<QuerySnapshot> requestReceivedTrade = db.collection("requests").whereEqualTo("status", "accepted")
+                .whereEqualTo("receiver", Utils.USER_ID).whereEqualTo("type", "Scambio").get();
+
         Task<QuerySnapshot> requestSent = db.collection("requests").whereEqualTo("status", "accepted")
-                .whereEqualTo("sender", Utils.USER_ID).get();
+                .whereEqualTo("sender", Utils.USER_ID).whereNotEqualTo("type", "Scambio").get();
 
         Task<QuerySnapshot> requestReceived = db.collection("requests").whereEqualTo("status", "accepted")
-                .whereEqualTo("receiver", Utils.USER_ID).get();
+                .whereEqualTo("receiver", Utils.USER_ID).whereNotEqualTo("type", "Scambio").get();
 
         Task<QuerySnapshot> requestSentOnGoing = db.collection("requests").whereEqualTo("status", "ongoing")
                 .whereEqualTo("sender", Utils.USER_ID).get();
@@ -186,48 +200,61 @@ public class RequestsAcceptedFragment extends InboxFragment {
         Task<QuerySnapshot> requestReceivedOnGoing = db.collection("requests").whereEqualTo("status", "ongoing")
                 .whereEqualTo("receiver", Utils.USER_ID).get();
 
-        Tasks.whenAllSuccess(requestSent, requestReceived, requestSentOnGoing, requestReceivedOnGoing).addOnSuccessListener(list -> {
+        Tasks.whenAllSuccess(requestSent, requestReceived, requestSentOnGoing, requestReceivedOnGoing, requestSentTrade, requestReceivedTrade).addOnSuccessListener(list -> {
             QuerySnapshot queryRequestSent = (QuerySnapshot) list.get(0);
             QuerySnapshot queryRequestReceived = (QuerySnapshot) list.get(1);
             QuerySnapshot queryRequestSentOnGoing = (QuerySnapshot) list.get(2);
             QuerySnapshot queryRequestReceivedOnGoing = (QuerySnapshot) list.get(3);
+            QuerySnapshot queryRequestSentTrade = (QuerySnapshot) list.get(4);
+            QuerySnapshot queryRequestReceivedTrade = (QuerySnapshot) list.get(5);
+
 
             for (QueryDocumentSnapshot doc : queryRequestReceived) {
                 //salvo le richieste ricevute per poterle filtrare
-                requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
             for (QueryDocumentSnapshot doc : queryRequestSent) {
                 //salvo le richieste inviate per poterle filtrare
-                requestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
             for (QueryDocumentSnapshot doc : queryRequestSentOnGoing) {
                 //salvo le richieste inviate per poterle filtrare
-                requestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
             for (QueryDocumentSnapshot doc : queryRequestReceivedOnGoing) {
-                //salvo le richieste inviate per poterle filtrare
-                requestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
-                requests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                //salvo le richieste ricevute per poterle filtrare
+                arrRequestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
+            //se è una richiesta di scambio l'utente deve sia dare che ricevere un libro
+            for(QueryDocumentSnapshot doc : queryRequestSentTrade){
+                arrRequestsTrade.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+            }
 
-            for (int i = 0; i < requests.size(); i++)
-                if (requests.get(i) instanceof RequestTradeModel)
+            for(QueryDocumentSnapshot doc : queryRequestReceivedTrade){
+                arrRequestsTrade.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+            }
 
-            addOtherUsers(requestsSent, false);
-            addOtherUsers(requestsReceived, false);
-            addOtherUsers(requests, true);
+           // for (int i = 0; i < requests.size(); i++)
+               // if (requests.get(i) instanceof RequestTradeModel)
 
+            addOtherUsers(arrRequestsSent);
+            addOtherUsers(arrRequestsReceived);
+            addOtherUsers(arrRequests);
+            addOtherUsers(arrRequestsTrade);
         });
     }
 
-    private void addOtherUsers(ArrayList<RequestModel> req, boolean all) {
+    private void addOtherUsers(ArrayList<RequestModel> req) {
         ArrayList<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (RequestModel r : req) {
             if (Utils.USER_ID.equals(r.getReceiver())) {
