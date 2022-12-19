@@ -69,6 +69,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     private Uri[] otherUserPic = new Uri[1];
 
+    /*
+    Se la richiesta è un regalo ---> Conferma la chiusura chi riceve il libro
+    Se la richiesta è un prestito ---> Conferma l'avvenuta consegna del libro il suo proprietario
+
+     */
+
     public RequestsAccepted_RecycleViewAdapter(Context ctx, ArrayList<RequestModel> requests, TextView empty) {
         this.context = ctx;
         this.requests = requests;
@@ -251,8 +257,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
         confirmBookGiven.setOnClickListener(view1 -> {
-            if (!Utils.USER_ID.equals(request.getReceiver()))
-                return; //solo chi riceve il libro può confermare di averlo ricevuto
+            if (Utils.USER_ID.equals(request.getReceiver()))
+                return; //solo chi da il libro può confermare la consegna
             /*
             da rivedere in ogni caso questo sistema, si potrebbe fare che serva una doppia conferma da parte di entrambi gli utenti
              */
@@ -291,13 +297,13 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
-
-            if (request instanceof RequestShareModel)
-                if (!Utils.USER_ID.equals(request.getSender())) {
-                     Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
-                     return;  //è solo il sender che può confermare che la richiesta è satta effettivamente conclusa
+            if (request instanceof RequestShareModel) {
+                if (Utils.USER_ID.equals(request.getSender())) {
+                    Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
+                    return; //solo chi presta il libro può confermarela richiesta conclusa
                 }
-            /*
+            }
+                    /*
                     anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
                     Possiamo aggiungere una sorta di flag per far concludere la richiesta in caso l'utente non dovesse restituire il libro al suo proprietario
                      */
