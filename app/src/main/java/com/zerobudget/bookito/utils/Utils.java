@@ -59,23 +59,6 @@ public class Utils {
         return gson;
     }
 
-    //metodi per controllare il formato dell'isbn inserito manualmente
-    public static int getSum(long isbn) {
-        int count = 0;
-        int sum = 0;
-        do {
-            sum += count % 2 == 0 ? isbn % 10 : 3 * (isbn % 10);
-            count++;
-            isbn /= 10;
-        } while (isbn > 0);
-        return sum;
-    }
-
-    public static boolean isAValidISBN(long isbn) {
-        return getSum(isbn) % 10 == 0;
-    }
-
-
     public static double truncateDoubleValue(double value, int decimalpoint) {
         value = value * Math.pow(10, decimalpoint);
         value = Math.floor(value);

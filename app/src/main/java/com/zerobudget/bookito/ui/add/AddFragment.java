@@ -1,7 +1,5 @@
 package com.zerobudget.bookito.ui.add;
 
-import static com.zerobudget.bookito.utils.Utils.isAValidISBN;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -33,6 +31,7 @@ import com.zerobudget.bookito.databinding.FragmentAddBinding;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.utils.Utils;
 
+import org.apache.commons.validator.routines.ISBNValidator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +53,14 @@ public class AddFragment extends Fragment {
      * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato*/
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) { //isbn scannerizzato
-            searchBookAPI(result.getContents());
+
+            ISBNValidator validator = new ISBNValidator();
+            String isbn =  result.getContents();
+
+            if(isbn.length() == 10 && validator.isValidISBN10(isbn))
+                isbn = validator.convertToISBN13(isbn);
+
+            searchBookAPI(isbn);
         }
     });
 
@@ -96,12 +102,11 @@ public class AddFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                //si assicura che vegnano inserti esattamente 13 caratteri
-
-                if (editable.toString().length() < 13) {
+                //si assicura che vegnano inserti almeno 10 caratteri
+                if (editable.toString().length() < 10) {
                     binding.btnAdd.setEnabled(false);
                 }
-                if (editable.toString().length() == 13)
+                if (editable.toString().length() >= 10)
                     binding.btnAdd.setEnabled(true);
             }
         });
@@ -111,17 +116,23 @@ public class AddFragment extends Fragment {
             spinner.setVisibility(View.VISIBLE);
 
             String isbn = binding.isbnNumber.getText().toString();
-            if (isAValidISBN(Long.parseLong(isbn))) {
-                searchBookAPI(isbn);
 
-            } else {
+            //crea un validator ISBN
+            ISBNValidator validator = new ISBNValidator();
+            //se l'isbn inserito è da dieci controlla se è valido e converte a 13
+            if(isbn.length() == 10 && validator.isValidISBN10(isbn))
+                isbn = validator.convertToISBN13(isbn);
+
+            if(validator.isValidISBN13(isbn))
+                searchBookAPI(isbn);
+            else{
                 AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Attenzione");
                 builder.setMessage("L'isbn inserito non è valido, si prega di riprovare");
                 builder.setPositiveButton("OK", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                 }).show();
-                binding.isbnNumber.setError("Attezione! L'isbn deve avere 13 caratteri");
+                binding.isbnNumber.setError("Attezione! L'isbn non è valido");
                 binding.isbnNumber.requestFocus();
             }
         });
@@ -301,6 +312,7 @@ public class AddFragment extends Fragment {
                             Toast.makeText(getContext().getApplicationContext(), "Oh no, il libro non è stato trovato", Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException ex) {
+                        Toast.makeText(getContext().getApplicationContext(), "Oh no, il libro non è stato trovato", Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     }
 

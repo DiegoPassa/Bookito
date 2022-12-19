@@ -58,7 +58,7 @@
         android:layout_width="200dp"
         android:layout_height="56dp"
         android:autofillHints=""
-        android:hint="isbn 13"
+        android:hint="Inserisci qui l'isbn"
         android:inputType="numberDecimal"
         android:maxHeight="48dp"
         android:maxLength="13"
