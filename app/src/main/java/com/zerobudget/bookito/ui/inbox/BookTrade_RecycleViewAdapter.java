@@ -204,7 +204,8 @@ public class BookTrade_RecycleViewAdapter extends RecyclerView.Adapter<BookTrade
 
             for (Object o : (ArrayList<Object>) arrBooks) {
                 HashMap<String, Object> map = (HashMap<String, Object>) o;
-                if(bookTrade.getIsbn().equals(map.get("isbn")) && bookTrade.getType().equals("type")) {
+//                Log.d("ORAORAORA", bookTrade.getIsbn() + " - " + bookTrade.getType() + " ---- " + map.get("isbn"));
+                if(bookTrade.getIsbn().equals(map.get("isbn")) && bookTrade.getType().equals(map.get("type"))) {
                     exists = true;
                     Log.d("ESISTE", "exists: "+map.get("title"));
                     break;
