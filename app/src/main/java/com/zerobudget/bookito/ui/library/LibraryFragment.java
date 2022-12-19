@@ -46,7 +46,8 @@ public class LibraryFragment extends Fragment {
 
         spinner = binding.progressBar;
 
-        binding.floatingActionButton.setVisibility(View.GONE);
+        if (!binding.addBookButton.getLocalVisibleRect(scrollBounds))
+            binding.floatingActionButton.setVisibility(View.VISIBLE);
 
         binding.nestedScrollView2.getHitRect(scrollBounds);
 

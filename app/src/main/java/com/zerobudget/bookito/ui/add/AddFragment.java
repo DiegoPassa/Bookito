@@ -60,7 +60,16 @@ public class AddFragment extends Fragment {
             if(isbn.length() == 10 && validator.isValidISBN10(isbn))
                 isbn = validator.convertToISBN13(isbn);
 
-            searchBookAPI(isbn);
+            if(validator.isValidISBN13(isbn))
+                searchBookAPI(isbn);
+            else{
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
+                builder.setTitle("Attenzione");
+                builder.setMessage("L'isbn non è valido, si prega di riprovare");
+                builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                }).show();
+            }
         }
     });
 
