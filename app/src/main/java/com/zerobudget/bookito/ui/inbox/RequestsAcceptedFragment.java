@@ -33,6 +33,9 @@ public class RequestsAcceptedFragment extends InboxFragment {
     private ArrayList<RequestModel> arrRequestsReceived = new ArrayList<>();
     private ArrayList<RequestModel> arrRequestsTrade = new ArrayList<>();
 
+    private ArrayList<RequestModel> arrRequestsSentOngoing = new ArrayList<>();
+    private ArrayList<RequestModel> arrRequestsReceivedOngoing = new ArrayList<>();
+
 
     private FirebaseFirestore db;
 
@@ -44,15 +47,8 @@ public class RequestsAcceptedFragment extends InboxFragment {
         binding = FragmentInboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        /*int textSize = 14;
-        int clicked_textSize = 17;*/
-
         binding.textView.setVisibility(View.GONE);
         binding.chipGroup.setVisibility(View.VISIBLE);
-        /*binding.filterBar.setVisibility(View.VISIBLE);
-
-        binding.seeAllReq.setTextSize(clicked_textSize);
-        binding.seeAllReq.setTextAppearance(R.style.selected_filter_text);*/
 
         emptyWarning = binding.empty;
 
@@ -66,18 +62,14 @@ public class RequestsAcceptedFragment extends InboxFragment {
         db = FirebaseFirestore.getInstance();
 
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            /*binding.seeAllReq.setTextSize(clicked_textSize);
-            binding.currentUsrReq.setTextSize(textSize);
-            binding.otherUsrReq.setTextSize(textSize);
-            binding.seeAllReq.setTextAppearance(R.style.selected_filter_text);
-            binding.currentUsrReq.setTextAppearance(R.style.filter_text);
-            binding.otherUsrReq.setTextAppearance(R.style.filter_text);*/
 
             addRequestsOnPage(new ArrayList<>());
             arrRequests = new ArrayList<>();
             arrRequestsSent = new ArrayList<>();
             arrRequestsReceived = new ArrayList<>();
             arrRequestsTrade = new ArrayList<>();
+            arrRequestsSentOngoing = new ArrayList<>();
+            arrRequestsReceivedOngoing = new ArrayList<>();
             binding.swipeRefreshLayout.setRefreshing(false);
             loadCompletedRequests();
         });
@@ -112,46 +104,13 @@ public class RequestsAcceptedFragment extends InboxFragment {
         //tutte le richieste, inivate e ricevute
         binding.chipSeeAll.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
 
-        /*binding.seeAllReq.setOnClickListener(view -> {
-            binding.seeAllReq.setTextSize(clicked_textSize);
-            binding.currentUsrReq.setTextSize(textSize);
-            binding.otherUsrReq.setTextSize(textSize);
-            binding.seeAllReq.setTextAppearance(R.style.selected_filter_text);
-            binding.currentUsrReq.setTextAppearance(R.style.filter_text);
-            binding.otherUsrReq.setTextAppearance(R.style.filter_text);
-
-            addRequestsOnPage(requests);
-        });*/
-
-        //richieste inviate, libri da ricevere
         binding.chipToReceive.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
-
-        /*binding.currentUsrReq.setOnClickListener(view -> {
-            binding.currentUsrReq.setTextSize(clicked_textSize);
-            binding.seeAllReq.setTextSize(textSize);
-            binding.otherUsrReq.setTextSize(textSize);
-            binding.currentUsrReq.setTextAppearance(R.style.selected_filter_text);
-            binding.seeAllReq.setTextAppearance(R.style.filter_text);
-            binding.otherUsrReq.setTextAppearance(R.style.filter_text);
-
-            addRequestsOnPage(requestsSent);
-        });*/
-
-        //richieste ricevute, libri da consegnare
         binding.chipToGive.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
-
-        /*
-        binding.otherUsrReq.setOnClickListener(view -> {
-            binding.otherUsrReq.setTextSize(clicked_textSize);
-            binding.seeAllReq.setTextSize(textSize);
-            binding.currentUsrReq.setTextSize(textSize);
-            binding.otherUsrReq.setTextAppearance(R.style.selected_filter_text);
-            binding.seeAllReq.setTextAppearance(R.style.filter_text);
-            binding.currentUsrReq.setTextAppearance(R.style.filter_text);
-
-            addRequestsOnPage(requestsReceived);
-        });*/
         binding.chipToTrade.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+
+        binding.chipToGiveOngoing.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+        binding.chipToReceiveOngoing.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
+
 
 
         return root;
@@ -174,6 +133,14 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
         if(binding.chipToTrade.isChecked()){
             addRequestsOnPage(arrRequestsTrade);
+        }
+
+        if(binding.chipToGiveOngoing.isChecked()){
+            addRequestsOnPage(arrRequestsSentOngoing);
+        }
+
+        if(binding.chipToReceiveOngoing.isChecked()){
+            addRequestsOnPage(arrRequestsReceivedOngoing);
         }
     }
 
@@ -223,13 +190,15 @@ public class RequestsAcceptedFragment extends InboxFragment {
 
             for (QueryDocumentSnapshot doc : queryRequestSentOnGoing) {
                 //salvo le richieste inviate per poterle filtrare
-                arrRequestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                //arrRequestsSent.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequestsSentOngoing.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
                 arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
             for (QueryDocumentSnapshot doc : queryRequestReceivedOnGoing) {
                 //salvo le richieste ricevute per poterle filtrare
-                arrRequestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                //arrRequestsReceived.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
+                arrRequestsReceivedOngoing.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
                 arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
@@ -247,10 +216,12 @@ public class RequestsAcceptedFragment extends InboxFragment {
            // for (int i = 0; i < requests.size(); i++)
                // if (requests.get(i) instanceof RequestTradeModel)
 
+            addOtherUsers(arrRequests);
             addOtherUsers(arrRequestsSent);
             addOtherUsers(arrRequestsReceived);
-            addOtherUsers(arrRequests);
             addOtherUsers(arrRequestsTrade);
+            addOtherUsers(arrRequestsSentOngoing);
+            addOtherUsers(arrRequestsReceivedOngoing);
         });
     }
 

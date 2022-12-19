@@ -177,6 +177,29 @@
                             android:theme="@style/Widget.Material3.Chip.Filter"
                             app:chipIcon="@drawable/to_trade_book"
                             app:chipStrokeWidth="0.5dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipToGiveOngoing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:textSize="13sp"
+                            android:text="Da restituire"
+                            app:ensureMinTouchTargetSize="false"
+                            android:theme="@style/Widget.Material3.Chip.Filter"
+                            app:chipIcon="@drawable/waiting_ongoing"
+                            app:chipStrokeWidth="0.5dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipToReceiveOngoing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:textSize="13sp"
+                            android:text="Da riprendere"
+                            app:ensureMinTouchTargetSize="false"
+                            android:theme="@style/Widget.Material3.Chip.Filter"
+                            app:chipStrokeWidth="0.5dp" />
                     </com.google.android.material.chip.ChipGroup>
                 <!--/HorizontalScrollView-->
             </LinearLayout>
