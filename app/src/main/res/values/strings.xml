@@ -48,4 +48,12 @@
     <string name="inviate">Inviate</string>
     <string name="accettate">Accettate</string>
     <string name="you">TU</string>
+    <string name="book_1_thumbnail">book 1 thumbnail</string>
+    <string name="book_2_thumbnail">book 2 thumbnail</string>
+    <string name="user_1_profile_picture">user 1 profile picture</string>
+    <string name="user_2_profile_picture">user 2 profile picture</string>
+    <string name="type_of_the_request">type of the request</string>
+    <string name="left_to_right_arrow">left to right arrow</string>
+    <string name="right_to_left_arrow">right to left arrow</string>
+    <string name="wait_icon">wait icon</string>
 </resources>

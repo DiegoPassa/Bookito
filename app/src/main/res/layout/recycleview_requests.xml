@@ -66,6 +66,8 @@
                 app:layout_constraintDimensionRatio="w,1:1.4375"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/book_1_thumbnail"
+                tools:ignore="ImageContrastCheck"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <ImageView
@@ -76,7 +78,9 @@
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="@+id/requestTitle"
                 app:layout_constraintTop_toTopOf="@+id/requester_name"
+                android:contentDescription="@string/type_of_the_request"
                 tools:scaleType="fitXY"
+                tools:ignore="ImageContrastCheck"
                 tools:srcCompat="@drawable/calendar" />
 
             <androidx.cardview.widget.CardView
@@ -110,6 +114,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:srcCompat="@tools:sample/avatars"
+                        android:contentDescription="@string/user_1_profile_picture"
                         tools:visibility="visible" />
 
                     <com.lelloman.identicon.view.ClassicIdenticonView

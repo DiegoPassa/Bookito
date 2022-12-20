@@ -38,6 +38,7 @@
                 app:layout_constraintDimensionRatio="h,1:1.4375"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/book_1_thumbnail"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
@@ -48,18 +49,19 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="10dp"
                 android:maxLines="4"
-                android:text="@string/lorem_ipsum_long"
+                app:layout_constraintStart_toStartOf="parent"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/book1_thumbnail"
-                app:layout_constraintStart_toStartOf="parent" />
+                tools:ignore="SmallSp"
+                tools:text="@string/lorem_ipsum_long" />
 
             <TextView
                 android:id="@+id/user1_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mittente"
+                tools:text="Mittente"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/user1_card"
@@ -99,6 +101,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0"
                         tools:srcCompat="@tools:sample/avatars"
+                        android:contentDescription="@string/user_1_profile_picture"
                         tools:visibility="visible" />
 
                     <com.lelloman.identicon.view.ClassicIdenticonView
@@ -145,7 +148,9 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0"
+                        android:contentDescription="@string/user_2_profile_picture"
                         tools:srcCompat="@tools:sample/avatars"
+                        tools:ignore="ImageContrastCheck"
                         tools:visibility="visible" />
 
                     <com.lelloman.identicon.view.ClassicIdenticonView
@@ -168,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Destinatario"
+                tools:text="Destinatario"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_name"
@@ -186,6 +191,7 @@
                 app:layout_constraintDimensionRatio="h,1:1.4375"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/book_2_thumbnail"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
@@ -196,12 +202,13 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="10dp"
                 android:maxLines="4"
-                android:text="@string/lorem_ipsum_long"
+                app:layout_constraintStart_toStartOf="@+id/book2_thumbnail"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/book2_thumbnail"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/book2_thumbnail" />
+                tools:ignore="SmallSp"
+                tools:text="@string/lorem_ipsum_long" />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -214,6 +221,7 @@
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
                 app:layout_constraintVertical_bias=".25"
                 style="@style/arrow_request_accepted_color"
+                android:contentDescription="@string/left_to_right_arrow"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
 
             <ImageView
@@ -228,24 +236,26 @@
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
                 app:layout_constraintVertical_bias=".75"
                 style="@style/arrow_request_accepted_color"
+                android:contentDescription="@string/right_to_left_arrow"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
 
             <TextView
                 android:id="@+id/badge_new_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/item_count"
-                android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@id/imageView3"
-                app:layout_constraintRight_toRightOf="@id/imageView3"
-                app:layout_constraintLeft_toLeftOf="@id/imageView3"
-                android:visibility="gone"
-                android:text="21"
                 android:width="25dp"
                 android:height="25dp"
+                android:background="@drawable/item_count"
+                android:textAlignment="center"
                 android:textColor="#FFF"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@id/imageView3"
+                app:layout_constraintRight_toRightOf="@id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3"
+                tools:text="21"
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
