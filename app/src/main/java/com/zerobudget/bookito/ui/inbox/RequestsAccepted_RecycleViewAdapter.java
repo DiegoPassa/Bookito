@@ -19,6 +19,7 @@ import androidx.cardview.widget.CardView;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -253,6 +254,35 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             }
         }
 
+        if (request instanceof RequestTradeModel) {
+            RequestTradeModel r = (RequestTradeModel) request;
+
+            /*
+//                    se l'utente attuale è un sender controllo che il sender non abbia già fatto la richiesta
+//                    se l'ha fatta allora mando messaggio di errore (e anche non faccio fare display dell'item della selezione dell'azione, non se sa mai)
+//                    l'utente può comunque vedere la richiesta perché deve poter accedere alla chat fino alla fine.
+                        stessa cosa all'inverso se user attuale è receiver
+//                     */
+
+            if ( (Utils.USER_ID.equals(r.getSender()) && r.isSenderConfirm()) || (Utils.USER_ID.equals(r.getReceiver()) && r.isReceiverConfirm())) {
+                closeRequest.setVisibility(View.GONE);
+            }
+
+//            if (Utils.USER_ID.equals(r.getSender())) {
+//                    /*
+//                    se l'utente attuale è un sender controllo che il sender non abbia già fatto la richiesta
+//                    se l'ha fatta allora mando messaggio di errore (e anche non faccio fare display dell'item della selezione dell'azione, non se sa mai)
+//                    l'utente può comunque vedere la richiesta perché deve poter accedere alla chat fino alla fine
+//                     */
+//                if (r.isSenderConfirm()) {
+//                    closeRequest.setVisibility(View.GONE);
+//                }
+//            } else if (r.isReceiverConfirm()) {
+//                closeRequest.setVisibility(View.GONE);
+//
+//            }
+        }
+
         title.setText("Cosa vuoi fare?");
 
         //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
@@ -303,6 +333,25 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     return; //solo chi presta il libro può confermarela richiesta conclusa
                 }
             }
+
+            if (request instanceof RequestTradeModel) {
+                RequestTradeModel r = (RequestTradeModel) request;
+                if (Utils.USER_ID.equals(r.getSender())) {
+                    /*
+                    se l'utente attuale è un sender controllo che il sender non abbia già fatto la richiesta
+                    se l'ha fatta allora mando messaggio di errore (e anche non faccio fare display dell'item della selezione dell'azione, non se sa mai)
+                    l'utente può comunque vedere la richiesta perché deve poter accedere alla chat fino alla fine
+                     */
+                    if (r.isSenderConfirm()) {
+                        Toast.makeText(context, "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                } else if (r.isReceiverConfirm()) {
+                    Log.d("HELLO", "sSONO QUA CAZZOZOOZOZOZ");
+                    Toast.makeText(context, "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
                     /*
                     anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
                     Possiamo aggiungere una sorta di flag per far concludere la richiesta in caso l'utente non dovesse restituire il libro al suo proprietario
@@ -351,7 +400,23 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                         sendFeedbackToUser(otherUserID, mRatingBar.getRating());
                         starDialog.dismiss();
 
-                        closeRequest(holder);//chiude la richiesta in base al tipo
+                        if (request instanceof RequestTradeModel) {
+                            Task<Void> task;
+                            if (Utils.USER_ID.equals(request.getSender())) {
+                                ((RequestTradeModel) request).setSenderConfirm(true);
+                                task = db.collection("requests").document(request.getRequestId()).update("senderConfirm", true);
+                            } else {
+                                ((RequestTradeModel) request).setReceiverConfirm(true);
+                                task = db.collection("requests").document(request.getRequestId()).update("receiverConfirm", true);
+                            }
+                            task.addOnSuccessListener((unused)->{
+                                db.collection("requests").document(request.getRequestId()).get().addOnSuccessListener(documentSnapshot -> {
+                                    if ((boolean) documentSnapshot.get("senderConfirm") && (boolean) documentSnapshot.get("receiverConfirm")) {
+                                        closeRequest(holder);
+                                    }
+                                });
+                            });
+                        } else closeRequest(holder);//chiude la richiesta in base al tipo
 
                         Toast.makeText(context, "Feedback inviato correttamente!", Toast.LENGTH_LONG).show();
                     });
@@ -364,6 +429,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //richiesta (CANCELLED) annullata mentre è ancora in corso
         cancelRequest.setOnClickListener(view1 -> {
+
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             builder.setTitle("Conferma");
             builder.setMessage(Html.fromHtml("Sei sicuro di voler annullare la richiesta di <br><b>" + requests.get(holder.getAdapterPosition()).getTitle() + "</b>?", Html.FROM_HTML_MODE_LEGACY));
@@ -371,12 +437,28 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 //TODO sistemare i permessi su firebase
                 //se è uno scambio  devono tornare disponibili entrambi i libri
                 if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
-                    if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
-                        Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
-                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook(), true);
+
+                    RequestTradeModel r = (RequestTradeModel) request;
+
+                    if (!r.isReceiverConfirm() && !r.isSenderConfirm()) {
+
+                        if (requests.get(holder.getAdapterPosition()).getReceiver().equals(Utils.USER_ID)) {
+                            Utils.changeBookStatus(db, Utils.USER_ID, requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
+                            Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getSender(), ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook(), true);
+                        } else {
+                            Utils.changeBookStatus(db, Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook(), true);
+                            Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
+                        }
                     } else {
-                        Utils.changeBookStatus(db, Utils.USER_ID, ((RequestTradeModel) requests.get(holder.getAdapterPosition())).getRequestTradeBook(), true);
-                        Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
+                        /*
+                        Va pensato bene come gestire questa situazione:
+                        potremmo fare in modo che se solo un utente conferma la richiesta del libro, e l'altro utente non lo fa, la richiesta viene automaticamente cancellata
+                        dopo un tot di tempo, oppure possiamo aprire un ticket di segnalazione per contattare lo staff in cui si spiega la situazione.
+                        Anche perché dubito che un utente consegni il proprio libro senza accertarsi che l'altro tizio non gli dia quello da scambiare.
+                        Il problema accade se uno dei due utenti preme il tasto di conferma libro completamente a caso.
+                         */
+                        Toast.makeText(context, "Non puoi cancellare la richiesta sicchè uno di voi ha confermato la consegna del libro!", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } else {
