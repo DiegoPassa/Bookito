@@ -32,12 +32,28 @@
                 android:id="@+id/book1_thumbnail"
                 android:layout_width="80dp"
                 android:layout_height="0dp"
+                android:foreground="@drawable/text_overlay"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="h,1:1.4375"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/book1_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="10dp"
+                android:maxLines="4"
+                android:text="@string/lorem_ipsum_long"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/book1_thumbnail"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/user1_name"
@@ -164,12 +180,28 @@
                 android:id="@+id/book2_thumbnail"
                 android:layout_width="80dp"
                 android:layout_height="0dp"
+                android:foreground="@drawable/text_overlay"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="h,1:1.4375"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/book2_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="10dp"
+                android:maxLines="4"
+                android:text="@string/lorem_ipsum_long"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/book2_thumbnail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/book2_thumbnail" />
 
             <ImageView
                 android:id="@+id/imageView2"

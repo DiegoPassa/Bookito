@@ -91,13 +91,14 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/constraintLayoutButtons">
+                app:layout_constraintTop_toBottomOf="@id/constraintLayoutButtons"
+                tools:visibility="visible">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroup"
+                    style="@style/Widget.Material3.ChipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.ChipGroup"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/constraintLayoutButtons">
 
@@ -110,8 +111,7 @@
                         android:text="Scambio"
                         android:theme="@style/Widget.Material3.Chip.Filter"
                         app:chipIcon="@drawable/swap"
-                        app:chipStrokeWidth="0dp"
-                        />
+                        app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipShare"
@@ -122,8 +122,7 @@
                         android:text="Prestito"
                         android:theme="@style/Widget.Material3.Chip.Filter"
                         app:chipIcon="@drawable/calendar"
-                        app:chipStrokeWidth="0dp"
-                        />
+                        app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipGift"

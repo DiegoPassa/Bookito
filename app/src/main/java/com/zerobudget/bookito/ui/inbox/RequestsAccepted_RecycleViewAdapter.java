@@ -124,18 +124,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 // La richiesta è uno scambio
                 SwapViewHolder swapHolder = (SwapViewHolder) holder;
                 RequestTradeModel trade = (RequestTradeModel) requests.get(holder.getAdapterPosition());
-                /*for (BookModel b : Utils.CURRENT_USER.getBooks()) {
-                    if (b.getIsbn().equals(trade.getRequestTradeBook())) {
-                        Picasso.get().load(b.getThumbnail()).into(swapHolder.book2_thumbnail);
-                        break;
-                    }
-                }*/
                 Picasso.get().load(trade.getThumbnailBookTrade()).into(swapHolder.book2_thumbnail);
+                swapHolder.book2_title.setText(trade.getTitleBookTrade());
                 break;
             case 1:
                 // La richiesta è un prestito oppure un regalo
                 BorrowOrGiftViewHolder otherHolder = (BorrowOrGiftViewHolder) holder;
-                otherHolder.book_title.setText(requests.get(holder.getAdapterPosition()).getTitle());
                 if (requests.get(holder.getAdapterPosition()).getType().equals("Regalo")) {
                     Picasso.get().load(R.drawable.gift).into(otherHolder.type);
                     otherHolder.expire_date.setVisibility(View.GONE);
@@ -149,6 +143,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         }
 
         Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book1_thumbnail);
+        holder.book1_title.setText(requests.get(holder.getAdapterPosition()).getTitle());
 
         // Elementi in comune tra le due viste
         if (otherUser != null) {
@@ -647,6 +642,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         protected final ImageView user2_propic;
         protected final ClassicIdenticonView user1_gravatar;
         protected final ClassicIdenticonView user2_gravatar;
+        protected final TextView book1_title;
 
         protected final CardView card;
 
@@ -663,6 +659,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             user2_gravatar = itemView.findViewById(R.id.user2_gravatar);
             card = itemView.findViewById(R.id.card);
             badge_new_msg = itemView.findViewById(R.id.badge_new_msg);
+            book1_title = itemView.findViewById(R.id.book1_title);
         }
     }
 
@@ -670,23 +667,23 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     public static class SwapViewHolder extends RequestsAccepted_RecycleViewAdapter.ViewHolder {
 
         protected final ImageView book2_thumbnail;
+        protected final TextView book2_title;
 
         public SwapViewHolder(@androidx.annotation.NonNull View itemView) {
             super(itemView);
             book2_thumbnail = itemView.findViewById(R.id.book2_thumbnail);
+            book2_title = itemView.findViewById(R.id.book2_title);
         }
     }
 
     // Vista per il prestito oppure regalo
     public static class BorrowOrGiftViewHolder extends RequestsAccepted_RecycleViewAdapter.ViewHolder {
 
-        protected final TextView book_title;
         protected final ImageView type;
         protected final TextView expire_date;
 
         public BorrowOrGiftViewHolder(@androidx.annotation.NonNull View itemView) {
             super(itemView);
-            book_title = itemView.findViewById(R.id.book_title);
             type = itemView.findViewById(R.id.type);
             expire_date = itemView.findViewById(R.id.expire_date);
         }

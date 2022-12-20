@@ -32,6 +32,7 @@
                 android:id="@+id/book1_thumbnail"
                 android:layout_width="80dp"
                 android:layout_height="0dp"
+                android:foreground="@drawable/text_overlay"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="h,1:1.4375"
@@ -43,13 +44,14 @@
                 android:id="@+id/user1_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="Mittente"
                 android:textSize="12sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/user1_card"
                 app:layout_constraintEnd_toEndOf="@+id/user1_card"
                 app:layout_constraintStart_toStartOf="@+id/user1_card"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/user1_card"
@@ -58,6 +60,7 @@
                 android:layout_marginTop="8dp"
                 app:cardCornerRadius="100dp"
                 app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@+id/imageView2"
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
@@ -154,25 +157,24 @@
                 app:layout_constraintTop_toTopOf="@+id/user1_name" />
 
             <TextView
-                android:id="@+id/book_title"
+                android:id="@+id/book1_title"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
-                android:lines="3"
+                android:maxLines="4"
                 android:text="@string/lorem_ipsum_long"
-                android:textSize="12sp"
-                android:textStyle="italic"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/book1_thumbnail"
-                app:layout_constraintEnd_toEndOf="@id/guideline5"
-                app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
-                app:layout_constraintTop_toBottomOf="@+id/user1_card" />
+                app:layout_constraintEnd_toEndOf="@+id/book1_thumbnail"
+                app:layout_constraintStart_toStartOf="@+id/book1_thumbnail" />
 
             <ImageView
                 android:id="@+id/imageView2"
+                style="@style/arrow_request_accepted_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/user1_card"
@@ -180,7 +182,6 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toEndOf="@+id/book1_thumbnail"
                 app:layout_constraintTop_toTopOf="@+id/user1_card"
-                style="@style/arrow_request_accepted_color"
                 app:srcCompat="@drawable/ic_baseline_arrow_right_alt_24" />
 
             <TextView
@@ -216,20 +217,20 @@
                 android:id="@+id/badge_new_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/item_count"
-                android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@id/expire_date"
-                app:layout_constraintRight_toRightOf="@id/expire_date"
-                app:layout_constraintLeft_toLeftOf="@id/expire_date"
-                android:visibility="gone"
-                android:text="21"
-
+                android:layout_margin="8dp"
                 android:width="25dp"
                 android:height="25dp"
-                android:layout_margin="8dp"
+                android:background="@drawable/item_count"
+                android:text="21"
+                android:textAlignment="center"
                 android:textColor="#FFF"
+
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@id/expire_date"
+                app:layout_constraintRight_toRightOf="@id/expire_date"
+                app:layout_constraintTop_toBottomOf="@id/expire_date" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

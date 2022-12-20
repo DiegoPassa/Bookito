@@ -97,172 +97,129 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout-->
-            <LinearLayout
-                android:id="@+id/linearLayoutChips"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                style="@style/Widget.Material3.ChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <!-- Chips can be declared here, or added dynamically. -->
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSeeAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:checked="true"
+                    android:padding="0dp"
+                    android:text="Vedi tutte"
+                    android:textSize="13sp"
+                    android:theme="@style/Widget.Material3.Chip.Filter"
+                    app:chipIcon="@drawable/see_all_book"
+                    app:chipStrokeWidth="0.5dp"
+                    app:ensureMinTouchTargetSize="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipToReceive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="Da ricevere"
+                    android:textSize="13sp"
+                    android:theme="@style/Widget.Material3.Chip.Filter"
+                    app:chipIcon="@drawable/to_receive_book"
+                    app:chipStrokeWidth="0.5dp"
+                    app:ensureMinTouchTargetSize="false" />
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipToGive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="Da consegnare"
+                    android:textSize="13sp"
+                    android:theme="@style/Widget.Material3.Chip.Filter"
+                    app:chipIcon="@drawable/to_give_book"
+                    app:chipStrokeWidth="0.5dp"
+                    app:ensureMinTouchTargetSize="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipToTrade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="Da scambiare"
+                    android:textSize="13sp"
+                    android:theme="@style/Widget.Material3.Chip.Filter"
+                    app:chipIcon="@drawable/to_trade_book"
+                    app:chipStrokeWidth="0.5dp"
+                    app:ensureMinTouchTargetSize="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipToGiveOngoing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="Da restituire"
+                    android:textSize="13sp"
+                    android:theme="@style/Widget.Material3.Chip.Filter"
+                    app:chipIcon="@drawable/waiting_ongoing"
+                    app:chipStrokeWidth="0.5dp"
+                    app:ensureMinTouchTargetSize="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipToReceiveOngoing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="Da riprendere"
+                    android:textSize="13sp"
+                    android:theme="@style/Widget.Material3.Chip.Filter"
+                    app:chipStrokeWidth="0.5dp"
+                    app:ensureMinTouchTargetSize="false" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Zona richieste"
+                android:textSize="34sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <!--HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none"-->
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/chipGroup"
-                        style="@style/Widget.Material3.ChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:layout_gravity="left"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/constraintLayoutButtons"
-                        app:selectionRequired="true"
-                        app:singleSelection="true">
-
-                        <!-- Chips can be declared here, or added dynamically. -->
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipSeeAll"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:checked="true"
-                            android:textSize="13sp"
-                            android:padding="0dp"
-                            android:text="Vedi tutte"
-                            app:ensureMinTouchTargetSize="false"
-                            android:theme="@style/Widget.Material3.Chip.Filter"
-                            app:chipIcon="@drawable/see_all_book"
-                            app:chipStrokeWidth="0.5dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipToReceive"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:textSize="13sp"
-                            android:text="Da ricevere"
-                            app:ensureMinTouchTargetSize="false"
-                            android:theme="@style/Widget.Material3.Chip.Filter"
-                            app:chipIcon="@drawable/to_receive_book"
-                            app:chipStrokeWidth="0.5dp" />
-
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipToGive"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:textSize="13sp"
-                            android:text="Da consegnare"
-                            app:ensureMinTouchTargetSize="false"
-                            android:theme="@style/Widget.Material3.Chip.Filter"
-                            app:chipIcon="@drawable/to_give_book"
-                            app:chipStrokeWidth="0.5dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipToTrade"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:textSize="13sp"
-                            android:text="Da scambiare"
-                            app:ensureMinTouchTargetSize="false"
-                            android:theme="@style/Widget.Material3.Chip.Filter"
-                            app:chipIcon="@drawable/to_trade_book"
-                            app:chipStrokeWidth="0.5dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipToGiveOngoing"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:textSize="13sp"
-                            android:text="Da restituire"
-                            app:ensureMinTouchTargetSize="false"
-                            android:theme="@style/Widget.Material3.Chip.Filter"
-                            app:chipIcon="@drawable/waiting_ongoing"
-                            app:chipStrokeWidth="0.5dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipToReceiveOngoing"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:textSize="13sp"
-                            android:text="Da riprendere"
-                            app:ensureMinTouchTargetSize="false"
-                            android:theme="@style/Widget.Material3.Chip.Filter"
-                            app:chipStrokeWidth="0.5dp" />
-                    </com.google.android.material.chip.ChipGroup>
-                <!--/HorizontalScrollView-->
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout3"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleView_Inbox"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutChips">
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup">
 
-                <!--TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="42dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Zona richieste"
-                    android:textSize="34sp"
-                    app:layout_constraintBottom_toTopOf="@+id/recycleView_Inbox"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" /-->
+            </androidx.recyclerview.widget.RecyclerView>
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Zona richieste"
-                    android:textSize="34sp"
-                    app:layout_constraintBottom_toTopOf="@+id/recycleView_Inbox"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/recycleView_Inbox"
+                tools:text="Empty" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleView_Inbox"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView">
-
-                </androidx.recyclerview.widget.RecyclerView>
-
-                <TextView
-                    android:id="@+id/empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/recycleView_Inbox"
-                    tools:text="Empty" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
