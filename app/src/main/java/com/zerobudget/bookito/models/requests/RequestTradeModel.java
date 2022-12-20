@@ -1,5 +1,8 @@
 package com.zerobudget.bookito.models.requests;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class RequestTradeModel extends RequestModel {
     private String requestTradeBook; //libro che l'utente attuale richiede all'altro utente
     private String thumbnailBookTrade; //copertina del libro che il current usr richede all'altro utente

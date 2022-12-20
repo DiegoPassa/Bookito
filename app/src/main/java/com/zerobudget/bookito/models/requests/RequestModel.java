@@ -3,12 +3,14 @@ package com.zerobudget.bookito.models.requests;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.zerobudget.bookito.models.users.UserModel;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class RequestModel {
     protected String requestedBook; //isbn libro richiesto
     protected String sender; //id utente che fa la richiesta

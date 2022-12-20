@@ -1,8 +1,11 @@
 package com.zerobudget.bookito.models.users;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class UserModel {
     protected String firstName;
     protected String lastName;

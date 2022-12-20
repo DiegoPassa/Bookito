@@ -1,11 +1,13 @@
 package com.zerobudget.bookito.models.requests;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class RequestShareModel extends RequestModel {
     private Timestamp date; //data di restituzione
 

@@ -108,4 +108,26 @@
         <item name="android:background">@style/buttonRefuse</item>
         <item name="android:alpha">0.05</item>
     </style>
+
+    <style name="book_thumbnail">
+        <item name="android:layout_width">85dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="layout_constraintDimensionRatio">h,1:1.4375</item>
+    </style>
+
+    <style name="profile_picture">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="circularflow_radiusInDP">10dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="hash_picture">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:visibility">gone</item>
+        <item name="hash">0</item>
+    </style>
 </resources>

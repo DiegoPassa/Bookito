@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.models.users;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.zerobudget.bookito.models.book.BookModel;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class UserLibrary extends UserModel {
     protected List<BookModel> books;
 

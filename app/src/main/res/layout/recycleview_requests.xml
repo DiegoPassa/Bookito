@@ -16,7 +16,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,12 +33,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Nome Cognome"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/user_location"
                 app:layout_constraintStart_toEndOf="@+id/cardView2"
-                app:layout_constraintTop_toTopOf="@+id/cardView2" />
+                app:layout_constraintTop_toTopOf="@+id/cardView2"
+                tools:text="Nome Cognome" />
 
             <TextView
                 android:id="@+id/requestTitle"
@@ -50,23 +50,20 @@
                 android:gravity="center_vertical"
                 android:lines="3"
                 android:maxLines="3"
-                tools:text="@string/titolo_del_libro"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/book_image_request"
                 app:layout_constraintStart_toStartOf="@+id/cardView2"
-                app:layout_constraintTop_toBottomOf="@+id/user_location" />
+                app:layout_constraintTop_toBottomOf="@+id/user_location"
+                tools:text="@string/titolo_del_libro" />
 
             <ImageView
+                style="@style/book_thumbnail"
                 android:id="@+id/book_image_request"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:scaleType="fitXY"
+                android:contentDescription="@string/book_1_thumbnail"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="w,1:1.4375"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/book_1_thumbnail"
                 tools:ignore="ImageContrastCheck"
                 tools:srcCompat="@tools:sample/avatars" />
 
@@ -74,13 +71,13 @@
                 android:id="@+id/icon_type2"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:contentDescription="@string/type_of_the_request"
                 app:layout_constraintBottom_toBottomOf="@+id/user_location"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="@+id/requestTitle"
                 app:layout_constraintTop_toTopOf="@+id/requester_name"
-                android:contentDescription="@string/type_of_the_request"
-                tools:scaleType="fitXY"
                 tools:ignore="ImageContrastCheck"
+                tools:scaleType="fitXY"
                 tools:srcCompat="@drawable/calendar" />
 
             <androidx.cardview.widget.CardView
@@ -99,30 +96,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:id="@+id/profile_pic"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:scaleType="fitXY"
-                        android:visibility="gone"
-                        app:circularflow_radiusInDP="10dp"
+                        style="@style/profile_picture"
+                        android:contentDescription="@string/user_1_profile_picture"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:srcCompat="@tools:sample/avatars"
-                        android:contentDescription="@string/user_1_profile_picture"
                         tools:visibility="visible" />
 
                     <com.lelloman.identicon.view.ClassicIdenticonView
                         android:id="@+id/user_gravatar"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:visibility="gone"
-                        app:hash="0"
+                        style="@style/hash_picture"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -136,11 +125,11 @@
                 android:id="@+id/user_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="@string/user_township"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/cardView2"
                 app:layout_constraintStart_toStartOf="@+id/requester_name"
-                app:layout_constraintTop_toBottomOf="@+id/requester_name" />
+                app:layout_constraintTop_toBottomOf="@+id/requester_name"
+                tools:text="@string/user_township" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

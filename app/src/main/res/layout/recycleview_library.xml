@@ -41,12 +41,10 @@
 
                     <ImageView
                         android:id="@+id/book_thumbnail"
+                        style="@style/book_thumbnail"
                         android:layout_width="167dp"
-                        android:layout_height="0dp"
                         android:contentDescription="@string/book_1_thumbnail"
-                        android:scaleType="fitXY"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="h,1:1.4375"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -57,12 +55,12 @@
                         android:id="@+id/wait_icon"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
+                        android:contentDescription="@string/wait_icon"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/book_thumbnail"
                         app:layout_constraintEnd_toStartOf="@+id/guideline14"
                         app:layout_constraintStart_toStartOf="@+id/guideline13"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/wait_icon"
                         app:srcCompat="@drawable/ic_twotone_access_time_24"
                         tools:visibility="visible" />
 
