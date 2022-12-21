@@ -148,15 +148,18 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         // Elementi in comune tra le due viste
         if (otherUser != null) {
             String nameOtherUser = otherUser.getFirstName();
-            String surnameOtherUser = otherUser.getLastName();
+            //String surnameOtherUser = otherUser.getLastName();
 
             if (isCurrentUserReceiver(requests.get(holder.getAdapterPosition()))) {
                 holder.user1_name.setText(R.string.you);
-                holder.user2_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
+                //holder.user2_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
+                holder.user2_name.setText(String.format("%s", nameOtherUser));
+
                 setUserPictures(Utils.CURRENT_USER, holder.user1_propic, holder.user1_gravatar, idReceiver);
                 setUserPictures(otherUser, holder.user2_propic, holder.user2_gravatar, idSender);
             } else {
-                holder.user1_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
+                //holder.user1_name.setText(String.format("%s %s", nameOtherUser, surnameOtherUser));
+                holder.user1_name.setText(String.format("%s", nameOtherUser));
                 holder.user2_name.setText(R.string.you);
                 setUserPictures(otherUser, holder.user1_propic, holder.user1_gravatar, idReceiver);
                 setUserPictures(Utils.CURRENT_USER, holder.user2_propic, holder.user2_gravatar, idSender);

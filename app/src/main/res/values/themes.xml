@@ -1,34 +1,6 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.Bookito" parent="Theme.Material3.DayNight.NoActionBar">
-        <!--        <item name="colorControlNormal">@color/black</item>
-                <item name="elevationOverlayColor">@color/md_theme_light_surfaceTint</item>
-                <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
-                <item name="colorOnError">@color/md_theme_light_onError</item>
-                <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
-                <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
-                <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
-                <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
-                <item name="colorTertiary">@color/md_theme_light_tertiary</item>
-                <item name="colorError">@color/md_theme_light_error</item>
-                <item name="colorOutline">@color/md_theme_light_outline</item>
-                <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
-                <item name="android:colorBackground">@color/md_theme_light_background</item>
-                <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
-                <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
-                <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-                <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
-                <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
-                <item name="colorSurface">@color/md_theme_light_surface</item>
-                <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
-                <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-                <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
-                <item name="colorSecondary">@color/md_theme_light_secondary</item>
-                <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
-                <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-                <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
-                <item name="colorPrimary">@color/md_theme_light_primary</item>
-                <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>-->
         <item name="colorControlNormal">@color/black</item>
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
@@ -107,27 +79,5 @@
     <style name="ButtonDisabled" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:background">@style/buttonRefuse</item>
         <item name="android:alpha">0.05</item>
-    </style>
-
-    <style name="book_thumbnail">
-        <item name="android:layout_width">85dp</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:scaleType">fitXY</item>
-        <item name="layout_constraintDimensionRatio">h,1:1.4375</item>
-    </style>
-
-    <style name="profile_picture">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:scaleType">fitXY</item>
-        <item name="circularflow_radiusInDP">10dp</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="hash_picture">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:visibility">gone</item>
-        <item name="hash">0</item>
     </style>
 </resources>
