@@ -282,7 +282,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
         confirmBookGiven.setOnClickListener(view1 -> {
-            if (Utils.USER_ID.equals(request.getReceiver()))
+            if (Utils.USER_ID.equals(request.getSender()))
                 return; //solo chi da il libro può confermare la consegna
             /*
             da rivedere in ogni caso questo sistema, si potrebbe fare che serva una doppia conferma da parte di entrambi gli utenti
