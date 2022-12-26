@@ -10,7 +10,7 @@ Il team principale di sviluppo del software è composto dai seguenti componenti:
 Un ulteriore contributo alla scrittura del codice è stato dato dal seguente componente:
 - [Tudor Croitor](https://github.com/CroTheodor)
 
-Gli altri membri del tema che hanno partecipato all'ideazione del progetto sono i seguenti:
+Gli altri membri del team che hanno partecipato all'ideazione del progetto sono i seguenti:
 - [Marta Cazzin](https://github.com/imvrtva)
 - [Jinpeng Zhang](https://github.com/Jimpoz)
 
