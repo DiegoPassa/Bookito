@@ -110,6 +110,7 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
                 RequestModel rm;
                 if (type.equals("Prestito"))
                     rm = new RequestShareModel();
+                else if (type.equals("Scambio")) rm = new RequestTradeModel();
                 else rm = new RequestModel();
 
                 rm.setRequestedBook(results.get(holder.getAdapterPosition()).getBook().getIsbn());

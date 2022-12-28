@@ -2,13 +2,16 @@ package com.zerobudget.bookito.models.requests;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @IgnoreExtraProperties
 public class RequestTradeModel extends RequestModel {
     private String requestTradeBook; //libro che l'utente attuale richiede all'altro utente
     private String thumbnailBookTrade; //copertina del libro che il current usr richede all'altro utente
     private String titleBookTrade; //titolo del libro che il current usr richiede per lo scambio
-    private boolean senderConfirm;
-    private boolean receiverConfirm;
+    private boolean senderConfirm = false;
+    private boolean receiverConfirm = false;
 
     public RequestTradeModel() {
     }
@@ -20,6 +23,15 @@ public class RequestTradeModel extends RequestModel {
         this.titleBookTrade = titleBookTrade;
         this.senderConfirm = senderConfirm;
         this.receiverConfirm = receiverConfirm;
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        HashMap<String, Object> map = (HashMap<String, Object>) super.serialize();
+        map.put("senderConfirm", senderConfirm);
+        map.put("receiverConfirm", receiverConfirm);
+
+        return map;
     }
 
     public String getRequestTradeBook() {
