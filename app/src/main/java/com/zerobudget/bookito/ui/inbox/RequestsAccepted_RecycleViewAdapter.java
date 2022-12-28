@@ -252,7 +252,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
             }
         }
 
-        if (request instanceof RequestTradeModel) {
+        else if (request instanceof RequestTradeModel) {
             RequestTradeModel r = (RequestTradeModel) request;
 
             /*
@@ -279,6 +279,10 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 //                closeRequest.setVisibility(View.GONE);
 //
 //            }
+        } else {
+            if (Utils.USER_ID.equals(request.getReceiver())) {
+                closeRequest.setVisibility(View.GONE);
+            }
         }
 
         title.setText("Cosa vuoi fare?");
@@ -349,6 +353,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     Toast.makeText(context, "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
                     return;
                 }
+            }
+
+            if (Utils.USER_ID.equals(request.getReceiver())) {
+                Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
+                return;
+
             }
                     /*
                     anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
