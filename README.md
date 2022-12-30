@@ -20,6 +20,11 @@ Bookito! è un'applicazione pensata per lo scambio, prestito e regalo di libri t
 
 Un pregio di quest'applicazione è che essa favorisce l’appartenenza al quartiere, incrementando le interazioni sociali e il rispetto tra persone diverse. Inoltre, essendo basata su interazioni tra utenti, essa farà molto affidanto al buonsenso e all'educazione di ognuno. Si prega di essere gentili e rispettosi verso il prossimo.
 
+## Software
+
+L'applicazione è sviluppata per dispositivi Android, la minima versione richiesta per un corretto funzionamento è la 8.1 (Oreo).
+
+
 ## Riferimenti
 - [Università Ca' Foscari](https://www.unive.it/)
 - [Informatica](https://www.unive.it/pag/3/)
