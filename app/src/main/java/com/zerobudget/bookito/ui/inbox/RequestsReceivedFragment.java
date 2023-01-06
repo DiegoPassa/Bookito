@@ -118,7 +118,7 @@ public class RequestsReceivedFragment extends InboxFragment {
                                         RequestModel addedRequestModel = RequestModel.getRequestModel(doc.getDocument().toObject(RequestModel.class).getType(), doc.getDocument());
                                         requests.add(doc.getNewIndex(), addedRequestModel);
                                         ids.add(newId);
-                                        adapter.notifyItemInserted(doc.getNewIndex());
+                                        // adapter.notifyItemInserted(doc.getNewIndex());
                                         getUserByRequest(addedRequestModel, doc.getNewIndex());
                                     }
                                     break;
@@ -151,8 +151,8 @@ public class RequestsReceivedFragment extends InboxFragment {
                     if (task.isSuccessful()) {
                         UserModel u = task.getResult().toObject(UserModel.class);
                         r.setOtherUser(u);
-                        // adapter.notifyItemInserted(position);
-                        adapter.notifyItemChanged(position);
+                        adapter.notifyItemInserted(position);
+                        // adapter.notifyItemChanged(position);
                         if (!requests.isEmpty()) {
                             recyclerView.scrollToPosition(0);
                         }
