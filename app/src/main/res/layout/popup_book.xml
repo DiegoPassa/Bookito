@@ -5,6 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
     <androidx.cardview.widget.CardView
         style="@style/color_card"
         android:layout_width="match_parent"
@@ -17,6 +28,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+
 
             <TextView
                 android:id="@+id/title"
@@ -197,6 +210,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginVertical="8dp"
                     android:maxHeight="120dp"
+                    android:maxLines="6"
                     android:scrollbars="vertical"
                     android:text="@string/lorem_ipsum_long"
                     android:textSize="14sp" />
@@ -277,5 +291,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
