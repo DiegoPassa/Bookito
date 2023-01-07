@@ -74,6 +74,8 @@ public class ChatFragment extends Fragment {
 
     private final ArrayList<MessageModel> messages = new ArrayList<>();
 
+    private ValueEventListener eventListener = createEvent();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater, container, false);
@@ -435,18 +437,26 @@ public class ChatFragment extends Fragment {
 
         dialog.show();
     }
+    
+    
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        realTimedb.removeEventListener(eventListener);
+        Log.d("SIUM", "SEI STATO SIUMMATO");
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     /**
      * in realtime prende i messaggi dal database e ne permette la visualizzazione sulla chat
      */
     protected void setUpChatRoom() {
-        realTimedb.addValueEventListener(new ValueEventListener() {
+        realTimedb.addValueEventListener(eventListener);
+    }
+
+    private ValueEventListener createEvent() {
+        return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 messages.clear();
@@ -468,11 +478,13 @@ public class ChatFragment extends Fragment {
 
                         //se lo status del messaggio dell'altro utente è segnato come sent,
                         //appena l'utente corrente apre la chat esso passa a read
-                        if (dataSnapshot.hasChild("status"))
+                        if (dataSnapshot.hasChild("status")) {
                             if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
                                     && dataSnapshot.child("status").getValue(String.class).equals("sent")) {
+                                Log.d("RECEIVER", ""+dataSnapshot.child("receiver"));
                                 realTimedb.child(dataSnapshot.getKey()).child("status").setValue("read");
                             }
+                        }
 
                         msg.setStatus(dataSnapshot.child("status").getValue(String.class));
                         msg.setMessage(dataSnapshot.child("message").getValue(String.class));
@@ -499,6 +511,6 @@ public class ChatFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("DB ERROR", error.getMessage());
             }
-        });
+        };
     }
 }
