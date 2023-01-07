@@ -444,6 +444,7 @@ public class ChatFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         realTimedb.removeEventListener(eventListener);
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
