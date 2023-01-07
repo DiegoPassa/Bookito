@@ -444,8 +444,7 @@ public class ChatFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         realTimedb.removeEventListener(eventListener);
-        Log.d("SIUM", "SEI STATO SIUMMATO");
-//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     /**
