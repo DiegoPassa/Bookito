@@ -148,7 +148,7 @@ public class SearchByNameFragment extends SearchFragment {
                     if (!document.getId().equals(Utils.USER_ID)) { //deve cercare i libri degli altri utenti
                         Object arrBooks = document.get("books"); //array dei books
                         if (arrBooks != null) { //si assicura di cercare solo se esiste quache libro
-                            addBooksToArray(document, arrBooks, arrResults, "", isTrade, isShare, isGift);
+                            addBooksToArray(document, arrBooks, arrResults, param, isTrade, isShare, isGift);
 
                         }
                     }
