@@ -351,6 +351,8 @@ public class ChatFragment extends Fragment {
 
                     sendFeedbackToUser(otherUserID, mRatingBar.getRating());
                     starDialog.dismiss();
+                    Toast.makeText(getContext(), "Feedback inviato correttamente!", Toast.LENGTH_LONG).show();
+
 
                     if (request instanceof RequestTradeModel) {
                         Task<Void> task;
@@ -371,8 +373,6 @@ public class ChatFragment extends Fragment {
                     }else {
 
                         closeRequest();//chiude la richiesta in base al tipo
-
-                        Toast.makeText(getContext(), "Feedback inviato correttamente!", Toast.LENGTH_LONG).show();
                     }
                 });
             }
