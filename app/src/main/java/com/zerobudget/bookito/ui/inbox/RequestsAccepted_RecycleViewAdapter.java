@@ -289,8 +289,11 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
         confirmBookGiven.setOnClickListener(view1 -> {
-            if (Utils.USER_ID.equals(request.getSender()))
-                return; //solo chi da il libro può confermare la consegna
+            if (Utils.USER_ID.equals(request.getSender())) {
+                Toast.makeText(context, "Solo il mittente può confermare", Toast.LENGTH_LONG).show();
+                return;
+            }
+                 //solo chi da il libro può confermare la consegna
             /*
             da rivedere in ogni caso questo sistema, si potrebbe fare che serva una doppia conferma da parte di entrambi gli utenti
              */
@@ -330,8 +333,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
             if (request instanceof RequestShareModel) {
-                if (Utils.USER_ID.equals(request.getReceiver())) {
-                    Toast.makeText(context, "Solo il ricevente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
+                if (Utils.USER_ID.equals(request.getSender())) {
+                    Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
                     return; //solo chi presta il libro può confermarela richiesta conclusa
                 }
             }
