@@ -330,7 +330,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
         closeRequest.setOnClickListener(view1 -> {
             if (request instanceof RequestShareModel) {
-                if (Utils.USER_ID.equals(request.getSender())) {
+                Log.d("DIO", "CANE");
+                if (Utils.USER_ID.equals(request.getReceiver())) {
                     Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
                     return; //solo chi presta il libro può confermarela richiesta conclusa
                 }
@@ -353,12 +354,11 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     Toast.makeText(context, "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
                     return;
                 }
-            }
-
-            if (Utils.USER_ID.equals(request.getReceiver())) {
-                Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
-                return;
-
+            } else {
+                if (!(request instanceof RequestShareModel) && Utils.USER_ID.equals(request.getReceiver())) { //SOLO CHI RICEVE IL LIBRO DEL REGALO PUÒ CONTROLLARE
+                    Toast.makeText(context, "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
+                    return; //solo chi presta il libro può confermarela richiesta conclusa
+                }
             }
                     /*
                     anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
@@ -411,9 +411,11 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                         if (request instanceof RequestTradeModel) {
                             Task<Void> task;
                             if (Utils.USER_ID.equals(request.getSender())) {
+                                Log.d("PORCO IL TUO DIO", "SENDER == " + request.getSender() + " -- NOW USER == " + Utils.USER_ID);
                                 ((RequestTradeModel) request).setSenderConfirm(true);
                                 task = db.collection("requests").document(request.getRequestId()).update("senderConfirm", true);
                             } else {
+                                Log.d("PORCO IL TUO DIO", "RECEIVER == " + request.getReceiver() + " -- NOW USER == " + Utils.USER_ID);
                                 ((RequestTradeModel) request).setReceiverConfirm(true);
                                 task = db.collection("requests").document(request.getRequestId()).update("receiverConfirm", true);
                             }
