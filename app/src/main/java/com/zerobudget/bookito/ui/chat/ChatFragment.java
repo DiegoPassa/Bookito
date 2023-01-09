@@ -25,6 +25,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
@@ -280,10 +281,35 @@ public class ChatFragment extends Fragment {
 
     private void closeRequestDialog(){
         if (request instanceof RequestShareModel)
-            if (!Utils.USER_ID.equals(request.getSender())) {
-                Toast.makeText(getContext(), "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
+            if (Utils.USER_ID.equals(request.getReceiver())) {
+                Toast.makeText(getContext(), "Solo il ricevente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
                 return;  //è solo il sender che può confermare che la richiesta è satta effettivamente conclusa
             }
+
+        if (request instanceof RequestTradeModel) {
+            RequestTradeModel r = (RequestTradeModel) request;
+            if (Utils.USER_ID.equals(r.getSender())) {
+                    /*
+                    se l'utente attuale è un sender controllo che il sender non abbia già fatto la richiesta
+                    se l'ha fatta allora mando messaggio di errore (e anche non faccio fare display dell'item della selezione dell'azione, non se sa mai)
+                    l'utente può comunque vedere la richiesta perché deve poter accedere alla chat fino alla fine
+                     */
+                if (r.isSenderConfirm()) {
+                    Toast.makeText(getContext(), "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            } else if (r.isReceiverConfirm()) {
+                Log.d("HELLO", "sSONO QUA CAZZOZOOZOZOZ");
+                Toast.makeText(getContext(), "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
+                return;
+            }
+        } else {
+            if (!(request instanceof RequestShareModel) && Utils.USER_ID.equals(request.getReceiver())) { //SOLO CHI RICEVE IL LIBRO DEL REGALO PUÒ CONTROLLARE
+                Toast.makeText(getContext(), "Solo il mittente può confermare che la richiesta è effettivamente conclusa!", Toast.LENGTH_LONG).show();
+                return; //solo chi presta il libro può confermarela richiesta conclusa
+            }
+        }
+
         MaterialAlertDialogBuilder builderConfirm = new MaterialAlertDialogBuilder(getContext());
         builderConfirm.setTitle("Conferma");
         builderConfirm.setMessage(Html.fromHtml("Sei sicuro di voler segnare la richiesta di <br><b>" + request.getTitle() + "</b> come conlusa?", Html.FROM_HTML_MODE_LEGACY));
@@ -326,9 +352,28 @@ public class ChatFragment extends Fragment {
                     sendFeedbackToUser(otherUserID, mRatingBar.getRating());
                     starDialog.dismiss();
 
-                    closeRequest();//chiude la richiesta in base al tipo
+                    if (request instanceof RequestTradeModel) {
+                        Task<Void> task;
+                        if (Utils.USER_ID.equals(request.getSender())) {
+                            ((RequestTradeModel) request).setSenderConfirm(true);
+                            task = db.collection("requests").document(request.getRequestId()).update("senderConfirm", true);
+                        } else {
+                            ((RequestTradeModel) request).setReceiverConfirm(true);
+                            task = db.collection("requests").document(request.getRequestId()).update("receiverConfirm", true);
+                        }
+                        task.addOnSuccessListener((unused)->{
+                            db.collection("requests").document(request.getRequestId()).get().addOnSuccessListener(documentSnapshot -> {
+                                if ((boolean) documentSnapshot.get("senderConfirm") && (boolean) documentSnapshot.get("receiverConfirm")) {
+                                    closeRequest();
+                                }
+                            });
+                        });
+                    }else {
 
-                    Toast.makeText(getContext(), "Feedback inviato correttamente!", Toast.LENGTH_LONG).show();
+                        closeRequest();//chiude la richiesta in base al tipo
+
+                        Toast.makeText(getContext(), "Feedback inviato correttamente!", Toast.LENGTH_LONG).show();
+                    }
                 });
             }
             dialogInterface.dismiss();
