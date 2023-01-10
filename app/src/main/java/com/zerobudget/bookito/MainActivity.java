@@ -21,6 +21,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -143,6 +145,13 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         MaterialToolbar toolbar = binding.topAppBar;
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+
+        NavInflater navInflater = navController.getNavInflater();
+        NavGraph graph = navInflater.inflate(R.navigation.mobile_navigation);
+
+        graph.setStartDestination(R.id.to_navigation_library);
+        navController.setGraph(graph);
+
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
@@ -151,29 +160,40 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
             Log.d("NAVIGATION", navDestination.getDisplayName());
-            if (navDestination.getId() == R.id.userProfileFragment ||
-                    navDestination.getId() == R.id.notificationsFragment ||
-                    navDestination.getId() == R.id.chat_fragment ||
-                    navDestination.getId() == R.id.bookTradeFragment ||
-                    navDestination.getId() == R.id.searchByNameFragment) {
+
+            int destination = navDestination.getId();
+
+            if (destination == R.id.userProfileFragment ||
+                    destination == R.id.notificationsFragment ||
+                    destination == R.id.chat_fragment ||
+                    destination == R.id.bookTradeFragment ||
+                    destination == R.id.searchByNameFragment) {
 
                 navView.setVisibility(View.GONE);
                 toolbar.getMenu().setGroupVisible(R.id.default_group, false);
 
-                if (navDestination.getId() == R.id.chat_fragment) {
+                if (destination == R.id.chat_fragment) {
                     toolbar.getMenu().setGroupVisible(R.id.chat_group, true);
                 }
 
-                if (navDestination.getId() == R.id.userProfileFragment) {
+                if (destination == R.id.userProfileFragment) {
                     toolbar.getMenu().setGroupVisible(R.id.profile_group, true);
                 }
 
-                if(navDestination.getId() == R.id.searchByNameFragment){
+                if (destination == R.id.searchByNameFragment) {
                     toolbar.getMenu().setGroupVisible(R.id.search_group, true);
                 }
             } else {
                 navView.setVisibility(View.VISIBLE);
             }
+        });
+
+        navView.setOnItemSelectedListener(item -> {
+            if (graph.getStartDestinationId() != item.getItemId()) {
+                graph.setStartDestination(item.getItemId());
+                navController.navigate(item.getItemId());
+            }
+            return true;
         });
     }
 

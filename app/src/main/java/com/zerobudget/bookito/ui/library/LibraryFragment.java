@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.library;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,8 @@ public class LibraryFragment extends Fragment {
     // ArrayList<BookModel> bookModels = new ArrayList<>();
     private FragmentLibraryBinding binding;
     private FirebaseFirestore db;
-    private RecyclerView recyclerView;
     private Book_RecycleViewAdapter adapter;
-    private Rect scrollBounds = new Rect();
+    private final Rect scrollBounds = new Rect();
 
     private ProgressBar spinner;
 
@@ -42,7 +40,7 @@ public class LibraryFragment extends Fragment {
         binding = FragmentLibraryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        recyclerView = binding.recycleViewMyLibrary;
+        RecyclerView recyclerView = binding.recycleViewMyLibrary;
 
         spinner = binding.progressBar;
 
@@ -65,7 +63,6 @@ public class LibraryFragment extends Fragment {
 
         binding.floatingActionButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
         binding.addBookButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
-
 
         //permette di ricaricare la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -110,6 +107,7 @@ public class LibraryFragment extends Fragment {
         //Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
         spinner.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
+
         Utils.toggleEmptyWarning(binding.emptyLibrary, Utils.CURRENT_USER.getBooks().size());
         if (!binding.addBookButton.getLocalVisibleRect(scrollBounds)) {
             binding.floatingActionButton.show();
@@ -119,6 +117,5 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }
