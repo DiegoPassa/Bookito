@@ -1,6 +1,7 @@
 package com.zerobudget.bookito.ui.notifications;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.notification.NotificationModel;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notification_RecycleViewAdapter.ViewHolder> {
 
@@ -36,7 +34,7 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-        View view = layoutInflater.inflate(R.layout.notification_adapter, parent, false);
+        View view = layoutInflater.inflate(R.layout.recycleview_notifications, parent, false);
 
         return new ViewHolder(view);
     }
@@ -48,14 +46,10 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
 
         if(notification.get(position).getTimestamp() != 0) {
             holder.date.setVisibility(View.VISIBLE);
-            Date date = new Date(notification.get(position).getTimestamp()*1000);
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            String currentTime = sdf.format(date);
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            String currentDate = sdf1.format(date);
 
-            String txtDate = currentDate + " "+currentTime;
-            holder.date.setText(txtDate);
+            String elapsedTime = (String) DateUtils.getRelativeTimeSpanString(notification.get(position).getTimestamp() * 1000);
+
+            holder.date.setText(elapsedTime);
         }
         FirebaseStorage.getInstance().getReference()
                 .child("profile_pics/")

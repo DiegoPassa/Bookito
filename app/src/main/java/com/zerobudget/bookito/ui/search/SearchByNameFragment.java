@@ -3,12 +3,9 @@ package com.zerobudget.bookito.ui.search;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.view.MenuItemCompat;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,7 +27,6 @@ import com.zerobudget.bookito.models.search.SearchResultsModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class SearchByNameFragment extends SearchFragment {
@@ -98,12 +95,11 @@ public class SearchByNameFragment extends SearchFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        MaterialToolbar toolbar = getActivity().findViewById(R.id.topAppBar);
+
+        toolbar.setTitle("");
+        Menu menu = toolbar.getMenu();
         menu.setGroupVisible(R.id.default_group, false);
         menu.setGroupVisible(R.id.search_group, true);
 
@@ -121,7 +117,7 @@ public class SearchByNameFragment extends SearchFragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if(!s.isEmpty()){
+                if (!s.isEmpty()) {
                     binding.recycleViewSearch.setVisibility(View.VISIBLE);
                     searchAllBooks_UsrCity(s, true, true, true);
                 } else {
@@ -132,8 +128,8 @@ public class SearchByNameFragment extends SearchFragment {
                 return false;
             }
         });
+        // setHasOptionsMenu(true);
     }
-
 
     @Override
     protected void searchAllBooks_UsrCity(String param, boolean isTrade, boolean isShare, boolean isGift) {
