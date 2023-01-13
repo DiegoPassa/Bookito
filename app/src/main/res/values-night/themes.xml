@@ -1,10 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <!--
-            OLD
-            <style name="Theme.Bookito" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-    -->
-    <style name="Theme.Bookito" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Bookito" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorControlNormal">@color/black</item>
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>

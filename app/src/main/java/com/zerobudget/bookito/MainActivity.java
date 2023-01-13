@@ -38,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
@@ -58,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private FirebaseFirestore db;
     private StorageReference storageRef;
-
     private AppBarConfiguration appBarConfiguration;
     private BadgeDrawable badge;
+    private ListenerRegistration fireStoreListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
      * preleva in realtime le richieste ricevute dall'utente corrente
      */
     protected void getRequestsRealTime() {
-        db.collection("requests")
+        fireStoreListener = db.collection("requests")
                 .whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "undefined")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -425,5 +426,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (fireStoreListener != null) fireStoreListener.remove();
+        Utils.incomingRequests.clear();
     }
 }

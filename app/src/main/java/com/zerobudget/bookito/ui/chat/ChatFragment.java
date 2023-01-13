@@ -149,8 +149,10 @@ public class ChatFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MaterialToolbar toolbar = (MaterialToolbar) getActivity().findViewById(R.id.topAppBar);
-        toolbar.setTitle(otherUser.getFirstName() + " " + otherUser.getLastName());
+        MaterialToolbar toolbar = requireActivity().findViewById(R.id.topAppBar);
+        // TODO: se si cambia tema toolbar diventa null e crasha
+        if (toolbar != null)
+            toolbar.setTitle(otherUser.getFirstName() + " " + otherUser.getLastName());
         setHasOptionsMenu(true);
     }
 
