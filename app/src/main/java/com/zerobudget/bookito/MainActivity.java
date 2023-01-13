@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getRequestsRealTime();
+        updateBadge();
     }
 
     /**

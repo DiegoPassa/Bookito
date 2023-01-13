@@ -10,10 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
@@ -22,9 +18,7 @@ public class RequestsReceivedFragment extends InboxFragment {
 
     private FragmentInboxBinding binding;
 
-    private FirebaseFirestore db;
     private ProgressBar spinner;
-    private BadgeDrawable badge;
     private TextView empty;
 
     private RequestsReceived_RecycleViewAdapter adapter;
@@ -42,16 +36,9 @@ public class RequestsReceivedFragment extends InboxFragment {
         View root = binding.getRoot();
 
         spinner = binding.progressBar;
+        spinner.setVisibility(View.GONE);
         empty = binding.empty;
         recyclerView = binding.recycleViewInbox;
-
-        db = FirebaseFirestore.getInstance();
-
-        BottomNavigationView navView = requireActivity().findViewById(R.id.nav_view);
-        if(navView != null) {
-            int menuItemId = navView.getMenu().getItem(0).getItemId();
-            badge = navView.getOrCreateBadge(menuItemId);
-        }
 
         binding.textView.setVisibility(View.VISIBLE);
         binding.chipGroup.setVisibility(View.GONE);
