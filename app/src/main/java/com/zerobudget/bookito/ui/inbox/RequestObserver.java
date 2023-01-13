@@ -1,13 +1,16 @@
 package com.zerobudget.bookito.ui.inbox;
 
 import androidx.databinding.ObservableList;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RequestObserver extends ObservableList.OnListChangedCallback<ObservableList> {
 
     private RequestsReceived_RecycleViewAdapter adapter;
+    private RecyclerView recyclerView;
 
-    public RequestObserver(RequestsReceived_RecycleViewAdapter adapter) {
+    public RequestObserver(RequestsReceived_RecycleViewAdapter adapter, RecyclerView recyclerView) {
         this.adapter = adapter;
+        this.recyclerView = recyclerView;
     }
 
     @Override
@@ -22,6 +25,7 @@ public class RequestObserver extends ObservableList.OnListChangedCallback<Observ
     @Override
     public void onItemRangeInserted(ObservableList sender, int positionStart, int itemCount) {
         adapter.notifyItemRangeInserted(positionStart, itemCount);
+        recyclerView.scrollToPosition(0);
     }
 
     @Override
