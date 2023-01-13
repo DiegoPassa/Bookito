@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.databinding.ObservableArrayList;
+
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
@@ -12,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
 
 import java.io.IOException;
@@ -31,6 +34,8 @@ public class Utils {
 
     public static String EMPTY_INBOX = "Nessuna richiesta ricevuta";
     public static String EMPTY_SEND = "Nessuna richiesta inviata!";
+
+    public static ObservableArrayList<RequestModel> incomingRequests = new ObservableArrayList<>();
 
     public static List<NeighborhoodModel> neighborhoods = new ArrayList<>();
 

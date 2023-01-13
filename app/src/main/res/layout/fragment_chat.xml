@@ -37,7 +37,9 @@
         app:layout_constraintBottom_toTopOf="@id/message_box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="1"
+        tools:listitem="@layout/message_sent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/message_box"

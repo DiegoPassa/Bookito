@@ -16,15 +16,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.transition.Hold;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -35,7 +30,6 @@ import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.Flag;
 import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.book.BookModel;
 import com.zerobudget.bookito.models.chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.notification.NotificationModel;
 import com.zerobudget.bookito.models.requests.RequestModel;
@@ -89,21 +83,23 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        UserModel senderModel = requests.get(holder.getAdapterPosition()).getOtherUser();
-        String idSender = requests.get(holder.getAdapterPosition()).getSender();
+        RequestModel currentRequest = requests.get(position);
+
+        UserModel senderModel = currentRequest.getOtherUser();
+        String idSender = currentRequest.getSender();
 
         if (senderModel != null) {
-            String other_usr = "Da: " + requests.get(holder.getAdapterPosition()).getOtherUser().getFirstName() + " " + requests.get(holder.getAdapterPosition()).getOtherUser().getLastName();
+            String other_usr = "Da: " + currentRequest.getOtherUser().getFirstName() + " " + currentRequest.getOtherUser().getLastName();
             holder.user_name.setText(other_usr);
             holder.user_location.setText(context.getString(R.string.user_location, requests.get(position).getOtherUser().getTownship(), requests.get(position).getOtherUser().getCity()));
         } // else holder.user_name.setText("undefined");
-        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
-        holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
-        if (requests.get(holder.getAdapterPosition()).getOtherUser() != null) {
+        Picasso.get().load(currentRequest.getThumbnail()).into(holder.book_image);
+        holder.title.setText(currentRequest.getTitle());
+        if (currentRequest.getOtherUser() != null) {
 
-            Utils.setUpIconBookType(requests.get(holder.getAdapterPosition()).getType(), holder.book_type);
+            Utils.setUpIconBookType(currentRequest.getType(), holder.book_type);
 
-            if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+            if (currentRequest.getOtherUser().isHasPicture()) {
                 holder.user_gravatar.setVisibility(View.GONE);
                 storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
                     for (StorageReference item : listResult.getItems()) {
@@ -119,7 +115,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                             }).addOnFailureListener(exception -> {
                                 int code = ((StorageException) exception).getErrorCode();
                                 if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                    holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                    holder.user_gravatar.setHash(currentRequest.getOtherUser().getTelephone().hashCode());
                                     holder.user_gravatar.setVisibility(View.VISIBLE);
                                     holder.usr_pic.setVisibility(View.GONE);
                                 }
@@ -128,7 +124,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     }
                 });
             } else {
-                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                holder.user_gravatar.setHash(currentRequest.getOtherUser().getTelephone().hashCode());
                 holder.user_gravatar.setVisibility(View.VISIBLE);
                 holder.usr_pic.setVisibility(View.GONE);
             }
@@ -141,7 +137,7 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 Number points = (Number) karma.get("points");
                 Number feedback_numbers = (Number) karma.get("numbers");
                 Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
-                createNewContactDialog(holder, flag);
+                createNewContactDialog(holder, flag, currentRequest);
 
             }
         });
@@ -150,10 +146,11 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * crea il popup con le inforazioni relative alla richiesta
      * l'utente potrà accettare o rifiutare
-     * in caso di scambio, prima di accettare l'utente corrente dovrà selezionare un libro dalla libreria dell'altro utente*/
-    public void createNewContactDialog(ViewHolder holder, Flag flag) {
+     * in caso di scambio, prima di accettare l'utente corrente dovrà selezionare un libro dalla libreria dell'altro utente
+     */
+    public void createNewContactDialog(ViewHolder holder, Flag flag, RequestModel currentRequest) {
         //controlla se la richiesta esiste ancora
-        checkIfStillExists(requests.get(holder.getAdapterPosition()));
+        checkIfStillExists(currentRequest);
 
         View view = View.inflate(context, R.layout.popup_inbox, null);
         //loadPopupViewMembers(view);
@@ -163,23 +160,23 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
-        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()));
-        dialogBuilder.setReputationMessage(requests.get(holder.getAdapterPosition()), flag);
+        dialogBuilder.setUpInformation(currentRequest);
+        dialogBuilder.setReputationMessage(currentRequest, flag);
 
         //se è un  prestito visualizza la data di restituzione
-        if (requests.get(holder.getAdapterPosition()) instanceof RequestShareModel) {
-            dialogBuilder.setUpDate((RequestShareModel) requests.get(holder.getAdapterPosition()));
+        if (currentRequest instanceof RequestShareModel) {
+            dialogBuilder.setUpDate((RequestShareModel) currentRequest);
         }
 
         //pulsante per visualizzare la libreria dell'altro utente, in caso di scambio
-        if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+        if (currentRequest instanceof RequestTradeModel) {
             dialogBuilder.setTextConfirmButton("Libreria Utente");
         }
 
         dialogBuilder.getConfirmButton().setOnClickListener(view1 -> {
             if (holder.getAdapterPosition() != -1) {
                 if (exists) { //controlla che la richiesta esista ancora
-                    checkIfTheBookStillExists(requests.get(holder.getAdapterPosition()), holder);
+                    checkIfTheBookStillExists(currentRequest, holder);
 
                 } else {
                 Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
@@ -192,8 +189,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         });
 
         dialogBuilder.getRefuseButton().setOnClickListener(view1 -> {
+            Log.d("RECYCLEVIEW", "createNewContactDialog: " + holder.getAdapterPosition());
             if (holder.getAdapterPosition() != -1) {
-                deleteRequest(requests.get(holder.getAdapterPosition()));
+                deleteRequest(currentRequest);
                 // requests.remove(holder.getAdapterPosition());
                 // notifyItemRemoved(holder.getAdapterPosition());
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
@@ -318,25 +316,25 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 }
             }
 
-            if(!exists)
+            if (!exists)
                 Toast.makeText(context, "Oh no, il libro è stato eliminato dal proprietario, non è possibile accettare la richiesta!.", Toast.LENGTH_LONG).show();
-            else{
-                doActions(holder);
+            else {
+                doActions(holder, r);
             }
         });
     }
 
-    private void doActions(ViewHolder holder){
-        if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
-                Bundle args = new Bundle();
-                String bookString = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
-                args.putString("BK", bookString);
+    private void doActions(ViewHolder holder, RequestModel currentRequest) {
+        if (currentRequest instanceof RequestTradeModel) {
+            Bundle args = new Bundle();
+            String bookString = Utils.getGsonParser().toJson(currentRequest);
+            args.putString("BK", bookString);
 
-                checkIfTheBookIsAlreadyAcceptedSomewhere(requests.get(holder.getAdapterPosition()), holder, args);
-                //Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
-            } else {
-                acceptRequest(requests.get(holder.getAdapterPosition()));
-            }
+            checkIfTheBookIsAlreadyAcceptedSomewhere(currentRequest, holder, args);
+            //Navigation.findNavController(holder.itemView).navigate(R.id.action_request_page_nav_to_bookTradeFragment, args);
+        } else {
+            acceptRequest(currentRequest);
+        }
 
     }
 

@@ -41,13 +41,15 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        UserModel otherModel = requests.get(holder.getAdapterPosition()).getOtherUser();
-        String idReceiver = requests.get(holder.getAdapterPosition()).getReceiver();
+        RequestModel currentRequest = requests.get(position);
+
+        UserModel otherModel = currentRequest.getOtherUser();
+        String idReceiver = currentRequest.getReceiver();
 
         if (otherModel != null) {
-            String other_user = "A: " + requests.get(holder.getAdapterPosition())
+            String other_user = "A: " + currentRequest
                     .getOtherUser()
-                    .getFirstName() + " " + requests.get(holder.getAdapterPosition())
+                    .getFirstName() + " " + currentRequest
                     .getOtherUser()
                     .getLastName();
 
@@ -55,11 +57,11 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
             holder.user_location.setText(context.getString(R.string.user_location, requests.get(position).getOtherUser().getTownship(), requests.get(position).getOtherUser().getCity()));
         } else holder.user_name.setText("undefined");
 
-        holder.title.setText(requests.get(holder.getAdapterPosition()).getTitle());
-        Picasso.get().load(requests.get(holder.getAdapterPosition()).getThumbnail()).into(holder.book_image);
+        holder.title.setText(currentRequest.getTitle());
+        Picasso.get().load(currentRequest.getThumbnail()).into(holder.book_image);
 
 
-        if (requests.get(holder.getAdapterPosition()).getOtherUser().isHasPicture()) {
+        if (currentRequest.getOtherUser().isHasPicture()) {
             holder.user_gravatar.setVisibility(View.GONE);
             //scorre le immagini e cerca solo quella dell'utente relativo alla richiesta
             storageRef.child("profile_pics/").listAll().addOnSuccessListener(listResult -> {
@@ -74,7 +76,7 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
                         }).addOnFailureListener(exception -> {
                             int code = ((StorageException) exception).getErrorCode();
                             if (code == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+                                holder.user_gravatar.setHash(currentRequest.getOtherUser().getTelephone().hashCode());
                                 holder.user_gravatar.setVisibility(View.VISIBLE);
                                 holder.usr_pic.setVisibility(View.GONE);
                             }
@@ -83,7 +85,7 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
                 }
             });
         } else {
-            holder.user_gravatar.setHash(requests.get(holder.getAdapterPosition()).getOtherUser().getTelephone().hashCode());
+            holder.user_gravatar.setHash(currentRequest.getOtherUser().getTelephone().hashCode());
             holder.user_gravatar.setVisibility(View.VISIBLE);
             holder.usr_pic.setVisibility(View.GONE);
         }
@@ -97,14 +99,14 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
                 Number points = (Number) karma.get("points");
                 Number feedback_numbers = (Number) karma.get("numbers");
                 Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
-                createNewContactDialog(holder, flag);
+                createNewContactDialog(holder, flag, currentRequest);
             }
         });
     }
 
     @Override
-    public void createNewContactDialog(ViewHolder holder, Flag flag) {
-        checkIfStillUndefined(requests.get(holder.getAdapterPosition()));
+    public void createNewContactDialog(ViewHolder holder, Flag flag, RequestModel currentRequest) {
+        checkIfStillUndefined(currentRequest);
 
         View view = View.inflate(context, R.layout.popup_inbox, null);
 
@@ -112,8 +114,8 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
         dialogBuilder.setView(view);
         AlertDialog dialog = dialogBuilder.create();
 
-        dialogBuilder.setReputationMessage(requests.get(holder.getAdapterPosition()), flag);
-        dialogBuilder.setUpInformation(requests.get(holder.getAdapterPosition()));
+        dialogBuilder.setReputationMessage(currentRequest, flag);
+        dialogBuilder.setUpInformation(currentRequest);
 
         dialogBuilder.setTextRefuseButton("Annulla richiesta");
         dialogBuilder.getConfirmButton().setVisibility(View.GONE);
@@ -126,10 +128,10 @@ public class RequestsSent_RecycleViewAdapter extends RequestsReceived_RecycleVie
                     AlertDialog.Builder newDialog = new MaterialAlertDialogBuilder(context);
                     newDialog.setTitle("Conferma cancellazione");
                     newDialog.setMessage(Html.fromHtml("Sei sicuro di voler <b>annullare</b> la richiesta per <b>" +
-                                    requests.get(holder.getAdapterPosition()).getTitle() + "</b>?",
+                                    currentRequest.getTitle() + "</b>?",
                             Html.FROM_HTML_MODE_LEGACY));
                     newDialog.setPositiveButton("SI", (dialogInterface, i) -> {
-                        super.deleteRequest(requests.get(holder.getAdapterPosition()));
+                        super.deleteRequest(currentRequest);
                         requests.remove(holder.getAdapterPosition());
                         notifyItemRemoved(holder.getAdapterPosition());
                         Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_SEND, requests.size());

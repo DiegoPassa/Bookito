@@ -1,9 +1,6 @@
 package com.zerobudget.bookito.ui.inbox;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +12,9 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
-import com.zerobudget.bookito.models.requests.RequestModel;
-import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
 
@@ -35,6 +28,8 @@ public class RequestsReceivedFragment extends InboxFragment {
     private TextView empty;
 
     private RequestsReceived_RecycleViewAdapter adapter;
+
+    private RequestObserver observer;
 
     public RequestsReceivedFragment() {
     }
@@ -72,10 +67,13 @@ public class RequestsReceivedFragment extends InboxFragment {
 
     protected void setUpRecycleView() {
         if (getView() != null) {
-            adapter = new RequestsReceived_RecycleViewAdapter(this.getContext(), requests, empty);
+            adapter = new RequestsReceived_RecycleViewAdapter(this.getContext(), Utils.incomingRequests, empty);
+            observer = new RequestObserver(adapter);
             recyclerView.setAdapter(adapter);
             //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
             recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));
+
+            Utils.incomingRequests.addOnListChangedCallback(observer);
         }
     }
 
@@ -83,82 +81,13 @@ public class RequestsReceivedFragment extends InboxFragment {
     public void onStart() {
         super.onStart();
         setUpRecycleView();
-        getRequestsRealTime();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    /**
-     * preleva in realtime le richieste ricevute dall'utente corrente*/
-    protected void getRequestsRealTime() {
-        spinner.setVisibility(View.VISIBLE);
-        db.collection("requests")
-                .whereEqualTo("receiver", Utils.USER_ID)
-                .whereEqualTo("status", "undefined")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e(TAG, "getRequestsRealTime: ", error);
-                        return;
-                    }
-                    if (value != null) {
-                        if (value.isEmpty()) {
-                            spinner.setVisibility(View.GONE);
-                        }
-                        for (DocumentChange doc : value.getDocumentChanges()) {
-                            spinner.setVisibility(View.VISIBLE);
-                            String newId = doc.getDocument().getId();
-                            switch (doc.getType()) {
-                                case ADDED:
-                                    if (!ids.contains(newId)) {
-                                        RequestModel addedRequestModel = RequestModel.getRequestModel(doc.getDocument().toObject(RequestModel.class).getType(), doc.getDocument());
-                                        requests.add(doc.getNewIndex(), addedRequestModel);
-                                        ids.add(newId);
-                                        // adapter.notifyItemInserted(doc.getNewIndex());
-                                        getUserByRequest(addedRequestModel, doc.getNewIndex());
-                                    }
-                                    break;
-                                case REMOVED:
-                                    requests.remove(doc.getOldIndex());
-                                    ids.remove(newId);
-                                    adapter.notifyItemRemoved(doc.getOldIndex());
-                                    spinner.setVisibility(View.GONE);
-                                    break;
-                            }
-                        }
-                        // set badge number
-                        if (badge != null) {
-                            badge.setNumber(requests.size());
-                            badge.setVisible(badge.getNumber() > 0);
-                        }
-                        // set emptiness
-                        Utils.toggleEmptyWarning(empty, Utils.EMPTY_INBOX, requests.size());
-                    }
-                });
-
-    }
-
-    /**
-     * */
-    protected void getUserByRequest(RequestModel r, int position) {
-        db.collection("users").document(r.getSender())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        UserModel u = task.getResult().toObject(UserModel.class);
-                        r.setOtherUser(u);
-                        adapter.notifyItemInserted(position);
-                        // adapter.notifyItemChanged(position);
-                        if (!requests.isEmpty()) {
-                            recyclerView.scrollToPosition(0);
-                        }
-                        spinner.setVisibility(View.GONE);
-                    }
-                });
+        Utils.incomingRequests.removeOnListChangedCallback(observer);
     }
 
 }

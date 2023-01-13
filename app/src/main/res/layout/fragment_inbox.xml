@@ -206,7 +206,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chipGroup">
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup"
+                tools:listitem="@layout/recycleview_requests_swap">
 
             </androidx.recyclerview.widget.RecyclerView>
 

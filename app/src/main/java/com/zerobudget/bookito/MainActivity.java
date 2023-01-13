@@ -24,6 +24,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -35,13 +36,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.zerobudget.bookito.databinding.ActivityMainBinding;
 import com.zerobudget.bookito.login.LoginActivity;
 import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
+import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserLibrary;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
@@ -144,57 +148,114 @@ public class MainActivity extends AppCompatActivity {
                 R.id.request_page_nav, R.id.navigation_library, R.id.navigation_search) //changed navigation_requests to request_page_nav
                 .build();
         MaterialToolbar toolbar = binding.topAppBar;
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 
-        NavInflater navInflater = navController.getNavInflater();
-        NavGraph graph = navInflater.inflate(R.navigation.mobile_navigation);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        if (navHostFragment != null) {
+            // NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+            NavController navController = navHostFragment.getNavController();
+            NavInflater navInflater = navController.getNavInflater();
+            NavGraph graph = navInflater.inflate(R.navigation.mobile_navigation);
 
-        graph.setStartDestination(R.id.to_navigation_library);
-        navController.setGraph(graph);
+            graph.setStartDestination(R.id.to_navigation_library);
+            navController.setGraph(graph);
 
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(binding.navView, navController);
 
-        int menuItemId = navView.getMenu().getItem(0).getItemId();
-        badge = navView.getOrCreateBadge(menuItemId);
+            int menuItemId = navView.getMenu().getItem(0).getItemId();
+            badge = navView.getOrCreateBadge(menuItemId);
 
-        navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-            Log.d("NAVIGATION", navDestination.getDisplayName());
+            navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
+                Log.d("NAVIGATION", navDestination.getDisplayName());
 
-            int destination = navDestination.getId();
+                int destination = navDestination.getId();
 
-            if (destination == R.id.userProfileFragment ||
-                    destination == R.id.notificationsFragment ||
-                    destination == R.id.chat_fragment ||
-                    destination == R.id.bookTradeFragment ||
-                    destination == R.id.searchByNameFragment) {
+                if (destination == R.id.userProfileFragment ||
+                        destination == R.id.notificationsFragment ||
+                        destination == R.id.chat_fragment ||
+                        destination == R.id.bookTradeFragment ||
+                        destination == R.id.searchByNameFragment) {
 
-                navView.setVisibility(View.GONE);
-                toolbar.getMenu().setGroupVisible(R.id.default_group, false);
+                    navView.setVisibility(View.GONE);
+                    toolbar.getMenu().setGroupVisible(R.id.default_group, false);
 
-                if (destination == R.id.chat_fragment) {
-                    toolbar.getMenu().setGroupVisible(R.id.chat_group, true);
+                    if (destination == R.id.chat_fragment) {
+                        toolbar.getMenu().setGroupVisible(R.id.chat_group, true);
+                    }
+
+                    if (destination == R.id.userProfileFragment) {
+                        toolbar.getMenu().setGroupVisible(R.id.profile_group, true);
+                    }
+
+                    if (destination == R.id.searchByNameFragment) {
+                        toolbar.getMenu().setGroupVisible(R.id.search_group, true);
+                    }
+                } else {
+                    navView.setVisibility(View.VISIBLE);
                 }
+            });
 
-                if (destination == R.id.userProfileFragment) {
-                    toolbar.getMenu().setGroupVisible(R.id.profile_group, true);
+            navView.setOnItemSelectedListener(item -> {
+                if (graph.getStartDestinationId() != item.getItemId()) {
+                    graph.setStartDestination(item.getItemId());
+                    navController.navigate(item.getItemId());
                 }
+                return true;
+            });
+        }
 
-                if (destination == R.id.searchByNameFragment) {
-                    toolbar.getMenu().setGroupVisible(R.id.search_group, true);
-                }
-            } else {
-                navView.setVisibility(View.VISIBLE);
-            }
-        });
+        getRequestsRealTime();
+    }
 
-        navView.setOnItemSelectedListener(item -> {
-            if (graph.getStartDestinationId() != item.getItemId()) {
-                graph.setStartDestination(item.getItemId());
-                navController.navigate(item.getItemId());
-            }
-            return true;
-        });
+    /**
+     * preleva in realtime le richieste ricevute dall'utente corrente
+     */
+    protected void getRequestsRealTime() {
+        db.collection("requests")
+                .whereEqualTo("receiver", Utils.USER_ID)
+                .whereEqualTo("status", "undefined")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "getRequestsRealTime: ", error);
+                        return;
+                    }
+                    if (value != null) {
+                        for (DocumentChange doc : value.getDocumentChanges()) {
+                            switch (doc.getType()) {
+                                case ADDED:
+                                    RequestModel addedRequestModel = RequestModel.getRequestModel(doc.getDocument().toObject(RequestModel.class).getType(), doc.getDocument());
+                                    getUserByRequest(addedRequestModel, doc.getNewIndex());
+                                    break;
+                                case REMOVED:
+                                    Utils.incomingRequests.remove(doc.getOldIndex());
+                                    updateBadge();
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+    }
+
+    protected void updateBadge() {
+        if (badge != null) {
+            badge.setNumber(Utils.incomingRequests.size());
+            badge.setVisible(badge.getNumber() > 0);
+        }
+    }
+
+    protected void getUserByRequest(RequestModel r, int position) {
+        db.collection("users").document(r.getSender())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        UserModel u = task.getResult().toObject(UserModel.class);
+                        r.setOtherUser(u);
+                        Utils.incomingRequests.add(position, r);
+                        updateBadge();
+                    }
+                });
     }
 
     @Override
@@ -326,7 +387,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * carica l'immagine di profilo dell'utente*/
+     * carica l'immagine di profilo dell'utente
+     */
     private void getUriPic() {
         StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
         load.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -336,8 +398,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*    */
+
     /**
-     * preleva le richieste ricevute dal database e inserisce il numero nel badge della bottom bar*/
+     * preleva le richieste ricevute dal database e inserisce il numero nel badge della bottom bar
+     *//*
     private void setRequestBadgeNumber(){
         db.collection("requests")
                 .whereEqualTo("status", "undefined")
@@ -347,17 +412,17 @@ public class MainActivity extends AppCompatActivity {
                     badge.setNumber(numReq);
                     badge.setVisible(numReq > 0);
                 });
-    }
-
-
-
+    }*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        setRequestBadgeNumber();
+        // setRequestBadgeNumber();
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
