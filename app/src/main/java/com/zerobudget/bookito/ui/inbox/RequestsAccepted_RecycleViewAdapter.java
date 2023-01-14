@@ -223,7 +223,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * visualizza il popup con le opzioni disponibili
      *
-     * @param holder: oggetto che contiene i binding dell'xml
+     * @param holder:  oggetto che contiene i binding dell'xml
      * @param request: richiesta selezionata
      */
     private void showActionsDialog(ViewHolder holder, RequestModel request) {
@@ -250,35 +250,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 confirmBookGiven.setVisibility(View.VISIBLE);
                 closeRequest.setVisibility(View.GONE);
             }
-        }
-
-        else if (request instanceof RequestTradeModel) {
+        } else if (request instanceof RequestTradeModel) {
             RequestTradeModel r = (RequestTradeModel) request;
 
-            /*
-//                    se l'utente attuale è un sender controllo che il sender non abbia già fatto la richiesta
-//                    se l'ha fatta allora mando messaggio di errore (e anche non faccio fare display dell'item della selezione dell'azione, non se sa mai)
-//                    l'utente può comunque vedere la richiesta perché deve poter accedere alla chat fino alla fine.
-                        stessa cosa all'inverso se user attuale è receiver
-//                     */
-
-            if ( (Utils.USER_ID.equals(r.getSender()) && r.isSenderConfirm()) || (Utils.USER_ID.equals(r.getReceiver()) && r.isReceiverConfirm())) {
+            if ((Utils.USER_ID.equals(r.getSender()) && r.isSenderConfirm()) || (Utils.USER_ID.equals(r.getReceiver()) && r.isReceiverConfirm())) {
                 closeRequest.setVisibility(View.GONE);
             }
-
-//            if (Utils.USER_ID.equals(r.getSender())) {
-//                    /*
-//                    se l'utente attuale è un sender controllo che il sender non abbia già fatto la richiesta
-//                    se l'ha fatta allora mando messaggio di errore (e anche non faccio fare display dell'item della selezione dell'azione, non se sa mai)
-//                    l'utente può comunque vedere la richiesta perché deve poter accedere alla chat fino alla fine
-//                     */
-//                if (r.isSenderConfirm()) {
-//                    closeRequest.setVisibility(View.GONE);
-//                }
-//            } else if (r.isReceiverConfirm()) {
-//                closeRequest.setVisibility(View.GONE);
-//
-//            }
         } else {
             if (Utils.USER_ID.equals(request.getReceiver())) {
                 closeRequest.setVisibility(View.GONE);
@@ -290,13 +267,10 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
         //conferma riguardante il prestito del libro (se il proprietario ha dato il libro)
         confirmBookGiven.setOnClickListener(view1 -> {
             if (Utils.USER_ID.equals(request.getSender())) {
-                Toast.makeText(context, "Solo il mittente può confermare", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Attenzione, solo il mittente può confermare", Toast.LENGTH_LONG).show();
                 return;
             }
-                 //solo chi da il libro può confermare la consegna
-            /*
-            da rivedere in ogni caso questo sistema, si potrebbe fare che serva una doppia conferma da parte di entrambi gli utenti
-             */
+
             if (request.getStatus().equals("ongoing")) return;
 
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
@@ -325,9 +299,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                 Number feedback_numbers = (Number) karma.get("numbers");
                 Flag flag = UserFlag.getFlagFromUser(points, feedback_numbers);
                 createNewContactDialog(holder, flag);
-
             }
-            // createNewContactDialog(holder);
         });
 
         //richiesta (CONCLUDED) conclusa, dichiarata come finita da uno dei due utenti
@@ -352,7 +324,6 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                         return;
                     }
                 } else if (r.isReceiverConfirm()) {
-                    Log.d("HELLO", "sSONO QUA CAZZOZOOZOZOZ");
                     Toast.makeText(context, "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -362,10 +333,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     return; //solo chi presta il libro può confermarela richiesta conclusa
                 }
             }
-                    /*
-                    anche qua da rivedere, in questo caso chi presta il libro può confermare se l'altro utente glielo restituisce o meno.
-                    Possiamo aggiungere una sorta di flag per far concludere la richiesta in caso l'utente non dovesse restituire il libro al suo proprietario
-                     */
+
             dialog.dismiss();
 
             MaterialAlertDialogBuilder builderConfirm = new MaterialAlertDialogBuilder(context);
@@ -419,7 +387,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                                 ((RequestTradeModel) request).setReceiverConfirm(true);
                                 task = db.collection("requests").document(request.getRequestId()).update("receiverConfirm", true);
                             }
-                            task.addOnSuccessListener((unused)->{
+                            task.addOnSuccessListener((unused) -> {
                                 db.collection("requests").document(request.getRequestId()).get().addOnSuccessListener(documentSnapshot -> {
                                     if ((boolean) documentSnapshot.get("senderConfirm") && (boolean) documentSnapshot.get("receiverConfirm")) {
                                         closeRequest(holder);
@@ -467,12 +435,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                         Anche perché dubito che un utente consegni il proprio libro senza accertarsi che l'altro tizio non gli dia quello da scambiare.
                         Il problema accade se uno dei due utenti preme il tasto di conferma libro completamente a caso.
                          */
-                        Toast.makeText(context, "Non puoi cancellare la richiesta sicchè uno di voi ha confermato la consegna del libro!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Non puoi cancellare la richiesta dato che uno di voi ha confermato la consegna del libro!", Toast.LENGTH_LONG).show();
                         return;
                     }
 
                 } else {
-                    Log.e("RECEIVER",requests.get(holder.getAdapterPosition()).getReceiver());
+                    Log.e("RECEIVER", requests.get(holder.getAdapterPosition()).getReceiver());
                     Utils.changeBookStatus(db, requests.get(holder.getAdapterPosition()).getReceiver(), requests.get(holder.getAdapterPosition()).getRequestedBook(), true);
                 }
 
@@ -547,7 +515,7 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * incrementa il punteggio di red flag dell'utente
      *
-     * @param id: id dell'utente di riferimento
+     * @param id:       id dell'utente di riferimento
      * @param feedback: valore di incremento del feedback dell'utente
      */
     private void sendFeedbackToUser(String id, float feedback) {
@@ -558,16 +526,16 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
      * visualizza le informazioni relative alla richiesta selezionata
      *
      * @param holder: vista contente le informazioni del file xml
-     * @param flag: classe usata per calcolare la reputazione dell'utente
+     * @param flag:   classe usata per calcolare la reputazione dell'utente
      */
     public void createNewContactDialog(ViewHolder holder, Flag flag) {
         View view;
         PopupInbox dialogBuilder;
-        if(requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
+        if (requests.get(holder.getAdapterPosition()) instanceof RequestTradeModel) {
             view = View.inflate(context, R.layout.popup_inbox_trade_acc, null);
             dialogBuilder = new PopupInboxTradeAcc(context, view);
             ((PopupInboxTradeAcc) dialogBuilder).setUpInformationTrade((RequestTradeModel) requests.get(holder.getAdapterPosition()));
-        }else {
+        } else {
             //crea il popup tramite la classe PopupInbox hce fornisce i metodi per settarne i valori
             view = View.inflate(context, R.layout.popup_inbox, null);
             dialogBuilder = new PopupInbox(context, view);
@@ -588,19 +556,13 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
         dialog.show();
     }
-//    @Override
-//    public void createNewContactDialog(int position, ViewHolder holder, Flag user) {
-//        Bundle args = new Bundle();
-//        String toJson = Utils.getGsonParser().toJson(requests.get(holder.getAdapterPosition()));
-//        args.putString("otherChatUser", toJson);
-//        Navigation.findNavController(View.inflate(context, R.id.recycleView_Inbox, null)).navigate(R.layout.chat_fragment);
-//    }
 
     /**
      * controlla se il current user è il receiver della richiesta
      *
      * @param r: richiesta di riferimento
-     * @return boolean: true se il controllo effettuato è vero*/
+     * @return boolean: true se il controllo effettuato è vero
+     */
     protected boolean isCurrentUserReceiver(RequestModel r) {
         return r.getReceiver().equals(Utils.USER_ID);
     }
@@ -609,7 +571,8 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * in real time vede se esistono nuovi messaggi nelle chat e ne visualizza il numero
      *
-     * @param holder: serve per poter visualizzare il numero nell'elemento xml*/
+     * @param holder: serve per poter visualizzare il numero nell'elemento xml
+     */
     protected void setUpChatRoom(ViewHolder holder) {
         realTimedb.addValueEventListener(new ValueEventListener() {
             @Override
@@ -626,12 +589,12 @@ public class RequestsAccepted_RecycleViewAdapter extends RecyclerView.Adapter<Re
                                 tot++;
                     }
                 }
-                if(tot > 0)
+                if (tot > 0)
                     holder.badge_new_msg.setVisibility(View.VISIBLE);
                 else
                     holder.badge_new_msg.setVisibility(View.GONE);
 
-                holder.badge_new_msg.setText(tot+"");
+                holder.badge_new_msg.setText(tot + "");
             }
 
             @Override

@@ -2,7 +2,6 @@ package com.zerobudget.bookito.ui.inbox;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +46,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
 
     protected final Context context;
     protected ArrayList<RequestModel> requests;
-    private String isbn_trade;
 
     protected FirebaseFirestore db;
     protected FirebaseAuth auth;
@@ -179,9 +177,9 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
                     checkIfTheBookStillExists(currentRequest, holder);
 
                 } else {
-                Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
-                Navigation.findNavController(holder.itemView).navigate(R.id.request_page_nav);
-            }
+                    Toast.makeText(context, "Oh no, la richiesta è stata eliminata dal richiedente!", Toast.LENGTH_LONG).show();
+                    Navigation.findNavController(holder.itemView).navigate(R.id.request_page_nav);
+                }
                 // notifyItemRangeChanged(holder.getAdapterPosition(), requests.size());
             }
             Utils.toggleEmptyWarning(emptyWarning, Utils.EMPTY_INBOX, requests.size());
@@ -189,7 +187,6 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
         });
 
         dialogBuilder.getRefuseButton().setOnClickListener(view1 -> {
-            Log.d("RECYCLEVIEW", "createNewContactDialog: " + holder.getAdapterPosition());
             if (holder.getAdapterPosition() != -1) {
                 deleteRequest(currentRequest);
                 // requests.remove(holder.getAdapterPosition());
@@ -206,7 +203,8 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * elimina la richiesta in caso di rifiuto
      *
-     * @param r: richiesta da eliminare*/
+     * @param r: richiesta da eliminare
+     */
     protected void deleteRequest(RequestModel r) {
         db.collection("requests").document(r.getRequestId()).delete();
         sendNotification(r, "Reject");
@@ -217,11 +215,12 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
      * - cambia lo status in accepted
      * - inizializza la chat tra i due utenti inviando il messaggio di default
      *
-     * @param r: richiesta da accettare*/
+     * @param r: richiesta da accettare
+     */
     protected void acceptRequest(RequestModel r) {
         Utils.changeBookStatus(db, Utils.USER_ID, r.getRequestedBook(), false);
 
-                //controlla prima che non esista già una richiesta accettata per il libro
+        //controlla prima che non esista già una richiesta accettata per il libro
         db.collection("requests")
                 .whereEqualTo("receiver", Utils.USER_ID)
                 .whereEqualTo("status", "accepted")
@@ -263,30 +262,32 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * crea la notifica da visulizzare nell'area notifiche dell'applicazione
      *
-     * @param r: richiesta di riferimento
-     * @param status: stato della richiesta, se Accept è accettata, altrimenti è rifiutata*/
+     * @param r:      richiesta di riferimento
+     * @param status: stato della richiesta, se Accept è accettata, altrimenti è rifiutata
+     */
     private void sendNotification(RequestModel r, String status) {
         String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/" + otherUserId);
         String body = status.equals("Accept") ? Utils.CURRENT_USER.getFirstName() + " ha accettato la tua richiesta!" : Utils.CURRENT_USER.getFirstName() + " ha rifiutato la tua richiesta!";
         String title = status.equals("Accept") ? "Richiesta accettata!" : "Richiesta rifiutata!";
 
         /*
-        PROBLEMA, NON POSSIAMO RICHIAMARE LA SERIALIZE DEL CURRENT USER PERCHÉ SI TRATTA DI UN USERLIBRARY, QUINDI MI GENERA ANCHE TUTTI I SUOI LIBRI E QUINDI DA ERRORE
+        NON POSSIAMO RICHIAMARE LA SERIALIZE DEL CURRENT USER PERCHÉ SI TRATTA DI UN USERLIBRARY,
+        QUINDI MI GENERA ANCHE TUTTI I SUOI LIBRI E QUINDI DA ERRORE
          */
-
         UserModel currentUser = new UserModel(Utils.CURRENT_USER.getFirstName(), Utils.CURRENT_USER.getLastName(),
                 Utils.CURRENT_USER.getTelephone(), Utils.CURRENT_USER.getTownship(), Utils.CURRENT_USER.getCity(),
                 Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
 
-        NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser,Timestamp.now().getSeconds());
+        NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, status, body, title, r.getThumbnail(), r, currentUser, Timestamp.now().getSeconds());
         ref.push().setValue(notificationModel.serialize());
     }
 
     /**
      * controlla se la richiesta esiste ancora (quindi se il sender non l'ha annullata)
      *
-     * @param r: richiesta di riferimento*/
+     * @param r: richiesta di riferimento
+     */
     private void checkIfStillExists(RequestModel r) {
         db.collection("requests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -301,17 +302,17 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     /**
      * controlla se il libro esiste ancora nella libreria dell'utente corrente per isbn e tipo
      *
-     * @param r: richiesta di riferimento
-     * @param holder: vista contente i riferimenti all'xml*/
-    private void checkIfTheBookStillExists(RequestModel r, ViewHolder holder){
+     * @param r:      richiesta di riferimento
+     * @param holder: vista contente i riferimenti all'xml
+     */
+    private void checkIfTheBookStillExists(RequestModel r, ViewHolder holder) {
         db.collection("users").document(Utils.USER_ID).get().addOnSuccessListener(documentSnapshot -> {
             Object arrBooks = documentSnapshot.get("books");
             boolean exists = false;
             for (Object o : (ArrayList<Object>) arrBooks) {
                 HashMap<String, Object> map = (HashMap<String, Object>) o;
-                if(r.getRequestedBook().equals(map.get("isbn")) && r.getType().equals(map.get("type"))) {
+                if (r.getRequestedBook().equals(map.get("isbn")) && r.getType().equals(map.get("type"))) {
                     exists = true;
-                    Log.d("ESISTE", "exists: "+map.get("title"));
                     break;
                 }
             }
@@ -339,14 +340,15 @@ public class RequestsReceived_RecycleViewAdapter extends RecyclerView.Adapter<Re
     }
 
     /**
-     * controlla se esiste già una richiesta accettata per quel libro dell'utente corrente da qualche parte*/
+     * controlla se esiste già una richiesta accettata per quel libro dell'utente corrente da qualche parte
+     */
     private void checkIfTheBookIsAlreadyAcceptedSomewhere(RequestModel r, ViewHolder holder, Bundle args) {
         db.collection("requests").get().addOnCompleteListener(task -> {
             boolean existsOther = false;
             for (QueryDocumentSnapshot doc : task.getResult()) {
                 //controllo se il receiver è il current user, perché mi interessa verificare se ci sono altre richieste per il suo libro
                 //può essere che esista un altro utente con lo stesso libro ma non sono interessata a quello
-                if(doc.get("receiver").equals(Utils.USER_ID)) {
+                if (doc.get("receiver").equals(Utils.USER_ID)) {
                     if (doc.get("requestedBook").equals(r.getRequestedBook()) && doc.get("status").equals("accepted"))
                         existsOther = true;
 

@@ -1,6 +1,5 @@
 package com.zerobudget.bookito.models.notification;
 
-import com.google.firebase.Timestamp;
 import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.users.UserModel;
 

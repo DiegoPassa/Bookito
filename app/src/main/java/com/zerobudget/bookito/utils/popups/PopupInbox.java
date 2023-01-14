@@ -46,7 +46,7 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
      * prepara il testo da visualizzare nella textview reputation, calcolandone il valore tramite i points e i feedback
      *
      * @param request: richiesta di riferimento per la visualizzazione della reputazione
-     * @param flag: flag usata per determinare il livello dell'utente (affidabile o non affidabile
+     * @param flag:    flag usata per determinare il livello dell'utente (affidabile o non affidabile
      */
     public void setReputationMessage(RequestModel request, Flag flag) {
         Number points = (Number) request.getOtherUser().getKarma().get("points");
@@ -136,7 +136,8 @@ public class PopupInbox extends MaterialAlertDialogBuilder {
     /**
      * assegna ai campi della classe le viste prelevate dalla view
      *
-     * @param view: view di riferimento*/
+     * @param view: view di riferimento
+     */
     private void loadPopupViewMembers(View view) {
         this.confirmButton = view.findViewById(R.id.acceptButton);
         this.refuseButton = view.findViewById(R.id.refuseButton);

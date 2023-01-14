@@ -24,25 +24,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.zerobudget.bookito.Flag;
-import com.zerobudget.bookito.Notifications;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.databinding.FragmentUserProfileBinding;
 import com.zerobudget.bookito.models.neighborhood.NeighborhoodModel;
 import com.zerobudget.bookito.models.users.UserModel;
-import com.zerobudget.bookito.utils.UserFlag;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class UserProfileFragment extends Fragment {
 
@@ -60,7 +54,6 @@ public class UserProfileFragment extends Fragment {
             registerForActivityResult(new ActivityResultContracts.GetContent(),
                     result -> {
                         if (result != null) {
-                            Log.d("URI", result.toString());
                             addPicOnFirebase(result);
                         }
                     });
@@ -85,9 +78,7 @@ public class UserProfileFragment extends Fragment {
 
         user = Utils.CURRENT_USER;
 
-        Log.d("Sent to: ", user.getNotificationToken());
-        Notifications.sendPushNotification("profilo di " + user.getFirstName() + " " + user.getLastName() + "\ntoken: " + user.getNotificationToken(), user.getTelephone(), user.getNotificationToken());
-
+        //Notifications.sendPushNotification("profilo di " + user.getFirstName() + " " + user.getLastName() + "\ntoken: " + user.getNotificationToken(), user.getTelephone(), user.getNotificationToken());
 
         binding.usrFirstName.setText(user.getFirstName());
         binding.usrLastName.setText(user.getLastName());
@@ -99,8 +90,6 @@ public class UserProfileFragment extends Fragment {
 
         showPic();
 
-        Log.d("SONO_USER_PROFILE", user.getFirstName());
-
         binding.imgContainer.setOnClickListener(view -> {
             showImagePicDialog();
         });
@@ -108,12 +97,10 @@ public class UserProfileFragment extends Fragment {
         binding.newTownship.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -190,7 +177,8 @@ public class UserProfileFragment extends Fragment {
 
     /**
      * visualizza l'immagine di profilo
-     * se esso l'ha impostata viene prelevata dal database, altrimenti è generata una di default*/
+     * se esso l'ha impostata viene prelevata dal database, altrimenti è generata una di default
+     */
     private void showPic() {
         if (user.isHasPicture()) {
             binding.profilePic.setVisibility(View.VISIBLE);
@@ -216,7 +204,8 @@ public class UserProfileFragment extends Fragment {
 
 
     /**
-     * visualizza il popup con le opzioni per scattare foro, selezionarla dalla galleria o eliminarla*/
+     * visualizza il popup con le opzioni per scattare foro, selezionarla dalla galleria o eliminarla
+     */
     private void showImagePicDialog() {
 
         AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(this.getContext());
@@ -257,7 +246,8 @@ public class UserProfileFragment extends Fragment {
     /**
      * aggiunde l'immagine nel database
      *
-     * @param uri: link da inserire all'interno di firebase storage*/
+     * @param uri: link da inserire all'interno di firebase storage
+     */
     private void addPicOnFirebase(Uri uri) {
         //salvata in profile_pics/<id dell'utente>
         StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);
@@ -281,7 +271,8 @@ public class UserProfileFragment extends Fragment {
     }
 
     /**
-     * elimina la foto profilo dal database*/
+     * elimina la foto profilo dal database
+     */
     private void deletePicOnFirebase() {
         StorageReference desertRef = storageRef.child("profile_pics/" + Utils.USER_ID);
 
@@ -299,7 +290,8 @@ public class UserProfileFragment extends Fragment {
 
     /**
      * cambia gli elementi visualizzati quando si effettuano modifiche al profilo
-     * (in seguito alla pressione del float button sul fondo dello schermo)*/
+     * (in seguito alla pressione del float button sul fondo dello schermo)
+     */
     private void changeVisibility() {
         if (binding.floatingActionButton.isShown()) {
             binding.editView.setVisibility(View.VISIBLE);

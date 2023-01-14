@@ -44,7 +44,7 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
         holder.title.setText(notification.get(position).getTitle());
         holder.body.setText(notification.get(position).getBody());
 
-        if(notification.get(position).getTimestamp() != 0) {
+        if (notification.get(position).getTimestamp() != 0) {
             holder.date.setVisibility(View.VISIBLE);
 
             String elapsedTime = (String) DateUtils.getRelativeTimeSpanString(notification.get(position).getTimestamp() * 1000);
@@ -56,7 +56,7 @@ public class Notification_RecycleViewAdapter extends RecyclerView.Adapter<Notifi
                 .child(notification.get(position).getActionerId())
                 .getDownloadUrl()
                 .addOnSuccessListener(uri ->
-                    Picasso.get().load(uri).into(holder.actioner_image)
+                        Picasso.get().load(uri).into(holder.actioner_image)
                 );
 
         Picasso.get().load(notification.get(position).getBook_thumb()).into(holder.book_victim);

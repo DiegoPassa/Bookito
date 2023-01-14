@@ -44,18 +44,12 @@ public class NotificationsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-
         View root = binding.getRoot();
-
         recyclerView = binding.notificationRecycleView;
 
         setUpScrollDelete();
-
         setUpRecycleView();
-
         setUpFragmentData();
-
-
 
         return root;
     }
@@ -72,12 +66,11 @@ public class NotificationsFragment extends Fragment {
 //                int position = viewHolder.getAdapterPosition();
 //                notifications.remove(position);
 //                adapter.notifyDataSetChanged();
-
                 deleteNotificationFromDatabase(viewHolder.getAdapterPosition());
             }
 
             private void deleteNotificationFromDatabase(int position) {
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/notification/"+Utils.USER_ID+'/'+notifications.get(position).getNotificationId());
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/notification/" + Utils.USER_ID + '/' + notifications.get(position).getNotificationId());
                 databaseReference.removeValue();
             }
 
@@ -88,7 +81,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     protected void setUpFragmentData() {
-        ref = FirebaseDatabase.getInstance().getReference("/notification/"+ Utils.USER_ID);
+        ref = FirebaseDatabase.getInstance().getReference("/notification/" + Utils.USER_ID);
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -103,27 +96,22 @@ public class NotificationsFragment extends Fragment {
                 }
                 adapter.notifyDataSetChanged();
 
-
-                 if(notifications.size() > 0)
-                     binding.emptyNotifications.setVisibility(View.GONE);
-                 else
-                     binding.emptyNotifications.setVisibility(View.VISIBLE);
+                if (notifications.size() > 0)
+                    binding.emptyNotifications.setVisibility(View.GONE);
+                else
+                    binding.emptyNotifications.setVisibility(View.VISIBLE);
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
 
     private void setUpRecycleView() {
-
         adapter = new Notification_RecycleViewAdapter(getContext(), notifications);
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 }

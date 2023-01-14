@@ -303,7 +303,6 @@ public class ChatFragment extends Fragment {
                     return;
                 }
             } else if (r.isReceiverConfirm()) {
-                Log.d("HELLO", "sSONO QUA CAZZOZOOZOZOZ");
                 Toast.makeText(getContext(), "Hai già confermato questa richiesta!", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -530,7 +529,6 @@ public class ChatFragment extends Fragment {
                         if (dataSnapshot.hasChild("status")) {
                             if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
                                     && dataSnapshot.child("status").getValue(String.class).equals("sent")) {
-                                Log.d("RECEIVER", ""+dataSnapshot.child("receiver"));
                                 realTimedb.child(dataSnapshot.getKey()).child("status").setValue("read");
                             }
                         }

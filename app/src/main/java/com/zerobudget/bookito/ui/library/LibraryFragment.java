@@ -24,24 +24,18 @@ import java.util.HashMap;
 
 public class LibraryFragment extends Fragment {
 
-    // ArrayList<BookModel> bookModels = new ArrayList<>();
     private FragmentLibraryBinding binding;
     private FirebaseFirestore db;
     private Book_RecycleViewAdapter adapter;
     private final Rect scrollBounds = new Rect();
-
     private ProgressBar spinner;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // LibraryViewModel libraryViewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
-
         binding = FragmentLibraryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         RecyclerView recyclerView = binding.recycleViewMyLibrary;
-
         spinner = binding.progressBar;
 
         if (!binding.addBookButton.getLocalVisibleRect(scrollBounds))
@@ -50,15 +44,11 @@ public class LibraryFragment extends Fragment {
         binding.nestedScrollView2.getHitRect(scrollBounds);
 
         db = FirebaseFirestore.getInstance();
-
-        // setUpBookModel();
         adapter = new Book_RecycleViewAdapter(this.getContext(), (ArrayList<BookModel>) Utils.CURRENT_USER.getBooks(), binding.emptyLibrary);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
-
         // getLibraryRealtime();
-
         getBooksFromDB();
 
         binding.floatingActionButton.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.action_navigation_library_to_navigation_insertNew));
@@ -84,7 +74,8 @@ public class LibraryFragment extends Fragment {
     }
 
     /**
-     * preleva i liri dell'utente corrente dal database*/
+     * preleva i liri dell'utente corrente dal database
+     */
     public void getBooksFromDB() {
         db.collection("users").document(Utils.USER_ID)
                 .get().addOnSuccessListener(documentSnapshot -> {
@@ -95,7 +86,8 @@ public class LibraryFragment extends Fragment {
     /**
      * carica la libreria dell'utente
      *
-     * @param books: i libri prelevati dal database*/
+     * @param books: i libri prelevati dal database
+     */
     private void loadLibrary(Object books) {
         spinner.setVisibility(View.VISIBLE);
         Utils.CURRENT_USER.getBooks().clear();
@@ -104,7 +96,6 @@ public class LibraryFragment extends Fragment {
             BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
             Utils.CURRENT_USER.getBooks().add(tmp);//aggiunge il bookmodel tmp all'array list
         }
-        //Log.d("LIBRERIA CREATA!!", "loadLibrary: " + Utils.CURRENT_USER);
         spinner.setVisibility(View.GONE);
         adapter.notifyDataSetChanged();
 

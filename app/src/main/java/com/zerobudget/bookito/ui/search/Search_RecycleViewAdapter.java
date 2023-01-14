@@ -199,15 +199,14 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
         }
 
 
-
         if (rDoc.getStatus().equals("accepted") || rDoc.getStatus().equals("ongoing")) {
             if (rDoc.getReceiver().equals(rm.getReceiver()) && rDoc.getRequestedBook().equals(rm.getRequestedBook())) {
                 exists = true;
                 Toast.makeText(context, "Attenzione! Esista già una richiesta in corso per '" + rm.getTitle() + "'!", Toast.LENGTH_LONG).show();
             }
 
-            if(rDoc instanceof RequestTradeModel){
-                if(((RequestTradeModel) rDoc).getRequestTradeBook().equals(rm.getRequestedBook())){
+            if (rDoc instanceof RequestTradeModel) {
+                if (((RequestTradeModel) rDoc).getRequestTradeBook().equals(rm.getRequestedBook())) {
                     exists = true;
                     Toast.makeText(context, "Attenzione! Il libro" + rm.getTitle() + " è già un una richiesta in corso!", Toast.LENGTH_LONG).show();
                 }
@@ -238,9 +237,9 @@ public class Search_RecycleViewAdapter extends RecyclerView.Adapter<Search_Recyc
 
                 for (QueryDocumentSnapshot doc : task.getResult()) {
                     RequestModel rDoc;
-                    if(doc.contains("requestTradeBook"))
+                    if (doc.contains("requestTradeBook"))
                         rDoc = doc.toObject(RequestTradeModel.class);
-                    //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
+                        //controlla se esiste già una richiesta uguale, non posso usare serialize di request model perchè ho lo status che varia
                     else rDoc = doc.toObject(RequestModel.class);
 
                     if (checkRequests(rDoc, rm)) {

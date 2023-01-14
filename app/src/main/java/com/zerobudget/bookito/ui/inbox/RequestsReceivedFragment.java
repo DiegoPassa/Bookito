@@ -58,9 +58,7 @@ public class RequestsReceivedFragment extends InboxFragment {
             recyclerView.setAdapter(adapter);
             //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
             recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));
-
             observer = new RequestObserver(adapter, recyclerView);
-
             Utils.incomingRequests.addOnListChangedCallback(observer);
         }
     }

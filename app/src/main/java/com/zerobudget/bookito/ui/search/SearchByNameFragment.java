@@ -47,39 +47,12 @@ public class SearchByNameFragment extends SearchFragment {
 
         viewBooks(new ArrayList<>(), binding.recycleViewSearch);
 
-        /*binding.bookTextfield.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!editable.toString().trim().isEmpty()) {
-                    binding.recycleViewSearch.setVisibility(View.VISIBLE);
-                    searchAllBooks_UsrCity(editable.toString(), true, true, true);
-                } else {
-                    //la nascondo se no da problemi di visualizzazione con i thread quando si cancella troppo velocemente
-                    binding.recycleViewSearch.setVisibility(View.GONE);
-                    viewBooks(new ArrayList<>(), binding.recycleViewSearch);
-                }
-            }
-        });*/
-
         //ricarica la pagina con lo swipe verso il basso
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
             binding.swipeRefreshLayout.setRefreshing(false);
-/*            binding.search.setQuery("", false); //clear the text
-            binding.search.setIconified(true); //rimette la search view ad icona*/
-            //binding.bookTextfield.setText("");
             searchToolBar.clearFocus();
             searchToolBar.setQuery("", false);
             viewBooks(new ArrayList<>(), binding.recycleViewSearch);
-            //svuota la recycle view
         });
 
         return root;
