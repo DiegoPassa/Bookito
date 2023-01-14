@@ -5,14 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView"
+        app:cardElevation="5dp"
         style="@style/color_card"
+        app:cardPreventCornerOverlap="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:cardCornerRadius="10dp"
+        app:shapeAppearanceOverlay="@style/roundedImageViewContainer"
+        app:strokeWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,30 +27,46 @@
             android:layout_height="wrap_content"
             android:clickable="true">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/thumb"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
+                app:cardPreventCornerOverlap="false"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/book_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:cardElevation="5dp">
+                app:shapeAppearanceOverlay="@style/roundedImageView"
+                app:strokeWidth="0dp"
+                tools:cardElevation="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/book_thumbnail"
-                        style="@style/book_thumbnail"
-                        android:layout_width="167dp"
-                        android:contentDescription="@string/book_1_thumbnail"
+                        android:id="@+id/book_background"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/book_background"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/book_thumbnail"
+                        style="@style/book_thumbnail"
+                        android:layout_width="167dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="9dp"
+                        android:contentDescription="@string/book_1_thumbnail"
+                        app:layout_constraintBottom_toBottomOf="@id/book_background"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/roundedImageView"
                         tools:ignore="ImageContrastCheck"
                         tools:srcCompat="@tools:sample/avatars" />
 
@@ -58,6 +77,7 @@
                         android:contentDescription="@string/wait_icon"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/book_thumbnail"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintEnd_toStartOf="@+id/guideline14"
                         app:layout_constraintStart_toStartOf="@+id/guideline13"
                         app:layout_constraintTop_toTopOf="parent"
@@ -83,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_begin="110dp" />
+                        app:layout_constraintGuide_end="57dp" />
 
                     <!--area per poter permettere all'utente di premere sull'icona-->
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,7 +122,8 @@
                             app:cardCornerRadius="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintDimensionRatio="w,1:1"
-                            app:layout_constraintEnd_toEndOf="parent">
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -130,7 +151,7 @@
                         </androidx.cardview.widget.CardView>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/book_title"
@@ -166,6 +187,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

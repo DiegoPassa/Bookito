@@ -21,4 +21,19 @@
         <item name="android:visibility">gone</item>
         <item name="hash">0</item>
     </style>
+
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">10dp</item>
+        <item name="cornerSizeBottomRight">7dp</item>
+        <item name="cornerSizeBottomLeft">2dp</item>
+        <item name="cornerSizeTopLeft">2dp</item>
+    </style>
+
+    <style name="roundedImageViewContainer" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">10dp</item>
+        <item name="cornerSizeBottomRight">7dp</item>
+        <item name="cornerSizeTopLeft">2dp</item>
+    </style>
 </resources>
