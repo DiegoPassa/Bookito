@@ -5,7 +5,7 @@ import com.zerobudget.bookito.models.users.UserModel;
 
 import java.util.HashMap;
 
-public class NotificationModel {
+public class NotificationModel implements Comparable<NotificationModel>{
     private String actionerId;
     private String type;
     private String notificationId;
@@ -135,5 +135,10 @@ public class NotificationModel {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public int compareTo(NotificationModel notificationModel) {
+        return this.getTimestamp() <= notificationModel.getTimestamp() ? 1 : -1;
     }
 }

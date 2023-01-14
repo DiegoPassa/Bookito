@@ -23,6 +23,7 @@ import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class NotificationsFragment extends Fragment {
@@ -94,6 +95,8 @@ public class NotificationsFragment extends Fragment {
                     not.setRequest(dataSnapshot.child("request").getValue(RequestModel.class));
                     notifications.add(not);
                 }
+
+                Collections.sort(notifications); //ordina le notifiche in ordine di arrivo (la più recente in cima)
                 adapter.notifyDataSetChanged();
 
                 if (notifications.size() > 0)
