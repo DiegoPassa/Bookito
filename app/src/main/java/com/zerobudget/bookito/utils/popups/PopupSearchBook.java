@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.models.search.SearchResultsModel;
 
-public class PopupSearchBook extends PopupBook{
+public class PopupSearchBook extends PopupBook {
     private TextView txtBookOwner;
     private TextView txtRequestNote;
 
@@ -30,7 +30,7 @@ public class PopupSearchBook extends PopupBook{
 
     public void setUpInformation(SearchResultsModel s) {
         super.setUpInformation(s.getBook());
-        String owner = s.getUser().getFirstName()+" "+s.getUser().getLastName();
+        String owner = s.getUser().getFirstName() + " " + s.getUser().getLastName();
         this.txtBookOwner.setText(owner);
     }
 

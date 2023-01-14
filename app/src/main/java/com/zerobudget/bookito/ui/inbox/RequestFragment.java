@@ -123,7 +123,7 @@ public class RequestFragment extends Fragment {
     protected void getNumberMsgNotRead() {
         tot = 0;
 
-        for(int i = 0; i < arrRequestsID.size(); i++) {
+        for (int i = 0; i < arrRequestsID.size(); i++) {
             realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + arrRequestsID.get(i));
 
             realTimedb.addValueEventListener(new ValueEventListener() {
@@ -131,14 +131,14 @@ public class RequestFragment extends Fragment {
                 public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")) {
-                                //se lo status del messaggio dell'altro utente è segnato come sent,
-                                //viene contato come nuovo messaggio
-                                if (dataSnapshot.hasChild("status"))
-                                    if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
-                                            && dataSnapshot.child("status").getValue(String.class).equals("sent"))
-                                        tot++;
-                            }
+                        if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")) {
+                            //se lo status del messaggio dell'altro utente è segnato come sent,
+                            //viene contato come nuovo messaggio
+                            if (dataSnapshot.hasChild("status"))
+                                if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
+                                        && dataSnapshot.child("status").getValue(String.class).equals("sent"))
+                                    tot++;
+                        }
                     }
                     if (tot > 0)
                         tabs.getTabAt(2).getOrCreateBadge().setNumber(tot);
@@ -155,7 +155,7 @@ public class RequestFragment extends Fragment {
     }
 
 
-    private void setUpBadgeNotRead(){
+    private void setUpBadgeNotRead() {
         arrRequestsID.clear();
         Task<QuerySnapshot> requestSent = db.collection("requests")
                 .whereEqualTo("status", "accepted")

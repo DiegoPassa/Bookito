@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 db.collection("users").document(Utils.USER_ID).update("notificationToken", token).addOnSuccessListener(task1 -> {
                     getCurrentUserFromDB();
                 });
-                Log.d("TOKEN GENERATO!!", "TOKEN: " + token);
             } else {
                 Log.e("TOKEN ERROR", "updateNotificationToken: ", task.getException());
             }
@@ -115,14 +114,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * preleva i dati dell'utente corrente dal database*/
+     * preleva i dati dell'utente corrente dal database
+     */
     private void getCurrentUserFromDB() {
         // get user
         db.collection("users").document(Utils.USER_ID).get().addOnCompleteListener(task -> {
             if (task.getResult() != null) {
                 // initialize user
                 Utils.CURRENT_USER = new UserLibrary(task.getResult().toObject(UserModel.class));
-                Log.d("UTENTE CREATO!!", "getQueryCurrentUser: " + Utils.CURRENT_USER);
                 if (Utils.CURRENT_USER.isHasPicture()) {
                     getUriPic();
                 }
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             badge = navView.getOrCreateBadge(menuItemId);
 
             navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-                Log.d("NAVIGATION", navDestination.getDisplayName());
+                //Log.d("NAVIGATION", navDestination.getDisplayName());
 
                 int destination = navDestination.getId();
 
@@ -336,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
-                        if(url.equals(urlPageAboutUs)) {
+                        if (url.equals(urlPageAboutUs)) {
                             btnOk.setText("Ho capito, torna indietro!");
                             btnOk.setOnClickListener(view1 -> {
                                 Toast.makeText(MainActivity.this, "Grazie per aver letto chi siamo!", Toast.LENGTH_LONG).show();
@@ -347,14 +346,14 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                        String temp  = request.getUrl().toString();
-                        if(!temp.isEmpty() && !temp.equals(urlPageAboutUs)) {
+                        String temp = request.getUrl().toString();
+                        if (!temp.isEmpty() && !temp.equals(urlPageAboutUs)) {
                             btnOk.setText("Torna alla home page");
                             btnOk.setOnClickListener(view1 -> {
                                 webAbUs.loadUrl(urlPageAboutUs);
                             });
                         }
-                        return  false;
+                        return false;
                     }
                 });
 
@@ -400,21 +399,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*    */
-
-    /**
-     * preleva le richieste ricevute dal database e inserisce il numero nel badge della bottom bar
-     *//*
-    private void setRequestBadgeNumber(){
-        db.collection("requests")
-                .whereEqualTo("status", "undefined")
-                .whereEqualTo("receiver", Utils.USER_ID)
-                .get().addOnCompleteListener(task -> {
-                    int numReq = task.getResult().size();
-                    badge.setNumber(numReq);
-                    badge.setVisible(numReq > 0);
-                });
-    }*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);

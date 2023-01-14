@@ -19,11 +19,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zerobudget.bookito.databinding.FragmentInboxBinding;
 import com.zerobudget.bookito.models.requests.RequestModel;
-import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RequestsAcceptedFragment extends InboxFragment {
@@ -77,10 +74,10 @@ public class RequestsAcceptedFragment extends InboxFragment {
         //notifica l'adapter della recycle view quando avviene una modifica
         //dall'interno della chat ( menu a tendina )
         Bundle args = getArguments();
-        if(args !=null){
+        if (args != null) {
             RequestsAccepted_RecycleViewAdapter adapteer = new RequestsAccepted_RecycleViewAdapter(this.getContext(), arrRequests, emptyWarning);
 
-            switch (args.getString("type")){
+            switch (args.getString("type")) {
                 case "changed":
                     adapteer.notifyItemChanged(args.getInt("position"));
                     break;
@@ -112,40 +109,41 @@ public class RequestsAcceptedFragment extends InboxFragment {
         binding.chipToReceiveOngoing.setOnCheckedChangeListener((compoundButton, b) -> checkAllChips());
 
 
-
         return root;
     }
 
     /**
-     * visualizza le richieste in base al tipo selezionato*/
-    private void checkAllChips(){
-        if(binding.chipSeeAll.isChecked()){
+     * visualizza le richieste in base al tipo selezionato
+     */
+    private void checkAllChips() {
+        if (binding.chipSeeAll.isChecked()) {
             addRequestsOnPage(arrRequests);
         }
 
-        if(binding.chipToReceive.isChecked()){
+        if (binding.chipToReceive.isChecked()) {
             addRequestsOnPage(arrRequestsSent);
         }
 
-        if(binding.chipToGive.isChecked()){
+        if (binding.chipToGive.isChecked()) {
             addRequestsOnPage(arrRequestsReceived);
         }
 
-        if(binding.chipToTrade.isChecked()){
+        if (binding.chipToTrade.isChecked()) {
             addRequestsOnPage(arrRequestsTrade);
         }
 
-        if(binding.chipToGiveOngoing.isChecked()){
+        if (binding.chipToGiveOngoing.isChecked()) {
             addRequestsOnPage(arrRequestsSentOngoing);
         }
 
-        if(binding.chipToReceiveOngoing.isChecked()){
+        if (binding.chipToReceiveOngoing.isChecked()) {
             addRequestsOnPage(arrRequestsReceivedOngoing);
         }
     }
 
     /**
-     * carica le richieste accettate dell'utente corrente*/
+     * carica le richieste accettate dell'utente corrente
+     */
     protected void loadCompletedRequests() {
 //        requests = new ArrayList<>();
         binding.progressBar.setVisibility(View.VISIBLE);
@@ -203,18 +201,15 @@ public class RequestsAcceptedFragment extends InboxFragment {
             }
 
             //se è una richiesta di scambio l'utente deve sia dare che ricevere un libro
-            for(QueryDocumentSnapshot doc : queryRequestSentTrade){
+            for (QueryDocumentSnapshot doc : queryRequestSentTrade) {
                 arrRequestsTrade.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
                 arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
 
-            for(QueryDocumentSnapshot doc : queryRequestReceivedTrade){
+            for (QueryDocumentSnapshot doc : queryRequestReceivedTrade) {
                 arrRequestsTrade.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
                 arrRequests.add(RequestModel.getRequestModel((String) doc.get("type"), doc));
             }
-
-           // for (int i = 0; i < requests.size(); i++)
-               // if (requests.get(i) instanceof RequestTradeModel)
 
             addOtherUsers(arrRequests);
             addOtherUsers(arrRequestsSent);
@@ -240,22 +235,20 @@ public class RequestsAcceptedFragment extends InboxFragment {
         Tasks.whenAllSuccess(tasks).addOnSuccessListener(task -> {
             binding.progressBar.setVisibility(View.GONE);
 
-                checkAllChips();
-                //addRequestsOnPage(req);
-
+            checkAllChips();
+            //addRequestsOnPage(req);
         });
     }
 
     /**
      * permette la viualizzazione delle richieste sulla pagina
      *
-     * @param req: array di richieste da visualizzare*/
+     * @param req: array di richieste da visualizzare
+     */
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
 
         RecyclerView recyclerView = binding.recycleViewInbox;
-
         RequestsAccepted_RecycleViewAdapter adapter = new RequestsAccepted_RecycleViewAdapter(this.getContext(), req, emptyWarning);
-
         recyclerView.setAdapter(adapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

@@ -102,17 +102,19 @@ public class Utils {
         Runtime runtime = Runtime.getRuntime();
         try {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
+            int exitValue = ipProcess.waitFor();
             return (exitValue == 0);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
-        catch (IOException | InterruptedException e){ e.printStackTrace(); }
 
         return false;
     }
 
     /**
-     * metodo per caricare l'icona sulla base del tipo del libro*/
-    public static void setUpIconBookType(String type, ImageView icon_type){
+     * metodo per caricare l'icona sulla base del tipo del libro
+     */
+    public static void setUpIconBookType(String type, ImageView icon_type) {
         switch (type) {
             case "Scambio":
                 Picasso.get().load(R.drawable.swap).into(icon_type);
@@ -133,9 +135,9 @@ public class Utils {
      * la modifica viene fatta rimuovendo il libro e inserendolo nuovamente con il nuovo stato
      * perché firebase non permette di modificare un valore all'interno della strutura dati in cui essi sono contenuti
      *
-     * @param db: database di riferimento su Firebase
+     * @param db:     database di riferimento su Firebase
      * @param userID: id dell'utente di riferimento
-     * @param isbn: isbn del libro che necessita del cambiamento di stato
+     * @param isbn:   isbn del libro che necessita del cambiamento di stato
      */
     public static void changeBookStatus(FirebaseFirestore db, String userID, String isbn, boolean newStatus) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {
@@ -161,9 +163,9 @@ public class Utils {
     /**
      * elimina un libro dalla libreria dell'utente, sulla base dell'isbn
      *
-     * @param db: database di riferimento su Firebase
+     * @param db:     database di riferimento su Firebase
      * @param userID: id dell'utente di riferimento
-     * @param isbn: isbn del libro che necessita del cambiamento di stato
+     * @param isbn:   isbn del libro che necessita del cambiamento di stato
      */
     public static void deleteUserBook(FirebaseFirestore db, String userID, String isbn) {
         db.collection("users").document(userID).get().addOnCompleteListener(task -> {

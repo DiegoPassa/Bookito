@@ -67,7 +67,8 @@ public class RequestsSentFragment extends InboxFragment {
     /**
      * preleva le richieste dell'utente corrente dal database
      *
-     * @param req: arraylist di richieste nel quale inserire le richieste trobate*/
+     * @param req: arraylist di richieste nel quale inserire le richieste trobate
+     */
     private void getRequests(ArrayList<RequestModel> req) {
         binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("requests").whereEqualTo("sender", Utils.USER_ID)
@@ -88,7 +89,8 @@ public class RequestsSentFragment extends InboxFragment {
     /**
      * aggiunge le informazioni dell'altro utente alle richieste
      *
-     * @param requests: array list delle richieste di riferimento*/
+     * @param requests: array list delle richieste di riferimento
+     */
     protected void addOtherUsers(ArrayList<RequestModel> requests) {
         ArrayList<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (RequestModel r : requests) {
@@ -103,13 +105,12 @@ public class RequestsSentFragment extends InboxFragment {
     /**
      * aggiunge le richiestealla pagina
      *
-     * @param req: array list di richieste da visualizzare*/
+     * @param req: array list di richieste da visualizzare
+     */
     private void addRequestsOnPage(ArrayList<RequestModel> req) {
         if (getView() != null) {
             RecyclerView recyclerView = binding.recycleViewInbox;
-
             RequestsReceived_RecycleViewAdapter adapter = new RequestsSent_RecycleViewAdapter(this.getContext(), req, emptyWarning);
-
             recyclerView.setAdapter(adapter);
             //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
             recyclerView.setLayoutManager(new CustomLinearLayoutManager(this.getContext()));

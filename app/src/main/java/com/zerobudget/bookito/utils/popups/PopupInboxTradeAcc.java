@@ -1,7 +1,6 @@
 package com.zerobudget.bookito.utils.popups;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,11 +9,10 @@ import androidx.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 import com.zerobudget.bookito.R;
-import com.zerobudget.bookito.models.requests.RequestModel;
 import com.zerobudget.bookito.models.requests.RequestTradeModel;
 import com.zerobudget.bookito.utils.Utils;
 
-public class PopupInboxTradeAcc extends PopupInbox{
+public class PopupInboxTradeAcc extends PopupInbox {
     private ImageView imgThumbnailBookTrade;
     private TextView txt;
 
@@ -32,9 +30,9 @@ public class PopupInboxTradeAcc extends PopupInbox{
         Picasso.get().load(r.getThumbnailBookTrade()).into(this.imgThumbnailBookTrade);
 
         String txt = "";
-        if(r.getReceiver().equals(Utils.USER_ID))
-            txt = "Hai scelto il libro '"+r.getTitleBookTrade()+"' di "+r.getOtherUser().getFirstName()+" per lo scambio!";
+        if (r.getReceiver().equals(Utils.USER_ID))
+            txt = "Hai scelto il libro '" + r.getTitleBookTrade() + "' di " + r.getOtherUser().getFirstName() + " per lo scambio!";
 
-       this.txt.setText(txt);
+        this.txt.setText(txt);
     }
 }

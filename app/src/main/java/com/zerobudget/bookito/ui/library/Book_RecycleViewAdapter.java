@@ -44,9 +44,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
 
     private final Context context;
     private final ArrayList<BookModel> bookModels;
-
     private AlertDialog dialog;
-
     private final TextView emptyWarning;
 
     FirebaseFirestore db;
@@ -76,8 +74,6 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     public void onBindViewHolder(@NonNull Book_RecycleViewAdapter.ViewHolder holder, int position) {
         holder.title.setText(bookModels.get(position).getTitle());
 
-        //int book_number = holder.getAdapterPosition()+1;
-        //holder.book_id.setText(book_number+"");
         if (bookModels.get(holder.getAdapterPosition()).getStatus()) {
             holder.wait_icon.setVisibility(View.GONE);
             Picasso.get().load(bookModels.get(position).getThumbnail()).into(holder.thumbnail);
@@ -127,7 +123,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         dialogBuilder.setTextOtherBtn("Elimina");
         dialogBuilder.getBtnDefault().setVisibility(View.GONE);
 
-        if(!bookModels.get(holder.getAdapterPosition()).getStatus()) {
+        if (!bookModels.get(holder.getAdapterPosition()).getStatus()) {
             dialogBuilder.getBtnOther().setVisibility(View.GONE);
             /*dialogBuilder.getBtnOther().setBackgroundColor(R.style.ButtonDisabled);
             dialogBuilder.getBtnOther().setEnabled(false);*/
@@ -157,7 +153,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                                 sendNotification(r);
                                 documentReference.delete();
                             }
-                });
+                        });
 
                 Toast.makeText(context, bookModels.get(holder.getAdapterPosition()).getTitle() + " eliminato!", Toast.LENGTH_LONG).show();
                 bookModels.remove(holder.getAdapterPosition());
@@ -237,14 +233,14 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
                     }
 
                     //elimina il vecchio libro se trovato
-                    if(positionOldBook != -1){
+                    if (positionOldBook != -1) {
                         bookModels.remove(positionOldBook);
                         notifyItemRemoved(positionOldBook);
                     }
                 });
     }
 
-    public void deleteAllUndefinedRequests(ViewHolder holder){
+    public void deleteAllUndefinedRequests(ViewHolder holder) {
         db.collection("requests")
                 .whereEqualTo("status", "undefined")
                 .whereEqualTo("requestedBook", bookModels.get(holder.getAdapterPosition()).getIsbn())
@@ -266,17 +262,18 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
     /**
      * crea la notifica da visulizzare nell'area notifiche dell'applicazione
      *
-     * @param r: richiesta di riferimento*/
+     * @param r: richiesta di riferimento
+     */
     private void sendNotification(RequestModel r) {
         String otherUserId = r.getSender().equals(Utils.USER_ID) ? r.getReceiver() : r.getSender();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/"+otherUserId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/notification/" + otherUserId);
         String body = Utils.CURRENT_USER.getFirstName() + " ha modificato o eliminato il libro da te richiesto.";
         String title = "Richiesta eliminata!";
 
         /*
-        PROBLEMA, NON POSSIAMO RICHIAMARE LA SERIALIZE DEL CURRENT USER PERCHÉ SI TRATTA DI UN USERLIBRARY, QUINDI MI GENERA ANCHE TUTTI I SUOI LIBRI E QUINDI DA ERRORE
+        PROBLEMA, NON POSSIAMO RICHIAMARE LA SERIALIZE DEL CURRENT USER PERCHÉ SI TRATTA DI UN USERLIBRARY,
+        QUINDI MI GENERA ANCHE TUTTI I SUOI LIBRI E QUINDI DA ERRORE
          */
-
         UserModel currentUser = new UserModel(Utils.CURRENT_USER.getFirstName(), Utils.CURRENT_USER.getLastName(),
                 Utils.CURRENT_USER.getTelephone(), Utils.CURRENT_USER.getTownship(), Utils.CURRENT_USER.getCity(),
                 Utils.CURRENT_USER.getKarma(), Utils.CURRENT_USER.isHasPicture(), Utils.CURRENT_USER.getNotificationToken());
@@ -284,6 +281,7 @@ public class Book_RecycleViewAdapter extends RecyclerView.Adapter<Book_RecycleVi
         NotificationModel notificationModel = new NotificationModel(Utils.USER_ID, "Delete", body, title, r.getThumbnail(), r, currentUser, Timestamp.now().getSeconds());
         ref.push().setValue(notificationModel.serialize());
     }
+
     @Override
     public int getItemCount() {
         return bookModels.size();

@@ -59,7 +59,8 @@ public class BookTradeFragment extends Fragment {
 
 
     /**
-     * visualizza i libri per concludere lo scambio*/
+     * visualizza i libri per concludere lo scambio
+     */
     private void setUpBookModel() {
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -71,7 +72,7 @@ public class BookTradeFragment extends Fragment {
                         if (arr != null) { //si assicura di cercare solo se esiste quache libro
                             for (Object o : (ArrayList<Object>) arr) {
                                 HashMap<Object, Object> map = (HashMap<Object, Object>) o;
-                                if((boolean) map.get("status"))
+                                if ((boolean) map.get("status"))
                                     //mostra solo i libri disponibili, quindi con status true
                                     if (map.get("type").equals("Scambio")) {
                                         BookModel tmp = new BookModel((String) map.get("thumbnail"), (String) map.get("isbn"), (String) map.get("title"), (String) map.get("author"), (String) map.get("description"), (String) map.get("type"), (boolean) map.get("status"));
@@ -99,7 +100,8 @@ public class BookTradeFragment extends Fragment {
     /**
      * permette la visualizzazione dei libri sulla pagina
      *
-     * @param arr: array list con i risultati da visualizzare sulla pagina*/
+     * @param arr: array list con i risultati da visualizzare sulla pagina
+     */
     protected void viewBooks(ArrayList<SearchResultsModel> arr) {
         if (getView() != null) { //evita il crash dell'applicazione
             RecyclerView recyclerView = binding.recycleViewMyLibrary;

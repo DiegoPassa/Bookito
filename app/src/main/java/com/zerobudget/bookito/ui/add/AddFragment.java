@@ -50,19 +50,20 @@ public class AddFragment extends Fragment {
     private FirebaseFirestore db;
 
     /**
-     * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato*/
+     * interazione con l'api di google books per la ricerca del libro tramite isbn scannerizzato
+     */
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) { //isbn scannerizzato
 
             ISBNValidator validator = new ISBNValidator();
-            String isbn =  result.getContents();
+            String isbn = result.getContents();
 
-            if(isbn.length() == 10 && validator.isValidISBN10(isbn))
+            if (isbn.length() == 10 && validator.isValidISBN10(isbn))
                 isbn = validator.convertToISBN13(isbn);
 
-            if(validator.isValidISBN13(isbn))
+            if (validator.isValidISBN13(isbn))
                 searchBookAPI(isbn);
-            else{
+            else {
                 AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Attenzione");
                 builder.setMessage("L'isbn non è valido, si prega di riprovare");
@@ -129,12 +130,12 @@ public class AddFragment extends Fragment {
             //crea un validator ISBN
             ISBNValidator validator = new ISBNValidator();
             //se l'isbn inserito è da dieci controlla se è valido e converte a 13
-            if(isbn.length() == 10 && validator.isValidISBN10(isbn))
+            if (isbn.length() == 10 && validator.isValidISBN10(isbn))
                 isbn = validator.convertToISBN13(isbn);
 
-            if(validator.isValidISBN13(isbn))
+            if (validator.isValidISBN13(isbn))
                 searchBookAPI(isbn);
-            else{
+            else {
                 AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this.getContext());
                 builder.setTitle("Attenzione");
                 builder.setMessage("L'isbn inserito non è valido, si prega di riprovare");
@@ -158,7 +159,8 @@ public class AddFragment extends Fragment {
     /**
      * metodo per nascondere la tastiera
      *
-     * @param activity: activty di riferimento*/
+     * @param activity: activty di riferimento
+     */
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
 
@@ -176,7 +178,8 @@ public class AddFragment extends Fragment {
     /**
      * preleva i dati dall'api di google maps, convertendo l'oggetto json ottenuto in base al formato deciso da goolge
      *
-     * @param isbn: isbn del libro cercato*/
+     * @param isbn: isbn del libro cercato
+     */
     private void searchBookAPI(String isbn) {
         mRequestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         mRequestQueue.getCache().clear();
@@ -326,7 +329,7 @@ public class AddFragment extends Fragment {
                     }
 
                 }, error -> {
-                    if(!Utils.isOnline())
+                    if (!Utils.isOnline())
                         Toast.makeText(getContext().getApplicationContext(), "Sembra che tu non sia connesso ad internet, connettiti e riprova!", Toast.LENGTH_LONG).show();
                     else
                         Toast.makeText(getContext().getApplicationContext(), "Qualcosa è andato storto", Toast.LENGTH_LONG).show();
@@ -335,8 +338,8 @@ public class AddFragment extends Fragment {
                 queue.add(booksObjrequestNotByIsbn);
             }
 
-        }, error ->{
-            if(!Utils.isOnline())
+        }, error -> {
+            if (!Utils.isOnline())
                 Toast.makeText(getContext().getApplicationContext(), "Sembra che tu non sia connesso ad internet, connettiti e riprova!", Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(getContext().getApplicationContext(), "Qualcosa è andato storto", Toast.LENGTH_LONG).show();

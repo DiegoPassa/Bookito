@@ -42,7 +42,8 @@ public class PopupBook extends MaterialAlertDialogBuilder {
     /**
      * inserisce le informazioni negli elementi xml
      *
-     * @param b: bookModel di riferimento da cui prelevare i dati per visualizzarne le informazioni*/
+     * @param b: bookModel di riferimento da cui prelevare i dati per visualizzarne le informazioni
+     */
     public void setUpInformation(BookModel b) {
         this.txtBookTitle.setText(b.getTitle());
         this.txtBookAuthor.setText(b.getAuthor());
@@ -58,7 +59,7 @@ public class PopupBook extends MaterialAlertDialogBuilder {
      * @param type: stringa contente il tipo del libro, vincolata ai valori Scambio, Prestito, Regalo
      */
     private void loadIconBookType(String type) {
-        Utils.setUpIconBookType(type,imgBookIconType);
+        Utils.setUpIconBookType(type, imgBookIconType);
     }
 
     public Button getBtnDefault() {
@@ -69,11 +70,11 @@ public class PopupBook extends MaterialAlertDialogBuilder {
         return btnOther;
     }
 
-    public void setTextBtnDefault(String txt){
+    public void setTextBtnDefault(String txt) {
         this.btnDefault.setText(txt);
     }
 
-    public void setTextOtherBtn(String txt){
+    public void setTextOtherBtn(String txt) {
         this.btnOther.setText(txt);
     }
 }

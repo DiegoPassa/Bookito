@@ -23,7 +23,6 @@ import com.zerobudget.bookito.models.chat.MessageModelWithImage;
 import com.zerobudget.bookito.models.users.UserModel;
 import com.zerobudget.bookito.utils.Utils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

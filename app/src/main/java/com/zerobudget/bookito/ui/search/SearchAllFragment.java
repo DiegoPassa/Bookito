@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -25,7 +24,6 @@ import com.zerobudget.bookito.utils.CustomLinearLayoutManager;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class SearchAllFragment extends SearchFragment {

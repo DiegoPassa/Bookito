@@ -30,30 +30,6 @@ public class UserModel {
         this.hasPicture = hasPicture;
         this.notificationToken = notificationToken;
     }
-/*    public static UserModel getUserFromDocument(DocumentSnapshot result) {
-        UserModel u = new UserModel();
-
-        u.setFirstName((String) result.get("first_name"));
-        u.setLastName((String) result.get("last_name"));
-        u.setTelephone((String) result.get("telephone"));
-        u.setNeighborhood((String) result.get("neighborhood"));
-        u.setNotificationToken((String) result.get("notificationToken"));
-        u.setKarma(loadKarma(result));
-
-        Boolean hasPicture = (Boolean) result.get("hasPicture");
-        if (hasPicture != null) {
-            u.setHasPicture(hasPicture);
-        } else {
-            u.setHasPicture(false);
-        }
-
-        return u;
-    }*/
-
-/*    private static HashMap<String, Object> loadKarma(DocumentSnapshot doc) {
-
-        return (HashMap<String, Object>) doc.get("karma");
-    }*/
 
     public Map<String, Object> serialize() {
         HashMap<String, Object> user = new HashMap<>();
