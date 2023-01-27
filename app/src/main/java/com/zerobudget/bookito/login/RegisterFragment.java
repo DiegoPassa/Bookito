@@ -248,7 +248,7 @@ public class RegisterFragment extends Fragment {
         bundle.putString("name", name);
         bundle.putString("surname", surname);
         bundle.putString("township", township);
-        bundle.getString("city", city);
+        bundle.putString("city", city);
         NavHostFragment.findNavController(RegisterFragment.this).navigate(R.id.action_registerFragment_to_OTPConfirmFragment, bundle);
     }
 
