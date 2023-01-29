@@ -549,7 +549,6 @@ public class ChatFragment extends Fragment {
                 adapter.notifyDataSetChanged();
 
                 recyclerView.scrollToPosition(messages.size() - 1);
-                Log.d("SIZE:", String.valueOf(messages.size()));
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }

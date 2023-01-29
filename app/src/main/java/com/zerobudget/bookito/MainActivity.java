@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
             badge = navView.getOrCreateBadge(menuItemId);
 
             navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-                //Log.d("NAVIGATION", navDestination.getDisplayName());
 
                 int destination = navDestination.getId();
 

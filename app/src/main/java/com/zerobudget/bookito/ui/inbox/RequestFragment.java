@@ -64,7 +64,7 @@ public class RequestFragment extends Fragment {
         tabs = view.findViewById(R.id.tabLayout);
 
         tabs.getTabAt(Wrapper.position).select();
-        viewPager.setCurrentItem(Wrapper.position);
+        viewPager.setCurrentItem(Wrapper.position, false);
         setUpBadgeNotRead();
 
 
@@ -127,7 +127,6 @@ public class RequestFragment extends Fragment {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
-                Log.d("SIUM", "SIUUUM");
                 counts[index] = 0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")) {
