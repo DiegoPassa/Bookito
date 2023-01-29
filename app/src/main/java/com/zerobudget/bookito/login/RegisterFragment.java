@@ -90,7 +90,15 @@ public class RegisterFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 citiesArray = Utils.neighborhoodsMap.get(binding.newTownship.getText().toString());
-                binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, citiesArray));
+                if (citiesArray != null) {
+                    binding.newCity.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, citiesArray));
+                }
+            }
+        });
+
+        binding.checkBoxAge.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                binding.checkBoxAge.setError(null);
             }
         });
 
@@ -130,50 +138,49 @@ public class RegisterFragment extends Fragment {
 
         binding.registerConfirm.setOnClickListener(view1 -> {
 
-            AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getContext());
-            View viewPopup = View.inflate(getContext(), R.layout.popup_gdpr, null);
+            if (validateInput()) {
+                AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getContext());
+                View viewPopup = View.inflate(getContext(), R.layout.popup_gdpr, null);
 
-            dialogBuilder.setView(viewPopup);
-            AlertDialog dialog = dialogBuilder.create();
+                dialogBuilder.setView(viewPopup);
+                AlertDialog dialog = dialogBuilder.create();
 
-            ProgressBar progressBar = viewPopup.findViewById(R.id.progressBar);
-            ConstraintLayout constr = viewPopup.findViewById(R.id.constr);
-            constr.setVisibility(View.GONE);
+                ProgressBar progressBar = viewPopup.findViewById(R.id.progressBar);
+                ConstraintLayout constr = viewPopup.findViewById(R.id.constr);
+                constr.setVisibility(View.GONE);
 
-            WebView web = viewPopup.findViewById(R.id.web);
-            //sito web contenente l'informativa sulla privacy
-            web.loadUrl("https://sites.google.com/view/bookito/home-page");
-            web.setWebViewClient(new WebViewClient() {
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
-                    progressBar.setVisibility(View.GONE);
-                    constr.setVisibility(View.VISIBLE);
-                }
-            });
+                WebView web = viewPopup.findViewById(R.id.web);
+                //sito web contenente l'informativa sulla privacy
+                web.loadUrl("https://sites.google.com/view/bookito/home-page");
+                web.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
+                        progressBar.setVisibility(View.GONE);
+                        constr.setVisibility(View.VISIBLE);
+                    }
+                });
 
+                CheckBox checkBoxGdpr = viewPopup.findViewById(R.id.checkBox_gdpr);
+                Button btnAccept = viewPopup.findViewById(R.id.btn_accept);
+                btnAccept.setEnabled(false);
 
-            CheckBox checkBoxGdpr = viewPopup.findViewById(R.id.checkBox_gdpr);
-            Button btnAccept = viewPopup.findViewById(R.id.btn_accept);
-            btnAccept.setEnabled(false);
+                Button btnRefuse = viewPopup.findViewById(R.id.btn_refuse);
 
-            Button btnRefuse = viewPopup.findViewById(R.id.btn_refuse);
+                dialog.show();
 
-            dialog.show();
+                checkBoxGdpr.setOnCheckedChangeListener((compoundButton, b) -> {
+                    //può registrarsi solo se ha seezionato la checkbox
+                    btnAccept.setEnabled(compoundButton.isChecked());
+                });
 
-            checkBoxGdpr.setOnCheckedChangeListener((compoundButton, b) -> {
-                //può registrarsi solo se ha seezionato la checkbox
-                btnAccept.setEnabled(compoundButton.isChecked());
-            });
+                btnRefuse.setOnClickListener(view2 -> {
+                    dialog.dismiss();
+                    Toast.makeText(getContext(), "Non puoi accedere a tutte le funzionalità di Bookito\nse non accetti la policy sulla privacy!", Toast.LENGTH_LONG).show();
+                });
 
-            btnRefuse.setOnClickListener(view2 -> {
-                dialog.dismiss();
-                Toast.makeText(getContext(), "Non puoi accedere a tutte le funzionalità di Bookito\nse non accetti la policy sulla privacy!", Toast.LENGTH_LONG).show();
-            });
-
-            btnAccept.setOnClickListener(view2 -> {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                if (validateInput())
+                btnAccept.setOnClickListener(view2 -> {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("users").whereEqualTo("telephone", phoneNumber)
                             .get()
                             .addOnCompleteListener(task -> {
@@ -185,8 +192,9 @@ public class RegisterFragment extends Fragment {
                                     binding.phoneNumberRegister.requestFocus();
                                 }
                             });
-                dialog.dismiss();
-            });
+                    dialog.dismiss();
+                });
+            }
         });
     }
 
@@ -231,11 +239,11 @@ public class RegisterFragment extends Fragment {
         }
 
         if (!townshipsArray.contains(township)) {
-            binding.newTownship.setError("Seleziona un comune di residenza!");
+            binding.newTownship.setError("Seleziona un comune di residenza valido!");
             flag = false;
         }
-        if (!citiesArray.contains(city)) {
-            binding.newTownship.setError("Seleziona la frazione in cui abiti!");
+        if (citiesArray == null || !citiesArray.contains(city)) {
+            binding.newCity.setError("Seleziona la frazione in cui abiti!");
             flag = false;
         }
         return flag;
