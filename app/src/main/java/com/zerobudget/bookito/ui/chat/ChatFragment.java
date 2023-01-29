@@ -125,7 +125,6 @@ public class ChatFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         LinearLayoutManager l = new LinearLayoutManager(this.getContext());
-        l.setStackFromEnd(true);
         recyclerView.setLayoutManager(l);
 
         setUpChatRoom();
@@ -550,6 +549,7 @@ public class ChatFragment extends Fragment {
                 adapter.notifyDataSetChanged();
 
                 recyclerView.scrollToPosition(messages.size() - 1);
+                Log.d("SIZE:", String.valueOf(messages.size()));
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
