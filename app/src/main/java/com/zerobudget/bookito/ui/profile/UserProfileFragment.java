@@ -181,27 +181,15 @@ public class UserProfileFragment extends Fragment {
      */
     private void showPic() {
         if (user.isHasPicture()) {
+            Picasso.get().load(Utils.URI_PIC).into(binding.profilePic);
             binding.profilePic.setVisibility(View.VISIBLE);
             binding.userGravatar.setVisibility(View.GONE);
-            if (Utils.URI_PIC.equals("")) {
-                StorageReference load = storageRef.child("profile_pics/" + Utils.USER_ID);
-
-                load.getDownloadUrl().addOnSuccessListener(uri -> {
-                    Utils.setUriPic(uri.toString());
-                    Picasso.get().load(uri.toString()).into(binding.profilePic);
-                }).addOnFailureListener(exception -> {
-                    String errorMessage = exception.getMessage();
-                });
-            } else {
-                Picasso.get().load(Utils.URI_PIC).into(binding.profilePic);
-            }
         } else {
             binding.userGravatar.setHash(user.getTelephone().hashCode());
             binding.userGravatar.setVisibility(View.VISIBLE);
             binding.profilePic.setVisibility(View.GONE);
         }
     }
-
 
     /**
      * visualizza il popup con le opzioni per scattare foro, selezionarla dalla galleria o eliminarla
@@ -252,6 +240,7 @@ public class UserProfileFragment extends Fragment {
         //salvata in profile_pics/<id dell'utente>
         StorageReference riversRef = storageRef.child("profile_pics/" + Utils.USER_ID);
         UploadTask uploadTask = riversRef.putFile(uri);
+        Utils.setUriPic(uri.toString());
 
         user.setHasPicture(true);
 
@@ -262,9 +251,8 @@ public class UserProfileFragment extends Fragment {
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Uri downloadUri = task.getResult().getUploadSessionUri(); //this is the download url that you need to pass to your database
-                db.collection("users").document(Utils.USER_ID).update("hasPicture", true).addOnSuccessListener(unused -> {
-                    showPic();
-                });
+                db.collection("users").document(Utils.USER_ID).update("hasPicture", true);
+                showPic();
                 Toast.makeText(getContext().getApplicationContext(), "Fatto! Ora sei una persona nuova!", Toast.LENGTH_LONG).show();
             }
         });
@@ -277,6 +265,7 @@ public class UserProfileFragment extends Fragment {
         StorageReference desertRef = storageRef.child("profile_pics/" + Utils.USER_ID);
 
         user.setHasPicture(false);
+        Utils.setUriPic("");
 
         desertRef.delete().addOnSuccessListener(aVoid -> {
             db.collection("users").document(Utils.USER_ID).update("hasPicture", false);
