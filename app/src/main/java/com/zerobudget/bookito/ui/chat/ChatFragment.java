@@ -125,7 +125,6 @@ public class ChatFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         LinearLayoutManager l = new LinearLayoutManager(this.getContext());
-        l.setStackFromEnd(true);
         recyclerView.setLayoutManager(l);
 
         setUpChatRoom();

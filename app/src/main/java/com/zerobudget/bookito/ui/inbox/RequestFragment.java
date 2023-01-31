@@ -24,6 +24,7 @@ import com.zerobudget.bookito.R;
 import com.zerobudget.bookito.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class RequestFragment extends Fragment {
@@ -35,11 +36,17 @@ public class RequestFragment extends Fragment {
     private TabLayout tabs;
     private int tot = 0;
 
-    RequestPageAdapter adapter;
+    private RequestPageAdapter adapter;
+    private ValueEventListener event[];
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        for (int i = 0; i < arrRequestsID.size(); i++) {
+            realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + arrRequestsID.get(i));
+            realTimedb.removeEventListener(event[i]);
+        }
     }
 
 
@@ -47,7 +54,6 @@ public class RequestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_request_page, container, false);
-
 
         this.db = FirebaseFirestore.getInstance();
 
@@ -58,7 +64,7 @@ public class RequestFragment extends Fragment {
         tabs = view.findViewById(R.id.tabLayout);
 
         tabs.getTabAt(Wrapper.position).select();
-        viewPager.setCurrentItem(Wrapper.position);
+        viewPager.setCurrentItem(Wrapper.position, false);
         setUpBadgeNotRead();
 
 
@@ -66,7 +72,7 @@ public class RequestFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 //il badge è rimosso se si è nel tab corrente
-                tab.removeBadge();
+//                tab.removeBadge();
                 viewPager.setCurrentItem(tab.getPosition());
                 Wrapper.setPosition(tab.getPosition());
             }
@@ -74,15 +80,15 @@ public class RequestFragment extends Fragment {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 //se non è selezionato l'ultimo tab mostra il badge
-                if (tab.getPosition() == 2) {
-                    setUpBadgeNotRead();
-                }
+//                if (tab.getPosition() == 2) {
+//                    setUpBadgeNotRead();
+//                }
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 //il badge è rimosso se si riseleziona il tab
-                tab.removeBadge();
+//                tab.removeBadge();
             }
         });
 
@@ -117,42 +123,49 @@ public class RequestFragment extends Fragment {
         }
     }
 
+    private ValueEventListener createEvent(int[] counts, int index) {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+                counts[index] = 0;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")) {
+                        //se lo status del messaggio dell'altro utente è segnato come sent,
+                        //viene contato come nuovo messaggio
+                        if (dataSnapshot.hasChild("status"))
+                            if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
+                                    && dataSnapshot.child("status").getValue(String.class).equals("sent"))
+                                counts[index]++;
+                    }
+                }
+                tot = Arrays.stream(counts).sum();
+                if (tot > 0)
+                    tabs.getTabAt(2).getOrCreateBadge().setNumber(tot);
+                else
+                    tabs.getTabAt(2).removeBadge();
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                Log.e("DB ERROR", error.getMessage());
+            }
+        };
+    }
+
     /**
      * in real time vede se esistono nuovi messaggi nelle chat e ne visualizza il numero nel tab realtivo
      */
     protected void getNumberMsgNotRead() {
-        tot = 0;
+        int[] counts = new int[arrRequestsID.size()];
 
         for (int i = 0; i < arrRequestsID.size(); i++) {
+            final int index = i;
             realTimedb = FirebaseDatabase.getInstance().getReference("/chatapp/" + arrRequestsID.get(i));
-
-            realTimedb.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
-
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        if (!dataSnapshot.getKey().equals("user1") && !dataSnapshot.getKey().equals("user2")) {
-                            //se lo status del messaggio dell'altro utente è segnato come sent,
-                            //viene contato come nuovo messaggio
-                            if (dataSnapshot.hasChild("status"))
-                                if (dataSnapshot.child("receiver").getValue(String.class).equals(Utils.USER_ID)
-                                        && dataSnapshot.child("status").getValue(String.class).equals("sent"))
-                                    tot++;
-                        }
-                    }
-                    if (tot > 0)
-                        tabs.getTabAt(2).getOrCreateBadge().setNumber(tot);
-                    else
-                        tabs.getTabAt(2).removeBadge();
-                }
-
-                @Override
-                public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-                    Log.e("DB ERROR", error.getMessage());
-                }
-            });
+            event[i] = createEvent(counts, index);
+            realTimedb.addValueEventListener(event[i]);
         }
     }
+
 
 
     private void setUpBadgeNotRead() {
@@ -175,6 +188,7 @@ public class RequestFragment extends Fragment {
             for (QueryDocumentSnapshot doc : queryRequestReceived)
                 arrRequestsID.add((String) doc.getId());
 
+            event = new ValueEventListener[arrRequestsID.size()];
             getNumberMsgNotRead();
         });
     }
